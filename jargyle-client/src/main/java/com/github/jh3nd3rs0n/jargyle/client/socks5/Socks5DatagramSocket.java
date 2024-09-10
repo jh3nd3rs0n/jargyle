@@ -1,15 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientIOException;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
-import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl.DomainName;
@@ -42,7 +40,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				final Socks5Client client) throws SocketException {
 			DatagramSocket datagramSock = new DatagramSocket((SocketAddress) null);
 			Socket sock = new Socket();
-			client.configureClientSocket(sock);
 			this.associated = false;
 			this.connected = false;
 			this.datagramSocket = datagramSock;
@@ -100,7 +97,27 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.remotePort = -1;
 			this.remoteSocketAddress = null;
 		}
-		
+
+		private Host getClientBindHost() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_BIND_HOST);
+		}
+
+		private PortRanges getClientBindPortRanges() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+		}
+
+		private PositiveInteger getClientConnectTimeout() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
+		}
+
+		private SocketSettings getClientSocketSettings() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
+		}
+
 		public void receive(final DatagramPacket p) throws IOException {
 			if (this.datagramSocket.isClosed()) {
 				throw new SocketException("socket is closed");
@@ -168,20 +185,25 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
-			ClientSocketConnectParams params = new ClientSocketConnectParams();
-			params.setNetObjectFactory(NetObjectFactory.getDefault());
-			Socket sock = this.socks5Client.getConnectedClientSocket(
-					this.socket, params);
+			Socket sock = this.socks5Client.getClientSocketBuilder()
+					.proceedToConfigure(this.socket)
+					.setSocketSettings(this.getClientSocketSettings())
+					.configure()
+					.proceedToConnect()
+					.setLocalAddress(this.getClientBindHost().toInetAddress())
+					.setLocalPortRanges(this.getClientBindPortRanges())
+					.setTimeout(this.getClientConnectTimeout().intValue())
+					.getConnectedClientSocket();
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.doMethodSubnegotiation(method, sock);
+					this.socks5Client.doMethodSubNegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
 			DatagramSocket datagramSock = this.datagramSocket;
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int port = datagramSock.getLocalPort();
 			Properties properties = this.socks5Client.getProperties();
 			if (properties.getValue(
-					Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN).booleanValue()) {
+					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN).booleanValue()) {
 				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
 				port = 0;
 			}
@@ -204,7 +226,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			if (HostAddress.isAllZerosHostAddress(serverBoundAddress)) {
 				serverBoundAddress = 
-						this.socks5Client.getSocksServerUri().getHost();
+						this.socks5Client.getSocksServerUri().getHost().toString();
 			}
 			datagramSock = this.socks5Client.getConnectedClientDatagramSocket(
 					datagramSock,

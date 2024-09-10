@@ -21,7 +21,6 @@
     -   [socksClient.dtls.trustStorePassword](#socksclient-dtls-truststorepassword)
     -   [socksClient.dtls.trustStoreType](#socksclient-dtls-truststoretype)
 -   [SOCKS5 Properties](#socks5-properties)
-    -   [socksClient.socks5.clientUdpAddressAndPortUnknown](#socksclient-socks5-clientudpaddressandportunknown)
     -   [socksClient.socks5.gssapimethod.mechanismOid](#socksclient-socks5-gssapimethod-mechanismoid)
     -   [socksClient.socks5.gssapimethod.necReferenceImpl](#socksclient-socks5-gssapimethod-necreferenceimpl)
     -   [socksClient.socks5.gssapimethod.protectionLevels](#socksclient-socks5-gssapimethod-protectionlevels)
@@ -29,7 +28,8 @@
     -   [socksClient.socks5.gssapimethod.suggestedConf](#socksclient-socks5-gssapimethod-suggestedconf)
     -   [socksClient.socks5.gssapimethod.suggestedInteg](#socksclient-socks5-gssapimethod-suggestedinteg)
     -   [socksClient.socks5.methods](#socksclient-socks5-methods)
-    -   [socksClient.socks5.useResolveCommand](#socksclient-socks5-useresolvecommand)
+    -   [socksClient.socks5.socks5DatagramSocket.actualAddressAndPortUnknown](#socksclient-socks5-socks5datagramsocket-actualaddressandportunknown)
+    -   [socksClient.socks5.socks5HostResolver.resolveFromSocks5Server](#socksclient-socks5-socks5hostresolver-resolvefromsocks5server)
     -   [socksClient.socks5.userpassmethod.password](#socksclient-socks5-userpassmethod-password)
     -   [socksClient.socks5.userpassmethod.username](#socksclient-socks5-userpassmethod-username)
 -   [SSL/TLS Properties](#ssl-tls-properties)
@@ -56,7 +56,7 @@ socksServerUri.port=PORT
 
 **Description:**
 
-The port of the SOCKS server URI (default is 1080)
+The port of the SOCKS server URI
 
 **Value:** [Port](value-syntaxes.md#port)
 
@@ -100,7 +100,7 @@ socksClient.clientBindHost=HOST
 
 **Description:**
 
-The binding host name or address for the client socket that is used to connect to the SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0.0.0.0)
+The binding host name or address for the client socket that is used to connect to the SOCKS server (default is 0.0.0.0)
 
 **Value:** [Host](value-syntaxes.md#host)
 
@@ -114,7 +114,7 @@ socksClient.clientBindPortRanges=PORT_RANGES
 
 **Description:**
 
-The comma separated list of binding port ranges for the client socket that is used to connect to the SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 0)
+The comma separated list of binding port ranges for the client socket that is used to connect to the SOCKS server (default is 0)
 
 **Value:** [Port Ranges](value-syntaxes.md#port-ranges)
 
@@ -128,7 +128,7 @@ socksClient.clientConnectTimeout=POSITIVE_INTEGER
 
 **Description:**
 
-The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (used for the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) (default is 60000)
+The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (default is 60000)
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
@@ -142,7 +142,7 @@ socksClient.clientSocketSettings=SOCKET_SETTINGS
 
 **Description:**
 
-The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server (used for the SOCKS5 command RESOLVE and UDP ASSOCIATE)
+The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server
 
 **Value:** [Socket Settings](value-syntaxes.md#socket-settings)
 
@@ -262,20 +262,6 @@ The type of trust store file for the DTLS connections to the SOCKS server (defau
 
 ## SOCKS5 Properties
 
-### socksClient.socks5.clientUdpAddressAndPortUnknown
-
-**Syntax:**
-
-```text
-socksClient.socks5.clientUdpAddressAndPortUnknown=true|false
-```
-
-**Description:**
-
-The boolean value to indicate that the client UDP address and port for sending UDP datagrams to the SOCKS5 server is unknown (default is false)
-
-**Value:** java.lang.Boolean
-
 ### socksClient.socks5.gssapimethod.mechanismOid
 
 **Syntax:**
@@ -374,17 +360,31 @@ The comma separated list of acceptable authentication methods to the SOCKS5 serv
 
 **Value:** [SOCKS5 Methods](value-syntaxes.md#socks5-methods)
 
-### socksClient.socks5.useResolveCommand
+### socksClient.socks5.socks5DatagramSocket.actualAddressAndPortUnknown
 
 **Syntax:**
 
 ```text
-socksClient.socks5.useResolveCommand=true|false
+socksClient.socks5.socks5DatagramSocket.actualAddressAndPortUnknown=true|false
 ```
 
 **Description:**
 
-The boolean value to indicate that the RESOLVE command is to be used on the SOCKS5 server for resolving host names (default is false)
+The boolean value to indicate that the actual address and port for sending UDP datagrams to the SOCKS5 server is unknown (default is false)
+
+**Value:** java.lang.Boolean
+
+### socksClient.socks5.socks5HostResolver.resolveFromSocks5Server
+
+**Syntax:**
+
+```text
+socksClient.socks5.socks5HostResolver.resolveFromSocks5Server=true|false
+```
+
+**Description:**
+
+The boolean value to indicate that host names are to be resolved from the SOCKS5 server (default is false)
 
 **Value:** java.lang.Boolean
 

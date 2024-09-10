@@ -116,12 +116,9 @@ import java.net.Socket;
 public class ClientApp {
     public static void main(String[] args) throws IOException {
         
-        String socksServerHost = "jargyle.net";
-        Integer socksServerPort = Integer.valueOf(1234);
-        
         SocksServerUri socksServerUri = 
             Scheme.SOCKS5.newSocksServerUri(
-                socksServerHost, socksServerPort);
+                "jargyle.net", 1234);
         
         SocksClient socksClient = socksServerUri.newSocksClient(
             Properties.of());
@@ -231,12 +228,9 @@ public class ClientApp {
         Properties properties = Properties.of(
             socks5Methods, username, password);
         
-        String socksServerHost = "jargyle.net";
-        Integer socksServerPort = Integer.valueOf(1234);
-        
         SocksServerUri socksServerUri = 
             Scheme.SOCKS5.newSocksServerUri(
-                socksServerHost, socksServerPort);
+                "jargyle.net", 1234);
         
         SocksClient socksClient = socksServerUri.newSocksClient(
             properties);

@@ -1446,18 +1446,18 @@ explanation of the server's internals:
 
 The server uses sockets to interact with the external world.
 
--   Under the CONNECT command, it uses a socket that connects to the desired 
-target server. In this documentation, this socket is called the server-facing 
+-   Under the CONNECT request, it uses a socket that connects to the desired 
+target server. In this documentation, this socket is called the target-facing 
 socket.
--   Under the BIND command, it uses a socket that listens for an inbound socket. 
+-   Under the BIND request, it uses a socket that listens for an inbound socket. 
 In this documentation, this socket is called the listen socket.
--   Under the UDP ASSOCIATE command, it uses a UDP socket that sends and 
+-   Under the UDP ASSOCIATE request, it uses a UDP socket that sends and 
 receives datagram packets to and from peer UDP sockets. In this documentation, 
 this UDP socket is called the peer-facing UDP socket.
 
 The server also uses a host resolver to resolve host names for the 
 aforementioned sockets and for 
-[the RESOLVE command](../reference/socks5-resolve-command.md).
+[the RESOLVE request](../reference/socks5-resolve-request.md).
 
 When the server is chained to another SOCKS5 server, the aforementioned sockets 
 that the server uses become SOCKS5-enabled, meaning that their traffic is routed 
@@ -1466,51 +1466,51 @@ through the other SOCKS5 server.
 It is similar for the host resolver. When the server is chained to another 
 SOCKS5 server, the host resolver that the server uses becomes SOCKS5-enabled, 
 meaning that it can use the other SOCKS5 server to resolve host names provided 
-that the other SOCKS5 server supports the SOCKS5 RESOLVE command. However, this 
-functionality for the host resolver is disabled by default making the host 
-resolver resolve host names through the local system.
+that the other SOCKS5 server supports handling the SOCKS5 RESOLVE request. 
+However, this functionality for the host resolver is disabled by default 
+making the host resolver resolve host names through the local system.
 
 Therefore, default host name resolution from the other SOCKS5 server is 
 performed but has the following limitations:
 
 Default host name resolution from the other SOCKS5 server OCCURS ONLY...
 
--   ...under the CONNECT command when the server-facing socket makes an 
-extemporaneous outbound connection. Preparation is omitted for the server-facing 
+-   ...under the CONNECT request when the target-facing socket makes an 
+extemporaneous outbound connection. Preparation is omitted for the target-facing 
 socket. Such preparation includes applying the specified socket settings for the 
-server-facing socket, resolving the target host name before connecting, and 
-setting the specified timeout in milliseconds on waiting for the server-facing 
+target-facing socket, resolving the target host name before connecting, and 
+setting the specified timeout in milliseconds on waiting for the target-facing 
 socket to connect. The host resolver is not used in resolving the target host 
-name. When the server-facing socket is SOCKS5-enabled, the target host name is 
+name. When the target-facing socket is SOCKS5-enabled, the target host name is 
 resolved by the other SOCKS5 server and not through the local system.
 
 Default host name resolution from the other SOCKS5 server DOES NOT OCCUR...
 
--   ...under the CONNECT command when the server-facing socket makes a prepared 
-outbound connection. Preparation for the server-facing socket includes resolving 
+-   ...under the CONNECT request when the target-facing socket makes a prepared 
+outbound connection. Preparation for the target-facing socket includes resolving 
 the target host name before connecting. The host resolver is used in resolving 
 the target host name. Because of its default functionality, the host resolver 
 resolves the target host name through the local system.
--   ...under the BIND command when resolving the binding host name for the 
+-   ...under the BIND request when resolving the binding host name for the 
 listen socket. The host resolver is used in resolving the binding host name for 
 the listen socket. Because of its default functionality, the host resolver 
 resolves the binding host name for the listen socket through the local system.
--   ...under the UDP ASSOCIATE command when resolving the host name for an 
+-   ...under the UDP ASSOCIATE request when resolving the host name for an 
 outbound datagram packet. The host resolver is used in resolving the host name 
 for an outbound datagram packet. Because of its default functionality, the host 
 resolver resolves the host name for an outbound datagram packet through the 
 local system.
--   ...under the RESOLVE command when resolving the provided host name. The host 
+-   ...under the RESOLVE request when resolving the provided host name. The host 
 resolver is used in resolving the provided host name. Because of its default 
 functionality, the host resolver resolves the provided host name through the 
 local system.
 
 If you prefer to have host name resolution from the other SOCKS5 server without 
 the aforementioned limitations, you would need to set the setting 
-`chaining.socks5.useResolveCommand` to `true`. This setting enables the 
-host resolver to use the SOCKS5 RESOLVE command on the other SOCKS5 server to 
-resolve host names. This setting can only be used if the other SOCKS5 server 
-supports the SOCKS5 RESOLVE command.
+`chaining.socks5.socks5HostResolver.resolveFromSocks5Server` to `true`. This 
+setting enables the host resolver to resolve host names from the other SOCKS5 
+server. This setting can only be used if the other SOCKS5 server supports 
+handling the RESOLVE request.
 
 API example:
 
@@ -1531,7 +1531,8 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:23456"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.useResolveCommand", "true")
+                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
+                "true")
         ))).start();
     }
 }
@@ -1542,7 +1543,7 @@ Command line example:
 ```bash
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:23456 \
-    --setting=chaining.socks5.useResolveCommand=true
+    --setting=chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true
 ```
 
 Server configuration file example:
@@ -1556,7 +1557,7 @@ Server configuration file example:
             <value>socks5://127.0.0.1:23456</value>
         </setting>
         <setting>
-            <name>chaining.socks5.useResolveCommand</name>
+            <name>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</name>
             <value>true</value>
         </setting>
     </settings>
@@ -1673,7 +1674,8 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://127.0.0.1:34567"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.useResolveCommand", "true")
+                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
+                "true")
         ))).start();
     }
 }
@@ -1691,7 +1693,7 @@ jargyle start-server \
     --setting=chaining.socks5.userpassmethod.username=Aladdin \
     --setting=chaining.socks5.userpassmethod.password=opensesame \
     --setting=chaining.socksServerUri=socks5://127.0.0.1:34567 \
-    --setting=chaining.socks5.useResolveCommand=true
+    --setting=chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true
 ```
 
 Server configuration file example:
@@ -1738,7 +1740,7 @@ Server configuration file example:
             <value>socks5://127.0.0.1:34567</value>
         </setting>        
         <setting>
-            <name>chaining.socks5.useResolveCommand</name>
+            <name>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</name>
             <value>true</value>
         </setting>    
     </settings>
@@ -2553,7 +2555,7 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Allows the CONNECT command to any server on port 80 
+             * Allows the CONNECT request for any server on port 80 
              * or 443
              */
             Setting.newInstanceWithParsedValue(
@@ -2563,7 +2565,7 @@ public class ServerApp {
                 + "socks5.request.desiredDestinationPort=443,"
                 + "firewallAction=ALLOW"),
             /*
-             * Denies the CONNECT command to any server on any 
+             * Denies the CONNECT request for any server on any 
              * other port
              */
             Setting.newInstanceWithParsedValue(
@@ -2699,7 +2701,7 @@ that group is evaluated as true. Zero rule conditions is evaluated as true.
 
 Partial API examples:
 
-```java
+```text
 /*
  * Evaluates as true if the client address is the IPv4 loopback 
  * address or the IPv6 loopback address
@@ -2707,7 +2709,7 @@ Partial API examples:
 "clientAddress=127.0.0.1,clientAddress=0:0:0:0:0:0:0:1"
 ```
 
-```java
+```text
 /*
  * Evaluates as true if username password authentication was used 
  * and the user is either 'guest' or 'specialuser'
@@ -2715,7 +2717,7 @@ Partial API examples:
 "socks5.method=USERNAME_PASSWORD,socks5.user=guest,socks5.user=specialuser"
 ```
 
-```java
+```text
 /*
  * Evaluates as true since there are no rule conditions given
  */
@@ -2826,8 +2828,8 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Deny any BIND or UDP ASSOCIATE commands and log as 
-             * a warning message if they are denied
+             * Deny any BIND or UDP ASSOCIATE requests and log as a warning 
+             * message their denials
              */
             Setting.newInstanceWithParsedValue(
                 "rule",
@@ -2950,7 +2952,7 @@ public class ServerApp {
             /*
              * Allow the user 'guest' from username password 
              * authentication 50 simultaneous connections and log 
-             * as an informational message that the limit has been 
+             * as an informational message when the limit has been 
              * reached
              */
             Setting.newInstanceWithParsedValue(
@@ -3112,7 +3114,7 @@ public class ServerApp {
                 "lastRouteId", "omega"),
             /*
              * Randomly select either route 'alpha' or 'beta' when 
-             * allowing the CONNECT command and log as an 
+             * allowing the CONNECT request and log as an 
              * informational message the route that has been 
              * selected
              */
@@ -3425,79 +3427,78 @@ each rule result specifying another socket setting)
 -   `socketSetting`: Specifies a socket setting for all sockets (This rule 
 result can be specified multiple times with each rule result specifying another 
 socket setting)
--   `socks5.onBind.inboundSocketSetting`: Specifies a socket setting for 
+-   `socks5.onBindRequest.inboundSocketSetting`: Specifies a socket setting for 
 the inbound socket (This rule result can be specified multiple times with each 
 rule result specifying another socket setting)
--   `socks5.onBind.listenBindHost`: Specifies the binding host name or 
+-   `socks5.onBindRequest.listenBindHost`: Specifies the binding host name or 
 address for the listen socket if the provided host address is all zeros
--   `socks5.onBind.listenBindPortRange`: Specifies a binding 
+-   `socks5.onBindRequest.listenBindPortRange`: Specifies a binding 
 port range for the listen socket if the provided port is zero (This rule 
 result can be specified multiple times with each rule result specifying another 
 port range)
--   `socks5.onBind.listenSocketSetting`: Specifies a socket setting for 
+-   `socks5.onBindRequest.listenSocketSetting`: Specifies a socket setting for 
 the listen socket (This rule result can be specified multiple times with each 
 rule result specifying another socket setting)
--   `socks5.onCommand.bindHost`: Specifies the binding host name or address 
-for all sockets 
--   `socks5.onCommand.bindTcpPortRange`: Specifies a binding 
-port range for all TCP sockets (This rule result can be specified multiple 
-times with each rule result specifying another port range)
--   `socks5.onCommand.bindUdpPortRange`: Specifies a binding 
-port range for all UDP sockets (This rule result can be specified multiple 
-times with each rule result specifying another port range)
--   `socks5.onCommand.externalFacingBindHost`: Specifies the binding host 
-name or address for all external-facing sockets 
--   `socks5.onCommand.externalFacingBindTcpPortRange`: Specifies a 
-binding port range for all external-facing TCP sockets (This rule result can be 
-specified multiple times with each rule result specifying another port range)
--   `socks5.onCommand.externalFacingBindUdpPortRange`: Specifies a 
-binding port range for all external-facing UDP sockets (This rule result can be 
-specified multiple times with each rule result specifying another port range)
--   `socks5.onCommand.externalFacingSocketSetting`: Specifies a socket 
-setting for all external-facing sockets (This rule result can be specified 
-multiple times with each rule result specifying another socket setting)
--   `socks5.onCommand.internalFacingBindHost`: Specifies the binding 
-host name or address for all internal-facing sockets
--   `socks5.onCommand.internalFacingBindUdpPortRange`: Specifies a 
-binding port range for all internal-facing UDP sockets (This rule result can be 
-specified multiple times with each rule result specifying another port range)
--   `socks5.onCommand.internalFacingSocketSetting`: Specifies a socket 
-setting for all internal-facing sockets (This rule result can be specified 
-multiple times with each rule result specifying another socket setting)
--   `socks5.onCommand.socketSetting`: Specifies a socket setting for all 
-sockets (This rule result can be specified multiple times with each rule result 
-specifying another socket setting)
--   `socks5.onConnect.prepareServerFacingSocket`: Specifies the boolean 
-value to indicate if the server-facing socket is to be prepared before 
+-   `socks5.onConnectRequest.prepareTargetFacingSocket`: Specifies the boolean 
+value to indicate if the target-facing socket is to be prepared before 
 connecting (involves applying the specified socket settings, resolving the 
 target host name, and setting the specified timeout on waiting to connect)
--   `socks5.onConnect.serverFacingBindHost`: Specifies the binding host 
-name or address for the server-facing socket
--   `socks5.onConnect.serverFacingBindPortRange`: Specifies a binding 
-port range for the server-facing socket 
-(This rule result can be specified multiple times with each rule result 
-specifying another port range)
--   `socks5.onConnect.serverFacingConnectTimeout`: Specifies the timeout 
-in milliseconds on waiting for the server-facing socket to connect (Value must 
+-   `socks5.onConnectRequest.targetFacingBindHost`: Specifies the binding host 
+name or address for the target-facing socket
+-   `socks5.onConnectRequest.targetFacingBindPortRange`: Specifies a binding 
+port range for the target-facing socket (This rule result can be specified 
+multiple times with each rule result specifying another port range)
+-   `socks5.onConnectRequest.targetFacingConnectTimeout`: Specifies the timeout 
+in milliseconds on waiting for the target-facing socket to connect (Value must 
 be an integer between 1 (inclusive) and 2147483647 (inclusive))
--   `socks5.onConnect.serverFacingSocketSetting`: Specifies a socket 
-setting for the server-facing socket (This rule result can be specified multiple 
+-   `socks5.onConnectRequest.targetFacingSocketSetting`: Specifies a socket 
+setting for the target-facing socket (This rule result can be specified multiple 
 times with each rule result specifying another socket setting)
--   `socks5.onUdpAssociate.clientFacingBindHost`: Specifies the binding 
+-   `socks5.onRequest.bindHost`: Specifies the binding host name or address
+for all sockets
+-   `socks5.onRequest.bindTcpPortRange`: Specifies a binding
+port range for all TCP sockets (This rule result can be specified multiple
+times with each rule result specifying another port range)
+-   `socks5.onRequest.bindUdpPortRange`: Specifies a binding
+port range for all UDP sockets (This rule result can be specified multiple
+times with each rule result specifying another port range)
+-   `socks5.onRequest.externalFacingBindHost`: Specifies the binding host
+name or address for all external-facing sockets
+-   `socks5.onRequest.externalFacingBindTcpPortRange`: Specifies a
+binding port range for all external-facing TCP sockets (This rule result can be
+specified multiple times with each rule result specifying another port range)
+-   `socks5.onRequest.externalFacingBindUdpPortRange`: Specifies a
+binding port range for all external-facing UDP sockets (This rule result can be
+specified multiple times with each rule result specifying another port range)
+-   `socks5.onRequest.externalFacingSocketSetting`: Specifies a socket
+setting for all external-facing sockets (This rule result can be specified
+multiple times with each rule result specifying another socket setting)
+-   `socks5.onRequest.internalFacingBindHost`: Specifies the binding
+host name or address for all internal-facing sockets
+-   `socks5.onRequest.internalFacingBindUdpPortRange`: Specifies a
+binding port range for all internal-facing UDP sockets (This rule result can be
+specified multiple times with each rule result specifying another port range)
+-   `socks5.onRequest.internalFacingSocketSetting`: Specifies a socket
+setting for all internal-facing sockets (This rule result can be specified
+multiple times with each rule result specifying another socket setting)
+-   `socks5.onRequest.socketSetting`: Specifies a socket setting for all
+sockets (This rule result can be specified multiple times with each rule result
+specifying another socket setting)
+-   `socks5.onUdpAssociateRequest.clientFacingBindHost`: Specifies the binding 
 host name or address for the client-facing UDP socket
--   `socks5.onUdpAssociate.clientFacingBindPortRange`: Specifies a 
+-   `socks5.onUdpAssociateRequest.clientFacingBindPortRange`: Specifies a 
 binding port range for the client-facing UDP socket (This rule result can be 
 specified multiple times with each rule result specifying another port range)
--   `socks5.onUdpAssociate.clientFacingSocketSetting`: Specifies a 
+-   `socks5.onUdpAssociateRequest.clientFacingSocketSetting`: Specifies a 
 socket setting for the client-facing UDP socket (This rule result can be 
 specified multiple times with each rule result specifying another socket 
 setting)
--   `socks5.onUdpAssociate.peerFacingBindHost`: Specifies the binding 
+-   `socks5.onUdpAssociateRequest.peerFacingBindHost`: Specifies the binding 
 host name or address for the peer-facing UDP socket
--   `socks5.onUdpAssociate.peerFacingBindPortRange`: Specifies a 
+-   `socks5.onUdpAssociateRequest.peerFacingBindPortRange`: Specifies a 
 binding port range for the peer-facing UDP socket (This rule result can be 
 specified multiple times with each rule result specifying another port range)
--   `socks5.onUdpAssociate.peerFacingSocketSetting`: Specifies a socket 
+-   `socks5.onUdpAssociateRequest.peerFacingSocketSetting`: Specifies a socket 
 setting for the peer-facing UDP socket (This rule result can be specified 
 multiple times with each rule result specifying another socket setting)
 
@@ -3511,7 +3512,7 @@ These rule results can be used with the following rule conditions:
 -   `socks5.user`
 -   `socksServerAddress`
 
-The rule result `socks5.onBind.inboundSocketSetting` can also be used with 
+The rule result `socks5.onBindRequest.inboundSocketSetting` can also be used with 
 the following rule conditions:
 
 -   `socks5.reply.serverBoundAddress`
@@ -3533,18 +3534,18 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Allow the CONNECT command to connect to 
-             * 'specialserver.com' and configure the server-facing 
-             * socket for the CONNECT command
+             * Allow the CONNECT request to connect to 
+             * 'specialserver.com' and configure the target-facing 
+             * socket
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks5.request.command=CONNECT,"
                 + "socks5.request.desiredDestinationAddress=specialserver.com,"
                 + "firewallAction=ALLOW,"
-                + "socks5.onConnect.prepareServerFacingSocket=true,"
-                + "socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256,"
-                + "socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256"),
+                + "socks5.onConnectRequest.prepareTargetFacingSocket=true,"
+                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
+                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
             /*
              * Allow anything else
              */
@@ -3559,7 +3560,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=specialserver.com,firewallAction=ALLOW,socks5.onConnect.prepareServerFacingSocket=true,socks5.onConnect.serverFacingSocketSetting=SO_RCVBUF=256,socks5.onConnect.serverFacingSocketSetting=SO_SNDBUF=256 \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=specialserver.com,firewallAction=ALLOW,socks5.onConnectRequest.prepareTargetFacingSocket=true,socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3588,18 +3589,18 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleResult>
                     <ruleResult>
-                        <name>socks5.onConnect.prepareServerFacingSocket</name>
+                        <name>socks5.onConnectRequest.prepareTargetFacingSocket</name>
                         <value>true</value>
                     </ruleResult>
                     <ruleResult>
-                        <name>socks5.onConnect.serverFacingSocketSetting</name>
+                        <name>socks5.onConnectRequest.targetFacingSocketSetting</name>
                         <socketSetting>
                             <name>SO_RCVBUF</name>
                             <value>256</value>
                         </socketSetting>
                     </ruleResult>
                     <ruleResult>
-                        <name>socks5.onConnect.serverFacingSocketSetting</name>
+                        <name>socks5.onConnectRequest.targetFacingSocketSetting</name>
                         <socketSetting>
                             <name>SO_SNDBUF</name>
                             <value>256</value>
@@ -3628,28 +3629,28 @@ Server configuration file example:
 
 To configure the relay settings, you will need any of the following rule results:
 
--   `socks5.onBind.relayBufferSize`: Specifies the buffer size in bytes 
+-   `socks5.onBindRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onBind.relayIdleTimeout`: Specifies the timeout in 
+-   `socks5.onBindRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
--   `socks5.onCommand.relayBufferSize`: Specifies the buffer size in bytes 
+-   `socks5.onRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onCommand.relayIdleTimeout`: Specifies the timeout in 
+-   `socks5.onRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
--   `socks5.onConnect.relayBufferSize`: Specifies the buffer size in bytes 
+-   `socks5.onConnectRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onConnect.relayIdleTimeout`: Specifies the timeout in 
+-   `socks5.onConnectRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
--   `socks5.onUdpAssociate.relayBufferSize`: Specifies the buffer size in 
+-   `socks5.onUdpAssociateRequest.relayBufferSize`: Specifies the buffer size in 
 bytes for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onUdpAssociate.relayIdleTimeout`: Specifies the timeout in 
+-   `socks5.onUdpAssociateRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
 
@@ -3683,7 +3684,7 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Allow the CONNECT command to connect to 
+             * Allow the CONNECT request to connect to 
              * 'intermittent-idling-server.com' with a relay idle 
              * timeout of 1024000 milliseconds (1024 seconds)
              */
@@ -3692,7 +3693,7 @@ public class ServerApp {
                 "socks5.request.command=CONNECT,"
                 + "socks5.request.desiredDestinationAddress=intermittent-idling-server.com,"
                 + "firewallAction=ALLOW,"
-                + "socks5.onConnect.relayIdleTimeout=1024000"),
+                + "socks5.onConnectRequest.relayIdleTimeout=1024000"),
             /*
              * Allow anything else
              */
@@ -3707,7 +3708,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=intermittent-idling-server.com,firewallAction=ALLOW,socks5.onConnect.relayIdleTimeout=1024000 \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=intermittent-idling-server.com,firewallAction=ALLOW,socks5.onConnectRequest.relayIdleTimeout=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3736,7 +3737,7 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleResult>
                     <ruleResult>
-                        <name>socks5.onConnect.relayIdleTimeout</name>
+                        <name>socks5.onConnectRequest.relayIdleTimeout</name>
                         <value>1024000</value>
                     </ruleResult>
                 </ruleResults>
@@ -3762,22 +3763,22 @@ Server configuration file example:
 
 To limit the relay bandwidth, you will need any of the following rule results:
 
--   `socks5.onBind.relayInboundBandwidthLimit`: Specifies the upper 
+-   `socks5.onBindRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onBind.relayOutboundBandwidthLimit`: Specifies the upper 
+-   `socks5.onBindRequest.relayOutboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onCommand.relayInboundBandwidthLimit`: Specifies the upper 
+-   `socks5.onRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onCommand.relayOutboundBandwidthLimit`: Specifies the upper 
+-   `socks5.onRequest.relayOutboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onConnect.relayInboundBandwidthLimit`: Specifies the upper 
+-   `socks5.onConnectRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onConnect.relayOutboundBandwidthLimit`: Specifies the upper 
+-   `socks5.onConnectRequest.relayOutboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onUdpAssociate.relayInboundBandwidthLimit`: Specifies the 
+-   `socks5.onUdpAssociateRequest.relayInboundBandwidthLimit`: Specifies the 
 upper limit on bandwidth in bytes per second of receiving inbound data to be 
 relayed
--   `socks5.onUdpAssociate.relayOutboundBandwidthLimit`: Specifies the 
+-   `socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit`: Specifies the 
 upper limit on bandwidth in bytes per second of receiving outbound data to be 
 relayed
 
@@ -3814,7 +3815,7 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Allow the CONNECT command to connect to 
+             * Allow the CONNECT request to connect to 
              * 'streamingwebsite.com' with an upper limit on the 
              * relay inbound and outbound bandwidth of 1024000 
              * bytes per second
@@ -3824,8 +3825,8 @@ public class ServerApp {
                 "socks5.request.command=CONNECT,"
                 + "socks5.request.desiredDestinationAddress=streamingwebsite.com,"
                 + "firewallAction=ALLOW,"
-                + "socks5.onConnect.relayInboundBandwidthLimit=1024000,"
-                + "socks5.onConnect.relayOutboundBandwidthLimit=1024000"),
+                + "socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,"
+                + "socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000"),
             /*
              * Allow anything else
              */
@@ -3840,7 +3841,7 @@ Command line example:
 
 ```bash
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=streamingwebsite.com,firewallAction=ALLOW,socks5.onConnect.relayInboundBandwidthLimit=1024000,socks5.onConnect.relayOutboundBandwidthLimit=1024000 \
+    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=streamingwebsite.com,firewallAction=ALLOW,socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3869,11 +3870,11 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleResult>
                     <ruleResult>
-                         <name>socks5.onConnect.relayInboundBandwidthLimit</name>
+                         <name>socks5.onConnectRequest.relayInboundBandwidthLimit</name>
                         <value>1024000</value>
                     </ruleResult>
                     <ruleResult>
-                         <name>socks5.onConnect.relayOutboundBandwidthLimit</name>
+                         <name>socks5.onConnectRequest.relayOutboundBandwidthLimit</name>
                         <value>1024000</value>
                     </ruleResult>                
                 </ruleResults>

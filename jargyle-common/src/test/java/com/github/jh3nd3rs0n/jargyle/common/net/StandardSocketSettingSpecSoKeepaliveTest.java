@@ -31,6 +31,26 @@ public class StandardSocketSettingSpecSoKeepaliveTest {
         Assert.assertTrue(socket.getKeepAlive());
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractDatagramSocketForUnsupportedOperationException() throws SocketException {
+        StandardSocketSettingSpecConstants.SO_KEEPALIVE.extract(
+                new DatagramSocket(null));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractServerSocketForUnsupportedOperationException() throws IOException {
+        StandardSocketSettingSpecConstants.SO_KEEPALIVE.extract(
+                new ServerSocket());
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setKeepAlive(true);
+        Assert.assertTrue(StandardSocketSettingSpecConstants.SO_KEEPALIVE.extract(
+                socket));
+    }
+
     @Test
     public void testNewSocketSettingWithParsedValueString() {
         Assert.assertNotNull(

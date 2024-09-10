@@ -1,15 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-import static com.github.jh3nd3rs0n.jargyle.client.SocksServerUriPropertySpecConstants.HOST;
-import static com.github.jh3nd3rs0n.jargyle.client.SocksServerUriPropertySpecConstants.PORT;
-import static com.github.jh3nd3rs0n.jargyle.client.SocksServerUriPropertySpecConstants.SCHEME;
-
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
 import java.util.Objects;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 
@@ -21,44 +16,48 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 )
 public abstract class SocksServerUri {
 
-	public static final int DEFAULT_PORT = 1080;
-	
-	public static final int MAX_PORT = Port.MAX_INT_VALUE;
-	
-	public static final int MIN_PORT = 1;
-	
+	public static final int DEFAULT_PORT_INT_VALUE = 1080;
+
+	public static final Port DEFAULT_PORT = Port.valueOf(
+			DEFAULT_PORT_INT_VALUE);
+
+	private static final int UNDEFINED_PORT_INT_VALUE = -1;
+
 	public static SocksServerUri newInstance() {
-		String schemeProperty = System.getProperty(SCHEME.getName());
+		String schemeProperty = System.getProperty(
+				SocksServerUriPropertySpecConstants.SCHEME.getName());
 		if (schemeProperty == null) {
 			return null;
 		}
-		Scheme scheme = SCHEME.newPropertyWithParsedValue(
+		Scheme scheme = SocksServerUriPropertySpecConstants.SCHEME.newPropertyWithParsedValue(
 				schemeProperty).getValue();
-		String hostProperty = System.getProperty(HOST.getName());
+		String hostProperty = System.getProperty(
+				SocksServerUriPropertySpecConstants.HOST.getName());
 		if (hostProperty == null) {
 			return null;
 		}
-		String host = HOST.newPropertyWithParsedValue(
-				hostProperty).getValue().toString();
-		String portProperty = System.getProperty(PORT.getName());
-		int port = (portProperty == null) ?
-				PORT.getDefaultProperty().getValue().intValue()
-				: PORT.newPropertyWithParsedValue(
-						portProperty).getValue().intValue();
-		return scheme.newSocksServerUri(host, Integer.valueOf(port));
+		Host host = SocksServerUriPropertySpecConstants.HOST.newPropertyWithParsedValue(
+				hostProperty).getValue();
+		String portProperty = System.getProperty(
+				SocksServerUriPropertySpecConstants.PORT.getName());
+		Port port = (portProperty == null) ?
+				null
+				: SocksServerUriPropertySpecConstants.PORT.newPropertyWithParsedValue(
+						portProperty).getValue();
+		return scheme.newSocksServerUri(host, port);
 	}
 	
 	public static SocksServerUri newInstanceFrom(final String s) {
-		URI uri = null;
+		URI uri;
 		try {
 			uri = new URI(s);
 		} catch (URISyntaxException e) {
 			throw new IllegalArgumentException(e);
 		}
-		return newInstance(uri);
+		return newInstanceFrom(uri);
 	}
 	
-	public static SocksServerUri newInstance(final URI uri) {
+	public static SocksServerUri newInstanceFrom(final URI uri) {
 		String message = "URI must be in the following format: "
 				+ "SCHEME://HOST[:PORT]";
 		String scheme = uri.getScheme();
@@ -70,53 +69,39 @@ public abstract class SocksServerUri {
 		if (host == null) {
 			throw new IllegalArgumentException(message);
 		}
-		String hst = host;
-		if (hst.startsWith("[") && hst.endsWith("]")) {
-			hst = host.substring(1, host.length() - 1);
-		}
-		try {
-			hst = URLDecoder.decode(hst, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new AssertionError(e);
+		if (host.startsWith("[") && host.endsWith("]")) {
+			host = host.substring(1, host.length() - 1);
 		}
 		int port = uri.getPort();
-		Integer prt = null;
-		if (port != -1) {
-			prt = Integer.valueOf(port);
-		}
-		return schm.newSocksServerUri(hst, prt);
+		return (port == UNDEFINED_PORT_INT_VALUE) ?
+				schm.newSocksServerUri(host)
+				: schm.newSocksServerUri(host, port);
 	}
 	
-	private final String host;
-	private final int port;
+	private final Host host;
+	private final Port port;
 	private final Scheme scheme;
 	private final URI uri;
-	
+
+	public SocksServerUri(final Scheme schm, final String hst) {
+		this(schm, Host.newInstance(hst), null);
+	}
+
+	public SocksServerUri(final Scheme schm, final String hst, final int prt) {
+		this(schm, Host.newInstance(hst), Port.valueOf(prt));
+	}
+
 	public SocksServerUri(
-			final Scheme schm, final String hst, final Integer prt) {
+			final Scheme schm, final Host hst, final Port prt) {
 		Objects.requireNonNull(schm, "scheme must not be null");
-		Objects.requireNonNull(hst, "host must not be null or empty");
-		if (hst.isEmpty()) {
-			throw new IllegalArgumentException("host must not be null or empty");
-		}
-		Integer p = prt;
-		boolean pSet = (p != null);
-		if (!pSet) {
-			p = Integer.valueOf(DEFAULT_PORT);
-		}
-		if (p.compareTo(Integer.valueOf(MIN_PORT)) < 0
-				|| p.compareTo(Integer.valueOf(MAX_PORT)) > 0) {
-			throw new IllegalArgumentException(String.format(
-					"port must be an integer between %s and %s (inclusive)", 
-					MIN_PORT, MAX_PORT));
-		}
-		URI u = null;
+		Objects.requireNonNull(hst, "host must not be null");
+		URI u;
 		try {
 			u = new URI(
 					schm.toString(), 
 					null, 
-					hst, 
-					(pSet) ? p.intValue() : -1,
+					hst.toString(),
+					(prt != null) ? prt.intValue() : UNDEFINED_PORT_INT_VALUE,
 					null,
 					null,
 					null);
@@ -124,17 +109,21 @@ public abstract class SocksServerUri {
 			throw new IllegalArgumentException(e);
 		}
 		this.host = hst;
-		this.port = p.intValue();
+		this.port = prt;
 		this.scheme = schm;
 		this.uri = u;
 	}
 	
-	public final String getHost() {
+	public final Host getHost() {
 		return this.host;
 	}
-	
-	public final int getPort() {
+
+	public final Port getPort() {
 		return this.port;
+	}
+
+	public final Port getPortOrDefault() {
+		return (this.port != null) ? this.port : DEFAULT_PORT;
 	}
 	
 	public final Scheme getScheme() {

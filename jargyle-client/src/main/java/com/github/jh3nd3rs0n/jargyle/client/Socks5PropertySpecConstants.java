@@ -19,20 +19,7 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Protection
 public final class Socks5PropertySpecConstants {
 
 	private static final PropertySpecs PROPERTY_SPECS = new PropertySpecs();
-	
-	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that the client UDP "
-					+ "address and port for sending UDP datagrams to the "
-					+ "SOCKS5 server is unknown (default is false)",
-			name = "socksClient.socks5.clientUdpAddressAndPortUnknown",
-			syntax = "socksClient.socks5.clientUdpAddressAndPortUnknown=true|false",
-			valueType = Boolean.class
-	)	
-	public static final PropertySpec<Boolean> SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN =
-			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-					"socksClient.socks5.clientUdpAddressAndPortUnknown",
-					Boolean.FALSE));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The object ID for the GSS-API authentication "
 					+ "mechanism to the SOCKS5 server "
@@ -128,18 +115,31 @@ public final class Socks5PropertySpecConstants {
 			PROPERTY_SPECS.addThenGet(new Socks5MethodsPropertySpec(
 					"socksClient.socks5.methods",
 					Methods.getDefault()));
-	
+
 	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that the RESOLVE "
-					+ "command is to be used on the SOCKS5 server for "
-					+ "resolving host names (default is false)",
-			name = "socksClient.socks5.useResolveCommand",
-			syntax = "socksClient.socks5.useResolveCommand=true|false",
+			description = "The boolean value to indicate that the actual "
+					+ "address and port for sending UDP datagrams to the "
+					+ "SOCKS5 server is unknown (default is false)",
+			name = "socksClient.socks5.socks5DatagramSocket.actualAddressAndPortUnknown",
+			syntax = "socksClient.socks5.socks5DatagramSocket.actualAddressAndPortUnknown=true|false",
 			valueType = Boolean.class
 	)
-	public static final PropertySpec<Boolean> SOCKS5_USE_RESOLVE_COMMAND = 
+	public static final PropertySpec<Boolean> SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN =
 			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-					"socksClient.socks5.useResolveCommand",
+					"socksClient.socks5.socks5DatagramSocket.actualAddressAndPortUnknown",
+					Boolean.FALSE));
+
+	@NameValuePairValueSpecDoc(
+			description = "The boolean value to indicate that host names "
+					+ "are to be resolved from the SOCKS5 server "
+					+ "(default is false)",
+			name = "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+			syntax = "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server=true|false",
+			valueType = Boolean.class
+	)
+	public static final PropertySpec<Boolean> SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER =
+			PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
+					"socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
 					Boolean.FALSE));
 	
 	@NameValuePairValueSpecDoc(

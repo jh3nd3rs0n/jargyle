@@ -20,20 +20,7 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.Protection
 public final class ChainingSocks5SettingSpecConstants {
 
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
-	
-	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that the client UDP "
-					+ "address and port for sending UDP datagrams to the other "
-					+ "SOCKS5 server is unknown (default is false)",
-			name = "chaining.socks5.clientUdpAddressAndPortUnknown",
-			syntax = "chaining.socks5.clientUdpAddressAndPortUnknown=true|false",
-			valueType = Boolean.class
-	)
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN =
-			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"chaining.socks5.clientUdpAddressAndPortUnknown",
-					Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN.getDefaultProperty().getValue()));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The object ID for the GSS-API authentication "
 					+ "mechanism to the other SOCKS5 server "
@@ -129,19 +116,32 @@ public final class ChainingSocks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new Socks5MethodsSettingSpec(
 					"chaining.socks5.methods", 
 					Socks5PropertySpecConstants.SOCKS5_METHODS.getDefaultProperty().getValue()));
-	
+
 	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that the RESOLVE "
-					+ "command is to be used on the other SOCKS5 server for "
-					+ "resolving host names (default is false)",
-			name = "chaining.socks5.useResolveCommand",
-			syntax = "chaining.socks5.useResolveCommand=true|false",
+			description = "The boolean value to indicate that the actual "
+					+ "address and port for sending UDP datagrams to the "
+					+ "other SOCKS5 server is unknown (default is false)",
+			name = "chaining.socks5.socks5DatagramSocket.actualAddressAndPortUnknown",
+			syntax = "chaining.socks5.socks5DatagramSocket.actualAddressAndPortUnknown=true|false",
+			valueType = Boolean.class
+	)
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN =
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
+					"chaining.socks5.socks5DatagramSocket.actualAddressAndPortUnknown",
+					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN.getDefaultProperty().getValue()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The boolean value to indicate that host names "
+					+ "are to be resolved from the other SOCKS5 server "
+					+ "(default is false)",
+			name = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",
+			syntax = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true|false",
 			valueType = Boolean.class
 	)	
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_USE_RESOLVE_COMMAND = 
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER =
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"chaining.socks5.useResolveCommand", 
-					Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND.getDefaultProperty().getValue()));
+					"chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
+					Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The password to be used to access the other SOCKS5 "

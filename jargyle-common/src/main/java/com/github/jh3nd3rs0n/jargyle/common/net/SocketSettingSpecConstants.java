@@ -1,12 +1,17 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * All {@code SocketSettingSpec} constants.
  */
 final class SocketSettingSpecConstants {
+
+    /**
+     * The {@code List} of all {@code SocketSettingSpec} constants.
+     */
+    private static final List<SocketSettingSpec<Object>> VALUES =
+            new ArrayList<>(StandardSocketSettingSpecConstants.values());
 
     /**
      * The {@code Map} of all {@code SocketSettingSpec} constants each
@@ -38,6 +43,15 @@ final class SocketSettingSpecConstants {
         }
         throw new IllegalArgumentException(String.format(
                 "unknown socket setting name: %s", name));
+    }
+
+    /**
+     * Returns an unmodifiable {@code List} of all {@code SocketSettingSpec}s.
+     *
+     * @return an unmodifiable {@code List} of all {@code SocketSettingSpec}s
+     */
+    public static List<SocketSettingSpec<Object>> values() {
+        return Collections.unmodifiableList(VALUES);
     }
 
 }

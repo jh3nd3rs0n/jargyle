@@ -18,16 +18,16 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 
-final class ResolveCommandWorker extends CommandWorker {
+final class ResolveRequestWorker extends RequestWorker {
 
 	private final Logger logger;
 	
-	public ResolveCommandWorker(
+	public ResolveRequestWorker(
 			final Socks5Worker socks5Worker, 
 			final MethodSubNegotiationResults methSubNegotiationResults, 
 			final Request req) {
 		super(socks5Worker, methSubNegotiationResults, req);
-		this.logger = LoggerFactory.getLogger(ResolveCommandWorker.class);
+		this.logger = LoggerFactory.getLogger(ResolveRequestWorker.class);
 	}
 
 	@Override

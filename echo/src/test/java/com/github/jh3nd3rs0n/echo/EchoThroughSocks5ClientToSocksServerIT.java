@@ -48,8 +48,8 @@ public class EchoThroughSocks5ClientToSocksServerIT {
 	
 	private static SocksClient newSocks5Client() {
 		return Scheme.SOCKS5.newSocksServerUri(
-				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT))
+				InetAddress.getLoopbackAddress().getHostAddress(),
+						SOCKS_SERVER_PORT)
 				.newSocksClient(Properties.of());
 	}
 	

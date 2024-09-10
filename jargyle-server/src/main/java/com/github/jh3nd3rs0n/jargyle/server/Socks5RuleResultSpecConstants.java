@@ -32,445 +32,445 @@ public final class Socks5RuleResultSpecConstants {
 			description = "Specifies a socket setting for the inbound socket "
 					+ "(can be specified multiple times with each rule result "
 					+ "specifying another socket setting)",
-			name = "socks5.onBind.inboundSocketSetting",
-			syntax = "socks5.onBind.inboundSocketSetting=SOCKET_SETTING",
+			name = "socks5.onBindRequest.inboundSocketSetting",
+			syntax = "socks5.onBindRequest.inboundSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)	
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_INBOUND_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onBind.inboundSocketSetting"));
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onBindRequest.inboundSocketSetting"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for the "
 					+ "listen socket if the provided host address is all zeros",
-			name = "socks5.onBind.listenBindHost",
-			syntax = "socks5.onBind.listenBindHost=HOST",
+			name = "socks5.onBindRequest.listenBindHost",
+			syntax = "socks5.onBindRequest.listenBindHost=HOST",
 			valueType = Host.class
 	)
-	public static final RuleResultSpec<Host> SOCKS5_ON_BIND_LISTEN_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onBind.listenBindHost"));
+	public static final RuleResultSpec<Host> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onBindRequest.listenBindHost"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the listen socket "
 					+ "if the provided port is zero (can be specified multiple "
 					+ "times with each rule result specifying another port "
 					+ "range)",
-			name = "socks5.onBind.listenBindPortRange",
-			syntax = "socks5.onBind.listenBindPortRange=PORT_RANGE",
+			name = "socks5.onBindRequest.listenBindPortRange",
+			syntax = "socks5.onBindRequest.listenBindPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_BIND_LISTEN_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onBind.listenBindPortRange"));
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onBindRequest.listenBindPortRange"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the listen socket "
 					+ "(can be specified multiple times with each rule result "
 					+ "specifying another socket setting)",
-			name = "socks5.onBind.listenSocketSetting",
-			syntax = "socks5.onBind.listenSocketSetting=SOCKET_SETTING",
+			name = "socks5.onBindRequest.listenSocketSetting",
+			syntax = "socks5.onBindRequest.listenSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)	
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_LISTEN_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onBind.listenSocketSetting"));
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onBindRequest.listenSocketSetting"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the buffer size in bytes for relaying the "
 					+ "data",
-			name = "socks5.onBind.relayBufferSize",
-			syntax = "socks5.onBind.relayBufferSize=POSITIVE_INTEGER",
+			name = "socks5.onBindRequest.relayBufferSize",
+			syntax = "socks5.onBindRequest.relayBufferSize=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onBind.relayBufferSize"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onBindRequest.relayBufferSize"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the timeout in milliseconds on relaying "
 					+ "no data",
-			name = "socks5.onBind.relayIdleTimeout",
-			syntax = "socks5.onBind.relayIdleTimeout=POSITIVE_INTEGER",
+			name = "socks5.onBindRequest.relayIdleTimeout",
+			syntax = "socks5.onBindRequest.relayIdleTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onBind.relayIdleTimeout"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onBindRequest.relayIdleTimeout"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the upper limit on bandwidth in bytes per "
 					+ "second of receiving inbound data to be relayed",
-			name = "socks5.onBind.relayInboundBandwidthLimit",
-			syntax = "socks5.onBind.relayInboundBandwidthLimit=POSITIVE_INTEGER",
+			name = "socks5.onBindRequest.relayInboundBandwidthLimit",
+			syntax = "socks5.onBindRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onBind.relayInboundBandwidthLimit"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onBindRequest.relayInboundBandwidthLimit"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the upper limit on bandwidth in bytes per "
 					+ "second of receiving outbound data to be relayed",
-			name = "socks5.onBind.relayOutboundBandwidthLimit",
-			syntax = "socks5.onBind.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
+			name = "socks5.onBindRequest.relayOutboundBandwidthLimit",
+			syntax = "socks5.onBindRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onBind.relayOutboundBandwidthLimit"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onBindRequest.relayOutboundBandwidthLimit"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the boolean value to indicate if the "
+					+ "target-facing socket is to be prepared before "
+					+ "connecting (involves applying the specified socket "
+					+ "settings, resolving the target host name, and setting "
+					+ "the specified timeout on waiting to connect)",
+			name = "socks5.onConnectRequest.prepareTargetFacingSocket",
+			syntax = "socks5.onConnectRequest.prepareTargetFacingSocket=true|false",
+			valueType = Boolean.class
+	)	
+	public static final RuleResultSpec<Boolean> SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET = RULE_RESULT_SPECS.addThenGet(new BooleanRuleResultSpec(
+			"socks5.onConnectRequest.prepareTargetFacingSocket"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the buffer size in bytes for relaying the "
+					+ "data",
+			name = "socks5.onConnectRequest.relayBufferSize",
+			syntax = "socks5.onConnectRequest.relayBufferSize=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)	
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnectRequest.relayBufferSize"));
+	
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the timeout in milliseconds on relaying "
+					+ "no data",
+			name = "socks5.onConnectRequest.relayIdleTimeout",
+			syntax = "socks5.onConnectRequest.relayIdleTimeout=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)	
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnectRequest.relayIdleTimeout"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the upper limit on bandwidth in bytes per "
+					+ "second of receiving inbound data to be relayed",
+			name = "socks5.onConnectRequest.relayInboundBandwidthLimit",
+			syntax = "socks5.onConnectRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnectRequest.relayInboundBandwidthLimit"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the upper limit on bandwidth in bytes per "
+					+ "second of receiving outbound data to be relayed",
+			name = "socks5.onConnectRequest.relayOutboundBandwidthLimit",
+			syntax = "socks5.onConnectRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnectRequest.relayOutboundBandwidthLimit"));
+	
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the binding host name or address for the "
+					+ "target-facing socket",
+			name = "socks5.onConnectRequest.targetFacingBindHost",
+			syntax = "socks5.onConnectRequest.targetFacingBindHost=HOST",
+			valueType = Host.class
+	)	
+	public static final RuleResultSpec<Host> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onConnectRequest.targetFacingBindHost"));
+	
+	@NameValuePairValueSpecDoc(
+			description = "Specifies a binding port range for the target-facing "
+					+ "socket (can be specified multiple times with each rule "
+					+ "result specifying another port range)",
+			name = "socks5.onConnectRequest.targetFacingBindPortRange",
+			syntax = "socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE",
+			valueType = PortRange.class
+	)	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onConnectRequest.targetFacingBindPortRange"));
+	
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the timeout in milliseconds on waiting for "
+					+ "the target-facing socket to connect",
+			name = "socks5.onConnectRequest.targetFacingConnectTimeout",
+			syntax = "socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)	
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onConnectRequest.targetFacingConnectTimeout"));
+	
+	@NameValuePairValueSpecDoc(
+			description = "Specifies a socket setting for the target-facing "
+					+ "socket (can be specified multiple times with each rule "
+					+ "result specifying another socket setting)",
+			name = "socks5.onConnectRequest.targetFacingSocketSetting",
+			syntax = "socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING",
+			valueType = SocketSetting.class
+	)	
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onConnectRequest.targetFacingSocketSetting"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for all "
 					+ "sockets",
-			name = "socks5.onCommand.bindHost",
-			syntax = "socks5.onCommand.bindHost=HOST",
+			name = "socks5.onRequest.bindHost",
+			syntax = "socks5.onRequest.bindHost=HOST",
 			valueType = Host.class
 	)
-	public static final RuleResultSpec<Host> SOCKS5_ON_COMMAND_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onCommand.bindHost"));
-	
+	public static final RuleResultSpec<Host> SOCKS5_ON_REQUEST_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onRequest.bindHost"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all TCP sockets "
 					+ "(can be specified multiple times with each rule result "
 					+ "specifying another port range)",
-			name = "socks5.onCommand.bindTcpPortRange",
-			syntax = "socks5.onCommand.bindTcpPortRange=PORT_RANGE",
+			name = "socks5.onRequest.bindTcpPortRange",
+			syntax = "socks5.onRequest.bindTcpPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onCommand.bindTcpPortRange"));
-	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_REQUEST_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onRequest.bindTcpPortRange"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all UDP sockets "
 					+ "(can be specified multiple times with each rule result "
 					+ "specifying another port range)",
-			name = "socks5.onCommand.bindUdpPortRange",
-			syntax = "socks5.onCommand.bindUdpPortRange=PORT_RANGE",
+			name = "socks5.onRequest.bindUdpPortRange",
+			syntax = "socks5.onRequest.bindUdpPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onCommand.bindUdpPortRange"));
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onRequest.bindUdpPortRange"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for all "
 					+ "external-facing sockets",
-			name = "socks5.onCommand.externalFacingBindHost",
-			syntax = "socks5.onCommand.externalFacingBindHost=HOST",
+			name = "socks5.onRequest.externalFacingBindHost",
+			syntax = "socks5.onRequest.externalFacingBindHost=HOST",
 			valueType = Host.class
 	)
-	public static final RuleResultSpec<Host> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onCommand.externalFacingBindHost"));
-	
+	public static final RuleResultSpec<Host> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onRequest.externalFacingBindHost"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "external-facing TCP sockets (can be specified multiple "
 					+ "times with each rule result specifying another port "
 					+ "range)",
-			name = "socks5.onCommand.externalFacingBindTcpPortRange",
-			syntax = "socks5.onCommand.externalFacingBindTcpPortRange=PORT_RANGE",
+			name = "socks5.onRequest.externalFacingBindTcpPortRange",
+			syntax = "socks5.onRequest.externalFacingBindTcpPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onCommand.externalFacingBindTcpPortRange"));
-	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onRequest.externalFacingBindTcpPortRange"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "external-facing UDP sockets (can be specified multiple "
 					+ "times with each rule result specifying another port "
 					+ "range)",
-			name = "socks5.onCommand.externalFacingBindUdpPortRange",
-			syntax = "socks5.onCommand.externalFacingBindUdpPortRange=PORT_RANGE",
+			name = "socks5.onRequest.externalFacingBindUdpPortRange",
+			syntax = "socks5.onRequest.externalFacingBindUdpPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onCommand.externalFacingBindUdpPortRange"));
-	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onRequest.externalFacingBindUdpPortRange"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all external-facing "
 					+ "sockets (can be specified multiple times with each rule "
 					+ "result specifying another socket setting)",
-			name = "socks5.onCommand.externalFacingSocketSetting",
-			syntax = "socks5.onCommand.externalFacingSocketSetting=SOCKET_SETTING",
+			name = "socks5.onRequest.externalFacingSocketSetting",
+			syntax = "socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_COMMAND_EXTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onCommand.externalFacingSocketSetting"));
-	
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onRequest.externalFacingSocketSetting"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for all "
 					+ "internal-facing sockets",
-			name = "socks5.onCommand.internalFacingBindHost",
-			syntax = "socks5.onCommand.internalFacingBindHost=HOST",
+			name = "socks5.onRequest.internalFacingBindHost",
+			syntax = "socks5.onRequest.internalFacingBindHost=HOST",
 			valueType = Host.class
 	)
-	public static final RuleResultSpec<Host> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onCommand.internalFacingBindHost"));
+	public static final RuleResultSpec<Host> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onRequest.internalFacingBindHost"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "internal-facing UDP sockets (can be specified multiple "
 					+ "times with each rule result specifying another port "
 					+ "range)",
-			name = "socks5.onCommand.internalFacingBindUdpPortRange",
-			syntax = "socks5.onCommand.internalFacingBindUdpPortRange=PORT_RANGE",
+			name = "socks5.onRequest.internalFacingBindUdpPortRange",
+			syntax = "socks5.onRequest.internalFacingBindUdpPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_COMMAND_INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onCommand.internalFacingBindUdpPortRange"));
-	
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onRequest.internalFacingBindUdpPortRange"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all internal-facing "
 					+ "sockets (can be specified multiple times with each rule "
 					+ "result specifying another socket setting)",
-			name = "socks5.onCommand.internalFacingSocketSetting",
-			syntax = "socks5.onCommand.internalFacingSocketSetting=SOCKET_SETTING",
+			name = "socks5.onRequest.internalFacingSocketSetting",
+			syntax = "socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_COMMAND_INTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onCommand.internalFacingSocketSetting"));
-	
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onRequest.internalFacingSocketSetting"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the buffer size in bytes for relaying the "
 					+ "data",
-			name = "socks5.onCommand.relayBufferSize",
-			syntax = "socks5.onCommand.relayBufferSize=POSITIVE_INTEGER",
+			name = "socks5.onRequest.relayBufferSize",
+			syntax = "socks5.onRequest.relayBufferSize=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
-	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onCommand.relayBufferSize"));
-	
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onRequest.relayBufferSize"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the timeout in milliseconds on relaying "
 					+ "no data",
-			name = "socks5.onCommand.relayIdleTimeout",
-			syntax = "socks5.onCommand.relayIdleTimeout=POSITIVE_INTEGER",
+			name = "socks5.onRequest.relayIdleTimeout",
+			syntax = "socks5.onRequest.relayIdleTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
-	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onCommand.relayIdleTimeout"));
+	)
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onRequest.relayIdleTimeout"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the upper limit on bandwidth in bytes per "
 					+ "second of receiving inbound data to be relayed",
-			name = "socks5.onCommand.relayInboundBandwidthLimit",
-			syntax = "socks5.onCommand.relayInboundBandwidthLimit=POSITIVE_INTEGER",
+			name = "socks5.onRequest.relayInboundBandwidthLimit",
+			syntax = "socks5.onRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onCommand.relayInboundBandwidthLimit"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onRequest.relayInboundBandwidthLimit"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the upper limit on bandwidth in bytes per "
 					+ "second of receiving outbound data to be relayed",
-			name = "socks5.onCommand.relayOutboundBandwidthLimit",
-			syntax = "socks5.onCommand.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
+			name = "socks5.onRequest.relayOutboundBandwidthLimit",
+			syntax = "socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_COMMAND_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onCommand.relayOutboundBandwidthLimit"));
-	
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onRequest.relayOutboundBandwidthLimit"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all sockets (can be "
 					+ "specified multiple times with each rule result "
 					+ "specifying another socket setting)",
-			name = "socks5.onCommand.socketSetting",
-			syntax = "socks5.onCommand.socketSetting=SOCKET_SETTING",
+			name = "socks5.onRequest.socketSetting",
+			syntax = "socks5.onRequest.socketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_COMMAND_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onCommand.socketSetting"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the boolean value to indicate if the "
-					+ "server-facing socket is to be prepared before "
-					+ "connecting (involves applying the specified socket "
-					+ "settings, resolving the target host name, and setting "
-					+ "the specified timeout on waiting to connect)",
-			name = "socks5.onConnect.prepareServerFacingSocket",
-			syntax = "socks5.onConnect.prepareServerFacingSocket=true|false",
-			valueType = Boolean.class
-	)	
-	public static final RuleResultSpec<Boolean> SOCKS5_ON_CONNECT_PREPARE_SERVER_FACING_SOCKET = RULE_RESULT_SPECS.addThenGet(new BooleanRuleResultSpec(
-			"socks5.onConnect.prepareServerFacingSocket"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the buffer size in bytes for relaying the "
-					+ "data",
-			name = "socks5.onConnect.relayBufferSize",
-			syntax = "socks5.onConnect.relayBufferSize=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onConnect.relayBufferSize"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the timeout in milliseconds on relaying "
-					+ "no data",
-			name = "socks5.onConnect.relayIdleTimeout",
-			syntax = "socks5.onConnect.relayIdleTimeout=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onConnect.relayIdleTimeout"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the upper limit on bandwidth in bytes per "
-					+ "second of receiving inbound data to be relayed",
-			name = "socks5.onConnect.relayInboundBandwidthLimit",
-			syntax = "socks5.onConnect.relayInboundBandwidthLimit=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onConnect.relayInboundBandwidthLimit"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the upper limit on bandwidth in bytes per "
-					+ "second of receiving outbound data to be relayed",
-			name = "socks5.onConnect.relayOutboundBandwidthLimit",
-			syntax = "socks5.onConnect.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onConnect.relayOutboundBandwidthLimit"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the binding host name or address for the "
-					+ "server-facing socket",
-			name = "socks5.onConnect.serverFacingBindHost",
-			syntax = "socks5.onConnect.serverFacingBindHost=HOST",
-			valueType = Host.class
-	)	
-	public static final RuleResultSpec<Host> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onConnect.serverFacingBindHost"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for the server-facing "
-					+ "socket (can be specified multiple times with each rule "
-					+ "result specifying another port range)",
-			name = "socks5.onConnect.serverFacingBindPortRange",
-			syntax = "socks5.onConnect.serverFacingBindPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)	
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_CONNECT_SERVER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onConnect.serverFacingBindPortRange"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the timeout in milliseconds on waiting for "
-					+ "the server-facing socket to connect",
-			name = "socks5.onConnect.serverFacingConnectTimeout",
-			syntax = "socks5.onConnect.serverFacingConnectTimeout=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_CONNECT_SERVER_FACING_CONNECT_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onConnect.serverFacingConnectTimeout"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a socket setting for the server-facing "
-					+ "socket (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
-			name = "socks5.onConnect.serverFacingSocketSetting",
-			syntax = "socks5.onConnect.serverFacingSocketSetting=SOCKET_SETTING",
-			valueType = SocketSetting.class
-	)	
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_CONNECT_SERVER_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onConnect.serverFacingSocketSetting"));
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_REQUEST_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onRequest.socketSetting"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for the "
 					+ "client-facing UDP socket",
-			name = "socks5.onUdpAssociate.clientFacingBindHost",
-			syntax = "socks5.onUdpAssociate.clientFacingBindHost=HOST",
+			name = "socks5.onUdpAssociateRequest.clientFacingBindHost",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingBindHost=HOST",
 			valueType = Host.class
 	)
-	public static final RuleResultSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onUdpAssociate.clientFacingBindHost"));
+	public static final RuleResultSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onUdpAssociateRequest.clientFacingBindHost"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the client-facing "
 					+ "UDP socket (can be specified multiple times with each "
 					+ "rule result specifying another port range)",
-			name = "socks5.onUdpAssociate.clientFacingBindPortRange",
-			syntax = "socks5.onUdpAssociate.clientFacingBindPortRange=PORT_RANGE",
+			name = "socks5.onUdpAssociateRequest.clientFacingBindPortRange",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingBindPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)	
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onUdpAssociate.clientFacingBindPortRange"));
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onUdpAssociateRequest.clientFacingBindPortRange"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the client-facing UDP "
 					+ "socket (can be specified multiple times with each rule "
 					+ "result specifying another socket setting)",
-			name = "socks5.onUdpAssociate.clientFacingSocketSetting",
-			syntax = "socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING",
+			name = "socks5.onUdpAssociateRequest.clientFacingSocketSetting",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)	
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_UDP_ASSOCIATE_CLIENT_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onUdpAssociate.clientFacingSocketSetting"));
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onUdpAssociateRequest.clientFacingSocketSetting"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for the "
 					+ "peer-facing UDP socket",
-			name = "socks5.onUdpAssociate.peerFacingBindHost",
-			syntax = "socks5.onUdpAssociate.peerFacingBindHost=HOST",
+			name = "socks5.onUdpAssociateRequest.peerFacingBindHost",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingBindHost=HOST",
 			valueType = Host.class
 	)	
-	public static final RuleResultSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
-			"socks5.onUdpAssociate.peerFacingBindHost"));
+	public static final RuleResultSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST = RULE_RESULT_SPECS.addThenGet(new HostRuleResultSpec(
+			"socks5.onUdpAssociateRequest.peerFacingBindHost"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the peer-facing "
 					+ "UDP socket (can be specified multiple times with each "
 					+ "rule result specifying another port range)",
-			name = "socks5.onUdpAssociate.peerFacingBindPortRange",
-			syntax = "socks5.onUdpAssociate.peerFacingBindPortRange=PORT_RANGE",
+			name = "socks5.onUdpAssociateRequest.peerFacingBindPortRange",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingBindPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)	
-	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
-			"socks5.onUdpAssociate.peerFacingBindPortRange"));
+	public static final RuleResultSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE = RULE_RESULT_SPECS.addThenGet(new PortRangeRuleResultSpec(
+			"socks5.onUdpAssociateRequest.peerFacingBindPortRange"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the peer-facing UDP "
 					+ "socket (can be specified multiple times with each rule "
 					+ "result specifying another socket setting)",
-			name = "socks5.onUdpAssociate.peerFacingSocketSetting",
-			syntax = "socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING",
+			name = "socks5.onUdpAssociateRequest.peerFacingSocketSetting",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)	
-	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_UDP_ASSOCIATE_PEER_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
-			"socks5.onUdpAssociate.peerFacingSocketSetting"));
+	public static final RuleResultSpec<SocketSetting<Object>> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING = RULE_RESULT_SPECS.addThenGet(new SocketSettingRuleResultSpec(
+			"socks5.onUdpAssociateRequest.peerFacingSocketSetting"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the buffer size in bytes for relaying the "
 					+ "data",
-			name = "socks5.onUdpAssociate.relayBufferSize",
-			syntax = "socks5.onUdpAssociate.relayBufferSize=POSITIVE_INTEGER",
+			name = "socks5.onUdpAssociateRequest.relayBufferSize",
+			syntax = "socks5.onUdpAssociateRequest.relayBufferSize=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onUdpAssociate.relayBufferSize"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onUdpAssociateRequest.relayBufferSize"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the timeout in milliseconds on relaying no "
 					+ "data",
-			name = "socks5.onUdpAssociate.relayIdleTimeout",
-			syntax = "socks5.onUdpAssociate.relayIdleTimeout=POSITIVE_INTEGER",
+			name = "socks5.onUdpAssociateRequest.relayIdleTimeout",
+			syntax = "socks5.onUdpAssociateRequest.relayIdleTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)	
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onUdpAssociate.relayIdleTimeout"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_IDLE_TIMEOUT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onUdpAssociateRequest.relayIdleTimeout"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the upper limit on bandwidth in bytes per "
 					+ "second of receiving inbound data to be relayed",
-			name = "socks5.onUdpAssociate.relayInboundBandwidthLimit",
-			syntax = "socks5.onUdpAssociate.relayInboundBandwidthLimit=POSITIVE_INTEGER",
+			name = "socks5.onUdpAssociateRequest.relayInboundBandwidthLimit",
+			syntax = "socks5.onUdpAssociateRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onUdpAssociate.relayInboundBandwidthLimit"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onUdpAssociateRequest.relayInboundBandwidthLimit"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the upper limit on bandwidth in bytes per "
 					+ "second of receiving outbound data to be relayed",
-			name = "socks5.onUdpAssociate.relayOutboundBandwidthLimit",
-			syntax = "socks5.onUdpAssociate.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
+			name = "socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit",
+			syntax = "socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
-			"socks5.onUdpAssociate.relayOutboundBandwidthLimit"));
+	public static final RuleResultSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_RESULT_SPECS.addThenGet(new PositiveIntegerRuleResultSpec(
+			"socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the desired destination address "

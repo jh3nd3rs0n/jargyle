@@ -31,7 +31,7 @@
 			<item name="Rule Results" href="reference/rule-results.html" />
 			<item name="Server Configuration File Schema" href="reference/server-configuration-file-schema.html" />
 			<item name="Server Configuration Settings" href="reference/server-configuration-settings.html" />
-			<item name="SOCKS5 RESOLVE Command" href="reference/socks5-resolve-command.html" />
+			<item name="SOCKS5 RESOLVE Request" href="reference/socks5-resolve-request.html" />
 			<item name="Value Syntaxes" href="reference/value-syntaxes.html" />
 		</menu>
 		<menu name="API Documentation">

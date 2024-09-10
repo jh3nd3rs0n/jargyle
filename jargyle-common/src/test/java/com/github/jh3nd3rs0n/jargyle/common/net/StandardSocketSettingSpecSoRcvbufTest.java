@@ -40,6 +40,36 @@ public class StandardSocketSettingSpecSoRcvbufTest {
     }
 
     @Test
+    public void testExtractDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        datagramSocket.setReceiveBufferSize(3000);
+        Assert.assertEquals(
+                3000,
+                StandardSocketSettingSpecConstants.SO_RCVBUF.extract(
+                        datagramSocket).intValue());
+    }
+
+    @Test
+    public void testExtractServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
+        serverSocket.setReceiveBufferSize(1500);
+        Assert.assertEquals(
+                1500,
+                StandardSocketSettingSpecConstants.SO_RCVBUF.extract(
+                        serverSocket).intValue());
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setReceiveBufferSize(1984);
+        Assert.assertEquals(
+                1984,
+                StandardSocketSettingSpecConstants.SO_RCVBUF.extract(
+                        socket).intValue());
+    }
+
+    @Test
     public void testNewSocketSettingWithParsedValueString() {
         Assert.assertNotNull(
                 StandardSocketSettingSpecConstants.SO_RCVBUF.newSocketSettingWithParsedValue(

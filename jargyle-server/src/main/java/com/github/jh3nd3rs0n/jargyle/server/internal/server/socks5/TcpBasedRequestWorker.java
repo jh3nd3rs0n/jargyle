@@ -5,11 +5,11 @@ import java.io.IOException;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
 
-class TcpBasedCommandWorker extends CommandWorker {
+class TcpBasedRequestWorker extends RequestWorker {
 
 	private static final int HALF_SECOND = 500;
 
-	protected TcpBasedCommandWorker(
+	protected TcpBasedRequestWorker(
 			final Socks5Worker socks5Worker, 
 			final MethodSubNegotiationResults methSubNegotiationResults, 
 			final Request req) {

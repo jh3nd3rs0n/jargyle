@@ -38,6 +38,32 @@ public class StandardSocketSettingSpecSoSndbufTest {
     }
 
     @Test
+    public void testExtractDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        datagramSocket.setSendBufferSize(2500);
+        Assert.assertEquals(
+                2500,
+                StandardSocketSettingSpecConstants.SO_SNDBUF.extract(
+                        datagramSocket).intValue());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractServerSocketForUnsupportedOperationException() throws IOException {
+        StandardSocketSettingSpecConstants.SO_SNDBUF.extract(
+                new ServerSocket());
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setSendBufferSize(4545);
+        Assert.assertEquals(
+                4545,
+                StandardSocketSettingSpecConstants.SO_SNDBUF.extract(
+                        socket).intValue());
+    }
+
+    @Test
     public void testNewSocketSettingWithParsedValueString() {
         Assert.assertNotNull(
                 StandardSocketSettingSpecConstants.SO_SNDBUF.newSocketSettingWithParsedValue(

@@ -36,6 +36,33 @@ public class StandardSocketSettingSpecSoReuseaddrTest {
     }
 
     @Test
+    public void testExtractDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        datagramSocket.setReuseAddress(true);
+        Assert.assertTrue(
+                StandardSocketSettingSpecConstants.SO_REUSEADDR.extract(
+                        datagramSocket));
+    }
+
+    @Test
+    public void testExtractServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
+        serverSocket.setReuseAddress(true);
+        Assert.assertTrue(
+                StandardSocketSettingSpecConstants.SO_REUSEADDR.extract(
+                        serverSocket));
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setReuseAddress(true);
+        Assert.assertTrue(
+                StandardSocketSettingSpecConstants.SO_REUSEADDR.extract(
+                        socket));
+    }
+
+    @Test
     public void testNewSocketSettingWithParsedValueString() {
         Assert.assertNotNull(
                 StandardSocketSettingSpecConstants.SO_REUSEADDR.newSocketSettingWithParsedValue(

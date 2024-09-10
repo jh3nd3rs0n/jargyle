@@ -29,8 +29,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the client "
 					+ "socket that is used to connect to the other SOCKS "
-					+ "server (used for the SOCKS5 commands RESOLVE, BIND and "
-					+ "UDP ASSOCIATE) (default is 0.0.0.0)",
+					+ "server (default is 0.0.0.0)",
 			name = "chaining.clientBindHost",
 			syntax = "chaining.clientBindHost=HOST",
 			valueType = Host.class
@@ -43,8 +42,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the client socket that is used to connect to the other "
-					+ "SOCKS server (used for the SOCKS5 commands RESOLVE, "
-					+ "BIND and UDP ASSOCIATE) (default is 0)",
+					+ "SOCKS server (default is 0)",
 			name = "chaining.clientBindPortRanges",
 			syntax = "chaining.clientBindPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -57,8 +55,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on waiting for the "
 					+ "client socket to connect to the other SOCKS server "
-					+ "(used for the SOCKS5 commands RESOLVE, BIND and UDP "
-					+ "ASSOCIATE) (default is 60000)",
+					+ "(default is 60000)",
 			name = "chaining.clientConnectTimeout",
 			syntax = "chaining.clientConnectTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
@@ -71,8 +68,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "client socket that is used to connect to the other "
-					+ "SOCKS server (used for the SOCKS5 command RESOLVE and "
-					+ "UDP ASSOCIATE)",
+					+ "SOCKS server",
 			name = "chaining.clientSocketSettings",
 			syntax = "chaining.clientSocketSettings=SOCKET_SETTINGS",
 			valueType = SocketSettings.class

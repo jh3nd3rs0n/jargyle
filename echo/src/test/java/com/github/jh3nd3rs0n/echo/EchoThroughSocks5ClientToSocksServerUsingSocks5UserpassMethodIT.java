@@ -69,8 +69,8 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 				Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD.newProperty(
 						EncryptedPassword.newInstance(password)));
 		return Scheme.SOCKS5.newSocksServerUri(
-				InetAddress.getLoopbackAddress().getHostAddress(), 
-				Integer.valueOf(SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD))
+				InetAddress.getLoopbackAddress().getHostAddress(),
+						SOCKS_SERVER_PORT_USING_SOCKS5_USERPASSMETHOD)
 				.newSocksClient(properties);		
 	}
 	

@@ -133,6 +133,48 @@ public class SocketSettingsTest {
     }
 
     @Test
+    public void testExtractFromDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        datagramSocket.setBroadcast(true);
+        datagramSocket.setSoTimeout(3000);
+        SocketSettings socketSettings1 = SocketSettings.of(
+                SocketSetting.newInstanceFrom("SO_BROADCAST=true"),
+                SocketSetting.newInstanceFrom("SO_TIMEOUT=3000"));
+        SocketSettings socketSettings2 = SocketSettings.extractFrom(
+                datagramSocket);
+        Assert.assertTrue(socketSettings2.toMap().values().containsAll(
+                socketSettings1.toMap().values()));
+    }
+
+    @Test
+    public void testExtractFromServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
+        serverSocket.setSoTimeout(3000);
+        serverSocket.setReceiveBufferSize(3000);
+        SocketSettings socketSettings1 = SocketSettings.of(
+                SocketSetting.newInstanceFrom("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceFrom("SO_RCVBUF=3000"));
+        SocketSettings socketSettings2 = SocketSettings.extractFrom(
+                serverSocket);
+        Assert.assertTrue(socketSettings2.toMap().values().containsAll(
+                socketSettings1.toMap().values()));
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setSoTimeout(3000);
+        socket.setSendBufferSize(3000);
+        SocketSettings socketSettings1 = SocketSettings.of(
+                SocketSetting.newInstanceFrom("SO_TIMEOUT=3000"),
+                SocketSetting.newInstanceFrom("SO_SNDBUF=3000"));
+        SocketSettings socketSettings2 = SocketSettings.extractFrom(
+                socket);
+        Assert.assertTrue(socketSettings2.toMap().values().containsAll(
+                socketSettings1.toMap().values()));
+    }
+
+    @Test
     public void testGetValueSocketSettingSpec02() {
         SocketSettings socketSettings = SocketSettings.of(
                 SocketSetting.newInstanceFrom("SO_TIMEOUT=3000"),

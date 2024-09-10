@@ -48,17 +48,16 @@ public class EchoThroughChainedSocks5ClientToSocksServersIT {
     private static SocksClient newChainedSocks5ClientToSocksServers() {
         SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_1))
+                        SOCKS_SERVER_PORT_1)
                 .newSocksClient(Properties.of());
         SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_2))
+                        SOCKS_SERVER_PORT_2)
                 .newSocksClient(Properties.of(), client1);
-        SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
+        return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_3))
+                        SOCKS_SERVER_PORT_3)
                 .newSocksClient(Properties.of(), client2);
-        return client3;
     }
 
     private static List<Configuration> newConfigurations() {

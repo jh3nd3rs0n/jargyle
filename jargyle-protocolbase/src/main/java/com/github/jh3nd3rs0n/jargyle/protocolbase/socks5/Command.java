@@ -41,12 +41,13 @@ public enum Command {
     BIND((byte) 0x02),
 
     /**
-     * A request to the SOCKS server to associate a UDP socket for sending
-     * and receiving datagrams.
+     * A request to the SOCKS server to establish an association within the
+     * UDP relay process to handle UDP datagrams.
      */
     @EnumValueDoc(
-            description = "A request to the SOCKS server to associate a UDP "
-                    + "socket for sending and receiving datagrams",
+            description = "A request to the SOCKS server to establish an "
+                    + "association within the UDP relay process to handle "
+                    + "UDP datagrams",
             value = "UDP_ASSOCIATE"
     )
     UDP_ASSOCIATE((byte) 0x03),

@@ -1,5 +1,17 @@
-package com.github.jh3nd3rs0n.jargyle.client;
+package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.TrustManagerHelper;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,17 +21,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManager;
-
-import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.TrustManagerHelper;
-
 final class SslSocketFactoryImpl extends SslSocketFactory {
 
 	public static boolean isSslEnabled(final Properties props) {
@@ -28,36 +29,35 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 	}
 	
 	private final ReentrantLock lock;
-	private final SocksClient socksClient;
+	private final Properties properties;
 	private SSLContext sslContext;
 
-	public SslSocketFactoryImpl(final SocksClient client) {
+	public SslSocketFactoryImpl(final Properties props) {
 		this.lock = new ReentrantLock();
-		this.socksClient = client;
+		this.properties = props;
 		this.sslContext = null;
 	}
 
 	private SSLContext getSslContext() throws IOException {
 		KeyManager[] keyManagers = null;
 		TrustManager[] trustManagers = null;
-		Properties properties = this.socksClient.getProperties();
-		File keyStoreFile = properties.getValue(
+		File keyStoreFile = this.properties.getValue(
 				SslPropertySpecConstants.SSL_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
-			char[] keyStorePassword = properties.getValue(
+			char[] keyStorePassword = this.properties.getValue(
 					SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD).getPassword();
-			String keyStoreType = properties.getValue(
+			String keyStoreType = this.properties.getValue(
 					SslPropertySpecConstants.SSL_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
 					keyStoreFile, keyStorePassword,	keyStoreType);
 			Arrays.fill(keyStorePassword, '\0');
 		}
-		File trustStoreFile = properties.getValue(
+		File trustStoreFile = this.properties.getValue(
 				SslPropertySpecConstants.SSL_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
-			char[] trustStorePassword = properties.getValue(
+			char[] trustStorePassword = this.properties.getValue(
 					SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD).getPassword();
-			String trustStoreType = properties.getValue(
+			String trustStoreType = this.properties.getValue(
 					SslPropertySpecConstants.SSL_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, trustStorePassword,	trustStoreType);
@@ -66,7 +66,8 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
-					properties.getValue(SslPropertySpecConstants.SSL_PROTOCOL), 
+					this.properties.getValue(
+							SslPropertySpecConstants.SSL_PROTOCOL),
 					keyManagers, 
 					trustManagers);
 		} catch (KeyManagementException e) {
@@ -103,14 +104,13 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				this.sslContext);
 		SSLSocket sslSocket = (SSLSocket) factory.newSocket(
 				socket, host, port,	autoClose);
-		Properties properties = this.socksClient.getProperties();
-		CommaSeparatedValues enabledCipherSuites = properties.getValue(
+		CommaSeparatedValues enabledCipherSuites = this.properties.getValue(
 				SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toArray();
 		if (cipherSuites.length > 0) {
 			sslSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		CommaSeparatedValues enabledProtocols = properties.getValue(
+		CommaSeparatedValues enabledProtocols = this.properties.getValue(
 				SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toArray();
 		if (protocols.length > 0) {

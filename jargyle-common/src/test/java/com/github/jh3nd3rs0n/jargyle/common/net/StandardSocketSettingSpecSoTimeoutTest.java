@@ -40,6 +40,36 @@ public class StandardSocketSettingSpecSoTimeoutTest {
     }
 
     @Test
+    public void testExtractDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        datagramSocket.setSoTimeout(2000);
+        Assert.assertEquals(
+                2000,
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.extract(
+                        datagramSocket).intValue());
+    }
+
+    @Test
+    public void testExtractServerSocket() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
+        serverSocket.setSoTimeout(2000);
+        Assert.assertEquals(
+                2000,
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.extract(
+                        serverSocket).intValue());
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setSoTimeout(2000);
+        Assert.assertEquals(
+                2000,
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.extract(
+                        socket).intValue());
+    }
+
+    @Test
     public void testNewSocketSettingWithParsedValueString() {
         Assert.assertNotNull(
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSettingWithParsedValue(

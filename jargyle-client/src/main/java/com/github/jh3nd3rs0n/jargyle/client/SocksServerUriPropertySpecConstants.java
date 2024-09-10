@@ -20,7 +20,7 @@ public final class SocksServerUriPropertySpecConstants {
 	private static final PropertySpecs PROPERTY_SPECS = new PropertySpecs();
 	
 	@NameValuePairValueSpecDoc(
-			description = "The port of the SOCKS server URI (default is 1080)",
+			description = "The port of the SOCKS server URI",
 			name = "socksServerUri.port",
 			syntax = "socksServerUri.port=PORT",
 			valueType = Port.class
@@ -28,7 +28,7 @@ public final class SocksServerUriPropertySpecConstants {
 	public static final PropertySpec<Port> PORT =
 			PROPERTY_SPECS.addThenGet(new PortPropertySpec(
 					"socksServerUri.port",
-					Port.valueOf(SocksServerUri.DEFAULT_PORT)));
+					null));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The host name or address of the SOCKS server URI",

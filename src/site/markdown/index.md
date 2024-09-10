@@ -64,11 +64,13 @@ public class ClientApp {
         System.setProperty("socksClient.socks5.userpassmethod.username", "Aladdin");
         System.setProperty("socksClient.socks5.userpassmethod.password", "opensesame");
         /*
-         * Have the HostResolver to send the RESOLVE command to the 
-         * SOCKS server to resolve host names instead of having the 
-         * HostResolver resolve host names from the local system.
+         * Have the HostResolver resolve host names from the SOCKS5 server 
+         * instead of having the HostResolver resolve host names from the 
+         * local system.
          */
-        System.setProperty("socksClient.socks5.useResolveCommand", "true");
+        System.setProperty(
+                "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server", 
+                "true");
         
         /*
          * Create networking objects whose traffic would be routed 
@@ -164,8 +166,8 @@ The client API has the following features:
 
 -   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
 -   Use DTLS for UDP traffic between itself and SOCKS5 servers
--   Resolve host names from SOCKS5 servers that implement the
-[SOCKS5 RESOLVE command](reference/socks5-resolve-command.md)
+-   Resolve host names from SOCKS5 servers that handle the
+[SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
 -   Route traffic through a specified chain of SOCKS5 servers 
 
 The server API and the server have the following features:
@@ -176,8 +178,8 @@ The server API and the server have the following features:
 -   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
 -   Use DTLS for UDP traffic between itself and SOCKS5 servers
 -   Resolve host names for clients from the local system or from SOCKS5 
-servers that implement the 
-[SOCKS5 RESOLVE command](reference/socks5-resolve-command.md)
+servers that handle the 
+[SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
 
 The server API and the server also have a rule system that allows you to manage 
 traffic in the following ways:

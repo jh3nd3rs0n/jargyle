@@ -23,48 +23,48 @@
     -   [selectableRouteId](#selectablerouteid)
     -   [socketSetting](#socketsetting)
 -   [SOCKS5 Rule Results](#socks5-rule-results)
-    -   [socks5.onBind.inboundSocketSetting](#socks5-onbind-inboundsocketsetting)
-    -   [socks5.onBind.listenBindHost](#socks5-onbind-listenbindhost)
-    -   [socks5.onBind.listenBindPortRange](#socks5-onbind-listenbindportrange)
-    -   [socks5.onBind.listenSocketSetting](#socks5-onbind-listensocketsetting)
-    -   [socks5.onBind.relayBufferSize](#socks5-onbind-relaybuffersize)
-    -   [socks5.onBind.relayIdleTimeout](#socks5-onbind-relayidletimeout)
-    -   [socks5.onBind.relayInboundBandwidthLimit](#socks5-onbind-relayinboundbandwidthlimit)
-    -   [socks5.onBind.relayOutboundBandwidthLimit](#socks5-onbind-relayoutboundbandwidthlimit)
-    -   [socks5.onCommand.bindHost](#socks5-oncommand-bindhost)
-    -   [socks5.onCommand.bindTcpPortRange](#socks5-oncommand-bindtcpportrange)
-    -   [socks5.onCommand.bindUdpPortRange](#socks5-oncommand-bindudpportrange)
-    -   [socks5.onCommand.externalFacingBindHost](#socks5-oncommand-externalfacingbindhost)
-    -   [socks5.onCommand.externalFacingBindTcpPortRange](#socks5-oncommand-externalfacingbindtcpportrange)
-    -   [socks5.onCommand.externalFacingBindUdpPortRange](#socks5-oncommand-externalfacingbindudpportrange)
-    -   [socks5.onCommand.externalFacingSocketSetting](#socks5-oncommand-externalfacingsocketsetting)
-    -   [socks5.onCommand.internalFacingBindHost](#socks5-oncommand-internalfacingbindhost)
-    -   [socks5.onCommand.internalFacingBindUdpPortRange](#socks5-oncommand-internalfacingbindudpportrange)
-    -   [socks5.onCommand.internalFacingSocketSetting](#socks5-oncommand-internalfacingsocketsetting)
-    -   [socks5.onCommand.relayBufferSize](#socks5-oncommand-relaybuffersize)
-    -   [socks5.onCommand.relayIdleTimeout](#socks5-oncommand-relayidletimeout)
-    -   [socks5.onCommand.relayInboundBandwidthLimit](#socks5-oncommand-relayinboundbandwidthlimit)
-    -   [socks5.onCommand.relayOutboundBandwidthLimit](#socks5-oncommand-relayoutboundbandwidthlimit)
-    -   [socks5.onCommand.socketSetting](#socks5-oncommand-socketsetting)
-    -   [socks5.onConnect.prepareServerFacingSocket](#socks5-onconnect-prepareserverfacingsocket)
-    -   [socks5.onConnect.relayBufferSize](#socks5-onconnect-relaybuffersize)
-    -   [socks5.onConnect.relayIdleTimeout](#socks5-onconnect-relayidletimeout)
-    -   [socks5.onConnect.relayInboundBandwidthLimit](#socks5-onconnect-relayinboundbandwidthlimit)
-    -   [socks5.onConnect.relayOutboundBandwidthLimit](#socks5-onconnect-relayoutboundbandwidthlimit)
-    -   [socks5.onConnect.serverFacingBindHost](#socks5-onconnect-serverfacingbindhost)
-    -   [socks5.onConnect.serverFacingBindPortRange](#socks5-onconnect-serverfacingbindportrange)
-    -   [socks5.onConnect.serverFacingConnectTimeout](#socks5-onconnect-serverfacingconnecttimeout)
-    -   [socks5.onConnect.serverFacingSocketSetting](#socks5-onconnect-serverfacingsocketsetting)
-    -   [socks5.onUdpAssociate.clientFacingBindHost](#socks5-onudpassociate-clientfacingbindhost)
-    -   [socks5.onUdpAssociate.clientFacingBindPortRange](#socks5-onudpassociate-clientfacingbindportrange)
-    -   [socks5.onUdpAssociate.clientFacingSocketSetting](#socks5-onudpassociate-clientfacingsocketsetting)
-    -   [socks5.onUdpAssociate.peerFacingBindHost](#socks5-onudpassociate-peerfacingbindhost)
-    -   [socks5.onUdpAssociate.peerFacingBindPortRange](#socks5-onudpassociate-peerfacingbindportrange)
-    -   [socks5.onUdpAssociate.peerFacingSocketSetting](#socks5-onudpassociate-peerfacingsocketsetting)
-    -   [socks5.onUdpAssociate.relayBufferSize](#socks5-onudpassociate-relaybuffersize)
-    -   [socks5.onUdpAssociate.relayIdleTimeout](#socks5-onudpassociate-relayidletimeout)
-    -   [socks5.onUdpAssociate.relayInboundBandwidthLimit](#socks5-onudpassociate-relayinboundbandwidthlimit)
-    -   [socks5.onUdpAssociate.relayOutboundBandwidthLimit](#socks5-onudpassociate-relayoutboundbandwidthlimit)
+    -   [socks5.onBindRequest.inboundSocketSetting](#socks5-onbindrequest-inboundsocketsetting)
+    -   [socks5.onBindRequest.listenBindHost](#socks5-onbindrequest-listenbindhost)
+    -   [socks5.onBindRequest.listenBindPortRange](#socks5-onbindrequest-listenbindportrange)
+    -   [socks5.onBindRequest.listenSocketSetting](#socks5-onbindrequest-listensocketsetting)
+    -   [socks5.onBindRequest.relayBufferSize](#socks5-onbindrequest-relaybuffersize)
+    -   [socks5.onBindRequest.relayIdleTimeout](#socks5-onbindrequest-relayidletimeout)
+    -   [socks5.onBindRequest.relayInboundBandwidthLimit](#socks5-onbindrequest-relayinboundbandwidthlimit)
+    -   [socks5.onBindRequest.relayOutboundBandwidthLimit](#socks5-onbindrequest-relayoutboundbandwidthlimit)
+    -   [socks5.onConnectRequest.prepareTargetFacingSocket](#socks5-onconnectrequest-preparetargetfacingsocket)
+    -   [socks5.onConnectRequest.relayBufferSize](#socks5-onconnectrequest-relaybuffersize)
+    -   [socks5.onConnectRequest.relayIdleTimeout](#socks5-onconnectrequest-relayidletimeout)
+    -   [socks5.onConnectRequest.relayInboundBandwidthLimit](#socks5-onconnectrequest-relayinboundbandwidthlimit)
+    -   [socks5.onConnectRequest.relayOutboundBandwidthLimit](#socks5-onconnectrequest-relayoutboundbandwidthlimit)
+    -   [socks5.onConnectRequest.targetFacingBindHost](#socks5-onconnectrequest-targetfacingbindhost)
+    -   [socks5.onConnectRequest.targetFacingBindPortRange](#socks5-onconnectrequest-targetfacingbindportrange)
+    -   [socks5.onConnectRequest.targetFacingConnectTimeout](#socks5-onconnectrequest-targetfacingconnecttimeout)
+    -   [socks5.onConnectRequest.targetFacingSocketSetting](#socks5-onconnectrequest-targetfacingsocketsetting)
+    -   [socks5.onRequest.bindHost](#socks5-onrequest-bindhost)
+    -   [socks5.onRequest.bindTcpPortRange](#socks5-onrequest-bindtcpportrange)
+    -   [socks5.onRequest.bindUdpPortRange](#socks5-onrequest-bindudpportrange)
+    -   [socks5.onRequest.externalFacingBindHost](#socks5-onrequest-externalfacingbindhost)
+    -   [socks5.onRequest.externalFacingBindTcpPortRange](#socks5-onrequest-externalfacingbindtcpportrange)
+    -   [socks5.onRequest.externalFacingBindUdpPortRange](#socks5-onrequest-externalfacingbindudpportrange)
+    -   [socks5.onRequest.externalFacingSocketSetting](#socks5-onrequest-externalfacingsocketsetting)
+    -   [socks5.onRequest.internalFacingBindHost](#socks5-onrequest-internalfacingbindhost)
+    -   [socks5.onRequest.internalFacingBindUdpPortRange](#socks5-onrequest-internalfacingbindudpportrange)
+    -   [socks5.onRequest.internalFacingSocketSetting](#socks5-onrequest-internalfacingsocketsetting)
+    -   [socks5.onRequest.relayBufferSize](#socks5-onrequest-relaybuffersize)
+    -   [socks5.onRequest.relayIdleTimeout](#socks5-onrequest-relayidletimeout)
+    -   [socks5.onRequest.relayInboundBandwidthLimit](#socks5-onrequest-relayinboundbandwidthlimit)
+    -   [socks5.onRequest.relayOutboundBandwidthLimit](#socks5-onrequest-relayoutboundbandwidthlimit)
+    -   [socks5.onRequest.socketSetting](#socks5-onrequest-socketsetting)
+    -   [socks5.onUdpAssociateRequest.clientFacingBindHost](#socks5-onudpassociaterequest-clientfacingbindhost)
+    -   [socks5.onUdpAssociateRequest.clientFacingBindPortRange](#socks5-onudpassociaterequest-clientfacingbindportrange)
+    -   [socks5.onUdpAssociateRequest.clientFacingSocketSetting](#socks5-onudpassociaterequest-clientfacingsocketsetting)
+    -   [socks5.onUdpAssociateRequest.peerFacingBindHost](#socks5-onudpassociaterequest-peerfacingbindhost)
+    -   [socks5.onUdpAssociateRequest.peerFacingBindPortRange](#socks5-onudpassociaterequest-peerfacingbindportrange)
+    -   [socks5.onUdpAssociateRequest.peerFacingSocketSetting](#socks5-onudpassociaterequest-peerfacingsocketsetting)
+    -   [socks5.onUdpAssociateRequest.relayBufferSize](#socks5-onudpassociaterequest-relaybuffersize)
+    -   [socks5.onUdpAssociateRequest.relayIdleTimeout](#socks5-onudpassociaterequest-relayidletimeout)
+    -   [socks5.onUdpAssociateRequest.relayInboundBandwidthLimit](#socks5-onudpassociaterequest-relayinboundbandwidthlimit)
+    -   [socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit](#socks5-onudpassociaterequest-relayoutboundbandwidthlimit)
     -   [socks5.request.desiredDestinationAddressRedirect](#socks5-request-desireddestinationaddressredirect)
     -   [socks5.request.desiredDestinationPortRedirect](#socks5-request-desireddestinationportredirect)
     -   [socks5.request.desiredDestinationRedirectLogAction](#socks5-request-desireddestinationredirectlogaction)
@@ -339,12 +339,12 @@ Specifies a socket setting for all sockets (can be specified multiple times with
 
 ## SOCKS5 Rule Results
 
-### socks5.onBind.inboundSocketSetting
+### socks5.onBindRequest.inboundSocketSetting
 
 **Syntax:**
 
 ```text
-socks5.onBind.inboundSocketSetting=SOCKET_SETTING
+socks5.onBindRequest.inboundSocketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -353,12 +353,12 @@ Specifies a socket setting for the inbound socket (can be specified multiple tim
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onBind.listenBindHost
+### socks5.onBindRequest.listenBindHost
 
 **Syntax:**
 
 ```text
-socks5.onBind.listenBindHost=HOST
+socks5.onBindRequest.listenBindHost=HOST
 ```
 
 **Description:**
@@ -367,12 +367,12 @@ Specifies the binding host name or address for the listen socket if the provided
 
 **Value:** [Host](value-syntaxes.md#host)
 
-### socks5.onBind.listenBindPortRange
+### socks5.onBindRequest.listenBindPortRange
 
 **Syntax:**
 
 ```text
-socks5.onBind.listenBindPortRange=PORT_RANGE
+socks5.onBindRequest.listenBindPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -381,12 +381,12 @@ Specifies a binding port range for the listen socket if the provided port is zer
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onBind.listenSocketSetting
+### socks5.onBindRequest.listenSocketSetting
 
 **Syntax:**
 
 ```text
-socks5.onBind.listenSocketSetting=SOCKET_SETTING
+socks5.onBindRequest.listenSocketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -395,12 +395,12 @@ Specifies a socket setting for the listen socket (can be specified multiple time
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onBind.relayBufferSize
+### socks5.onBindRequest.relayBufferSize
 
 **Syntax:**
 
 ```text
-socks5.onBind.relayBufferSize=POSITIVE_INTEGER
+socks5.onBindRequest.relayBufferSize=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -409,12 +409,12 @@ Specifies the buffer size in bytes for relaying the data
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onBind.relayIdleTimeout
+### socks5.onBindRequest.relayIdleTimeout
 
 **Syntax:**
 
 ```text
-socks5.onBind.relayIdleTimeout=POSITIVE_INTEGER
+socks5.onBindRequest.relayIdleTimeout=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -423,12 +423,12 @@ Specifies the timeout in milliseconds on relaying no data
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onBind.relayInboundBandwidthLimit
+### socks5.onBindRequest.relayInboundBandwidthLimit
 
 **Syntax:**
 
 ```text
-socks5.onBind.relayInboundBandwidthLimit=POSITIVE_INTEGER
+socks5.onBindRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -437,12 +437,12 @@ Specifies the upper limit on bandwidth in bytes per second of receiving inbound 
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onBind.relayOutboundBandwidthLimit
+### socks5.onBindRequest.relayOutboundBandwidthLimit
 
 **Syntax:**
 
 ```text
-socks5.onBind.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+socks5.onBindRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -451,12 +451,138 @@ Specifies the upper limit on bandwidth in bytes per second of receiving outbound
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onCommand.bindHost
+### socks5.onConnectRequest.prepareTargetFacingSocket
 
 **Syntax:**
 
 ```text
-socks5.onCommand.bindHost=HOST
+socks5.onConnectRequest.prepareTargetFacingSocket=true|false
+```
+
+**Description:**
+
+Specifies the boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
+
+**Value:** java.lang.Boolean
+
+### socks5.onConnectRequest.relayBufferSize
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.relayBufferSize=POSITIVE_INTEGER
+```
+
+**Description:**
+
+Specifies the buffer size in bytes for relaying the data
+
+**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
+
+### socks5.onConnectRequest.relayIdleTimeout
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.relayIdleTimeout=POSITIVE_INTEGER
+```
+
+**Description:**
+
+Specifies the timeout in milliseconds on relaying no data
+
+**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
+
+### socks5.onConnectRequest.relayInboundBandwidthLimit
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
+```
+
+**Description:**
+
+Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
+
+### socks5.onConnectRequest.relayOutboundBandwidthLimit
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+```
+
+**Description:**
+
+Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
+
+### socks5.onConnectRequest.targetFacingBindHost
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.targetFacingBindHost=HOST
+```
+
+**Description:**
+
+Specifies the binding host name or address for the target-facing socket
+
+**Value:** [Host](value-syntaxes.md#host)
+
+### socks5.onConnectRequest.targetFacingBindPortRange
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE
+```
+
+**Description:**
+
+Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule result specifying another port range)
+
+**Value:** [Port Range](value-syntaxes.md#port-range)
+
+### socks5.onConnectRequest.targetFacingConnectTimeout
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER
+```
+
+**Description:**
+
+Specifies the timeout in milliseconds on waiting for the target-facing socket to connect
+
+**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
+
+### socks5.onConnectRequest.targetFacingSocketSetting
+
+**Syntax:**
+
+```text
+socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING
+```
+
+**Description:**
+
+Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule result specifying another socket setting)
+
+**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
+
+### socks5.onRequest.bindHost
+
+**Syntax:**
+
+```text
+socks5.onRequest.bindHost=HOST
 ```
 
 **Description:**
@@ -465,12 +591,12 @@ Specifies the binding host name or address for all sockets
 
 **Value:** [Host](value-syntaxes.md#host)
 
-### socks5.onCommand.bindTcpPortRange
+### socks5.onRequest.bindTcpPortRange
 
 **Syntax:**
 
 ```text
-socks5.onCommand.bindTcpPortRange=PORT_RANGE
+socks5.onRequest.bindTcpPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -479,12 +605,12 @@ Specifies a binding port range for all TCP sockets (can be specified multiple ti
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onCommand.bindUdpPortRange
+### socks5.onRequest.bindUdpPortRange
 
 **Syntax:**
 
 ```text
-socks5.onCommand.bindUdpPortRange=PORT_RANGE
+socks5.onRequest.bindUdpPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -493,12 +619,12 @@ Specifies a binding port range for all UDP sockets (can be specified multiple ti
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onCommand.externalFacingBindHost
+### socks5.onRequest.externalFacingBindHost
 
 **Syntax:**
 
 ```text
-socks5.onCommand.externalFacingBindHost=HOST
+socks5.onRequest.externalFacingBindHost=HOST
 ```
 
 **Description:**
@@ -507,12 +633,12 @@ Specifies the binding host name or address for all external-facing sockets
 
 **Value:** [Host](value-syntaxes.md#host)
 
-### socks5.onCommand.externalFacingBindTcpPortRange
+### socks5.onRequest.externalFacingBindTcpPortRange
 
 **Syntax:**
 
 ```text
-socks5.onCommand.externalFacingBindTcpPortRange=PORT_RANGE
+socks5.onRequest.externalFacingBindTcpPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -521,12 +647,12 @@ Specifies a binding port range for all external-facing TCP sockets (can be speci
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onCommand.externalFacingBindUdpPortRange
+### socks5.onRequest.externalFacingBindUdpPortRange
 
 **Syntax:**
 
 ```text
-socks5.onCommand.externalFacingBindUdpPortRange=PORT_RANGE
+socks5.onRequest.externalFacingBindUdpPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -535,12 +661,12 @@ Specifies a binding port range for all external-facing UDP sockets (can be speci
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onCommand.externalFacingSocketSetting
+### socks5.onRequest.externalFacingSocketSetting
 
 **Syntax:**
 
 ```text
-socks5.onCommand.externalFacingSocketSetting=SOCKET_SETTING
+socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -549,12 +675,12 @@ Specifies a socket setting for all external-facing sockets (can be specified mul
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onCommand.internalFacingBindHost
+### socks5.onRequest.internalFacingBindHost
 
 **Syntax:**
 
 ```text
-socks5.onCommand.internalFacingBindHost=HOST
+socks5.onRequest.internalFacingBindHost=HOST
 ```
 
 **Description:**
@@ -563,12 +689,12 @@ Specifies the binding host name or address for all internal-facing sockets
 
 **Value:** [Host](value-syntaxes.md#host)
 
-### socks5.onCommand.internalFacingBindUdpPortRange
+### socks5.onRequest.internalFacingBindUdpPortRange
 
 **Syntax:**
 
 ```text
-socks5.onCommand.internalFacingBindUdpPortRange=PORT_RANGE
+socks5.onRequest.internalFacingBindUdpPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -577,12 +703,12 @@ Specifies a binding port range for all internal-facing UDP sockets (can be speci
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onCommand.internalFacingSocketSetting
+### socks5.onRequest.internalFacingSocketSetting
 
 **Syntax:**
 
 ```text
-socks5.onCommand.internalFacingSocketSetting=SOCKET_SETTING
+socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -591,12 +717,12 @@ Specifies a socket setting for all internal-facing sockets (can be specified mul
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onCommand.relayBufferSize
+### socks5.onRequest.relayBufferSize
 
 **Syntax:**
 
 ```text
-socks5.onCommand.relayBufferSize=POSITIVE_INTEGER
+socks5.onRequest.relayBufferSize=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -605,12 +731,12 @@ Specifies the buffer size in bytes for relaying the data
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onCommand.relayIdleTimeout
+### socks5.onRequest.relayIdleTimeout
 
 **Syntax:**
 
 ```text
-socks5.onCommand.relayIdleTimeout=POSITIVE_INTEGER
+socks5.onRequest.relayIdleTimeout=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -619,12 +745,12 @@ Specifies the timeout in milliseconds on relaying no data
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onCommand.relayInboundBandwidthLimit
+### socks5.onRequest.relayInboundBandwidthLimit
 
 **Syntax:**
 
 ```text
-socks5.onCommand.relayInboundBandwidthLimit=POSITIVE_INTEGER
+socks5.onRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -633,12 +759,12 @@ Specifies the upper limit on bandwidth in bytes per second of receiving inbound 
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onCommand.relayOutboundBandwidthLimit
+### socks5.onRequest.relayOutboundBandwidthLimit
 
 **Syntax:**
 
 ```text
-socks5.onCommand.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -647,12 +773,12 @@ Specifies the upper limit on bandwidth in bytes per second of receiving outbound
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onCommand.socketSetting
+### socks5.onRequest.socketSetting
 
 **Syntax:**
 
 ```text
-socks5.onCommand.socketSetting=SOCKET_SETTING
+socks5.onRequest.socketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -661,138 +787,12 @@ Specifies a socket setting for all sockets (can be specified multiple times with
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onConnect.prepareServerFacingSocket
+### socks5.onUdpAssociateRequest.clientFacingBindHost
 
 **Syntax:**
 
 ```text
-socks5.onConnect.prepareServerFacingSocket=true|false
-```
-
-**Description:**
-
-Specifies the boolean value to indicate if the server-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
-
-**Value:** java.lang.Boolean
-
-### socks5.onConnect.relayBufferSize
-
-**Syntax:**
-
-```text
-socks5.onConnect.relayBufferSize=POSITIVE_INTEGER
-```
-
-**Description:**
-
-Specifies the buffer size in bytes for relaying the data
-
-**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
-
-### socks5.onConnect.relayIdleTimeout
-
-**Syntax:**
-
-```text
-socks5.onConnect.relayIdleTimeout=POSITIVE_INTEGER
-```
-
-**Description:**
-
-Specifies the timeout in milliseconds on relaying no data
-
-**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
-
-### socks5.onConnect.relayInboundBandwidthLimit
-
-**Syntax:**
-
-```text
-socks5.onConnect.relayInboundBandwidthLimit=POSITIVE_INTEGER
-```
-
-**Description:**
-
-Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
-
-### socks5.onConnect.relayOutboundBandwidthLimit
-
-**Syntax:**
-
-```text
-socks5.onConnect.relayOutboundBandwidthLimit=POSITIVE_INTEGER
-```
-
-**Description:**
-
-Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
-
-### socks5.onConnect.serverFacingBindHost
-
-**Syntax:**
-
-```text
-socks5.onConnect.serverFacingBindHost=HOST
-```
-
-**Description:**
-
-Specifies the binding host name or address for the server-facing socket
-
-**Value:** [Host](value-syntaxes.md#host)
-
-### socks5.onConnect.serverFacingBindPortRange
-
-**Syntax:**
-
-```text
-socks5.onConnect.serverFacingBindPortRange=PORT_RANGE
-```
-
-**Description:**
-
-Specifies a binding port range for the server-facing socket (can be specified multiple times with each rule result specifying another port range)
-
-**Value:** [Port Range](value-syntaxes.md#port-range)
-
-### socks5.onConnect.serverFacingConnectTimeout
-
-**Syntax:**
-
-```text
-socks5.onConnect.serverFacingConnectTimeout=POSITIVE_INTEGER
-```
-
-**Description:**
-
-Specifies the timeout in milliseconds on waiting for the server-facing socket to connect
-
-**Value:** [Positive Integer](value-syntaxes.md#positive-integer)
-
-### socks5.onConnect.serverFacingSocketSetting
-
-**Syntax:**
-
-```text
-socks5.onConnect.serverFacingSocketSetting=SOCKET_SETTING
-```
-
-**Description:**
-
-Specifies a socket setting for the server-facing socket (can be specified multiple times with each rule result specifying another socket setting)
-
-**Value:** [Socket Setting](value-syntaxes.md#socket-setting)
-
-### socks5.onUdpAssociate.clientFacingBindHost
-
-**Syntax:**
-
-```text
-socks5.onUdpAssociate.clientFacingBindHost=HOST
+socks5.onUdpAssociateRequest.clientFacingBindHost=HOST
 ```
 
 **Description:**
@@ -801,12 +801,12 @@ Specifies the binding host name or address for the client-facing UDP socket
 
 **Value:** [Host](value-syntaxes.md#host)
 
-### socks5.onUdpAssociate.clientFacingBindPortRange
+### socks5.onUdpAssociateRequest.clientFacingBindPortRange
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.clientFacingBindPortRange=PORT_RANGE
+socks5.onUdpAssociateRequest.clientFacingBindPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -815,12 +815,12 @@ Specifies a binding port range for the client-facing UDP socket (can be specifie
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onUdpAssociate.clientFacingSocketSetting
+### socks5.onUdpAssociateRequest.clientFacingSocketSetting
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.clientFacingSocketSetting=SOCKET_SETTING
+socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -829,12 +829,12 @@ Specifies a socket setting for the client-facing UDP socket (can be specified mu
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onUdpAssociate.peerFacingBindHost
+### socks5.onUdpAssociateRequest.peerFacingBindHost
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.peerFacingBindHost=HOST
+socks5.onUdpAssociateRequest.peerFacingBindHost=HOST
 ```
 
 **Description:**
@@ -843,12 +843,12 @@ Specifies the binding host name or address for the peer-facing UDP socket
 
 **Value:** [Host](value-syntaxes.md#host)
 
-### socks5.onUdpAssociate.peerFacingBindPortRange
+### socks5.onUdpAssociateRequest.peerFacingBindPortRange
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.peerFacingBindPortRange=PORT_RANGE
+socks5.onUdpAssociateRequest.peerFacingBindPortRange=PORT_RANGE
 ```
 
 **Description:**
@@ -857,12 +857,12 @@ Specifies a binding port range for the peer-facing UDP socket (can be specified 
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 
-### socks5.onUdpAssociate.peerFacingSocketSetting
+### socks5.onUdpAssociateRequest.peerFacingSocketSetting
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.peerFacingSocketSetting=SOCKET_SETTING
+socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING
 ```
 
 **Description:**
@@ -871,12 +871,12 @@ Specifies a socket setting for the peer-facing UDP socket (can be specified mult
 
 **Value:** [Socket Setting](value-syntaxes.md#socket-setting)
 
-### socks5.onUdpAssociate.relayBufferSize
+### socks5.onUdpAssociateRequest.relayBufferSize
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.relayBufferSize=POSITIVE_INTEGER
+socks5.onUdpAssociateRequest.relayBufferSize=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -885,12 +885,12 @@ Specifies the buffer size in bytes for relaying the data
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onUdpAssociate.relayIdleTimeout
+### socks5.onUdpAssociateRequest.relayIdleTimeout
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.relayIdleTimeout=POSITIVE_INTEGER
+socks5.onUdpAssociateRequest.relayIdleTimeout=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -899,12 +899,12 @@ Specifies the timeout in milliseconds on relaying no data
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onUdpAssociate.relayInboundBandwidthLimit
+### socks5.onUdpAssociateRequest.relayInboundBandwidthLimit
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.relayInboundBandwidthLimit=POSITIVE_INTEGER
+socks5.onUdpAssociateRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
 ```
 
 **Description:**
@@ -913,12 +913,12 @@ Specifies the upper limit on bandwidth in bytes per second of receiving inbound 
 
 **Value:** [Positive Integer](value-syntaxes.md#positive-integer)
 
-### socks5.onUdpAssociate.relayOutboundBandwidthLimit
+### socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit
 
 **Syntax:**
 
 ```text
-socks5.onUdpAssociate.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
 ```
 
 **Description:**

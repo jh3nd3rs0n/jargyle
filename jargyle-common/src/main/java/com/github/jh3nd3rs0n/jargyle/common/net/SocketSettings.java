@@ -59,6 +59,78 @@ public final class SocketSettings {
     }
 
     /**
+     * Returns a new {@code SocketSettings} extracted from the provided
+     * {@code DatagramSocket}.
+     *
+     * @param datagramSocket the provided {@code DatagramSocket}
+     * @return a new {@code SocketSettings} extracted from the provided
+     * {@code DatagramSocket}
+     * @throws SocketException if an error occurs in extracting from the
+     *                         provided {@code DatagramSocket}
+     */
+    public static SocketSettings extractFrom(
+            final DatagramSocket datagramSocket) throws SocketException {
+        List<SocketSetting<?>> socketSttngs = new ArrayList<>();
+        for (SocketSettingSpec<Object> socketSttngSpec
+                : SocketSettingSpecConstants.values()) {
+            try {
+                socketSttngs.add(socketSttngSpec.newSocketSetting(
+                        socketSttngSpec.extract(datagramSocket)));
+            } catch (UnsupportedOperationException ignored) {
+            }
+        }
+        return of(socketSttngs);
+    }
+
+    /**
+     * Returns a new {@code SocketSettings} extracted from the provided
+     * {@code ServerSocket}.
+     *
+     * @param serverSocket the provided {@code ServerSocket}
+     * @return a new {@code SocketSettings} extracted from the provided
+     * {@code ServerSocket}
+     * @throws SocketException if an error occurs in extracting from the
+     *                         provided {@code ServerSocket}
+     */
+    public static SocketSettings extractFrom(
+            final ServerSocket serverSocket) throws SocketException {
+        List<SocketSetting<?>> socketSttngs = new ArrayList<>();
+        for (SocketSettingSpec<Object> socketSttngSpec
+                : SocketSettingSpecConstants.values()) {
+            try {
+                socketSttngs.add(socketSttngSpec.newSocketSetting(
+                        socketSttngSpec.extract(serverSocket)));
+            } catch (UnsupportedOperationException ignored) {
+            }
+        }
+        return of(socketSttngs);
+    }
+
+    /**
+     * Returns a new {@code SocketSettings} extracted from the provided
+     * {@code Socket}.
+     *
+     * @param socket the provided {@code Socket}
+     * @return a new {@code SocketSettings} extracted from the provided
+     * {@code Socket}
+     * @throws SocketException if an error occurs in extracting from the
+     *                         provided {@code Socket}
+     */
+    public static SocketSettings extractFrom(
+            final Socket socket) throws SocketException {
+        List<SocketSetting<?>> socketSttngs = new ArrayList<>();
+        for (SocketSettingSpec<Object> socketSttngSpec
+                : SocketSettingSpecConstants.values()) {
+            try {
+                socketSttngs.add(socketSttngSpec.newSocketSetting(
+                        socketSttngSpec.extract(socket)));
+            } catch (UnsupportedOperationException ignored) {
+            }
+        }
+        return of(socketSttngs);
+    }
+
+    /**
      * Returns a {@code SocketSettings} of the provided {@code List} of
      * {@code SocketSetting}s.
      *

@@ -32,6 +32,26 @@ public class StandardSocketSettingSpecSoBroadcastTest {
     }
 
     @Test
+    public void testExtractDatagramSocket() throws SocketException {
+        DatagramSocket datagramSocket = new DatagramSocket(null);
+        datagramSocket.setBroadcast(true);
+        Assert.assertTrue(StandardSocketSettingSpecConstants.SO_BROADCAST.extract(
+                datagramSocket));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractServerSocketForUnsupportedOperationException() throws IOException {
+        StandardSocketSettingSpecConstants.SO_BROADCAST.extract(
+                new ServerSocket());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractSocketForUnsupportedOperationException() throws IOException {
+        StandardSocketSettingSpecConstants.SO_BROADCAST.extract(
+                new Socket());
+    }
+
+    @Test
     public void testNewSocketSettingWithParsedValueString() {
         Assert.assertNotNull(
                 StandardSocketSettingSpecConstants.SO_BROADCAST.newSocketSettingWithParsedValue(

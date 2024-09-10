@@ -61,7 +61,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSocks5UserpassMeth
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
                                 Scheme.SOCKS5.newSocksServerUri(
                                         InetAddress.getLoopbackAddress().getHostAddress(),
-                                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD))),
+                                        CHAINED_SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)),
                         ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
                                 Methods.of(Method.USERNAME_PASSWORD)),
                         ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_USERNAME.newSetting(
@@ -81,7 +81,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSocks5UserpassMeth
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
                                 Scheme.SOCKS5.newSocksServerUri(
                                         InetAddress.getLoopbackAddress().getHostAddress(),
-                                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD))),
+                                        CHAINED_SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)),
                         ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS.newSetting(
                                 Methods.of(Method.USERNAME_PASSWORD)),
                         ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_USERNAME.newSetting(
@@ -103,7 +103,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSocks5UserpassMeth
     private static SocksClient newSocks5ClientToChainedSocksServersUsingSocks5UserpassMethod() {
         return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD))
+                        CHAINED_SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)
                 .newSocksClient(Properties.of(
                         Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                 Methods.of(Method.USERNAME_PASSWORD)),

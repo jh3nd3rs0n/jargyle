@@ -14,12 +14,12 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
 
-class CommandWorker extends Socks5Worker {
+class RequestWorker extends Socks5Worker {
 
 	private final MethodSubNegotiationResults methodSubNegotiationResults;
 	private final Request request;
 	
-	protected CommandWorker(
+	protected RequestWorker(
 			final Socks5Worker socks5Worker,
 			final MethodSubNegotiationResults methSubNegotiationResults,
 			final Request req) {

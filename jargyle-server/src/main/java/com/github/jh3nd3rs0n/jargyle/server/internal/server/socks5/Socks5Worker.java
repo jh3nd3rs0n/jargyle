@@ -103,13 +103,13 @@ public class Socks5Worker extends Worker {
 		return true;
 	}
 	
-	private MethodSubNegotiationResults doMethodSubnegotiation(
+	private MethodSubNegotiationResults doMethodSubNegotiation(
 			final Method method) {
-		MethodSubNegotiator methodSubnegotiator = 
+		MethodSubNegotiator methodSubNegotiator =
 				MethodSubNegotiator.getInstance(method);
 		MethodSubNegotiationResults methodSubNegotiationResults = null;
 		try {
-			methodSubNegotiationResults = methodSubnegotiator.subNegotiate(
+			methodSubNegotiationResults = methodSubNegotiator.subNegotiate(
 					this.getClientSocket(), this.getConfiguration());
 		} catch (MethodSubNegotiationException e) {
 			if (e.getCause() == null) {
@@ -365,7 +365,7 @@ public class Socks5Worker extends Worker {
 			Method method = this.negotiateMethod();
 			if (method == null) { return; } 
 			MethodSubNegotiationResults methodSubNegotiationResults = 
-					this.doMethodSubnegotiation(method);
+					this.doMethodSubNegotiation(method);
 			if (methodSubNegotiationResults == null) { return; }
 			Socket socket = methodSubNegotiationResults.getSocket();
 			this.clientInputStream = socket.getInputStream();
@@ -392,16 +392,14 @@ public class Socks5Worker extends Worker {
 			if (!this.canAllowRequest()) {
 				return;
 			}
-			request = this.redirectRequestIfSpecified(
-                    request);
+			request = this.redirectRequestIfSpecified(request);
 			Route selectedRoute = this.selectRequestRoute();
 			this.setSelectedRoute(selectedRoute);
-			CommandWorkerFactory commandWorkerFactory =
-					CommandWorkerFactory.getInstance(
-							request.getCommand());
-			CommandWorker commandWorker = commandWorkerFactory.newCommandWorker(
+			RequestWorkerFactory requestWorkerFactory =
+					RequestWorkerFactory.getInstance(request.getCommand());
+			RequestWorker requestWorker = requestWorkerFactory.newRequestWorker(
 					this, methodSubNegotiationResults, request);
-			commandWorker.run();			
+			requestWorker.run();
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

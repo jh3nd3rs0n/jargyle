@@ -4,12 +4,10 @@
 
 -   [Address Range](#address-range)
 -   [Comma Separated Values](#comma-separated-values)
--   [Digit](#digit)
 -   [Firewall Action](#firewall-action)
 -   [Host](#host)
 -   [Log Action](#log-action)
 -   [Non-negative Integer](#non-negative-integer)
--   [Performance Preferences](#performance-preferences)
 -   [Port](#port)
 -   [Port Range](#port-range)
 -   [Port Ranges](#port-ranges)
@@ -23,7 +21,6 @@
 -   [Socket Setting](#socket-setting)
     -   [Standard Socket Settings](#standard-socket-settings)
         -   [IP_TOS](#ip_tos)
-        -   [PERF_PREFS](#perf_prefs)
         -   [SO_BROADCAST](#so_broadcast)
         -   [SO_KEEPALIVE](#so_keepalive)
         -   [SO_LINGER](#so_linger)
@@ -67,18 +64,6 @@ ADDRESS|IP_ADDRESS1-IP_ADDRESS2|regex:REGULAR_EXPRESSION
 A comma separated list of values
 
 **Element value:** java.lang.String
-
-## Digit
-
-**Syntax:**
-
-```text
-0-9
-```
-
-**Description:**
-
-An integer between 0 and 9 (inclusive)
 
 ## Firewall Action
 
@@ -131,20 +116,6 @@ LOG_AS_WARNING|LOG_AS_INFO
 **Description:**
 
 An integer between 0 and 2147483647 (inclusive)
-
-## Performance Preferences
-
-**Syntax:**
-
-```text
-DIGITDIGITDIGIT
-```
-
-**Description:**
-
-Performance preferences for a TCP socket described by three digits whose values indicate the relative importance of short connection time, low latency, and high bandwidth
-
-**Element value:** [Digit](#digit)
 
 ## Port
 
@@ -284,20 +255,6 @@ The type-of-service or traffic class field in the IP header for a TCP or UDP soc
 
 **Value:** [Unsigned Byte](#unsigned-byte)
 
-#### PERF_PREFS
-
-**Syntax:**
-
-```text
-PERF_PREFS=PERFORMANCE_PREFERENCES
-```
-
-**Description:**
-
-Performance preferences for a TCP socket described by three digits whose values indicate the relative importance of short connection time, low latency, and high bandwidth
-
-**Value:** [Performance Preferences](#performance-preferences)
-
 #### SO_BROADCAST
 
 **Syntax:**
@@ -331,14 +288,14 @@ Keeps a TCP socket alive when no data has been exchanged in either direction
 **Syntax:**
 
 ```text
-SO_LINGER=NON_NEGATIVE_INTEGER
+SO_LINGER=-2147483648-2147483647
 ```
 
 **Description:**
 
-Linger on closing the TCP socket in seconds
+Linger on closing the TCP socket in seconds (disabled if the number of seconds is negative)
 
-**Value:** [Non-negative Integer](#non-negative-integer)
+**Value:** java.lang.Integer
 
 #### SO_RCVBUF
 
@@ -524,7 +481,7 @@ Type of request to the SOCKS server
 
 -   `BIND`: A request to the SOCKS server to bind to another address and port in order to receive an inbound connection
 
--   `UDP_ASSOCIATE`: A request to the SOCKS server to associate a UDP socket for sending and receiving datagrams
+-   `UDP_ASSOCIATE`: A request to the SOCKS server to establish an association within the UDP relay process to handle UDP datagrams
 
 -   `RESOLVE`: A request to the SOCKS server to resolve a host name
 

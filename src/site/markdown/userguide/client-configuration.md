@@ -405,8 +405,9 @@ The client API comes with a `HostResolver` object to resolve host names. By
 default, the `HostResolver` object resolves host names through the local 
 system. To enable the `HostResolver` object to have the host names resolved 
 from the SOCKS5 server instead, you would need to set the property 
-`socksClient.socks5.useResolveCommand` set to `true`. This property can 
-only be used if the SOCKS5 server supports the SOCKS5 RESOLVE command.
+`socksClient.socks5.socks5HostResolver.resolveFromSocks5Server` set to 
+`true`. This property can only be used if the SOCKS5 server supports handling 
+the SOCKS5 RESOLVE request.
 
 API example:
 
@@ -428,6 +429,9 @@ public class ClientApp {
         System.setProperty("socksServerUri.scheme", "socks5");
         System.setProperty("socksServerUri.host", "jargyle.net");
         System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+                "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                "true");
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         HostResolver hostResolver = netObjectFactory.newHostResolver();
         InetAddress inetAddress = hostResolver.resolve("google.com");
@@ -463,13 +467,13 @@ import java.net.Socket;
 public class ClientApp {
     public static void main(String[] args) throws IOException {
         SocksClient socksClient1 = Scheme.SOCKS5
-            .newSocksServerUri("betabeta.net", "3456")
+            .newSocksServerUri("betabeta.net", 3456)
             .newSocksClient(Properties.of());
         SocksClient socksClient2 = Scheme.SOCKS5
-            .newSocksServerUri("alphaalpha.net", "2345")
+            .newSocksServerUri("alphaalpha.net", 2345)
             .newSocksClient(Properties.of(), socksClient1);
         SocksClient socksClient3 = Scheme.SOCKS5
-            .newSocksServerUri("jargyle.net", "1234")
+            .newSocksServerUri("jargyle.net", 1234)
             .newSocksClient(Properties.of(), socksClient2);
         NetObjectFactory netObjectFactory = 
             socksClient3.newSocksNetObjectFactory();

@@ -85,7 +85,7 @@ public final class Socks5RuleConditionSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the server bound address of the second " 
-					+ "reply (for the BIND command)",
+					+ "reply (for the BIND request)",
 			name = "socks5.secondReply.serverBoundAddress",
 			syntax = "socks5.secondReply.serverBoundAddress=ADDRESS_RANGE",
 			valueType = AddressRange.class
@@ -96,7 +96,7 @@ public final class Socks5RuleConditionSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the server bound port of the second " 
-					+ "reply (for the BIND command)",
+					+ "reply (for the BIND request)",
 			name = "socks5.secondReply.serverBoundPort",
 			syntax = "socks5.secondReply.serverBoundPort=PORT_RANGE",
 			valueType = PortRange.class

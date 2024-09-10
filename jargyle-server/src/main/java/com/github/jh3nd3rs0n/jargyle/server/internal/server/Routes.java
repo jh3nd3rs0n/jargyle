@@ -123,10 +123,6 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN, 
-				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_CLIENT_UDP_ADDRESS_AND_PORT_UNKNOWN));
-		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_MECHANISM_OID, 
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID));
@@ -155,9 +151,13 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_METHODS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USE_RESOLVE_COMMAND, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_USE_RESOLVE_COMMAND));
+						Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER,
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD, 
 				new SettingToPropertyConverter(

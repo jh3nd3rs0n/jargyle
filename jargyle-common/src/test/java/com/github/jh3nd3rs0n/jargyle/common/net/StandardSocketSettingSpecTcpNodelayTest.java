@@ -18,7 +18,7 @@ public class StandardSocketSettingSpecTcpNodelayTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void testApplyValueServerSocket() throws IOException {
+    public void testApplyValueServerSocketForUnsupportedOperationException() throws IOException {
         StandardSocketSettingSpecConstants.TCP_NODELAY.apply(
                 Boolean.TRUE, new ServerSocket());
     }
@@ -29,6 +29,27 @@ public class StandardSocketSettingSpecTcpNodelayTest {
         StandardSocketSettingSpecConstants.TCP_NODELAY.apply(
                 Boolean.TRUE, socket);
         Assert.assertTrue(socket.getTcpNoDelay());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractDatagramSocketForUnsupportedOperationException() throws SocketException {
+        StandardSocketSettingSpecConstants.TCP_NODELAY.extract(
+                new DatagramSocket(null));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractServerSocketForUnsupportedOperationException() throws IOException {
+        StandardSocketSettingSpecConstants.TCP_NODELAY.extract(
+                new ServerSocket());
+    }
+
+    @Test
+    public void testExtractSocket() throws SocketException {
+        Socket socket = new Socket();
+        socket.setTcpNoDelay(true);
+        Assert.assertTrue(
+                StandardSocketSettingSpecConstants.TCP_NODELAY.extract(
+                        socket));
     }
 
     @Test

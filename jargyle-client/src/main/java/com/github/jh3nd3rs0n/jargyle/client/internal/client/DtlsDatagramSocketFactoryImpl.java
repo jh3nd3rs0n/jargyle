@@ -1,8 +1,7 @@
-package com.github.jh3nd3rs0n.jargyle.client.socks5;
+package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
@@ -20,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
-final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
+public final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
 	public static boolean isDtlsEnabled(final Properties props) {
 		return props.getValue(
@@ -29,23 +28,22 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
 	private SSLContext dtlsContext;
 	private final ReentrantLock lock;
-	private final SocksClient socksClient;
+	private final Properties properties;
 		
-	public DtlsDatagramSocketFactoryImpl(final SocksClient client) {
+	public DtlsDatagramSocketFactoryImpl(final Properties props) {
 		this.dtlsContext = null;
 		this.lock = new ReentrantLock();
-		this.socksClient = client;
+		this.properties = props;
 	}
 	
 	private SSLContext getDtlsContext() throws IOException {
 		TrustManager[] trustManagers = null;
-		Properties properties = this.socksClient.getProperties();
-		File trustStoreFile = properties.getValue(
+		File trustStoreFile = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
-			char[] trustStorePassword = properties.getValue(
+			char[] trustStorePassword = this.properties.getValue(
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD).getPassword();
-			String trustStoreType = properties.getValue(
+			String trustStoreType = this.properties.getValue(
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
 					trustStoreFile, trustStorePassword,	trustStoreType);
@@ -54,7 +52,7 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		SSLContext context = null;
 		try {
 			context = SslContextHelper.getSslContext(
-					properties.getValue(
+					this.properties.getValue(
 							DtlsPropertySpecConstants.DTLS_PROTOCOL), 
 					null,
 					trustManagers);
@@ -82,20 +80,19 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		DtlsDatagramSocket dtlsDatagramSocket = 
 				(DtlsDatagramSocket) factory.newDatagramSocket(datagramSocket);
 		dtlsDatagramSocket.setUseClientMode(true);
-		Properties properties = this.socksClient.getProperties();
-		CommaSeparatedValues enabledCipherSuites = properties.getValue(
+		CommaSeparatedValues enabledCipherSuites = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES);
 		String[] cipherSuites = enabledCipherSuites.toArray();
 		if (cipherSuites.length > 0) {
 			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
 		}
-		CommaSeparatedValues enabledProtocols = properties.getValue(
+		CommaSeparatedValues enabledProtocols = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS);
 		String[] protocols = enabledProtocols.toArray();
 		if (protocols.length > 0) {
 			dtlsDatagramSocket.setEnabledProtocols(protocols);
 		}
-		PositiveInteger maxPacketSize = properties.getValue(
+		PositiveInteger maxPacketSize = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE);
 		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
 		return dtlsDatagramSocket;

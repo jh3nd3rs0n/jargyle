@@ -15,17 +15,19 @@ import java.net.UnknownHostException;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
+import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl.DomainName;
 
 public final class Socks5Socket extends Socket {
 
 	private static final class Socks5SocketImpl {
-		
+
 		private boolean connected;
 		private InputStream inputStream;
 		private OutputStream outputStream;
@@ -94,11 +96,11 @@ public final class Socks5Socket extends Socket {
 				final InetAddress inetAddress,
 				final int port,
 				final int timeout) throws IOException {
-			ClientSocketConnectParams params = new ClientSocketConnectParams();
-			params.setMustBindBeforeConnect(false);
-			params.setConnectTimeout(Integer.valueOf(timeout));
-			Socket sock = this.socks5Client.getConnectedClientSocket(
-					this.socket, params);
+			Socket sock = this.socks5Client.getClientSocketBuilder()
+					.proceedToConfigure(this.socket)
+					.proceedToConnect()
+					.setTimeout(timeout)
+					.getConnectedClientSocket();
 			String address = inetAddress.getHostAddress();
 			this.socks5Connect(sock, address, port);
 		}
@@ -109,7 +111,7 @@ public final class Socks5Socket extends Socket {
 				final int port) throws IOException {
 			Method method = this.socks5Client.negotiateMethod(connectedSocket); 
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.doMethodSubnegotiation(
+					this.socks5Client.doMethodSubNegotiation(
 							method, connectedSocket);
 			Socket connectedSock = methodEncapsulation.getSocket();
 			Request req = Request.newInstance(
@@ -283,14 +285,26 @@ public final class Socks5Socket extends Socket {
 			}
 		}
 	}
-	
+
+	private static Host getClientBindHost(
+			final Socks5Client socks5Client) {
+		return socks5Client.getProperties().getValue(
+				GeneralPropertySpecConstants.CLIENT_BIND_HOST);
+	}
+
+	private static PortRanges getClientBindPortRanges(
+			final Socks5Client socks5Client) {
+		return socks5Client.getProperties().getValue(
+				GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+	}
+
 	private final Socks5Client socks5Client;
 	private final Socks5SocketImpl socks5SocketImpl;
 	
 	Socks5Socket(final Socks5Client client) {
 		this.socks5Client = client;
 		this.socks5SocketImpl = new Socks5SocketImpl(
-				client, client.newClientSocket()); 
+				client, client.getClientSocketBuilder().newClientSocket());
 	}
 	
 	Socks5Socket(
@@ -298,7 +312,7 @@ public final class Socks5Socket extends Socket {
 			final InetAddress address, 
 			final int port) throws IOException {
 		Socks5SocketImpl impl = new Socks5SocketImpl(
-				client, client.newClientSocket());
+				client, client.getClientSocketBuilder().newClientSocket());
 		try {
 			impl.socks5Connect(address, port, 0);
 		} catch (IOException e) {
@@ -316,7 +330,7 @@ public final class Socks5Socket extends Socket {
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
 		Socks5SocketImpl impl = new Socks5SocketImpl(
-				client, client.newClientSocket());
+				client, client.getClientSocketBuilder().newClientSocket());
 		try {
 			impl.socket.bind(new InetSocketAddress(localAddr, localPort));
 			impl.socks5Connect(address, port, 0);
@@ -339,9 +353,12 @@ public final class Socks5Socket extends Socket {
 			final int port) throws UnknownHostException, IOException {
 		Socks5SocketImpl impl = null;
 		try {
-			Socket connectedInternalSocket = client.newConnectedClientSocket();
-			impl = new Socks5SocketImpl(client, connectedInternalSocket);
-			impl.socks5Connect(connectedInternalSocket, host, port);
+			Socket connectedClientSocket =
+					client.getClientSocketBuilder().newConnectedClientSocket(
+							getClientBindHost(client).toInetAddress(),
+							getClientBindPortRanges(client));
+			impl = new Socks5SocketImpl(client, connectedClientSocket);
+			impl.socks5Connect(connectedClientSocket, host, port);
 		} catch (IOException e) {
 			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
 					e, client);
@@ -358,10 +375,11 @@ public final class Socks5Socket extends Socket {
 			final int localPort) throws IOException {
 		Socks5SocketImpl impl = null;
 		try {
-			Socket connectedInternalSocket = client.newConnectedClientSocket(
-					localAddr, localPort);
-			impl = new Socks5SocketImpl(client, connectedInternalSocket);
-			impl.socks5Connect(connectedInternalSocket, host, port);
+			Socket connectedClientSocket =
+					client.getClientSocketBuilder().newConnectedClientSocket(
+							localAddr, localPort);
+			impl = new Socks5SocketImpl(client, connectedClientSocket);
+			impl.socks5Connect(connectedClientSocket, host, port);
 		} catch (IOException e) {
 			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
 					e, client);

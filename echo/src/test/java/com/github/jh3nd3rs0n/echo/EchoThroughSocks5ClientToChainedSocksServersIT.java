@@ -51,7 +51,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
                                 Scheme.SOCKS5.newSocksServerUri(
                                         InetAddress.getLoopbackAddress().getHostAddress(),
-                                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2))))),
+                                        CHAINED_SOCKS_SERVER_PORT_2)))),
                 Configuration.newUnmodifiableInstance(Settings.of(
                         GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
                                 Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
@@ -60,7 +60,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
                                 Scheme.SOCKS5.newSocksServerUri(
                                         InetAddress.getLoopbackAddress().getHostAddress(),
-                                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_3))))),
+                                        CHAINED_SOCKS_SERVER_PORT_3)))),
                 Configuration.newUnmodifiableInstance(Settings.of(
                         GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
                                 Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
@@ -71,7 +71,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersIT {
     private static SocksClient newSocks5ClientToChainedSocksServers() {
         return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1))
+                        CHAINED_SOCKS_SERVER_PORT_1)
                 .newSocksClient(Properties.of());
     }
 

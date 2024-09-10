@@ -49,7 +49,7 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
     private static SocksClient newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod() {
         SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD))
+                        SOCKS_SERVER_PORT_1_USING_SOCKS5_USERPASSMETHOD)
                 .newSocksClient(Properties.of(
                         Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                 Methods.of(Method.USERNAME_PASSWORD)),
@@ -60,7 +60,7 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                                         "opensesame".toCharArray()))));
         SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD))
+                        SOCKS_SERVER_PORT_2_USING_SOCKS5_USERPASSMETHOD)
                 .newSocksClient(Properties.of(
                                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                         Methods.of(Method.USERNAME_PASSWORD)),
@@ -70,9 +70,9 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                                         EncryptedPassword.newInstance(
                                                 "mission:impossible".toCharArray()))),
                         client1);
-        SocksClient client3 = Scheme.SOCKS5.newSocksServerUri(
+        return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD))
+                        SOCKS_SERVER_PORT_3_USING_SOCKS5_USERPASSMETHOD)
                 .newSocksClient(Properties.of(
                                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                         Methods.of(Method.USERNAME_PASSWORD)),
@@ -82,7 +82,6 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                                         EncryptedPassword.newInstance(
                                                 "safeDriversSave40%".toCharArray()))),
                         client2);
-        return client3;
     }
 
     private static List<Configuration> newConfigurationsUsingSocks5UserpassMethod() {

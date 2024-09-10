@@ -6,10 +6,13 @@ import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,67 +50,38 @@ public final class StandardSocketSettingSpecConstants {
                     "IP_TOS",
                     UnsignedByte.class) {
 
-        @Override
-        public void apply(
-                final UnsignedByte value,
-                final DatagramSocket datagramSocket) throws SocketException {
-            datagramSocket.setTrafficClass(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final UnsignedByte value,
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    datagramSocket.setTrafficClass(value.intValue());
+                }
 
-        @Override
-        public void apply(
-                final UnsignedByte value,
-                final Socket socket) throws SocketException {
-            socket.setTrafficClass(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final UnsignedByte value,
+                        final Socket socket) throws SocketException {
+                    socket.setTrafficClass(value.intValue());
+                }
 
-        @Override
-        protected UnsignedByte parse(final String value) {
-            return UnsignedByte.valueOf(value);
-        }
+                @Override
+                public UnsignedByte extract(
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    return UnsignedByte.valueOf(datagramSocket.getTrafficClass());
+                }
 
-    });
+                @Override
+                public UnsignedByte extract(
+                        final Socket socket) throws SocketException {
+                    return UnsignedByte.valueOf(socket.getTrafficClass());
+                }
 
-    /**
-     * {@code SocketSettingSpec} constant for {@code PERF_PREFS}: Performance
-     * preferences for a TCP socket described by three digits whose values
-     * indicate the relative importance of short connection time, low latency,
-     * and high bandwidth. The {@code SocketSetting} can only be applied to
-     * the following objects: {@code ServerSocket}, {@code Socket}.
-     */
-    @NameValuePairValueSpecDoc(
-            description = "Performance preferences for a TCP socket described "
-                    + "by three digits whose values indicate the relative "
-                    + "importance of short connection time, low latency, and "
-                    + "high bandwidth",
-            name = "PERF_PREFS",
-            syntax = "PERF_PREFS=PERFORMANCE_PREFERENCES",
-            valueType = PerformancePreferences.class
-    )
-    public static final SocketSettingSpec<PerformancePreferences> PERF_PREFS =
-            SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
-                    "PERF_PREFS",
-                    PerformancePreferences.class) {
+                @Override
+                protected UnsignedByte parse(final String value) {
+                    return UnsignedByte.valueOf(value);
+                }
 
-        @Override
-        public void apply(
-                final PerformancePreferences value,
-                final ServerSocket serverSocket) {
-            value.applyTo(serverSocket);
-        }
-
-        @Override
-        public void apply(
-                final PerformancePreferences value, final Socket socket) {
-            value.applyTo(socket);
-        }
-
-        @Override
-        protected PerformancePreferences parse(final String value) {
-            return PerformancePreferences.newInstanceFrom(value);
-        }
-
-    });
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_BROADCAST}: a
@@ -126,19 +100,25 @@ public final class StandardSocketSettingSpecConstants {
                     "SO_BROADCAST",
                     Boolean.class) {
 
-        @Override
-        public void apply(
-                final Boolean value,
-                final DatagramSocket datagramSocket) throws SocketException {
-            datagramSocket.setBroadcast(value);
-        }
+                @Override
+                public void apply(
+                        final Boolean value,
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    datagramSocket.setBroadcast(value);
+                }
 
-        @Override
-        protected Boolean parse(final String value) {
-            return Boolean.valueOf(value);
-        }
+                @Override
+                public Boolean extract(
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    return datagramSocket.getBroadcast();
+                }
 
-    });
+                @Override
+                protected Boolean parse(final String value) {
+                    return Boolean.valueOf(value);
+                }
+
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_KEEPALIVE}: a
@@ -159,50 +139,68 @@ public final class StandardSocketSettingSpecConstants {
                     "SO_KEEPALIVE",
                     Boolean.class) {
 
-        @Override
-        public void apply(
-                final Boolean value,
-                final Socket socket) throws SocketException {
-            socket.setKeepAlive(value);
-        }
+                @Override
+                public void apply(
+                        final Boolean value,
+                        final Socket socket) throws SocketException {
+                    socket.setKeepAlive(value);
+                }
 
-        @Override
-        protected Boolean parse(final String value) {
-            return Boolean.valueOf(value);
-        }
+                @Override
+                public Boolean extract(
+                        final Socket socket) throws SocketException {
+                    return socket.getKeepAlive();
+                }
 
-    });
+                @Override
+                protected Boolean parse(final String value) {
+                    return Boolean.valueOf(value);
+                }
+
+            });
 
     /**
-     * {@code SocketSettingSpec} constant for {@code SO_LINGER}: a
-     * {@code NonNegativeInteger} of the number of seconds of lingering on
-     * closing the TCP socket. The {@code SocketSetting} can only be applied
-     * on the following objects: {@code Socket}.
+     * {@code SocketSettingSpec} constant for {@code SO_LINGER}: an
+     * {@code Integer} of the number of seconds of lingering on closing the
+     * TCP socket (disabled if the number of seconds is negative). The
+     * {@code SocketSetting} can only be applied on the following objects:
+     * {@code Socket}.
      */
     @NameValuePairValueSpecDoc(
-            description = "Linger on closing the TCP socket in seconds",
+            description = "Linger on closing the TCP socket in seconds "
+                    + "(disabled if the number of seconds is negative)",
             name = "SO_LINGER",
-            syntax = "SO_LINGER=NON_NEGATIVE_INTEGER",
-            valueType = NonNegativeInteger.class
+            syntax = "SO_LINGER=-2147483648-2147483647",
+            valueType = Integer.class
     )
-    public static final SocketSettingSpec<NonNegativeInteger> SO_LINGER =
+    public static final SocketSettingSpec<Integer> SO_LINGER =
             SOCKET_SETTING_SPECS.addThenGet(new SocketSettingSpec<>(
                     "SO_LINGER",
-                    NonNegativeInteger.class) {
+                    Integer.class) {
 
-        @Override
-        public void apply(
-                final NonNegativeInteger value,
-                final Socket socket) throws SocketException {
-            socket.setSoLinger(true, value.intValue());
-        }
+                @Override
+                public void apply(
+                        final Integer value,
+                        final Socket socket) throws SocketException {
+                    if (value < 0) {
+                        socket.setSoLinger(false, value);
+                        return;
+                    }
+                    socket.setSoLinger(true, value);
+                }
 
-        @Override
-        protected NonNegativeInteger parse(final String value) {
-            return NonNegativeInteger.valueOf(value);
-        }
+                @Override
+                public Integer extract(
+                        final Socket socket) throws SocketException {
+                    return socket.getSoLinger();
+                }
 
-    });
+                @Override
+                protected Integer parse(final String value) {
+                    return Integer.valueOf(value);
+                }
+
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_RCVBUF}: a
@@ -221,33 +219,54 @@ public final class StandardSocketSettingSpecConstants {
                     "SO_RCVBUF",
                     PositiveInteger.class) {
 
-        @Override
-        public void apply(
-                final PositiveInteger value,
-                final DatagramSocket datagramSocket) throws SocketException {
-            datagramSocket.setReceiveBufferSize(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final PositiveInteger value,
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    datagramSocket.setReceiveBufferSize(value.intValue());
+                }
 
-        @Override
-        public void apply(
-                final PositiveInteger value,
-                final ServerSocket serverSocket) throws SocketException {
-            serverSocket.setReceiveBufferSize(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final PositiveInteger value,
+                        final ServerSocket serverSocket) throws SocketException {
+                    serverSocket.setReceiveBufferSize(value.intValue());
+                }
 
-        @Override
-        public void apply(
-                final PositiveInteger value,
-                final Socket socket) throws SocketException {
-            socket.setReceiveBufferSize(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final PositiveInteger value,
+                        final Socket socket) throws SocketException {
+                    socket.setReceiveBufferSize(value.intValue());
+                }
 
-        @Override
-        protected PositiveInteger parse(final String value) {
-            return PositiveInteger.valueOf(value);
-        }
+                @Override
+                public PositiveInteger extract(
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    return PositiveInteger.valueOf(
+                            datagramSocket.getReceiveBufferSize());
+                }
 
-    });
+                @Override
+                public PositiveInteger extract(
+                        final ServerSocket serverSocket) throws SocketException {
+                    return PositiveInteger.valueOf(
+                            serverSocket.getReceiveBufferSize());
+                }
+
+                @Override
+                public PositiveInteger extract(
+                        final Socket socket) throws SocketException {
+                    return PositiveInteger.valueOf(
+                            socket.getReceiveBufferSize());
+                }
+
+                @Override
+                protected PositiveInteger parse(final String value) {
+                    return PositiveInteger.valueOf(value);
+                }
+
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_REUSEADDR}: a
@@ -266,33 +285,51 @@ public final class StandardSocketSettingSpecConstants {
                     "SO_REUSEADDR",
                     Boolean.class) {
 
-        @Override
-        public void apply(
-                final Boolean value,
-                final DatagramSocket datagramSocket) throws SocketException {
-            datagramSocket.setReuseAddress(value);
-        }
+                @Override
+                public void apply(
+                        final Boolean value,
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    datagramSocket.setReuseAddress(value);
+                }
 
-        @Override
-        public void apply(
-                final Boolean value,
-                final ServerSocket serverSocket) throws SocketException {
-            serverSocket.setReuseAddress(value);
-        }
+                @Override
+                public void apply(
+                        final Boolean value,
+                        final ServerSocket serverSocket) throws SocketException {
+                    serverSocket.setReuseAddress(value);
+                }
 
-        @Override
-        public void apply(
-                final Boolean value,
-                final Socket socket) throws SocketException {
-            socket.setReuseAddress(value);
-        }
+                @Override
+                public void apply(
+                        final Boolean value,
+                        final Socket socket) throws SocketException {
+                    socket.setReuseAddress(value);
+                }
 
-        @Override
-        protected Boolean parse(final String value) {
-            return Boolean.valueOf(value);
-        }
+                @Override
+                public Boolean extract(
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    return datagramSocket.getReuseAddress();
+                }
 
-    });
+                @Override
+                public Boolean extract(
+                        final ServerSocket serverSocket) throws SocketException {
+                    return serverSocket.getReuseAddress();
+                }
+
+                @Override
+                public Boolean extract(
+                        final Socket socket) throws SocketException {
+                    return socket.getReuseAddress();
+                }
+
+                @Override
+                protected Boolean parse(final String value) {
+                    return Boolean.valueOf(value);
+                }
+
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_SNDBUF}: a
@@ -311,26 +348,39 @@ public final class StandardSocketSettingSpecConstants {
                     "SO_SNDBUF",
                     PositiveInteger.class) {
 
-        @Override
-        public void apply(
-                final PositiveInteger value,
-                final DatagramSocket datagramSocket) throws SocketException {
-            datagramSocket.setSendBufferSize(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final PositiveInteger value,
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    datagramSocket.setSendBufferSize(value.intValue());
+                }
 
-        @Override
-        public void apply(
-                final PositiveInteger value,
-                final Socket socket) throws SocketException {
-            socket.setSendBufferSize(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final PositiveInteger value,
+                        final Socket socket) throws SocketException {
+                    socket.setSendBufferSize(value.intValue());
+                }
 
-        @Override
-        protected PositiveInteger parse(final String value) {
-            return PositiveInteger.valueOf(value);
-        }
+                @Override
+                public PositiveInteger extract(
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    return PositiveInteger.valueOf(
+                            datagramSocket.getSendBufferSize());
+                }
 
-    });
+                @Override
+                public PositiveInteger extract(
+                        final Socket socket) throws SocketException {
+                    return PositiveInteger.valueOf(socket.getSendBufferSize());
+                }
+
+                @Override
+                protected PositiveInteger parse(final String value) {
+                    return PositiveInteger.valueOf(value);
+                }
+
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code SO_TIMEOUT}: a
@@ -351,33 +401,56 @@ public final class StandardSocketSettingSpecConstants {
                     "SO_TIMEOUT",
                     NonNegativeInteger.class) {
 
-        @Override
-        public void apply(
-                final NonNegativeInteger value,
-                final DatagramSocket datagramSocket) throws SocketException {
-            datagramSocket.setSoTimeout(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final NonNegativeInteger value,
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    datagramSocket.setSoTimeout(value.intValue());
+                }
 
-        @Override
-        public void apply(
-                final NonNegativeInteger value,
-                final ServerSocket serverSocket) throws SocketException {
-            serverSocket.setSoTimeout(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final NonNegativeInteger value,
+                        final ServerSocket serverSocket) throws SocketException {
+                    serverSocket.setSoTimeout(value.intValue());
+                }
 
-        @Override
-        public void apply(
-                final NonNegativeInteger value,
-                final Socket socket) throws SocketException {
-            socket.setSoTimeout(value.intValue());
-        }
+                @Override
+                public void apply(
+                        final NonNegativeInteger value,
+                        final Socket socket) throws SocketException {
+                    socket.setSoTimeout(value.intValue());
+                }
 
-        @Override
-        protected NonNegativeInteger parse(final String value) {
-            return NonNegativeInteger.valueOf(value);
-        }
+                @Override
+                public NonNegativeInteger extract(
+                        final DatagramSocket datagramSocket) throws SocketException {
+                    return NonNegativeInteger.valueOf(
+                            datagramSocket.getSoTimeout());
+                }
 
-    });
+                @Override
+                public NonNegativeInteger extract(
+                        final ServerSocket serverSocket) {
+                    try {
+                        return NonNegativeInteger.valueOf(serverSocket.getSoTimeout());
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+
+                @Override
+                public NonNegativeInteger extract(
+                        final Socket socket) throws SocketException {
+                    return NonNegativeInteger.valueOf(socket.getSoTimeout());
+                }
+
+                @Override
+                protected NonNegativeInteger parse(final String value) {
+                    return NonNegativeInteger.valueOf(value);
+                }
+
+            });
 
     /**
      * {@code SocketSettingSpec} constant for {@code TCP_NODELAY}: a
@@ -396,24 +469,41 @@ public final class StandardSocketSettingSpecConstants {
                     "TCP_NODELAY",
                     Boolean.class) {
 
-        @Override
-        public void apply(
-                final Boolean value,
-                final Socket socket) throws SocketException {
-            socket.setTcpNoDelay(value);
-        }
+                @Override
+                public void apply(
+                        final Boolean value,
+                        final Socket socket) throws SocketException {
+                    socket.setTcpNoDelay(value);
+                }
 
-        @Override
-        protected Boolean parse(final String value) {
-            return Boolean.valueOf(value);
-        }
+                @Override
+                public Boolean extract(
+                        final Socket socket) throws SocketException {
+                    return socket.getTcpNoDelay();
+                }
 
-    });
+                @Override
+                protected Boolean parse(final String value) {
+                    return Boolean.valueOf(value);
+                }
+
+            });
 
     /**
      * Prevents the construction of unnecessary instances.
      */
     private StandardSocketSettingSpecConstants() {
+    }
+
+    /**
+     * Returns an unmodifiable {@code List} of the {@code SocketSettingSpec}
+     * constants.
+     *
+     * @return an unmodifiable {@code List} of the {@code SocketSettingSpec}
+     * constants
+     */
+    public static List<SocketSettingSpec<Object>> values() {
+        return SOCKET_SETTING_SPECS.toList();
     }
 
     /**

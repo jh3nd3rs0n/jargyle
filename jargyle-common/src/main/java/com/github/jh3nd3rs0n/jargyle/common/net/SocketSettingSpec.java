@@ -114,6 +114,58 @@ public abstract class SocketSettingSpec<V> {
     }
 
     /**
+     * Extracts the value from the provided {@code DatagramSocket}. An
+     * {@code UnsupportedOperationException} is thrown if this
+     * {@code SocketSettingSpec} does not support extraction from the provided
+     * {@code DatagramSocket}.
+     *
+     * @param datagramSocket the provided {@code DatagramSocket}
+     * @return the value from the provided {@code DatagramSocket}
+     * @throws SocketException if an error occurs in extracting the value from
+     *                         the provided {@code DatagramSocket}
+     */
+    public V extract(
+            final DatagramSocket datagramSocket) throws SocketException {
+        throw new UnsupportedOperationException(String.format(
+                "socket setting spec %s does not support extraction from a %s",
+                this.name, DatagramSocket.class.getName()));
+    }
+
+    /**
+     * Extracts the value from the provided {@code ServerSocket}. An
+     * {@code UnsupportedOperationException} is thrown if this
+     * {@code SocketSettingSpec} does not support extraction from the provided
+     * {@code ServerSocket}.
+     *
+     * @param serverSocket the provided {@code ServerSocket}
+     * @return the value from the provided {@code ServerSocket}
+     * @throws SocketException if an error occurs in extracting the value from
+     *                         the provided {@code ServerSocket}
+     */
+    public V extract(final ServerSocket serverSocket) throws SocketException {
+        throw new UnsupportedOperationException(String.format(
+                "socket setting spec %s does not support extraction from a %s",
+                this.name, ServerSocket.class.getName()));
+    }
+
+    /**
+     * Extracts the value from the provided {@code Socket}. An
+     * {@code UnsupportedOperationException} is thrown if this
+     * {@code SocketSettingSpec} does not support extraction from the provided
+     * {@code Socket}.
+     *
+     * @param socket the provided {@code Socket}
+     * @return the value from the provided {@code Socket}
+     * @throws SocketException if an error occurs in extracting the value from
+     *                         the provided {@code Socket}
+     */
+    public V extract(final Socket socket) throws SocketException {
+        throw new UnsupportedOperationException(String.format(
+                "socket setting spec %s does not support extraction from a %s",
+                this.name, Socket.class.getName()));
+    }
+
+    /**
      * Returns the name of the {@code SocketSetting}.
      *
      * @return the name of the {@code SocketSetting}

@@ -150,7 +150,7 @@ socks5.secondReply.serverBoundAddress=ADDRESS_RANGE
 
 **Description:**
 
-Specifies the server bound address of the second reply (for the BIND command)
+Specifies the server bound address of the second reply (for the BIND request)
 
 **Value:** [Address Range](value-syntaxes.md#address-range)
 
@@ -164,7 +164,7 @@ socks5.secondReply.serverBoundPort=PORT_RANGE
 
 **Description:**
 
-Specifies the server bound port of the second reply (for the BIND command)
+Specifies the server bound port of the second reply (for the BIND request)
 
 **Value:** [Port Range](value-syntaxes.md#port-range)
 

@@ -26,8 +26,7 @@ public final class GeneralPropertySpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the client "
 					+ "socket that is used to connect to the SOCKS server "
-					+ "(used for the SOCKS5 commands RESOLVE, BIND and UDP "
-					+ "ASSOCIATE) (default is 0.0.0.0)",
+					+ "(default is 0.0.0.0)",
 			name = "socksClient.clientBindHost",
 			syntax = "socksClient.clientBindHost=HOST",
 			valueType = Host.class
@@ -40,8 +39,7 @@ public final class GeneralPropertySpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the client socket that is used to connect to the SOCKS "
-					+ "server (used for the SOCKS5 commands RESOLVE, BIND and "
-					+ "UDP ASSOCIATE) (default is 0)",
+					+ "server (default is 0)",
 			name = "socksClient.clientBindPortRanges",
 			syntax = "socksClient.clientBindPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -53,8 +51,7 @@ public final class GeneralPropertySpecConstants {
 	
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on waiting for the "
-					+ "client socket to connect to the SOCKS server (used for "
-					+ "the SOCKS5 commands RESOLVE, BIND and UDP ASSOCIATE) "
+					+ "client socket to connect to the SOCKS server "
 					+ "(default is 60000)",
 			name = "socksClient.clientConnectTimeout",
 			syntax = "socksClient.clientConnectTimeout=POSITIVE_INTEGER",
@@ -68,8 +65,7 @@ public final class GeneralPropertySpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "client socket that is used to connect to the SOCKS "
-					+ "server (used for the SOCKS5 command RESOLVE and UDP "
-					+ "ASSOCIATE)",
+					+ "server",
 			name = "socksClient.clientSocketSettings",
 			syntax = "socksClient.clientSocketSettings=SOCKET_SETTINGS",
 			valueType = SocketSettings.class

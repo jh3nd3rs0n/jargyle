@@ -41,11 +41,11 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSslIT {
     private static SocksClient newChainedSocks5ClientToSocksServersUsingSsl() {
         SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_1_USING_SSL))
+                        SOCKS_SERVER_PORT_1_USING_SSL)
                 .newSocksClient(Properties.of());
-        SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
+        return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(SOCKS_SERVER_PORT_2_USING_SSL))
+                        SOCKS_SERVER_PORT_2_USING_SSL)
                 .newSocksClient(Properties.of(
                                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
                                         Boolean.TRUE),
@@ -60,7 +60,6 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSslIT {
                                 SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
                                         TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_PASSWORD_FILE.getContentAsString())),
                         client1);
-        return client2;
     }
 
     private static List<Configuration> newConfigurationsUsingSsl() {

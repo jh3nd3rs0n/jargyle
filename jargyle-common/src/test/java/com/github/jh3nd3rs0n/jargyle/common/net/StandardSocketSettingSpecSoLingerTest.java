@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.common.net;
 
-import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,24 +14,65 @@ public class StandardSocketSettingSpecSoLingerTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueDatagramSocket() throws SocketException {
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
-                NonNegativeInteger.valueOf(234),
+                234,
                 new DatagramSocket(null));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testApplyValueServerSocket() throws IOException {
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
-                NonNegativeInteger.valueOf(234),
+                234,
                 new ServerSocket());
     }
 
     @Test
-    public void testApplyValueSocket() throws SocketException {
+    public void testApplyValueSocket01() throws SocketException {
         Socket socket = new Socket();
         StandardSocketSettingSpecConstants.SO_LINGER.apply(
-                NonNegativeInteger.valueOf(234),
+                234,
                 socket);
         Assert.assertEquals(234, socket.getSoLinger());
+    }
+
+    @Test
+    public void testApplyValueSocket02() throws SocketException {
+        Socket socket = new Socket();
+        StandardSocketSettingSpecConstants.SO_LINGER.apply(
+                -234,
+                socket);
+        Assert.assertEquals(-1, socket.getSoLinger());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractDatagramSocketForUnsupportedOperationException() throws SocketException {
+        StandardSocketSettingSpecConstants.SO_LINGER.extract(
+                new DatagramSocket(null));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testExtractServerSocketForUnsupportedOperationException() throws IOException {
+        StandardSocketSettingSpecConstants.SO_LINGER.extract(
+                new ServerSocket());
+    }
+
+    @Test
+    public void testExtractSocket01() throws SocketException {
+        Socket socket = new Socket();
+        socket.setSoLinger(true, 12);
+        Assert.assertEquals(
+                12,
+                StandardSocketSettingSpecConstants.SO_LINGER.extract(
+                        socket).intValue());
+    }
+
+    @Test
+    public void testExtractSocket02() throws SocketException {
+        Socket socket = new Socket();
+        socket.setSoLinger(false, -12);
+        Assert.assertEquals(
+                -1,
+                StandardSocketSettingSpecConstants.SO_LINGER.extract(
+                        socket).intValue());
     }
 
     @Test

@@ -50,7 +50,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSslIT {
                         ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
                                 Scheme.SOCKS5.newSocksServerUri(
                                         InetAddress.getLoopbackAddress().getHostAddress(),
-                                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_2_USING_SSL))),
+                                        CHAINED_SOCKS_SERVER_PORT_2_USING_SSL)),
                         ChainingDtlsSettingSpecConstants.CHAINING_DTLS_ENABLED.newSetting(Boolean.TRUE),
                         ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_FILE.newSetting(
                                 TestResourceConstants.ECHO_SOCKS_SERVER_KEY_STORE_FILE.getFile()),
@@ -81,7 +81,7 @@ public class EchoThroughSocks5ClientToChainedSocksServersUsingSslIT {
     private static SocksClient newSocks5ClientToChainedSocksServersUsingSsl() {
         return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        Integer.valueOf(CHAINED_SOCKS_SERVER_PORT_1_USING_SSL))
+                        CHAINED_SOCKS_SERVER_PORT_1_USING_SSL)
                 .newSocksClient(Properties.of());
     }
 

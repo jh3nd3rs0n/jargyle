@@ -17,15 +17,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient.ClientSocketConnectParams;
+import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
-import com.github.jh3nd3rs0n.jargyle.common.net.PerformancePreferences;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.common.number.Digit;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.net.FilterSocket;
@@ -283,12 +278,12 @@ public final class Socks5ServerSocket extends ServerSocket {
 		private int localPort;
 		private SocketAddress localSocketAddress;
 		private Socket socket;
-		private SocketSettings socketSettings;
+		private final SocketSettings socketSettings;
 		private boolean socks5Bound;
 		private final Socks5Client socks5Client;
 		
 		public Socks5ServerSocketImpl(final Socks5Client client) {
-			Socket sock = client.newClientSocket();
+			Socket sock = client.getClientSocketBuilder().newClientSocket();
 			this.bound = false;
 			this.closed = false;
 			this.localInetAddress = null;
@@ -332,7 +327,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 						serverBoundPort,
 						this.localInetAddress,
 						this.localPort);
-				Socket newSocket = this.socks5Client.newClientSocket();
+				Socket newSocket =
+						this.socks5Client.getClientSocketBuilder().newClientSocket();
 				this.socketSettings.applyTo(newSocket);
 				this.socket = newSocket;
 			} finally {
@@ -375,7 +371,22 @@ public final class Socks5ServerSocket extends ServerSocket {
 			this.socks5Bound = false;
 			this.socket.close();
 		}
-		
+
+		private Host getClientBindHost() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_BIND_HOST);
+		}
+
+		private PortRanges getClientBindPortRanges() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+		}
+
+		private PositiveInteger getClientConnectTimeout() {
+			return this.socks5Client.getProperties().getValue(
+					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
+		}
+
 		public int getReceiveBufferSize() throws SocketException {
 			return this.socket.getReceiveBufferSize();
 		}
@@ -391,14 +402,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 		public void setPerformancePreferences(
 				int connectionTime, int latency, int bandwidth) {
 			if (!this.bound) {
-				PerformancePreferences pp = PerformancePreferences.of(
-						Digit.valueOf(connectionTime),
-						Digit.valueOf(bandwidth),
-						Digit.valueOf(latency));
 				this.socket.setPerformancePreferences(
 						connectionTime, latency, bandwidth);
-				this.socketSettings.putValue(
-						StandardSocketSettingSpecConstants.PERF_PREFS, pp);
 			}
 		}
 		
@@ -425,13 +430,16 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			ClientSocketConnectParams params = new ClientSocketConnectParams();
-			params.setSocketSettings(this.socketSettings);
-			Socket sock = this.socks5Client.getConnectedClientSocket(
-					this.socket, params);
+			Socket sock = this.socks5Client.getClientSocketBuilder()
+					.proceedToConfigure(this.socket)
+					.proceedToConnect()
+					.setLocalAddress(this.getClientBindHost().toInetAddress())
+					.setLocalPortRanges(this.getClientBindPortRanges())
+					.setTimeout(this.getClientConnectTimeout().intValue())
+					.getConnectedClientSocket();
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.doMethodSubnegotiation(method, sock);
+					this.socks5Client.doMethodSubNegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
 			int prt = port;
 			if (prt == -1) {
@@ -459,14 +467,6 @@ public final class Socks5ServerSocket extends ServerSocket {
 								+ "actual server bound address is %s", 
 								serverBoundAddress));
 			}
-			if (serverBoundPort < 0 || serverBoundPort > Port.MAX_INT_VALUE) {
-				throw new Socks5ClientIOException(
-						this.socks5Client, 
-						String.format(
-								"server bound port is out of range. "
-								+ "actual server bound port is %s", 
-								serverBoundPort));				
-			}			
 			this.bound = true;
 			this.localInetAddress = InetAddress.getByName(serverBoundAddress);
 			this.localPort = serverBoundPort;

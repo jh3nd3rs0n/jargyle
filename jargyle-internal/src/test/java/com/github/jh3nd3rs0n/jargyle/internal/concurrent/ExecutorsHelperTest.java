@@ -46,7 +46,7 @@ public class ExecutorsHelperTest {
         ExecutorService executorService2 =
                 ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
                         ExecutorsHelper.newCachedThreadPoolBuilder());
-        if (ExecutorsHelper.canUseVirtualThreads() && Runtime.version().version().get(0) != 19) {
+        if (Runtime.version().version().get(0) >= 21) {
             Assert.assertNotEquals(
                     executorService1.getClass(),
                     executorService2.getClass());
@@ -63,7 +63,7 @@ public class ExecutorsHelperTest {
         ExecutorService executorService2 =
                 ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
                         ExecutorsHelper.newFixedThreadPoolBuilder(2));
-        if (ExecutorsHelper.canUseVirtualThreads() && Runtime.version().version().get(0) != 19) {
+        if (Runtime.version().version().get(0) >= 21) {
             Assert.assertNotEquals(
                     executorService1.getClass(),
                     executorService2.getClass());

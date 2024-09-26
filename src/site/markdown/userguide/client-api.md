@@ -56,6 +56,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -67,12 +68,30 @@ public class ClientApp {
         System.setProperty("socksServerUri.host", "jargyle.net");
         
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        
-        Socket socket = netObjectFactory.newSocket();
-        ServerSocket serverSocket = netObjectFactory.newServerSocket();
-        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket();
+
+        /*
+         * Example of creating a HostResolver and a Socket
+         */
+        /*        
         HostResolver hostResolver = netObjectFactory.newHostResolver();
-        
+        InetAddress inetAddress = hostResolver.resolve("google.com");        
+        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        */
+
+        /*
+         * Example of creating a ServerSocket
+         */
+        /*
+        ServerSocket serverSocket = netObjectFactory.newServerSocket(443);
+        */
+
+        /*
+         * Example of creating a DatagramSocket
+         */        
+        /*
+        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket(4444);
+        */
+
         // ...
     }
 }
@@ -110,6 +129,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -125,12 +145,30 @@ public class ClientApp {
                 
         NetObjectFactory netObjectFactory = 
             socksClient.newSocksNetObjectFactory();
-        
-        Socket socket = netObjectFactory.newSocket();
-        ServerSocket serverSocket = netObjectFactory.newServerSocket();
-        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket();
+
+        /*
+         * Example of creating a HostResolver and a Socket
+         */
+        /*        
         HostResolver hostResolver = netObjectFactory.newHostResolver();
-        
+        InetAddress inetAddress = hostResolver.resolve("google.com");        
+        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        */
+
+        /*
+         * Example of creating a ServerSocket
+         */
+        /*
+        ServerSocket serverSocket = netObjectFactory.newServerSocket(443);
+        */
+
+        /*
+         * Example of creating a DatagramSocket
+         */        
+        /*
+        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket(4444);
+        */
+
         // ...
     }
 }
@@ -158,6 +196,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -205,6 +244,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 

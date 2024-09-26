@@ -203,7 +203,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			int port = datagramSock.getLocalPort();
 			Properties properties = this.socks5Client.getProperties();
 			if (properties.getValue(
-					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN).booleanValue()) {
+					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE).booleanValue()) {
 				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
 				port = 0;
 			}
@@ -228,16 +228,18 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 				serverBoundAddress = 
 						this.socks5Client.getSocksServerUri().getHost().toString();
 			}
-			datagramSock = this.socks5Client.getConnectedClientDatagramSocket(
-					datagramSock,
-					serverBoundAddress,
-					serverBoundPort);
+			InetAddress serverBoundInetAddress = InetAddress.getByName(
+					serverBoundAddress);
+			datagramSock = this.socks5Client.getClientDatagramSocketBuilder()
+					.getConnectedClientDatagramSocket(
+							datagramSock,
+							serverBoundInetAddress,
+							serverBoundPort);
 			DatagramSocket datagramSck = methodEncapsulation.getDatagramSocket(
 					datagramSock);
 			this.associated = true;
 			this.datagramSocket = datagramSck;
-			this.udpRelayServerInetAddress = InetAddress.getByName(
-					serverBoundAddress);
+			this.udpRelayServerInetAddress = serverBoundInetAddress;
 			this.udpRelayServerPort = serverBoundPort;
 			this.socket = sck;
 		}

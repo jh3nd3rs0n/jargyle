@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,14 +16,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Listener implements Runnable {
 
-	private final ConfiguredWorkerParamsProvider configuredWorkerParamsProvider;
+	private final ConfiguredWorkerPropertiesProvider configuredWorkerPropertiesProvider;
 	private final AtomicInteger currentWorkerCount;	
 	private final Logger logger;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.configuredWorkerParamsProvider = 
-				new ConfiguredWorkerParamsProvider(config);		
+		this.configuredWorkerPropertiesProvider =
+				new ConfiguredWorkerPropertiesProvider(config);
 		this.currentWorkerCount = new AtomicInteger(0);
 		this.logger = LoggerFactory.getLogger(Listener.class);
 		this.serverSocket = serverSock;
@@ -31,8 +31,8 @@ public final class Listener implements Runnable {
 	
 	public void run() {
 		ExecutorService executor =
-				ExecutorsHelper.newPossibleVirtualThreadPerTaskExecutor(
-						ExecutorsHelper.DefaultExecutorFactory.CACHED_THREAD_POOL_FACTORY);
+				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+						ExecutorsHelper.newCachedThreadPoolBuilder());
 		try {
 			while (true) {
 				try {
@@ -40,7 +40,7 @@ public final class Listener implements Runnable {
 					executor.execute(new Worker(
 							clientSocket,
 							this.currentWorkerCount,
-							this.configuredWorkerParamsProvider));
+							this.configuredWorkerPropertiesProvider));
 				} catch (SocketTimeoutException e) {
 					this.logger.error(
 							ObjectLogMessageHelper.objectLogMessage(

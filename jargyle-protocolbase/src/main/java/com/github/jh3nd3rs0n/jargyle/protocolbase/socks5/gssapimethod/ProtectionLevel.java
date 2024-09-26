@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @EnumValueTypeDoc(
         description = "Security context protection level",
         name = "SOCKS5 GSS-API Method Protection Level",
-        syntax = "NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF",
+        syntax = "NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF|SELECTIVE_INTEG_OR_CONF",
         syntaxName = "SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL"
 )
 public enum ProtectionLevel {

@@ -1,0 +1,51 @@
+<!DOCTYPE html><html><head><title></title></head><body>
+<a id="client-properties"></a><h1>Client Properties</h1>
+<table>
+<tr><th colspan="3">SOCKS Server URI Properties</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socksServerUri.port</code></td><td><a href="value-syntaxes.html#port">Port</a></td><td>The port of the SOCKS server URI</td></tr>
+<tr><td><code>socksServerUri.host</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The host name or address of the SOCKS server URI</td></tr>
+<tr><td><code>socksServerUri.scheme</code></td><td><a href="value-syntaxes.html#scheme">Scheme</a></td><td>The scheme of the SOCKS server URI</td></tr>
+<tr><th colspan="3">General Properties</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socksClient.clientBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the client socket that is used to connect to the SOCKS server (default is 0.0.0.0)</td></tr>
+<tr><td><code>socksClient.clientBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the client socket that is used to connect to the SOCKS server (default is 0)</td></tr>
+<tr><td><code>socksClient.clientConnectTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (default is 60000)</td></tr>
+<tr><td><code>socksClient.clientSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server</td></tr>
+<tr><th colspan="3">DTLS Properties</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socksClient.dtls.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)</td></tr>
+<tr><td><code>socksClient.dtls.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.dtls.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.dtls.maxPacketSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The maximum packet size for the DTLS connections to the SOCKS server (default is 32768)</td></tr>
+<tr><td><code>socksClient.dtls.protocol</code></td><td>java.lang.String</td><td>The protocol version for the DTLS connections to the SOCKS server (default is DTLSv1.2)</td></tr>
+<tr><td><code>socksClient.dtls.trustStoreFile</code></td><td>java.io.File.toString()</td><td>The trust store file for the DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.dtls.trustStorePassword</code></td><td>java.lang.String</td><td>The password for the trust store for the DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.dtls.trustStoreType</code></td><td>java.lang.String</td><td>The type of trust store file for the DTLS connections to the SOCKS server (default is PKCS12)</td></tr>
+<tr><th colspan="3">SOCKS5 Properties</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socksClient.socks5.gssapimethod.mechanismOid</code></td><td>org.ietf.jgss.Oid.toString()</td><td>The object ID for the GSS-API authentication mechanism to the SOCKS5 server (default is 1.2.840.113554.1.2.2)</td></tr>
+<tr><td><code>socksClient.socks5.gssapimethod.necReferenceImpl</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the SOCKS5 server use the NEC reference implementation (default is false)</td></tr>
+<tr><td><code>socksClient.socks5.gssapimethod.protectionLevels</code></td><td><a href="value-syntaxes.html#socks5-gss-api-method-protection-levels">SOCKS5 GSS-API Method Protection Levels</a></td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)</td></tr>
+<tr><td><code>socksClient.socks5.gssapimethod.serviceName</code></td><td>java.lang.String</td><td>The GSS-API service name for the SOCKS5 server</td></tr>
+<tr><td><code>socksClient.socks5.gssapimethod.suggestedConf</code></td><td>java.lang.Boolean.toString()</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is true)</td></tr>
+<tr><td><code>socksClient.socks5.gssapimethod.suggestedInteg</code></td><td>java.lang.Integer.toString()</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is 0)</td></tr>
+<tr><td><code>socksClient.socks5.methods</code></td><td><a href="value-syntaxes.html#socks5-methods">SOCKS5 Methods</a></td><td>The comma separated list of acceptable authentication methods to the SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)</td></tr>
+<tr><td><code>socksClient.socks5.socks5DatagramSocket.clientInfoUnavailable</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the SOCKS5 server (an address and port of all zeros is sent instead) (default is false)</td></tr>
+<tr><td><code>socksClient.socks5.socks5HostResolver.resolveFromSocks5Server</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if host names are to be resolved from the SOCKS5 server (default is false)</td></tr>
+<tr><td><code>socksClient.socks5.userpassmethod.password</code></td><td>java.lang.String</td><td>The password to be used to access the SOCKS5 server</td></tr>
+<tr><td><code>socksClient.socks5.userpassmethod.username</code></td><td>java.lang.String</td><td>The username to be used to access the SOCKS5 server</td></tr>
+<tr><th colspan="3">SSL/TLS Properties</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socksClient.ssl.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)</td></tr>
+<tr><td><code>socksClient.ssl.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.ssl.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.ssl.keyStoreFile</code></td><td>java.io.File.toString()</td><td>The key store file for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.ssl.keyStorePassword</code></td><td>java.lang.String</td><td>The password for the key store for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.ssl.keyStoreType</code></td><td>java.lang.String</td><td>The type of key store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)</td></tr>
+<tr><td><code>socksClient.ssl.protocol</code></td><td>java.lang.String</td><td>The protocol version for the SSL/TLS connections to the SOCKS server (default is TLSv1.2)</td></tr>
+<tr><td><code>socksClient.ssl.trustStoreFile</code></td><td>java.io.File.toString()</td><td>The trust store file for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.ssl.trustStorePassword</code></td><td>java.lang.String</td><td>The password for the trust store for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>socksClient.ssl.trustStoreType</code></td><td>java.lang.String</td><td>The type of trust store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)</td></tr>
+</table>
+</body></html>

@@ -106,15 +106,13 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 				socket, host, port,	autoClose);
 		CommaSeparatedValues enabledCipherSuites = this.properties.getValue(
 				SslPropertySpecConstants.SSL_ENABLED_CIPHER_SUITES);
-		String[] cipherSuites = enabledCipherSuites.toArray();
-		if (cipherSuites.length > 0) {
-			sslSocket.setEnabledCipherSuites(cipherSuites);
+		if (enabledCipherSuites != null) {
+			sslSocket.setEnabledCipherSuites(enabledCipherSuites.toArray());
 		}
 		CommaSeparatedValues enabledProtocols = this.properties.getValue(
 				SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS);
-		String[] protocols = enabledProtocols.toArray();
-		if (protocols.length > 0) {
-			sslSocket.setEnabledProtocols(protocols);
+		if (enabledProtocols != null) {
+			sslSocket.setEnabledProtocols(enabledProtocols.toArray());
 		}
 		return sslSocket;
 	}

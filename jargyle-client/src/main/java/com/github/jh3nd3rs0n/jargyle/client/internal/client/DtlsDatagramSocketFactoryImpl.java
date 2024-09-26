@@ -19,7 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantLock;
 
-public final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
+final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
 	public static boolean isDtlsEnabled(final Properties props) {
 		return props.getValue(
@@ -82,15 +82,15 @@ public final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFacto
 		dtlsDatagramSocket.setUseClientMode(true);
 		CommaSeparatedValues enabledCipherSuites = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_ENABLED_CIPHER_SUITES);
-		String[] cipherSuites = enabledCipherSuites.toArray();
-		if (cipherSuites.length > 0) {
-			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
+		if (enabledCipherSuites != null) {
+			dtlsDatagramSocket.setEnabledCipherSuites(
+					enabledCipherSuites.toArray());
 		}
 		CommaSeparatedValues enabledProtocols = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS);
-		String[] protocols = enabledProtocols.toArray();
-		if (protocols.length > 0) {
-			dtlsDatagramSocket.setEnabledProtocols(protocols);
+		if (enabledProtocols != null) {
+			dtlsDatagramSocket.setEnabledProtocols(
+					enabledProtocols.toArray());
 		}
 		PositiveInteger maxPacketSize = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE);

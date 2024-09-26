@@ -28,7 +28,7 @@ public final class ClientSocketBuilder {
         this.socksClient = client;
         this.netObjectFactory = (chainedClient != null) ?
                 chainedClient.newSocksNetObjectFactory()
-                : NetObjectFactory.getInstance();
+                : NetObjectFactory.getDefault();
         this.sslSocketFactory =
                 (SslSocketFactoryImpl.isSslEnabled(properties)) ?
                         new SslSocketFactoryImpl(properties) : null;

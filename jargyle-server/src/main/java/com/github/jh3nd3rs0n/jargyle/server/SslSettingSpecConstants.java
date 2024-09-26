@@ -44,7 +44,7 @@ public final class SslSettingSpecConstants {
 	public static final SettingSpec<CommaSeparatedValues> SSL_ENABLED_CIPHER_SUITES = 
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"ssl.enabledCipherSuites", 
-					CommaSeparatedValues.of(new String[] { })));
+					null));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable protocol "
@@ -57,7 +57,7 @@ public final class SslSettingSpecConstants {
 	public static final SettingSpec<CommaSeparatedValues> SSL_ENABLED_PROTOCOLS = 
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"ssl.enabledProtocols", 
-					CommaSeparatedValues.of(new String[] { })));
+					null));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the SSL/TLS connections to "

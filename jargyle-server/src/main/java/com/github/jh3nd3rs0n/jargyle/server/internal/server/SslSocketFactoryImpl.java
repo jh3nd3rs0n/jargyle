@@ -101,15 +101,13 @@ final class SslSocketFactoryImpl extends SslSocketFactory {
 		Settings settings = this.configuration.getSettings();
 		CommaSeparatedValues enabledCipherSuites = settings.getLastValue(
 				SslSettingSpecConstants.SSL_ENABLED_CIPHER_SUITES);
-		String[] cipherSuites = enabledCipherSuites.toArray();
-		if (cipherSuites.length > 0) {
-			sslSocket.setEnabledCipherSuites(cipherSuites);
+		if (enabledCipherSuites != null) {
+			sslSocket.setEnabledCipherSuites(enabledCipherSuites.toArray());
 		}
 		CommaSeparatedValues enabledProtocols = settings.getLastValue(
 				SslSettingSpecConstants.SSL_ENABLED_PROTOCOLS);
-		String[] protocols = enabledProtocols.toArray();
-		if (protocols.length > 0) {
-			sslSocket.setEnabledProtocols(protocols);
+		if (enabledProtocols != null) {
+			sslSocket.setEnabledProtocols(enabledProtocols.toArray());
 		}
 		if (settings.getLastValue(
 				SslSettingSpecConstants.SSL_NEED_CLIENT_AUTH).booleanValue()) {

@@ -118,20 +118,22 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_METHODS.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that the actual "
-					+ "address and port for sending UDP datagrams to the "
-					+ "other SOCKS5 server is unknown (default is false)",
-			name = "chaining.socks5.socks5DatagramSocket.actualAddressAndPortUnknown",
-			syntax = "chaining.socks5.socks5DatagramSocket.actualAddressAndPortUnknown=true|false",
+			description = "The boolean value to indicate if the client "
+					+ "information expected to be used to send UDP datagrams "
+					+ "(address and port) is unavailable to be sent to the "
+					+ "other SOCKS5 server (an address and port of all zeros "
+					+ "is sent instead) (default is false)",
+			name = "chaining.socks5.socks5DatagramSocket.clientInfoUnavailable",
+			syntax = "chaining.socks5.socks5DatagramSocket.clientInfoUnavailable=true|false",
 			valueType = Boolean.class
 	)
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN =
+	public static final SettingSpec<Boolean> CHAINING_SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE =
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"chaining.socks5.socks5DatagramSocket.actualAddressAndPortUnknown",
-					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN.getDefaultProperty().getValue()));
+					"chaining.socks5.socks5DatagramSocket.clientInfoUnavailable",
+					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate that host names "
+			description = "The boolean value to indicate if host names "
 					+ "are to be resolved from the other SOCKS5 server "
 					+ "(default is false)",
 			name = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",

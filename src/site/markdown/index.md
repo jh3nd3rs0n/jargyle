@@ -27,6 +27,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -80,15 +81,30 @@ public class ClientApp {
          * would be ordinary networking objects.
          */
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        Socket socket = netObjectFactory.newSocket();
-        ServerSocket serverSocket = netObjectFactory.newServerSocket();
-        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket();
-        HostResolver hostResolver = netObjectFactory.newHostResolver();
-        
+
         /*
-         * Use the created networking objects as if they were 
-         * ordinary networking objects.
+         * Example of creating a HostResolver and a Socket
          */
+        /*        
+        HostResolver hostResolver = netObjectFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("google.com");        
+        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        */
+
+        /*
+         * Example of creating a ServerSocket
+         */
+        /*
+        ServerSocket serverSocket = netObjectFactory.newServerSocket(443);
+        */
+
+        /*
+         * Example of creating a DatagramSocket
+         */        
+        /*
+        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket(4444);
+        */
+        
         // ...
     }
 }

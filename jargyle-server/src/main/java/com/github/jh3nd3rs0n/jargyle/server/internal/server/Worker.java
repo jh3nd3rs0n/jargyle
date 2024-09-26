@@ -58,22 +58,22 @@ public class Worker implements Runnable {
 	Worker(
 			final Socket clientSock, 
 			final AtomicInteger workerCount,
-			final ConfiguredWorkerParamsProvider configuredWorkerParamsProvider) {
-		ConfiguredWorkerParams configuredWorkerParams = 
-				configuredWorkerParamsProvider.getConfiguredWorkerParams();
+			final ConfiguredWorkerPropertiesProvider configuredWorkerPropertiesProvider) {
+		ConfiguredWorkerProperties configuredWorkerProperties =
+				configuredWorkerPropertiesProvider.getConfiguredWorkerProperties();
 		this.applicableRule = null;
 		this.belowAllowLimitRules = new HashSet<Rule>();
 		this.clientFacingDtlsDatagramSocketFactory = 
-				configuredWorkerParams.getClientFacingDtlsDatagramSocketFactory();
+				configuredWorkerProperties.getClientFacingDtlsDatagramSocketFactory();
 		this.clientSocket = clientSock;
 		this.clientSslSocketFactory = 
-				configuredWorkerParams.getClientSslSocketFactory();
-		this.configuration = configuredWorkerParams.getConfiguration();
+				configuredWorkerProperties.getClientSslSocketFactory();
+		this.configuration = configuredWorkerProperties.getConfiguration();
 		this.currentWorkerCount = workerCount;		
 		this.logger = LoggerFactory.getLogger(Worker.class);
-		this.routes = configuredWorkerParams.getRoutes();
+		this.routes = configuredWorkerProperties.getRoutes();
 		this.ruleContext = null;
-		this.rules = configuredWorkerParams.getRules();
+		this.rules = configuredWorkerProperties.getRules();
 		this.selectedRoute = null;
 		this.worker = null;
 	}

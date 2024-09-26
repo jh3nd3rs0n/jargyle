@@ -43,7 +43,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>test-help</artifactId>
+			<artifactId>jargyle-test-help</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -59,11 +59,4 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>

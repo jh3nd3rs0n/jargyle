@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>jargyle-protocolbase</artifactId>
 	<name>Jargyle Protocolbase</name>
-	<description>Foundational API for the SOCKS client and server API</description>
+	<description>Foundational API for the SOCKS client API and the SOCKS server API</description>
 	<properties>
 		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
 	</properties>
@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>test-help</artifactId>
+			<artifactId>jargyle-test-help</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>test</scope>
 		</dependency>

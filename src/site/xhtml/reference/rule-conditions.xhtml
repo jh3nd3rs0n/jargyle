@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><title></title></head><body>
+<a id="rule-conditions"></a><h1>Rule Conditions</h1>
+<table>
+<tr><th colspan="3">General Rule Conditions</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>clientAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the client address</td></tr>
+<tr><td><code>socksServerAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the SOCKS server address the client connected to</td></tr>
+<tr><th colspan="3">SOCKS5 Rule Conditions</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socks5.method</code></td><td><a href="value-syntaxes.html#socks5-method">SOCKS5 Method</a></td><td>Specifies the negotiated method</td></tr>
+<tr><td><code>socks5.reply.serverBoundAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the server bound address of the reply</td></tr>
+<tr><td><code>socks5.reply.serverBoundPort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the server bound port of the reply</td></tr>
+<tr><td><code>socks5.request.command</code></td><td><a href="value-syntaxes.html#socks5-request-command">SOCKS5 Request Command</a></td><td>Specifies the command of the request</td></tr>
+<tr><td><code>socks5.request.desiredDestinationAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the desired destination address of the request</td></tr>
+<tr><td><code>socks5.request.desiredDestinationPort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the desired destination port of the request</td></tr>
+<tr><td><code>socks5.secondReply.serverBoundAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the server bound address of the second reply (for the BIND request)</td></tr>
+<tr><td><code>socks5.secondReply.serverBoundPort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the server bound port of the second reply (for the BIND request)</td></tr>
+<tr><td><code>socks5.udp.inbound.desiredDestinationAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the UDP inbound desired destination address</td></tr>
+<tr><td><code>socks5.udp.inbound.desiredDestinationPort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the UDP inbound desired destination port</td></tr>
+<tr><td><code>socks5.udp.inbound.sourceAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the UDP inbound source address</td></tr>
+<tr><td><code>socks5.udp.inbound.sourcePort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the UDP inbound source port</td></tr>
+<tr><td><code>socks5.udp.outbound.desiredDestinationAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the UDP outbound desired destination address</td></tr>
+<tr><td><code>socks5.udp.outbound.desiredDestinationPort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the UDP outbound desired destination port</td></tr>
+<tr><td><code>socks5.udp.outbound.sourceAddress</code></td><td><a href="value-syntaxes.html#address-range">Address Range</a></td><td>Specifies the UDP outbound source address</td></tr>
+<tr><td><code>socks5.udp.outbound.sourcePort</code></td><td><a href="value-syntaxes.html#port-range">Port Range</a></td><td>Specifies the UDP outbound source port</td></tr>
+<tr><td><code>socks5.user</code></td><td>java.lang.String</td><td>Specifies the user if any after the negotiated method</td></tr>
+</table>
+</body></html>

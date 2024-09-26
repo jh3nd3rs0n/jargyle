@@ -89,15 +89,14 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		Settings settings = this.configuration.getSettings();
 		CommaSeparatedValues enabledCipherSuites = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_ENABLED_CIPHER_SUITES);
-		String[] cipherSuites = enabledCipherSuites.toArray();
-		if (cipherSuites.length > 0) {
-			dtlsDatagramSocket.setEnabledCipherSuites(cipherSuites);
+		if (enabledCipherSuites != null) {
+			dtlsDatagramSocket.setEnabledCipherSuites(
+					enabledCipherSuites.toArray());
 		}
 		CommaSeparatedValues enabledProtocols = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_ENABLED_PROTOCOLS);
-		String[] protocols = enabledProtocols.toArray();
-		if (protocols.length > 0) {
-			dtlsDatagramSocket.setEnabledProtocols(protocols);
+		if (enabledProtocols != null) {
+			dtlsDatagramSocket.setEnabledProtocols(enabledProtocols.toArray());
 		}
 		PositiveInteger maxPacketSize = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_MAX_PACKET_SIZE);

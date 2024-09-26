@@ -151,9 +151,9 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_METHODS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN,
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_ACTUAL_ADDRESS_AND_PORT_UNKNOWN));
+						Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER,
 				new SettingToPropertyConverter(

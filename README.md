@@ -38,36 +38,39 @@ when a push has been made to the GitHub repository
 
 `docs`: Contains the website/documentation
 
-`echo`: Maven module for an API of clients and servers that send/receive
-data and receive/send the same data (This module is used internally for
-performing integration testing on the SOCKS client and server API)
-
-`echo-performance-test`: Maven module for performance tests for the echo
-API and the SOCKS client and server API (The results can be found in
-`echo-performance-test/target/performance-results/`)
-
 `jargyle-cli`: Maven module for the Jargyle command line interface API
 
 `jargyle-client`: Maven module for the SOCKS client API
+
+`jargyle-client-test-help`: Maven module for the test help API for testing the 
+SOCKS client API. This module is used internally to help with testing the 
+SOCKS client API.
 
 `jargyle-common`: Maven module for the public API used by all modules
 
 `jargyle-distribution`: Maven module for creating the binary distribution
 
+`jargyle-integration-test`: Maven module for integration testing between the
+SOCKS client API and the SOCKS server API.
+
 `jargyle-internal`: Maven module for the internal API used by all modules
 
+`jargyle-performance-test`: Maven module for performance testing of the SOCKS
+server API. The results can be found in
+`jargyle-performance-test/target/performance-results/`.
+
 `jargyle-protocolbase`: Maven module for the foundational API for the
-SOCKS client and server API
+SOCKS client API and the SOCKS server API
 
 `jargyle-report-aggregate`: Maven module for generating the aggregated
 test coverage reports
 
 `jargyle-server`: Maven module for the SOCKS server API
 
-`src/site`: Contains files used to generate `docs/`
+`jargyle-test-help`: Maven module for the test help API. This module is used
+internally to help with testing.
 
-`test-help`: Maven module for the test help API (This module is used
-internally to help with testing)
+`src/site`: Contains files used to generate `docs/`
 
 `.gitignore`: List of directories and files for Git to ignore such as
 Eclipse and IntelliJ IDEA project directories and files
@@ -112,9 +115,9 @@ before running the above command:
 ```bash
 # This command is necessary if the binary distribution is not built
 mvn clean package -DskipTests=true
-# Change to the directory of Markdown reference documentation
-cd src/site/markdown/reference/
-# Run Jargyle to generate Markdown reference documents in the present directory 
+# Change to the directory of XHTML reference documentation
+cd src/site/xhtml/reference/
+# Run Jargyle to generate XHTML reference documents in the present directory 
 ../../../../jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs
 # Change back to the top directory of Jargyle
 cd ../../../../

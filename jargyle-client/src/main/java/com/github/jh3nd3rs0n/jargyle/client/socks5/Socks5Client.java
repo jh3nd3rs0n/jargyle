@@ -1,22 +1,22 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.*;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.ClientDatagramSocketBuilder;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.ClientSocketBuilder;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.DtlsDatagramSocketFactoryImpl;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public final class Socks5Client extends SocksClient {
 
+	private final ClientDatagramSocketBuilder clientDatagramSocketBuilder;
 	private final ClientSocketBuilder clientSocketBuilder;
-	private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 
 	Socks5Client(final Socks5ServerUri serverUri, final Properties props) {
 		this(serverUri, props, null);
@@ -27,10 +27,9 @@ public final class Socks5Client extends SocksClient {
 			final Properties props,
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
+		this.clientDatagramSocketBuilder = new ClientDatagramSocketBuilder(
+				props);
 		this.clientSocketBuilder = new ClientSocketBuilder(this);
-        this.dtlsDatagramSocketFactory =
-				DtlsDatagramSocketFactoryImpl.isDtlsEnabled(props) ?
-						new DtlsDatagramSocketFactoryImpl(props) : null;
 	}
 
 	MethodEncapsulation doMethodSubNegotiation(
@@ -41,25 +40,12 @@ public final class Socks5Client extends SocksClient {
 		return methodSubNegotiator.subNegotiate(connectedClientSocket, this);
 	}
 
-	ClientSocketBuilder getClientSocketBuilder() {
-		return this.clientSocketBuilder;
+	ClientDatagramSocketBuilder getClientDatagramSocketBuilder() {
+		return this.clientDatagramSocketBuilder;
 	}
 
-	DatagramSocket getConnectedClientDatagramSocket(
-			final DatagramSocket clientDatagramSocket,
-			final String udpRelayServerHost,
-			final int udpRelayServerPort) throws IOException {
-		InetAddress udpRelayServerHostInetAddress = InetAddress.getByName(
-				udpRelayServerHost);
-		DatagramSocket clientDatagramSock = clientDatagramSocket;
-		clientDatagramSock.connect(
-				udpRelayServerHostInetAddress, udpRelayServerPort);
-		if (this.dtlsDatagramSocketFactory == null) {
-			return clientDatagramSock;
-		}
-		clientDatagramSock = this.dtlsDatagramSocketFactory.newDatagramSocket(
-				clientDatagramSock);
-		return clientDatagramSock;
+	ClientSocketBuilder getClientSocketBuilder() {
+		return this.clientSocketBuilder;
 	}
 
 	Method negotiateMethod(

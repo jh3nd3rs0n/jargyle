@@ -1,0 +1,147 @@
+<!DOCTYPE html><html><head><title></title></head><body>
+<a id="server-configuration-settings"></a><h1>Server Configuration Settings</h1>
+<table>
+<tr><th colspan="3">General Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>backlog</code></td><td><a href="value-syntaxes.html#non-negative-integer">Non-negative Integer</a></td><td>The maximum length of the queue of incoming client connections to the SOCKS server (default is 50)</td></tr>
+<tr><td><code>bindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The default binding host name or address for all sockets (default is 0.0.0.0)</td></tr>
+<tr><td><code>bindTcpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of default binding port ranges for all TCP sockets (default is 0)</td></tr>
+<tr><td><code>bindUdpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of default binding port ranges for all UDP sockets (default is 0)</td></tr>
+<tr><td><code>clientSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the client socket</td></tr>
+<tr><td><code>doc</code></td><td>java.lang.String</td><td>A documentation setting</td></tr>
+<tr><td><code>externalFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The default binding host name or address for all external-facing sockets</td></tr>
+<tr><td><code>externalFacingBindTcpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of default binding port ranges for all external-facing TCP sockets</td></tr>
+<tr><td><code>externalFacingBindUdpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of default binding port ranges for all external-facing UDP sockets</td></tr>
+<tr><td><code>externalFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of default socket settings for all external-facing sockets</td></tr>
+<tr><td><code>internalFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The default binding host name or address for all internal-facing sockets</td></tr>
+<tr><td><code>internalFacingBindTcpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of default binding port ranges for all internal-facing TCP sockets</td></tr>
+<tr><td><code>internalFacingBindUdpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of default binding port ranges for all internal-facing UDP sockets</td></tr>
+<tr><td><code>internalFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of default socket settings for all internal-facing sockets</td></tr>
+<tr><td><code>lastRouteId</code></td><td>java.lang.String</td><td>The ID for the last and unassigned route (default is lastRoute)</td></tr>
+<tr><td><code>port</code></td><td><a href="value-syntaxes.html#port">Port</a></td><td>The port for the SOCKS server</td></tr>
+<tr><td><code>routeSelectionLogAction</code></td><td><a href="value-syntaxes.html#log-action">Log Action</a></td><td>The logging action to take if a route is selected</td></tr>
+<tr><td><code>routeSelectionStrategy</code></td><td><a href="value-syntaxes.html#selection-strategy">Selection Strategy</a></td><td>The selection strategy for the next route (default is CYCLICAL)</td></tr>
+<tr><td><code>rule</code></td><td><a href="value-syntaxes.html#rule">Rule</a></td><td>A rule for the SOCKS server (default is firewallAction=ALLOW)</td></tr>
+<tr><td><code>socketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of default socket settings for all sockets</td></tr>
+<tr><td><code>socksServerBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the SOCKS server socket</td></tr>
+<tr><td><code>socksServerBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the SOCKS server socket</td></tr>
+<tr><td><code>socksServerSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the SOCKS server socket</td></tr>
+<tr><th colspan="3">Chaining General Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>chaining.clientBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the client socket that is used to connect to the other SOCKS server (default is 0.0.0.0)</td></tr>
+<tr><td><code>chaining.clientBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the client socket that is used to connect to the other SOCKS server (default is 0)</td></tr>
+<tr><td><code>chaining.clientConnectTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on waiting for the client socket to connect to the other SOCKS server (default is 60000)</td></tr>
+<tr><td><code>chaining.clientSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the client socket that is used to connect to the other SOCKS server</td></tr>
+<tr><td><code>chaining.routeId</code></td><td>java.lang.String</td><td>The ID for a route through a chain of other SOCKS servers. This setting also marks the current other SOCKS server as the last SOCKS server in the chain of other SOCKS servers</td></tr>
+<tr><td><code>chaining.socksServerUri</code></td><td><a href="value-syntaxes.html#socks-server-uri">SOCKS Server URI</a></td><td>The URI of the other SOCKS server</td></tr>
+<tr><th colspan="3">Chaining DTLS Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>chaining.dtls.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if DTLS connections to the other SOCKS server are enabled (default is false)</td></tr>
+<tr><td><code>chaining.dtls.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for DTLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.dtls.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for DTLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.dtls.maxPacketSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The maximum packet size for the DTLS connections to the other SOCKS server (default is 32768)</td></tr>
+<tr><td><code>chaining.dtls.protocol</code></td><td>java.lang.String</td><td>The protocol version for the DTLS connections to the other SOCKS server (default is DTLSv1.2)</td></tr>
+<tr><td><code>chaining.dtls.trustStoreFile</code></td><td>java.io.File.toString()</td><td>The trust store file for the DTLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.dtls.trustStorePassword</code></td><td>java.lang.String</td><td>The password for the trust store for the DTLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.dtls.trustStoreType</code></td><td>java.lang.String</td><td>The type of trust store file for the DTLS connections to the other SOCKS server (default is PKCS12)</td></tr>
+<tr><th colspan="3">Chaining SOCKS5 Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>chaining.socks5.gssapimethod.mechanismOid</code></td><td>org.ietf.jgss.Oid.toString()</td><td>The object ID for the GSS-API authentication mechanism to the other SOCKS5 server (default is 1.2.840.113554.1.2.2)</td></tr>
+<tr><td><code>chaining.socks5.gssapimethod.necReferenceImpl</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation (default is false)</td></tr>
+<tr><td><code>chaining.socks5.gssapimethod.protectionLevels</code></td><td><a href="value-syntaxes.html#socks5-gss-api-method-protection-levels">SOCKS5 GSS-API Method Protection Levels</a></td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default is REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)</td></tr>
+<tr><td><code>chaining.socks5.gssapimethod.serviceName</code></td><td>java.lang.String</td><td>The GSS-API service name for the other SOCKS5 server</td></tr>
+<tr><td><code>chaining.socks5.gssapimethod.suggestedConf</code></td><td>java.lang.Boolean.toString()</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is true)</td></tr>
+<tr><td><code>chaining.socks5.gssapimethod.suggestedInteg</code></td><td>java.lang.Integer.toString()</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is 0)</td></tr>
+<tr><td><code>chaining.socks5.methods</code></td><td><a href="value-syntaxes.html#socks5-methods">SOCKS5 Methods</a></td><td>The comma separated list of acceptable authentication methods to the other SOCKS5 server (default is NO_AUTHENTICATION_REQUIRED)</td></tr>
+<tr><td><code>chaining.socks5.socks5DatagramSocket.clientInfoUnavailable</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS5 server (an address and port of all zeros is sent instead) (default is false)</td></tr>
+<tr><td><code>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if host names are to be resolved from the other SOCKS5 server (default is false)</td></tr>
+<tr><td><code>chaining.socks5.userpassmethod.password</code></td><td>java.lang.String</td><td>The password to be used to access the other SOCKS5 server</td></tr>
+<tr><td><code>chaining.socks5.userpassmethod.username</code></td><td>java.lang.String</td><td>The username to be used to access the other SOCKS5 server</td></tr>
+<tr><th colspan="3">Chaining SSL/TLS Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>chaining.ssl.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if SSL/TLS connections to the other SOCKS server are enabled (default is false)</td></tr>
+<tr><td><code>chaining.ssl.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for SSL/TLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.ssl.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for SSL/TLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.ssl.keyStoreFile</code></td><td>java.io.File.toString()</td><td>The key store file for the SSL/TLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.ssl.keyStorePassword</code></td><td>java.lang.String</td><td>The password for the key store for the SSL/TLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.ssl.keyStoreType</code></td><td>java.lang.String</td><td>The type of key store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)</td></tr>
+<tr><td><code>chaining.ssl.protocol</code></td><td>java.lang.String</td><td>The protocol version for the SSL/TLS connections to the other SOCKS server (default is TLSv1.2)</td></tr>
+<tr><td><code>chaining.ssl.trustStoreFile</code></td><td>java.io.File.toString()</td><td>The trust store file for the SSL/TLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.ssl.trustStorePassword</code></td><td>java.lang.String</td><td>The password for the trust store for the SSL/TLS connections to the other SOCKS server</td></tr>
+<tr><td><code>chaining.ssl.trustStoreType</code></td><td>java.lang.String</td><td>The type of trust store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)</td></tr>
+<tr><th colspan="3">DTLS Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>dtls.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)</td></tr>
+<tr><td><code>dtls.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>dtls.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>dtls.keyStoreFile</code></td><td>java.io.File.toString()</td><td>The key store file for the DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>dtls.keyStorePassword</code></td><td>java.lang.String</td><td>The password for the key store for the DTLS connections to the SOCKS server</td></tr>
+<tr><td><code>dtls.keyStoreType</code></td><td>java.lang.String</td><td>The type of key store file for the DTLS connections to the SOCKS server (default is PKCS12)</td></tr>
+<tr><td><code>dtls.maxPacketSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The maximum packet size for the DTLS connections to the SOCKS server (default is 32768)</td></tr>
+<tr><td><code>dtls.protocol</code></td><td>java.lang.String</td><td>The protocol version for the DTLS connections to the SOCKS server (default is DTLSv1.2)</td></tr>
+<tr><th colspan="3">SOCKS5 Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>socks5.gssapimethod.necReferenceImpl</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation (default is false)</td></tr>
+<tr><td><code>socks5.gssapimethod.protectionLevels</code></td><td><a href="value-syntaxes.html#socks5-gss-api-method-protection-levels">SOCKS5 GSS-API Method Protection Levels</a></td><td>The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.) (default is REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)</td></tr>
+<tr><td><code>socks5.gssapimethod.suggestedConf</code></td><td>java.lang.Boolean.toString()</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is true)</td></tr>
+<tr><td><code>socks5.gssapimethod.suggestedInteg</code></td><td>java.lang.Integer.toString()</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default is 0)</td></tr>
+<tr><td><code>socks5.methods</code></td><td><a href="value-syntaxes.html#socks5-methods">SOCKS5 Methods</a></td><td>The comma separated list of acceptable authentication methods in order of preference (default is NO_AUTHENTICATION_REQUIRED)</td></tr>
+<tr><td><code>socks5.onBindRequest.inboundSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the inbound socket</td></tr>
+<tr><td><code>socks5.onBindRequest.listenBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the listen socket if the provided host address is all zeros</td></tr>
+<tr><td><code>socks5.onBindRequest.listenBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the listen socket if the provided port is zero</td></tr>
+<tr><td><code>socks5.onBindRequest.listenSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the listen socket</td></tr>
+<tr><td><code>socks5.onBindRequest.relayBufferSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The buffer size in bytes for relaying the data</td></tr>
+<tr><td><code>socks5.onBindRequest.relayIdleTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on relaying no data</td></tr>
+<tr><td><code>socks5.onBindRequest.relayInboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><code>socks5.onBindRequest.relayOutboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><code>socks5.onConnectRequest.prepareTargetFacingSocket</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect) (default is false)</td></tr>
+<tr><td><code>socks5.onConnectRequest.relayBufferSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The buffer size in bytes for relaying the data</td></tr>
+<tr><td><code>socks5.onConnectRequest.relayIdleTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on relaying no data</td></tr>
+<tr><td><code>socks5.onConnectRequest.relayInboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><code>socks5.onConnectRequest.relayOutboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><code>socks5.onConnectRequest.targetFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the target-facing socket</td></tr>
+<tr><td><code>socks5.onConnectRequest.targetFacingBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the target-facing socket</td></tr>
+<tr><td><code>socks5.onConnectRequest.targetFacingConnectTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on waiting for the target-facing socket to connect (default is 60000)</td></tr>
+<tr><td><code>socks5.onConnectRequest.targetFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the target-facing socket</td></tr>
+<tr><td><code>socks5.onRequest.bindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for all sockets</td></tr>
+<tr><td><code>socks5.onRequest.bindTcpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for all TCP sockets</td></tr>
+<tr><td><code>socks5.onRequest.bindUdpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for all UDP sockets</td></tr>
+<tr><td><code>socks5.onRequest.externalFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for all external-facing sockets</td></tr>
+<tr><td><code>socks5.onRequest.externalFacingBindTcpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for all external-facing TCP sockets</td></tr>
+<tr><td><code>socks5.onRequest.externalFacingBindUdpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for all external-facing UDP sockets</td></tr>
+<tr><td><code>socks5.onRequest.externalFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for all external-facing sockets</td></tr>
+<tr><td><code>socks5.onRequest.internalFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for all internal-facing sockets</td></tr>
+<tr><td><code>socks5.onRequest.internalFacingBindUdpPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for all internal-facing UDP sockets</td></tr>
+<tr><td><code>socks5.onRequest.internalFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for all internal-facing sockets</td></tr>
+<tr><td><code>socks5.onRequest.relayBufferSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The buffer size in bytes for relaying the data (default is 1024)</td></tr>
+<tr><td><code>socks5.onRequest.relayIdleTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on relaying no data (default is 60000)</td></tr>
+<tr><td><code>socks5.onRequest.relayInboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><code>socks5.onRequest.relayOutboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><code>socks5.onRequest.socketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for all sockets</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.clientFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the client-facing UDP socket</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.clientFacingBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the client-facing UDP socket</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.clientFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the client-facing UDP socket</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.peerFacingBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the peer-facing UDP socket</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.peerFacingBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the peer-facing UDP socket</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.peerFacingSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the peer-facing UDP socket</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.relayBufferSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The buffer size in bytes for relaying the data</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.relayIdleTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on relaying no data</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.relayInboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><code>socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><code>socks5.userpassmethod.userRepository</code></td><td><a href="value-syntaxes.html#socks5-username-password-method-user-repository">SOCKS5 Username Password Method User Repository</a></td><td>The user repository used for username password authentication (default is StringSourceUserRepository:)</td></tr>
+<tr><th colspan="3">SSL/TLS Settings</th></tr>
+<tr><th>Name</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>ssl.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled (default is false)</td></tr>
+<tr><td><code>ssl.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>ssl.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>ssl.keyStoreFile</code></td><td>java.io.File.toString()</td><td>The key store file for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>ssl.keyStorePassword</code></td><td>java.lang.String</td><td>The password for the key store for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>ssl.keyStoreType</code></td><td>java.lang.String</td><td>The type of key store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)</td></tr>
+<tr><td><code>ssl.needClientAuth</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate that client authentication is required for SSL/TLS connections to the SOCKS server (default is false)</td></tr>
+<tr><td><code>ssl.protocol</code></td><td>java.lang.String</td><td>The protocol version for the SSL/TLS connections to the SOCKS server (default is TLSv1.2)</td></tr>
+<tr><td><code>ssl.trustStoreFile</code></td><td>java.io.File.toString()</td><td>The trust store file for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>ssl.trustStorePassword</code></td><td>java.lang.String</td><td>The password for the trust store for the SSL/TLS connections to the SOCKS server</td></tr>
+<tr><td><code>ssl.trustStoreType</code></td><td>java.lang.String</td><td>The type of trust store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)</td></tr>
+<tr><td><code>ssl.wantClientAuth</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate that client authentication is requested for SSL/TLS connections to the SOCKS server (default is false)</td></tr>
+</table>
+</body></html>

@@ -8,6 +8,7 @@ com.github.jh3nd3rs0n.jargyle.common.security
 com.github.jh3nd3rs0n.jargyle.common.string
 module:com.github.jh3nd3rs0n.jargyle.internal
 com.github.jh3nd3rs0n.jargyle.internal.annotation
+com.github.jh3nd3rs0n.jargyle.internal.concurrent
 com.github.jh3nd3rs0n.jargyle.internal.logging
 com.github.jh3nd3rs0n.jargyle.internal.net
 com.github.jh3nd3rs0n.jargyle.internal.net.ssl

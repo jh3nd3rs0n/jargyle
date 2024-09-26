@@ -41,6 +41,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -76,6 +77,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -123,6 +125,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -164,6 +167,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -206,6 +210,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -243,6 +248,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -287,6 +293,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -386,6 +393,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -461,6 +469,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import java.io.IOException;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 

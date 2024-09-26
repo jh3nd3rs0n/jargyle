@@ -14,22 +14,22 @@ import java.util.stream.Collectors;
 
 final class ReferenceDocsGenerator {
 
-    private static final String VALUE_SYNTAXES_FILENAME =
-            "value-syntaxes.xhtml";
-    private static final String NEW_VALUE_SYNTAXES_FILENAME =
-            "value-syntaxes.html";
     private static final String CLIENT_PROPERTIES_FILENAME =
             "client-properties.xhtml";
+    private static final String CLI_HELP_INFO_FILENAME =
+            "cli-help-info.xhtml";
     private static final String RULE_CONDITIONS_FILENAME =
             "rule-conditions.xhtml";
     private static final String RULE_RESULTS_FILENAME =
             "rule-results.xhtml";
-    private static final String SERVER_CONFIGURATION_SETTINGS_FILENAME =
-            "server-configuration-settings.xhtml";
     private static final String SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME =
             "server-configuration-file-schema.xhtml";
-    private static final String CLI_HELP_INFO_FILENAME =
-            "cli-help-info.xhtml";
+    private static final String SERVER_CONFIGURATION_SETTINGS_FILENAME =
+            "server-configuration-settings.xhtml";
+    private static final String VALUE_SYNTAXES_FILENAME =
+            "value-syntaxes.xhtml";
+    private static final String FUTURE_VALUE_SYNTAXES_FILENAME =
+            "value-syntaxes.html";
 
     private static final String DOCUMENT_START_TAGS =
             "<!DOCTYPE html><html><head><title></title></head><body>";
@@ -50,23 +50,16 @@ final class ReferenceDocsGenerator {
     }
 
     public void generateReferenceDocs() throws IOException {
-        Map<String, Class<?>> valueTypeMap = new TreeMap<>(
-                String::compareToIgnoreCase);
-        this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
-        this.putFromRootNameValuePairValueType(
-                valueTypeMap, RuleCondition.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, RuleResult.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
-        System.out.printf("Creating '%s'...", VALUE_SYNTAXES_FILENAME);
-        try (PrintWriter valueSyntaxesWriter = new PrintWriter(
-                VALUE_SYNTAXES_FILENAME, "UTF-8")) {
-            this.printValueSyntaxes(valueTypeMap, valueSyntaxesWriter);
-        }
-        System.out.println("Done.");
         System.out.printf("Creating '%s'...", CLIENT_PROPERTIES_FILENAME);
         try (PrintWriter clientPropertiesWriter = new PrintWriter(
                 CLIENT_PROPERTIES_FILENAME, "UTF-8")) {
             this.printClientProperties(clientPropertiesWriter);
+        }
+        System.out.println("Done.");
+        System.out.printf("Creating '%s'...", CLI_HELP_INFO_FILENAME);
+        try (PrintWriter cliHelpInfoWriter = new PrintWriter(
+                CLI_HELP_INFO_FILENAME, "UTF-8")) {
+            this.printCliHelpInfo(cliHelpInfoWriter);
         }
         System.out.println("Done.");
         System.out.printf("Creating '%s'...", RULE_CONDITIONS_FILENAME);
@@ -82,14 +75,6 @@ final class ReferenceDocsGenerator {
         }
         System.out.println("Done.");
         System.out.printf(
-                "Creating '%s'...", SERVER_CONFIGURATION_SETTINGS_FILENAME);
-        try (PrintWriter serverConfigurationSettingsWriter = new PrintWriter(
-                SERVER_CONFIGURATION_SETTINGS_FILENAME, "UTF-8")) {
-            this.printServerConfigurationSettings(
-                    serverConfigurationSettingsWriter);
-        }
-        System.out.println("Done.");
-        System.out.printf(
                 "Creating '%s'...", SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME);
         try (PrintStream serverConfigurationFileSchemaStream = new PrintStream(
                 SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME, "UTF-8")) {
@@ -97,16 +82,27 @@ final class ReferenceDocsGenerator {
                     serverConfigurationFileSchemaStream);
         }
         System.out.println("Done.");
-        System.out.printf("Creating '%s'...", CLI_HELP_INFO_FILENAME);
-        try (PrintWriter cliHelpInfoWriter = new PrintWriter(
-                CLI_HELP_INFO_FILENAME, "UTF-8")) {
-            this.printCliHelpInfo(cliHelpInfoWriter);
+        System.out.printf(
+                "Creating '%s'...", SERVER_CONFIGURATION_SETTINGS_FILENAME);
+        try (PrintWriter serverConfigurationSettingsWriter = new PrintWriter(
+                SERVER_CONFIGURATION_SETTINGS_FILENAME, "UTF-8")) {
+            this.printServerConfigurationSettings(
+                    serverConfigurationSettingsWriter);
         }
         System.out.println("Done.");
-    }
-
-    private String getAid(final String id) {
-        return String.format("<a id=\"%s\"></a>", id);
+        Map<String, Class<?>> valueTypeMap = new TreeMap<>(
+                String::compareToIgnoreCase);
+        this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
+        this.putFromRootNameValuePairValueType(
+                valueTypeMap, RuleCondition.class);
+        this.putFromRootNameValuePairValueType(valueTypeMap, RuleResult.class);
+        this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
+        System.out.printf("Creating '%s'...", VALUE_SYNTAXES_FILENAME);
+        try (PrintWriter valueSyntaxesWriter = new PrintWriter(
+                VALUE_SYNTAXES_FILENAME, "UTF-8")) {
+            this.printValueSyntaxes(valueTypeMap, valueSyntaxesWriter);
+        }
+        System.out.println("Done.");
     }
 
     private String getBoldText(final String text) {
@@ -123,29 +119,29 @@ final class ReferenceDocsGenerator {
 
     private String getHeader1(final String text) {
         return String.format(
-                "%s<h1>%s</h1>",
-                this.getAid(this.getId(text)),
+                "<h1 id=\"%s\">%s</h1>",
+                this.getId(text),
                 text);
     }
 
     private String getHeader2(final String text) {
         return String.format(
-                "%s<h2>%s</h2>",
-                this.getAid(this.getId(text)),
+                "<h2 id=\"%s\">%s</h2>",
+                this.getId(text),
                 text);
     }
 
     private String getHeader3(final String text) {
         return String.format(
-                "%s<h3>%s</h3>",
-                this.getAid(this.getId(text)),
+                "<h3 id=\"%s\">%s</h3>",
+                this.getId(text),
                 text);
     }
 
     private String getHeader4(final String text) {
         return String.format(
-                "%s<h4>%s</h4>",
-                this.getAid(this.getId(text)),
+                "<h4 id=\"%s\">%s</h4>",
+                this.getId(text),
                 text);
     }
 
@@ -174,26 +170,26 @@ final class ReferenceDocsGenerator {
                 EnumValueTypeDoc.class);
         if (enumValueTypeDoc != null) {
             return this.getLinkToHeader(
-                    NEW_VALUE_SYNTAXES_FILENAME, enumValueTypeDoc.name());
+                    FUTURE_VALUE_SYNTAXES_FILENAME, enumValueTypeDoc.name());
         }
         NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
                 cls.getAnnotation(NameValuePairValueTypeDoc.class);
         if (nameValuePairValueTypeDoc != null) {
             return this.getLinkToHeader(
-                    NEW_VALUE_SYNTAXES_FILENAME,
+                    FUTURE_VALUE_SYNTAXES_FILENAME,
                     nameValuePairValueTypeDoc.name());
         }
         SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
                 SingleValueTypeDoc.class);
         if (singleValueTypeDoc != null) {
             return this.getLinkToHeader(
-                    NEW_VALUE_SYNTAXES_FILENAME, singleValueTypeDoc.name());
+                    FUTURE_VALUE_SYNTAXES_FILENAME, singleValueTypeDoc.name());
         }
         ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
                 ValuesValueTypeDoc.class);
         if (valuesValueTypeDoc != null) {
             return this.getLinkToHeader(
-                    NEW_VALUE_SYNTAXES_FILENAME, valuesValueTypeDoc.name());
+                    FUTURE_VALUE_SYNTAXES_FILENAME, valuesValueTypeDoc.name());
         }
         if (!cls.equals(String.class)) {
             return cls.getName().concat(".toString()");
@@ -431,7 +427,6 @@ final class ReferenceDocsGenerator {
         pw.print(PREFORMATTED_TEXT_START_TAGS);
         pw.println(valuesValueTypeDoc.syntax());
         pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println();
         String description = valuesValueTypeDoc.description();
         if (!description.isEmpty()) {
             pw.println(this.getTextAsParagraph(this.getBoldText(
@@ -594,6 +589,30 @@ final class ReferenceDocsGenerator {
                 valuesValueTypeDoc.name())));
     }
 
+    private void printListItemOfLinkToContentFromValueType(
+            final Class<?> cls, final PrintWriter pw) {
+        EnumValueTypeDoc enumValueTypeDoc = cls.getAnnotation(
+                EnumValueTypeDoc.class);
+        if (enumValueTypeDoc != null) {
+            this.printListItemOfLinkToContentFrom(enumValueTypeDoc, pw);
+        }
+        NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
+                cls.getAnnotation(NameValuePairValueTypeDoc.class);
+        if (nameValuePairValueTypeDoc != null) {
+            this.printListItemOfLinkToContentFrom(nameValuePairValueTypeDoc, pw);
+        }
+        SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
+                SingleValueTypeDoc.class);
+        if (singleValueTypeDoc != null) {
+            this.printListItemOfLinkToContentFrom(singleValueTypeDoc, pw);
+        }
+        ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
+                ValuesValueTypeDoc.class);
+        if (valuesValueTypeDoc != null) {
+            this.printListItemOfLinkToContentFrom(valuesValueTypeDoc, pw);
+        }
+    }
+
     private void printTableFromRootNameValuePairValueType(
             final Class<?> cls, final PrintWriter pw) {
         NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
@@ -627,30 +646,6 @@ final class ReferenceDocsGenerator {
                 }
             }
             pw.println("</table>");
-        }
-    }
-
-    private void printListItemOfLinkToContentFromValueType(
-            final Class<?> cls, final PrintWriter pw) {
-        EnumValueTypeDoc enumValueTypeDoc = cls.getAnnotation(
-                EnumValueTypeDoc.class);
-        if (enumValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(enumValueTypeDoc, pw);
-        }
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
-                cls.getAnnotation(NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(nameValuePairValueTypeDoc, pw);
-        }
-        SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
-                SingleValueTypeDoc.class);
-        if (singleValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(singleValueTypeDoc, pw);
-        }
-        ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
-                ValuesValueTypeDoc.class);
-        if (valuesValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(valuesValueTypeDoc, pw);
         }
     }
 

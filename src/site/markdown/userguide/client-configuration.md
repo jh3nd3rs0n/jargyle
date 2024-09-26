@@ -13,6 +13,7 @@ The following are topics for configuring the client from the client API.
 -   [Resolving Host Names From the SOCKS5 Server](#resolving-host-names-from-the-socks5-server)
 -   [Routing Traffic Through a Specified Chain of SOCKS Servers](#routing-traffic-through-a-specified-chain-of-socks-servers)
 
+<a id="enabling-ssltls-for-tcp-traffic-between-the-client-and-the-socks-server"></a>
 ## Enabling SSL/TLS for TCP Traffic Between the Client and the SOCKS Server
 
 You can enable SSL/TLS for TCP traffic between the client and the SOCKS server 
@@ -97,6 +98,7 @@ public class ClientApp {
 }
 ```
 
+<a id="enabling-dtls-for-udp-traffic-between-the-client-and-the-socks-server"></a>
 ## Enabling DTLS for UDP Traffic Between the Client and the SOCKS Server
 
 You can enable DTLS for UDP traffic between the client and the SOCKS server 
@@ -228,6 +230,7 @@ public class ClientApp {
 }
 ```
 
+<a id="accessing-the-socks-server-using-username-password-authentication"></a>
 ### Accessing the SOCKS Server Using Username Password Authentication
 
 To access the SOCKS server using username password authentication, you 

@@ -1,6 +1,6 @@
 <!DOCTYPE html><html><head><title></title></head><body>
-<a id="value-syntaxes"></a><h1>Value Syntaxes</h1>
-<a id="page-contents"></a><h2>Page Contents</h2>
+<h1 id="value-syntaxes">Value Syntaxes</h1>
+<h2 id="page-contents">Page Contents</h2>
 <ul>
 <li>
 <a href="#address-range">Address Range</a>
@@ -103,19 +103,18 @@
 </ul>
 </li>
 </ul>
-<a id="address-range"></a><h2>Address Range</h2>
+<h2 id="address-range">Address Range</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">ADDRESS|IP_ADDRESS1-IP_ADDRESS2|regex:REGULAR_EXPRESSION
 </code></pre>
-<a id="comma-separated-values"></a><h2>Comma Separated Values</h2>
+<h2 id="comma-separated-values">Comma Separated Values</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">[VALUE1[,VALUE2[...]]]
 </code></pre>
-
 <p><b>Description:</b></p>
 <p>A comma separated list of values</p>
 <p><b>Element value:</b> java.lang.String</p>
-<a id="firewall-action"></a><h2>Firewall Action</h2>
+<h2 id="firewall-action">Firewall Action</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">ALLOW|DENY
 </code></pre>
@@ -124,13 +123,13 @@
 <li><code>ALLOW</code></li>
 <li><code>DENY</code></li>
 </ul>
-<a id="host"></a><h2>Host</h2>
+<h2 id="host">Host</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">HOST_NAME|HOST_ADDRESS
 </code></pre>
 <p><b>Description:</b></p>
 <p>A name or address of a node of a network</p>
-<a id="log-action"></a><h2>Log Action</h2>
+<h2 id="log-action">Log Action</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">LOG_AS_WARNING|LOG_AS_INFO
 </code></pre>
@@ -139,45 +138,43 @@
 <li><code>LOG_AS_WARNING</code>: Log message as a warning message</li>
 <li><code>LOG_AS_INFO</code>: Log message as an informational message</li>
 </ul>
-<a id="non-negative-integer"></a><h2>Non-negative Integer</h2>
+<h2 id="non-negative-integer">Non-negative Integer</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">0-2147483647
 </code></pre>
 <p><b>Description:</b></p>
 <p>An integer between 0 and 2147483647 (inclusive)</p>
-<a id="port"></a><h2>Port</h2>
+<h2 id="port">Port</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">0-65535
 </code></pre>
 <p><b>Description:</b></p>
 <p>An integer between 0 and 65535 (inclusive) that is assigned to uniquely identify a connection endpoint and to direct data to a node of a network</p>
-<a id="port-range"></a><h2>Port Range</h2>
+<h2 id="port-range">Port Range</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">PORT|PORT1-PORT2
 </code></pre>
-
 <p><b>Description:</b></p>
 <p>A range of port numbers between the provided minimum port number and the maximum port number (inclusive). A port range can also be one port number.</p>
 <p><b>Element value:</b> <a href="value-syntaxes.html#port">Port</a></p>
-<a id="port-ranges"></a><h2>Port Ranges</h2>
+<h2 id="port-ranges">Port Ranges</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">[PORT_RANGE1[,PORT_RANGE2[...]]]
 </code></pre>
-
 <p><b>Description:</b></p>
 <p>A comma separated list of port ranges.</p>
 <p><b>Element value:</b> <a href="value-syntaxes.html#port-range">Port Range</a></p>
-<a id="positive-integer"></a><h2>Positive Integer</h2>
+<h2 id="positive-integer">Positive Integer</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">1-2147483647
 </code></pre>
 <p><b>Description:</b></p>
 <p>An integer between 1 and 2147483647 (inclusive)</p>
-<a id="rule"></a><h2>Rule</h2>
+<h2 id="rule">Rule</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]
 </code></pre>
-<a id="scheme"></a><h2>Scheme</h2>
+<h2 id="scheme">Scheme</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">socks5
 </code></pre>
@@ -185,111 +182,110 @@
 <ul>
 <li><code>socks5</code>: SOCKS5 protocol version 5</li>
 </ul>
-<a id="selection-strategy"></a><h2>Selection Strategy</h2>
+<h2 id="selection-strategy">Selection Strategy</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">CYCLICAL|RANDOM
 </code></pre>
-<a id="selection-strategies"></a><h3>Selection Strategies</h3>
-<a id="cyclical"></a><h4>CYCLICAL</h4>
+<h3 id="selection-strategies">Selection Strategies</h3>
+<h4 id="cyclical">CYCLICAL</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">CYCLICAL
 </code></pre>
 <p><b>Description:</b></p>
 <p>Select the next in the cycle</p>
-<a id="random"></a><h4>RANDOM</h4>
+<h4 id="random">RANDOM</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">RANDOM
 </code></pre>
 <p><b>Description:</b></p>
 <p>Select the next at random</p>
-<a id="socket-setting"></a><h2>Socket Setting</h2>
+<h2 id="socket-setting">Socket Setting</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">NAME=VALUE
 </code></pre>
 <p><b>Description:</b></p>
 <p>A setting to be applied to a socket</p>
-<a id="standard-socket-settings"></a><h3>Standard Socket Settings</h3>
+<h3 id="standard-socket-settings">Standard Socket Settings</h3>
 
 <p><b>Description:</b></p>
 <p>Standard settings applied to a socket</p>
-<a id="ip_tos"></a><h4>IP_TOS</h4>
+<h4 id="ip_tos">IP_TOS</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">IP_TOS=UNSIGNED_BYTE
 </code></pre>
 <p><b>Description:</b></p>
 <p>The type-of-service or traffic class field in the IP header for a TCP or UDP socket</p>
 <p><b>Value:</b> <a href="value-syntaxes.html#unsigned-byte">Unsigned Byte</a></p>
-<a id="so_broadcast"></a><h4>SO_BROADCAST</h4>
+<h4 id="so_broadcast">SO_BROADCAST</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_BROADCAST=true|false
 </code></pre>
 <p><b>Description:</b></p>
 <p>Can send broadcast datagrams</p>
 <p><b>Value:</b> java.lang.Boolean.toString()</p>
-<a id="so_keepalive"></a><h4>SO_KEEPALIVE</h4>
+<h4 id="so_keepalive">SO_KEEPALIVE</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_KEEPALIVE=true|false
 </code></pre>
 <p><b>Description:</b></p>
 <p>Keeps a TCP socket alive when no data has been exchanged in either direction</p>
 <p><b>Value:</b> java.lang.Boolean.toString()</p>
-<a id="so_linger"></a><h4>SO_LINGER</h4>
+<h4 id="so_linger">SO_LINGER</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_LINGER=-2147483648-2147483647
 </code></pre>
 <p><b>Description:</b></p>
 <p>Linger on closing the TCP socket in seconds (disabled if the number of seconds is negative)</p>
 <p><b>Value:</b> java.lang.Integer.toString()</p>
-<a id="so_rcvbuf"></a><h4>SO_RCVBUF</h4>
+<h4 id="so_rcvbuf">SO_RCVBUF</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_RCVBUF=POSITIVE_INTEGER
 </code></pre>
 <p><b>Description:</b></p>
 <p>The receive buffer size</p>
 <p><b>Value:</b> <a href="value-syntaxes.html#positive-integer">Positive Integer</a></p>
-<a id="so_reuseaddr"></a><h4>SO_REUSEADDR</h4>
+<h4 id="so_reuseaddr">SO_REUSEADDR</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_REUSEADDR=true|false
 </code></pre>
 <p><b>Description:</b></p>
 <p>Can reuse socket address and port</p>
 <p><b>Value:</b> java.lang.Boolean.toString()</p>
-<a id="so_sndbuf"></a><h4>SO_SNDBUF</h4>
+<h4 id="so_sndbuf">SO_SNDBUF</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_SNDBUF=POSITIVE_INTEGER
 </code></pre>
 <p><b>Description:</b></p>
 <p>The send buffer size</p>
 <p><b>Value:</b> <a href="value-syntaxes.html#positive-integer">Positive Integer</a></p>
-<a id="so_timeout"></a><h4>SO_TIMEOUT</h4>
+<h4 id="so_timeout">SO_TIMEOUT</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SO_TIMEOUT=NON_NEGATIVE_INTEGER
 </code></pre>
 <p><b>Description:</b></p>
 <p>The timeout in milliseconds on waiting for an idle socket</p>
 <p><b>Value:</b> <a href="value-syntaxes.html#non-negative-integer">Non-negative Integer</a></p>
-<a id="tcp_nodelay"></a><h4>TCP_NODELAY</h4>
+<h4 id="tcp_nodelay">TCP_NODELAY</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">TCP_NODELAY=true|false
 </code></pre>
 <p><b>Description:</b></p>
 <p>Disables Nagle's algorithm</p>
 <p><b>Value:</b> java.lang.Boolean.toString()</p>
-<a id="socket-settings"></a><h2>Socket Settings</h2>
+<h2 id="socket-settings">Socket Settings</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">[SOCKET_SETTING1[,SOCKET_SETTING2[...]]]
 </code></pre>
-
 <p><b>Description:</b></p>
 <p>A comma separated list of socket settings.</p>
 <p><b>Element value:</b> <a href="value-syntaxes.html#socket-setting">Socket Setting</a></p>
-<a id="socks5-address"></a><h2>SOCKS5 Address</h2>
+<h2 id="socks5-address">SOCKS5 Address</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">DOMAIN_NAME|IPV4_ADDRESS|IPV6_ADDRESS
 </code></pre>
 <p><b>Description:</b></p>
 <p>An identifier or a virtual location of a node of a network</p>
-<a id="socks5-gss-api-method-protection-level"></a><h2>SOCKS5 GSS-API Method Protection Level</h2>
+<h2 id="socks5-gss-api-method-protection-level">SOCKS5 GSS-API Method Protection Level</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF|SELECTIVE_INTEG_OR_CONF
 </code></pre>
@@ -302,15 +298,14 @@
 <li><code>REQUIRED_INTEG_AND_CONF</code>: Required per-message integrity and confidentiality</li>
 <li><code>SELECTIVE_INTEG_OR_CONF</code>: Selective per-message integrity or confidentiality based on local client and server configurations</li>
 </ul>
-<a id="socks5-gss-api-method-protection-levels"></a><h2>SOCKS5 GSS-API Method Protection Levels</h2>
+<h2 id="socks5-gss-api-method-protection-levels">SOCKS5 GSS-API Method Protection Levels</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL2[...]]
 </code></pre>
-
 <p><b>Description:</b></p>
 <p>A comma separated list of security context protection levels</p>
 <p><b>Element value:</b> <a href="value-syntaxes.html#socks5-gss-api-method-protection-level">SOCKS5 GSS-API Method Protection Level</a></p>
-<a id="socks5-method"></a><h2>SOCKS5 Method</h2>
+<h2 id="socks5-method">SOCKS5 Method</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">NO_AUTHENTICATION_REQUIRED|GSSAPI|USERNAME_PASSWORD
 </code></pre>
@@ -322,15 +317,14 @@
 <li><code>GSSAPI</code>: GSS-API authentication</li>
 <li><code>USERNAME_PASSWORD</code>: Username password authentication</li>
 </ul>
-<a id="socks5-methods"></a><h2>SOCKS5 Methods</h2>
+<h2 id="socks5-methods">SOCKS5 Methods</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">[SOCKS5_METHOD1[,SOCKS5_METHOD2[...]]]
 </code></pre>
-
 <p><b>Description:</b></p>
 <p>A comma-separated list of SOCKS5 authentication methods</p>
 <p><b>Element value:</b> <a href="value-syntaxes.html#socks5-method">SOCKS5 Method</a></p>
-<a id="socks5-request-command"></a><h2>SOCKS5 Request Command</h2>
+<h2 id="socks5-request-command">SOCKS5 Request Command</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">CONNECT|BIND|UDP_ASSOCIATE|RESOLVE
 </code></pre>
@@ -343,31 +337,31 @@
 <li><code>UDP_ASSOCIATE</code>: A request to the SOCKS server to establish an association within the UDP relay process to handle UDP datagrams</li>
 <li><code>RESOLVE</code>: A request to the SOCKS server to resolve a host name</li>
 </ul>
-<a id="socks5-username-password-method-user-repository"></a><h2>SOCKS5 Username Password Method User Repository</h2>
+<h2 id="socks5-username-password-method-user-repository">SOCKS5 Username Password Method User Repository</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">TYPE_NAME:INITIALIZATION_STRING
 </code></pre>
-<a id="socks5-username-password-method-user-repositories"></a><h3>SOCKS5 Username Password Method User Repositories</h3>
+<h3 id="socks5-username-password-method-user-repositories">SOCKS5 Username Password Method User Repositories</h3>
 
-<a id="filesourceuserrepository"></a><h4>FileSourceUserRepository</h4>
+<h4 id="filesourceuserrepository">FileSourceUserRepository</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">FileSourceUserRepository:FILE
 </code></pre>
 <p><b>Description:</b></p>
 <p>User repository that handles the storage of the users from a provided file of a list of URL encoded username and hashed password pairs (If the file does not exist, it will be created and used.)</p>
 <p><b>Value:</b> java.io.File.toString()</p>
-<a id="stringsourceuserrepository"></a><h4>StringSourceUserRepository</h4>
+<h4 id="stringsourceuserrepository">StringSourceUserRepository</h4>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">StringSourceUserRepository:[USERNAME1:PASSWORD1[,USERNAME2:PASSWORD2[...]]]
 </code></pre>
 <p><b>Description:</b></p>
 <p>User repository that handles the storage of the users from a provided string of a comma separated list of URL encoded username and password pairs</p>
 <p><b>Value:</b> java.lang.String</p>
-<a id="socks-server-uri"></a><h2>SOCKS Server URI</h2>
+<h2 id="socks-server-uri">SOCKS Server URI</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">SCHEME://HOST[:PORT]
 </code></pre>
-<a id="unsigned-byte"></a><h2>Unsigned Byte</h2>
+<h2 id="unsigned-byte">Unsigned Byte</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">0-255
 </code></pre>

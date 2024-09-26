@@ -52,8 +52,8 @@ To generate reference documentation, you would run the following command:
 jargyle generate-reference-docs
 ```
 
-This command will generate reference documentation as markdown files in 
-the present working directory.
+This command will generate reference documentation as XHTML files in the 
+present working directory.
 
 ## Managing SOCKS5 Users
 
@@ -232,6 +232,7 @@ jargyle new-server-config-file \
 </configuration>
 ```
 
+<a id="creating-a-server-configuration-file-supplemented-with-command-line-options"></a>
 ### Creating a Server Configuration File Supplemented With Command Line Options
 
 You can supplement an existing server configuration file with command line 
@@ -274,6 +275,7 @@ jargyle new-server-config-file \
 </configuration>
 ```
 
+<a id="creating-a-server-configuration-file-combined-from-server-configuration-files"></a>
 ### Creating a Server Configuration File Combined From Server Configuration Files
 
 You can combine multiple server configuration files into one server 

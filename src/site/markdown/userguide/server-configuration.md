@@ -32,6 +32,7 @@ the command line.
     -   [Configuring Relay Settings](#configuring-relay-settings)
     -   [Limiting Relay Bandwidth](#limiting-relay-bandwidth)
 
+<a id="enabling-ssltls-for-tcp-traffic-between-the-server-and-its-clients"></a>
 ## Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients
 
 You can enable SSL/TLS for TCP traffic between the server and its clients. By 
@@ -759,6 +760,7 @@ number of the other SOCKS server (`23456`). In the aforementioned examples, the
 SOCKS protocol version 5 is used. At this time, the only supported scheme for 
 the URI format is `socks5`
 
+<a id="enabling-ssltls-for-tcp-traffic-between-the-server-and-the-other-socks-server"></a>
 ### Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server
 
 You can enable SSL/TLS for TCP traffic between the server and the other SOCKS 
@@ -962,6 +964,7 @@ jargyle start-server \
     --enter-chaining-ssl-trust-store-pass
 ```
 
+<a id="enabling-dtls-for-udp-traffic-between-the-server-and-the-other-socks-server"></a>
 ### Enabling DTLS for UDP Traffic Between the Server and the Other SOCKS Server
 
 You can enable DTLS for UDP traffic between the server and the other SOCKS 
@@ -1203,6 +1206,7 @@ Server configuration file example:
 </configuration>
 ```
 
+<a id="chaining-to-the-other-socks-server-using-username-password-authentication"></a>
 #### Chaining to the Other SOCKS Server Using Username Password Authentication
 
 To chain to the other SOCKS server using username password authentication, you 
@@ -3031,6 +3035,7 @@ Server configuration file example:
 </configuration>
 ```
 
+<a id="routing-traffic-through-a-selection-of-specified-chains-of-socks-servers"></a>
 ### Routing Traffic Through a Selection of Specified Chains of SOCKS Servers
 
 To route traffic through a selection of specified chains of SOCKS servers, you 

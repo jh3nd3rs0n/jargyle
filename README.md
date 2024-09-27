@@ -42,10 +42,6 @@ when a push has been made to the GitHub repository
 
 `jargyle-client`: Maven module for the SOCKS client API
 
-`jargyle-client-test-help`: Maven module for the test help API for testing the 
-SOCKS client API. This module is used internally to help with testing the 
-SOCKS client API.
-
 `jargyle-common`: Maven module for the public API used by all modules
 
 `jargyle-distribution`: Maven module for creating the binary distribution

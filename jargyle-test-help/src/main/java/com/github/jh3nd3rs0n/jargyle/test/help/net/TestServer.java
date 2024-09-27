@@ -1,7 +1,5 @@
-package com.github.jh3nd3rs0n.jargyle.client.test.help;
+package com.github.jh3nd3rs0n.jargyle.test.help.net;
 
-import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +37,12 @@ public final class TestServer {
     private final InetAddress bindInetAddress;
 
     /**
+     * The {@code ExecutorFactory} used for creating an {@code Executor} to
+     * execute {@code Worker}s.
+     */
+    private final ExecutorFactory executorFactory;
+
+    /**
      * The specified binding port of this {@code TestServer}.
      */
     private final int specifiedPort;
@@ -49,7 +53,7 @@ public final class TestServer {
     private final WorkerFactory workerFactory;
 
     /**
-     * The {@code Executor} used for executing {@code Worker}s.
+     * The {@code Executor}.
      */
     private ExecutorService executor;
 
@@ -69,41 +73,48 @@ public final class TestServer {
     private State state;
 
     /**
-     * Constructs a {@code TestServer} with the provided specified port and
-     * the provided {@code WorkerFactory}.
+     * Constructs a {@code TestServer} with the provided specified port, the
+     * provided {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
      *
-     * @param prt     the provided specified port
-     * @param factory the provided {@code WorkerFactory}
+     * @param prt      the provided specified port
+     * @param factory1 the provided {@code ExecutorFactory}
+     * @param factory2 the provided {@code WorkerFactory}
      */
-    public TestServer(final int prt, final WorkerFactory factory) {
-        this(prt, BACKLOG, INET_ADDRESS, factory);
+    public TestServer(
+            final int prt,
+            final ExecutorFactory factory1,
+            final WorkerFactory factory2) {
+        this(prt, BACKLOG, INET_ADDRESS, factory1, factory2);
     }
 
     /**
      * Constructs a {@code TestServer} with the provided specified port, the
      * provided maximum length of the queue of incoming connections, the
-     * provided binding {@code InetAddress}, and the provided
-     * {@code WorkerFactory}.
+     * provided binding {@code InetAddress}, the provided
+     * {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
      *
      * @param prt          the provided specified port
      * @param bklog        the provided maximum length of the queue of incoming
      *                     connections
      * @param bindInetAddr the provided binding {@code InetAddress}
-     * @param factory      the provided {@code WorkerFactory}
+     * @param factory1     the provided {@code ExecutorFactory}
+     * @param factory2     the provided {@code WorkerFactory}
      */
     public TestServer(
             final int prt,
             final int bklog,
             final InetAddress bindInetAddr,
-            final WorkerFactory factory) {
+            final ExecutorFactory factory1,
+            final WorkerFactory factory2) {
         this.backlog = bklog;
         this.bindInetAddress = bindInetAddr;
         this.executor = null;
+        this.executorFactory = factory1;
         this.port = -1;
         this.serverSocket = null;
         this.specifiedPort = prt;
         this.state = State.STOPPED;
-        this.workerFactory = factory;
+        this.workerFactory = factory2;
     }
 
     /**
@@ -145,7 +156,7 @@ public final class TestServer {
         this.port = this.serverSocket.getLocalPort();
         this.executor = Executors.newSingleThreadExecutor();
         this.executor.execute(new Listener(
-                this.serverSocket, this.workerFactory));
+                this.serverSocket, this.executorFactory, this.workerFactory));
         this.state = State.STARTED;
     }
 
@@ -199,6 +210,7 @@ public final class TestServer {
 
         @Override
         protected void doWork() {
+            // does nothing
         }
 
     }
@@ -230,6 +242,12 @@ public final class TestServer {
     private static final class Listener implements Runnable {
 
         /**
+         * The {@code ExecutorFactory} used for creating an {@code Executor} to
+         * execute {@code Worker}s.
+         */
+        private final ExecutorFactory executorFactory;
+
+        /**
          * The {@code Logger}.
          */
         private final Logger logger;
@@ -246,23 +264,26 @@ public final class TestServer {
 
         /**
          * Constructs a {@code Listener} with the provided
-         * {@code ServerSocket} and the provided {@code WorkerFactory}.
+         * {@code ServerSocket}, the provided {@code ExecutorFactory}, and the
+         * provided {@code WorkerFactory}.
          *
          * @param serverSock the provided {@code ServerSocket}
-         * @param factory    the provided {@code WorkerFactory}
+         * @param factory1   the provided {@code ExecutorFactory}
+         * @param factory2   the provided {@code WorkerFactory}
          */
         public Listener(
-                final ServerSocket serverSock, final WorkerFactory factory) {
+                final ServerSocket serverSock,
+                final ExecutorFactory factory1,
+                final WorkerFactory factory2) {
+            this.executorFactory = factory1;
             this.logger = LoggerFactory.getLogger(Listener.class);
             this.serverSocket = serverSock;
-            this.workerFactory = factory;
+            this.workerFactory = factory2;
         }
 
         @Override
         public void run() {
-            ExecutorService executor =
-                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
-                            ExecutorsHelper.newCachedThreadPoolBuilder());
+            ExecutorService executor = this.executorFactory.newExecutor();
             try {
                 while (true) {
                     try {

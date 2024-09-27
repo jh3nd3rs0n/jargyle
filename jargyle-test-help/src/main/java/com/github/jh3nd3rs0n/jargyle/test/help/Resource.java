@@ -1,5 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.test.help;
 
+import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;

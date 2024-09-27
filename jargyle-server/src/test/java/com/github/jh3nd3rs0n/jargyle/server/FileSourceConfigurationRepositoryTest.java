@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.test.help.IoHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
 import com.github.jh3nd3rs0n.jargyle.test.help.ThreadHelper;
 import org.junit.After;
 import org.junit.Before;

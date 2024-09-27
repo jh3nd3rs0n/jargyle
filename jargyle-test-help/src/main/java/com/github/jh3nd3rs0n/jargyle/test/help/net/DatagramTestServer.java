@@ -1,6 +1,5 @@
-package com.github.jh3nd3rs0n.jargyle.client.test.help;
+package com.github.jh3nd3rs0n.jargyle.test.help.net;
 
-import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +32,12 @@ public final class DatagramTestServer {
     private final InetAddress bindInetAddress;
 
     /**
+     * The {@code ExecutorFactory} used for creating an {@code Executor} to
+     * execute {@code Worker}s.
+     */
+    private final ExecutorFactory executorFactory;
+
+    /**
      * The specified binding port of this {@code DatagramTestServer}.
      */
     private final int specifiedPort;
@@ -43,7 +48,7 @@ public final class DatagramTestServer {
     private final WorkerFactory workerFactory;
 
     /**
-     * The {@code Executor} used for executing {@code Worker}s.
+     * The {@code Executor}.
      */
     private ExecutorService executor;
 
@@ -65,35 +70,43 @@ public final class DatagramTestServer {
 
     /**
      * Constructs a {@code DatagramTestServer} with the provided specified
-     * binding port and the provided {@code WorkerFactory}.
+     * binding port, the provided {@code ExecutorFactory}, and the provided
+     * {@code WorkerFactory}.
      *
-     * @param prt     the provided specified binding port
-     * @param factory the provided {@code WorkerFactory}
+     * @param prt      the provided specified binding port
+     * @param factory1 the provided {@code ExecutorFactory}
+     * @param factory2 the provided {@code WorkerFactory}
      */
-    public DatagramTestServer(final int prt, final WorkerFactory factory) {
-        this(prt, INET_ADDRESS, factory);
+    public DatagramTestServer(
+            final int prt,
+            final ExecutorFactory factory1,
+            final WorkerFactory factory2) {
+        this(prt, INET_ADDRESS, factory1, factory2);
     }
 
     /**
      * Constructs a {@code DatagramTestServer} with the provided specified
-     * binding port, the provided binding {@code InetAddress}, and the
-     * provided {@code WorkerFactory}.
+     * binding port, the provided binding {@code InetAddress}, the provided
+     * {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
      *
      * @param prt          the provided specified binding port
      * @param bindInetAddr the provided binding {@code InetAddress}
-     * @param factory      the provided {@code WorkerFactory}
+     * @param factory1     the provided {@code ExecutorFactory}
+     * @param factory2     the provided {@code WorkerFactory}
      */
     public DatagramTestServer(
             final int prt,
             final InetAddress bindInetAddr,
-            final WorkerFactory factory) {
+            final ExecutorFactory factory1,
+            final WorkerFactory factory2) {
         this.bindInetAddress = bindInetAddr;
         this.executor = null;
+        this.executorFactory = factory1;
         this.port = -1;
         this.serverSocket = null;
         this.specifiedPort = prt;
         this.state = State.STOPPED;
-        this.workerFactory = factory;
+        this.workerFactory = factory2;
     }
 
     /**
@@ -137,7 +150,7 @@ public final class DatagramTestServer {
         this.port = this.serverSocket.getLocalPort();
         this.executor = Executors.newSingleThreadExecutor();
         this.executor.execute(new Listener(
-                this.serverSocket, this.workerFactory));
+                this.serverSocket, this.executorFactory, this.workerFactory));
         this.state = State.STARTED;
     }
 
@@ -195,6 +208,7 @@ public final class DatagramTestServer {
 
         @Override
         protected void doWork() {
+            // does nothing
         }
 
     }
@@ -227,9 +241,10 @@ public final class DatagramTestServer {
     private static final class Listener implements Runnable {
 
         /**
-         * The {@code WorkerFactory} used to create {@code Worker}s.
+         * The {@code ExecutorFactory} used for creating an {@code Executor} to
+         * execute {@code Worker}s.
          */
-        private final WorkerFactory workerFactory;
+        private final ExecutorFactory executorFactory;
 
         /**
          * The {@code Logger}.
@@ -243,29 +258,35 @@ public final class DatagramTestServer {
         private final DatagramSocket serverSocket;
 
         /**
+         * The {@code WorkerFactory} used to create {@code Worker}s.
+         */
+        private final WorkerFactory workerFactory;
+
+        /**
          * Constructs a {@code Listener} with the provided
          * {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients and the
-         * provided {@code WorkerFactory}.
+         * clients and sends {@code DatagramPacket}s to clients, the provided
+         * {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
          *
          * @param serverSock the provided {@code DatagramSocket} that receives
          *                   {@code DatagramPacket}s from clients and sends
          *                   {@code DatagramPacket}s to clients
-         * @param factory    the provided {@code WorkerFactory}
+         * @param factory1   the provided {@code ExecutorFactory}
+         * @param factory2   the provided {@code WorkerFactory}
          */
         public Listener(
                 final DatagramSocket serverSock,
-                final WorkerFactory factory) {
-            this.workerFactory = factory;
+                final ExecutorFactory factory1,
+                final WorkerFactory factory2) {
+            this.executorFactory = factory1;
             this.logger = LoggerFactory.getLogger(Listener.class);
             this.serverSocket = serverSock;
+            this.workerFactory = factory2;
         }
 
         @Override
         public void run() {
-            ExecutorService executor =
-                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
-                            ExecutorsHelper.newCachedThreadPoolBuilder());
+            ExecutorService executor = this.executorFactory.newExecutor();
             try {
                 while (true) {
                     try {

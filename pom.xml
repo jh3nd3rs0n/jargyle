@@ -39,7 +39,7 @@
 		<junit.version>4.13.2</junit.version>
 		<slf4j.version>2.0.12</slf4j.version>
 		<maven.javadoc.skippedModules>
-			jargyle-cli,jargyle-client-test-help,jargyle-integration-test,jargyle-performance-test,jargyle-test-help
+			jargyle-cli,jargyle-integration-test,jargyle-performance-test,jargyle-test-help
 		</maven.javadoc.skippedModules>
 		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 		<jacoco.skip>true</jacoco.skip>
@@ -254,7 +254,6 @@
 		<module>jargyle-internal</module>
 		<module>jargyle-common</module>
 		<module>jargyle-protocolbase</module>
-		<module>jargyle-client-test-help</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
 		<module>jargyle-integration-test</module>

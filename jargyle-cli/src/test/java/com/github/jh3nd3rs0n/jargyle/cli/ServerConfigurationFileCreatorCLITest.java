@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.cli;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
-import com.github.jh3nd3rs0n.jargyle.test.help.IoHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

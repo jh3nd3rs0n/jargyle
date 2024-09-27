@@ -13,18 +13,8 @@
 	<description>SOCKS client API</description>
 	<properties>
 		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
-		<exportJargyleInternalConcurrent>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.concurrent=ALL-UNNAMED</exportJargyleInternalConcurrent>
-		<exportJargyleInternalThrowable>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.throwable=ALL-UNNAMED</exportJargyleInternalThrowable>
-		<argLine/>
-		<addExports>--add-exports ${exportJargyleInternalConcurrent} --add-exports ${exportJargyleInternalThrowable}</addExports>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-client-test-help</artifactId>
-			<version>${project.parent.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-common</artifactId>
@@ -41,39 +31,16 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>jargyle-test-help</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>testCompile</id>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-							<compilerArgs>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalConcurrent}</arg>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalThrowable}</arg>
-							</compilerArgs>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<argLine>@{argLine} ${addExports}</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

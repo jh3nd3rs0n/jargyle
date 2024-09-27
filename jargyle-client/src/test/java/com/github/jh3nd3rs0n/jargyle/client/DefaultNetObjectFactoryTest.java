@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-import com.github.jh3nd3rs0n.jargyle.client.test.help.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -142,7 +142,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketInetAddressInt01() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -174,7 +177,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketInetAddressIntInetAddressInt01() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -197,7 +203,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketInetAddressIntInetAddressInt02() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -243,7 +252,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringInt01() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -264,7 +276,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringInt02() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -297,7 +312,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringIntInetAddressInt01() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -320,7 +338,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringIntInetAddressInt02() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -342,7 +363,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringIntInetAddressInt03() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();
@@ -367,7 +391,10 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringIntInetAddressInt04() throws IOException {
-        TestServer testServer = new TestServer(0, new TestServer.DefaultWorkerFactory());
+        TestServer testServer = new TestServer(
+                0,
+                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
+                new TestServer.DefaultWorkerFactory());
         Socket socket = null;
         try {
             testServer.start();

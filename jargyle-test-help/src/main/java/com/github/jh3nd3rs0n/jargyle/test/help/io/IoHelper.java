@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.test.help;
+package com.github.jh3nd3rs0n.jargyle.test.help.io;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

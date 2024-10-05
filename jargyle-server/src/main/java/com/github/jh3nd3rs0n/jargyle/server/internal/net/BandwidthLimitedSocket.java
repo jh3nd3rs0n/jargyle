@@ -79,6 +79,12 @@ public final class BandwidthLimitedSocket extends FilterSocket {
 	}
 
 	@Override
+	public synchronized void close() throws IOException {
+		super.close();
+		this.inputStream.close();
+	}
+
+	@Override
 	public InputStream getInputStream() throws IOException {
 		if (this.inputStream != null) {
 			return this.inputStream;

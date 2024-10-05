@@ -99,6 +99,10 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE));
 		SETTING_CONVERTER_MAP.put(
+				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_INPUT_STREAM,
+				new SettingToPropertyConverter(
+						DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM));
+		SETTING_CONVERTER_MAP.put(
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_PASSWORD, 
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD));
@@ -183,6 +187,10 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						SslPropertySpecConstants.SSL_KEY_STORE_FILE));
 		SETTING_CONVERTER_MAP.put(
+				ChainingSslSettingSpecConstants.CHAINING_SSL_KEY_STORE_INPUT_STREAM,
+				new SettingToPropertyConverter(
+						SslPropertySpecConstants.SSL_KEY_STORE_INPUT_STREAM));
+		SETTING_CONVERTER_MAP.put(
 				ChainingSslSettingSpecConstants.CHAINING_SSL_KEY_STORE_PASSWORD, 
 				new SettingToPropertyConverter(
 						SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD));
@@ -198,6 +206,10 @@ public final class Routes {
 				ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_FILE, 
 				new SettingToPropertyConverter(
 						SslPropertySpecConstants.SSL_TRUST_STORE_FILE));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_INPUT_STREAM,
+				new SettingToPropertyConverter(
+						SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSslSettingSpecConstants.CHAINING_SSL_TRUST_STORE_PASSWORD, 
 				new SettingToPropertyConverter(

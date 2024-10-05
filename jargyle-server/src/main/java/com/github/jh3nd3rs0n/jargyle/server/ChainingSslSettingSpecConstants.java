@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +10,7 @@ import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.CommaSeparatedValuesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -72,7 +69,12 @@ public final class ChainingSslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"chaining.ssl.keyStoreFile", 
 					SslPropertySpecConstants.SSL_KEY_STORE_FILE.getDefaultProperty().getValue()));
-	
+
+	public static final SettingSpec<InputStream> CHAINING_SSL_KEY_STORE_INPUT_STREAM =
+			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
+					"chaining.ssl.keyStoreInputStream",
+					SslPropertySpecConstants.SSL_KEY_STORE_INPUT_STREAM.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The password for the key store for the SSL/TLS "
 					+ "connections to the other SOCKS server",
@@ -121,7 +123,12 @@ public final class ChainingSslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"chaining.ssl.trustStoreFile", 
 					SslPropertySpecConstants.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue()));
-	
+
+	public static final SettingSpec<InputStream> CHAINING_SSL_TRUST_STORE_INPUT_STREAM =
+			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
+					"chaining.ssl.trustStoreInputStream",
+					SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The password for the trust store for the SSL/TLS "
 					+ "connections to the other SOCKS server",

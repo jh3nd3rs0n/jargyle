@@ -18,6 +18,26 @@ public final class IoHelper {
     }
 
     /**
+     * Copies the contents of the provided {@code InputStream} to the provided
+     * {@code File}.
+     *
+     * @param in   the provided {@code InputStream}
+     * @param file the provided {@code File}
+     * @throws IOException if an I/O error occurs
+     */
+    public static void copyInputStreamToFile(
+            final InputStream in, final File file) throws IOException {
+        Objects.requireNonNull(in);
+        Objects.requireNonNull(file);
+        try (OutputStream out = Files.newOutputStream(file.toPath())) {
+            int b;
+            while ((b = in.read()) != -1) {
+                out.write(b);
+            }
+        }
+    }
+
+    /**
      * Reads the contents from the provided {@code File} and returns its
      * contents as a {@code String}.
      *

@@ -8,6 +8,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecD
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -130,6 +131,16 @@ public final class DtlsPropertySpecConstants {
     public static final PropertySpec<File> DTLS_TRUST_STORE_FILE =
             PROPERTY_SPECS.addThenGet(new FilePropertySpec(
                     "socksClient.dtls.trustStoreFile",
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.dtls.trustStoreInputStream}: the {@code InputStream}
+     * of the trust store for the DTLS connections to the SOCKS server.
+     */
+    public static final PropertySpec<InputStream> DTLS_TRUST_STORE_INPUT_STREAM =
+            PROPERTY_SPECS.addThenGet(new InputStreamPropertySpec(
+                    "socksClient.dtls.trustStoreInputStream",
                     null));
 
     /**

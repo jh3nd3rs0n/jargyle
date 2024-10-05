@@ -52,8 +52,7 @@ SOCKS client API and the SOCKS server API.
 `jargyle-internal`: Maven module for the internal API used by all modules
 
 `jargyle-performance-test`: Maven module for performance testing of the SOCKS
-server API. The results can be found in
-`jargyle-performance-test/target/performance-results/`.
+server API.
 
 `jargyle-protocolbase`: Maven module for the foundational API for the
 SOCKS client API and the SOCKS server API
@@ -99,8 +98,9 @@ These commands are to be executed at the top directory of Jargyle.
 `mvn clean`: Deletes directories and files created by this project.
 
 `mvn clean compile site:site site:stage site:deploy`: Performs a clean build 
-and produces the website/documentation. The website/documentation can be found 
-in `docs/`. 
+and produces the website/documentation. 
+
+The produced website/documentation can be found in `docs/`. 
 
 Included in the website/documentation is the reference documentation. The 
 reference documentation was generated from special annotations within in the 
@@ -120,17 +120,32 @@ cd ../../../../
 ```
 
 `mvn clean package -DskipTests=true`: Performs a clean build of the binary 
-distribution while skipping all tests. The built binary distribution can be 
-found as a directory and in multiple archive formats in 
-`jargyle-distribution/target/`.
+distribution skipping the execution of all tests. 
 
-`mvn clean test -Pcoverage`: Performs a clean build and execution of all tests 
-except integration tests and also produces test coverage reports. The test 
-coverage reports can be found in `jargyle-report-aggregate/target/`. The option 
-`-Pcoverage` can be removed if you do not want test coverage reports produced.
+The built binary distribution can be found as a directory and in multiple 
+archive formats in `jargyle-distribution/target/`.
 
-`mvn clean verify -Pcoverage`: Performs a clean build and
-execution of all tests including integration tests and also produces test
-coverage reports. The test coverage reports can be found in
-`jargyle-report-aggregate/target/`. The option `-Pcoverage` can be removed if
-you do not want test coverage reports produced.
+`mvn clean test -Pcoverage`: Performs a clean build, executes all tests except 
+integration tests, and produces the aggregated test coverage reports. 
+
+The aggregated test coverage reports can be found in 
+`jargyle-report-aggregate/target/`. 
+
+The option `-Pcoverage` can be removed if you do not want the aggregated test 
+coverage reports produced.
+
+`mvn clean verify --projects=\!jargyle-performance-test,\!jargyle-distribution -Pcoverage`: 
+Performs a clean build, executes all tests including integration tests except 
+the ones from the project `jargyle-performance-test`, skips building the 
+binary distribution, and produces the aggregated test coverage reports. 
+
+The argument `\!jargyle-performance-test` for the option `--projects` can be 
+removed if you want the performance tests to be executed. If the performance 
+tests are executed, the results can be found in
+`jargyle-performance-test/target/performance-results/`. 
+
+The aggregated test coverage reports can be found in
+`jargyle-report-aggregate/target/`. 
+
+The option `-Pcoverage` can be removed if you do not want the aggregated test 
+coverage reports produced.

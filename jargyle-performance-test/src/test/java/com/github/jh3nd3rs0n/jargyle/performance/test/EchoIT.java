@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.performance.test;
 
 import com.github.jh3nd3rs0n.jargyle.integration.test.DatagramEchoClient;
 import com.github.jh3nd3rs0n.jargyle.integration.test.EchoClient;
-import com.github.jh3nd3rs0n.jargyle.test.help.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -98,7 +98,7 @@ public class EchoIT {
         public void run() {
             try {
                 new DatagramEchoClient().echo(
-                        TestStringConstants.STRING_03,
+                        TestStringConstants.STRING_04,
                         this.datagramEchoServerInetAddress,
                         this.datagramEchoServerPort);
             } catch (IOException e) {
@@ -143,7 +143,7 @@ public class EchoIT {
         public void run() {
             try {
                 new EchoClient().echo(
-                        TestStringConstants.STRING_03,
+                        TestStringConstants.STRING_04,
                         this.echoServerInetAddress,
                         this.echoServerPort);
             } catch (IOException e) {

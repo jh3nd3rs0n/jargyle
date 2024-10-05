@@ -2,7 +2,9 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramSocket;
+import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -44,15 +46,20 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	private SSLContext getDtlsContext() throws IOException {
 		KeyManager[] keyManagers = null;
 		Settings settings = this.configuration.getSettings();
+		InputStream keyStoreInputStream = settings.getLastValue(
+				DtlsSettingSpecConstants.DTLS_KEY_STORE_INPUT_STREAM);
 		File keyStoreFile = settings.getLastValue(
 				DtlsSettingSpecConstants.DTLS_KEY_STORE_FILE);
 		if (keyStoreFile != null) {
+			keyStoreInputStream = Files.newInputStream(keyStoreFile.toPath());
+		}
+		if (keyStoreInputStream != null) {
 			char[] keyStorePassword = settings.getLastValue(
 					DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD).getPassword();
 			String keyStoreType = settings.getLastValue(
 					DtlsSettingSpecConstants.DTLS_KEY_STORE_TYPE);
 			keyManagers = KeyManagerHelper.getKeyManagers(
-					keyStoreFile, keyStorePassword,	keyStoreType);
+					keyStoreInputStream, keyStorePassword, keyStoreType);
 			Arrays.fill(keyStorePassword, '\0');
 		}
 		SSLContext context = null;

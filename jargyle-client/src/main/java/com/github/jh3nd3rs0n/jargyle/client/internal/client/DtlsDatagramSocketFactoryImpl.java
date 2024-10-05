@@ -13,7 +13,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramSocket;
+import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -38,15 +40,21 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 	
 	private SSLContext getDtlsContext() throws IOException {
 		TrustManager[] trustManagers = null;
+		InputStream trustStoreInputStream = this.properties.getValue(
+				DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM);
 		File trustStoreFile = this.properties.getValue(
 				DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE);
 		if (trustStoreFile != null) {
+			trustStoreInputStream = Files.newInputStream(
+					trustStoreFile.toPath());
+		}
+		if (trustStoreInputStream != null) {
 			char[] trustStorePassword = this.properties.getValue(
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD).getPassword();
 			String trustStoreType = this.properties.getValue(
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE);
 			trustManagers = TrustManagerHelper.getTrustManagers(
-					trustStoreFile, trustStorePassword,	trustStoreType);
+					trustStoreInputStream, trustStorePassword, trustStoreType);
 			Arrays.fill(trustStorePassword, '\0');
 		}
 		SSLContext context = null;

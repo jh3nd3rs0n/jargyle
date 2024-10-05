@@ -4,8 +4,8 @@ import com.github.jh3nd3rs0n.jargyle.internal.security.KeyStoreHelper;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -22,21 +22,22 @@ public final class TrustManagerHelper {
     }
 
     /**
-     * Returns an array of {@code TrustManager}s from the provided {@code File}
-     * of the trust store, the provided password of the trust store, and the
-     * type of trust store.
+     * Returns an array of {@code TrustManager}s from the provided
+     * {@code InputStream} of the trust store, the provided password of the
+     * trust store, and the type of trust store.
      *
-     * @param trustStoreFile     the provided {@code File} of the trust store
-     * @param trustStorePassword the provided password of the trust store
-     * @param trustStoreType     the type of trust store (can be {@code null})
-     * @return an array of {@code TrustManager}s from the provided {@code File}
-     * of the trust store, the provided password of the trust store, and the
-     * type of trust store
+     * @param trustStoreInputStream the provided {@code InputStream} of the
+     *                              trust store
+     * @param trustStorePassword    the provided password of the trust store
+     * @param trustStoreType        the type of trust store (can be {@code null})
+     * @return an array of {@code TrustManager}s from the provided
+     * {@code InputStream} of the trust store, the provided password of the
+     * trust store, and the type of trust store
      * @throws IOException if an I/O error occurs when reading the provided
-     *                     {@code File}
+     *                     {@code InputStream}
      */
     public static TrustManager[] getTrustManagers(
-            final File trustStoreFile,
+            final InputStream trustStoreInputStream,
             final char[] trustStorePassword,
             final String trustStoreType) throws IOException {
         TrustManagerFactory trustManagerFactory;
@@ -47,7 +48,7 @@ public final class TrustManagerHelper {
             throw new AssertionError(e);
         }
         KeyStore trustStore = KeyStoreHelper.getKeyStore(
-                trustStoreFile, trustStorePassword, trustStoreType);
+                trustStoreInputStream, trustStorePassword, trustStoreType);
         try {
             trustManagerFactory.init(trustStore);
         } catch (KeyStoreException e) {

@@ -290,11 +290,10 @@ public final class TestServer {
                         Socket clientSocket = this.serverSocket.accept();
                         executor.execute(this.workerFactory.newWorker(
                                 clientSocket));
+                    } catch (SocketException e) {
+                        // closed by TestServer.stop()
+                        break;
                     } catch (IOException e) {
-                        if (ThrowableHelper.isOrHasInstanceOf(
-                                e, SocketException.class)) {
-                            break;
-                        }
                         this.logger.warn(String.format(
                                         "%s: An error occurred in waiting "
                                                 + "for a client socket",
@@ -322,7 +321,7 @@ public final class TestServer {
         /**
          * The client {@code Socket}.
          */
-        private final Socket clientSocket;
+        private Socket clientSocket;
 
         /**
          * Constructs a {@code Worker} with the provided client {@code Socket}.
@@ -332,6 +331,25 @@ public final class TestServer {
         public Worker(final Socket clientSock) {
             this.logger = LoggerFactory.getLogger(Worker.class);
             this.clientSocket = clientSock;
+        }
+
+        /**
+         * Returns the {@code boolean} value indicating if the provided
+         * {@code Throwable} is an instance of {@code SocketException} or has
+         * an instance of {@code SocketException}.
+         *
+         * @param t the provided {@code Throwable}
+         * @return the {@code boolean} value indicating if the provided
+         * {@code Throwable} is an instance of {@code SocketException} or has
+         * an instance of {@code SocketException}
+         */
+        private static boolean isOrHasInstanceOfSocketException(
+                final Throwable t) {
+            if (t instanceof SocketException) {
+                return true;
+            }
+            Throwable cause = t.getCause();
+            return cause != null && isOrHasInstanceOfSocketException(cause);
         }
 
         /**
@@ -356,8 +374,7 @@ public final class TestServer {
             try {
                 this.doWork();
             } catch (IOException e) {
-                if (!ThrowableHelper.isOrHasInstanceOf(
-                        e, SocketException.class)) {
+                if (!isOrHasInstanceOfSocketException(e)) {
                     this.logger.warn(String.format(
                                     "%s: %s",
                                     this.getClass().getSimpleName(),
@@ -374,6 +391,17 @@ public final class TestServer {
                             e);
                 }
             }
+        }
+
+        /**
+         * Sets the client {@code Socket} with the provided {@code Socket}.
+         * This method is for setting the {@code Socket} with a wrapped
+         * {@code Socket} of the other.
+         *
+         * @param clientSock the provided {@code Socket}
+         */
+        protected final void setClientSocket(final Socket clientSock) {
+            this.clientSocket = clientSock;
         }
 
     }

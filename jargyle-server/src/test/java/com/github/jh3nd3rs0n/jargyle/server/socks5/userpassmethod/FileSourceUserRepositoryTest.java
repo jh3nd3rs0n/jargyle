@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
 import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.test.help.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.server.TestResourceConstants;
 import org.junit.After;
 import org.junit.Before;
@@ -53,13 +53,13 @@ public class FileSourceUserRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_USERS_FILE.getContentAsString(),
 				usrsFile);
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */
 		usrsFile.setLastModified(System.currentTimeMillis());
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		final int userCount = 3; 
 		assertTrue(this.fileSourceUserRepository.getAll().toMap().size() == userCount);
 	}
@@ -76,13 +76,13 @@ public class FileSourceUserRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_ADDED_USER_TO_USERS_FILE.getContentAsString(),
 				usrsFile);
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */		
 		usrsFile.setLastModified(System.currentTimeMillis());
-		ThreadHelper.sleepForThreeSeconds();		
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		final int userCount = 4; 
 		assertTrue(this.fileSourceUserRepository.getAll().toMap().size() == userCount);
 	}

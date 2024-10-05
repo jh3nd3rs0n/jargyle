@@ -82,14 +82,19 @@ final class GssDatagramSocket extends FilterDatagramSocket {
      */
     @Override
     public void close() {
+        super.close();
         try {
             this.gssContext.dispose();
         } catch (GSSException e) {
             throw new UncheckedIOException(new IOException(e));
         }
-        super.close();
     }
 
+    /**
+     * Throws an {@code UnsupportedOperationException}.
+     *
+     * @return {@code null}
+     */
     @Override
     public DatagramChannel getChannel() {
         throw new UnsupportedOperationException();

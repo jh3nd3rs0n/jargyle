@@ -298,6 +298,7 @@ public final class DatagramTestServer {
                                 this.workerFactory.newWorker(
                                         this.serverSocket, packet));
                     } catch (SocketException e) {
+                        // closed by DatagramTestServer.stop()
                         break;
                     } catch (IOException e) {
                         this.logger.warn(String.format(
@@ -333,7 +334,7 @@ public final class DatagramTestServer {
          * The {@code DatagramSocket} that receives {@code DatagramPacket}s from
          * clients and sends {@code DatagramPacket}s to clients.
          */
-        private final DatagramSocket serverSocket;
+        private DatagramSocket serverSocket;
 
         /**
          * Constructs a {@code Worker} with the provided
@@ -389,6 +390,7 @@ public final class DatagramTestServer {
             try {
                 this.doWork();
             } catch (SocketException ignored) {
+                // closed by DatagramTestServer.stop()
             } catch (IOException e) {
                 this.logger.warn(String.format(
                                 "%s: %s",
@@ -396,6 +398,20 @@ public final class DatagramTestServer {
                                 e),
                         e);
             }
+        }
+
+        /**
+         * Sets the {@code DatagramSocket} that receives
+         * {@code DatagramPacket}s from clients and sends
+         * {@code DatagramPacket}s to clients with the provided
+         * {@code DatagramSocket}. This method is for setting the
+         * {@code DatagramSocket} with a wrapped {@code DatagramSocket} of
+         * the other.
+         *
+         * @param serverSock the provided {@code DatagramSocket}
+         */
+        protected final void setServerSocket(final DatagramSocket serverSock) {
+            this.serverSocket = serverSock;
         }
 
     }

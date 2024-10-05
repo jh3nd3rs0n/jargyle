@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -8,11 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.CommaSeparatedValuesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -70,7 +67,12 @@ public final class SslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"ssl.keyStoreFile", 
 					null));
-	
+
+	public static final SettingSpec<InputStream> SSL_KEY_STORE_INPUT_STREAM =
+			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
+					"ssl.keyStoreInputStream",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The password for the key store for the SSL/TLS "
 					+ "connections to the SOCKS server",
@@ -131,7 +133,12 @@ public final class SslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"ssl.trustStoreFile", 
 					null));
-	
+
+	public static final SettingSpec<InputStream> SSL_TRUST_STORE_INPUT_STREAM =
+			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
+					"ssl.trustStoreInputStream",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The password for the trust store for the SSL/TLS "
 					+ "connections to the SOCKS server",

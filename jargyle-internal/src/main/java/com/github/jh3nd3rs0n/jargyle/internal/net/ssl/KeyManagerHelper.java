@@ -4,8 +4,8 @@ import com.github.jh3nd3rs0n.jargyle.internal.security.KeyStoreHelper;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -23,21 +23,22 @@ public final class KeyManagerHelper {
     }
 
     /**
-     * Returns an array of {@code KeyManager}s from the provided {@code File}
-     * of the key store, the provided password of the key store, and the type
-     * of key store.
+     * Returns an array of {@code KeyManager}s from the provided
+     * {@code InputStream} of the key store, the provided password of the key
+     * store, and the type of key store.
      *
-     * @param keyStoreFile     the provided {@code File} of the key store
-     * @param keyStorePassword the provided password of the key store
-     * @param keyStoreType     the type of key store (can be {@code null})
-     * @return an array of {@code KeyManager}s from the provided {@code File}
-     * of the key store, the provided password of the key store, and the type
-     * of key store
+     * @param keyStoreInputStream the provided {@code InputStream} of the key
+     *                            store
+     * @param keyStorePassword    the provided password of the key store
+     * @param keyStoreType        the type of key store (can be {@code null})
+     * @return an array of {@code KeyManager}s from the provided
+     * {@code InputStream} of the key store, the provided password of the key
+     * store, and the type of key store
      * @throws IOException if an I/O error occurs when reading the provided
-     *                     {@code File}
+     *                     {@code InputStream}
      */
     public static KeyManager[] getKeyManagers(
-            final File keyStoreFile,
+            final InputStream keyStoreInputStream,
             final char[] keyStorePassword,
             final String keyStoreType) throws IOException {
         KeyManagerFactory keyManagerFactory;
@@ -48,7 +49,7 @@ public final class KeyManagerHelper {
             throw new AssertionError(e);
         }
         KeyStore keyStore = KeyStoreHelper.getKeyStore(
-                keyStoreFile, keyStorePassword, keyStoreType);
+                keyStoreInputStream, keyStorePassword, keyStoreType);
         try {
             keyManagerFactory.init(keyStore, keyStorePassword);
         } catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {

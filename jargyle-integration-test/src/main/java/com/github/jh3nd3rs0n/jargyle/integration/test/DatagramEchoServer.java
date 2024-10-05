@@ -37,6 +37,7 @@ public final class DatagramEchoServer {
 						this.serverSocket.receive(packet);
 						executor.execute(new Worker(this.serverSocket, packet));
 					} catch (SocketException e) {
+						// closed by DatagramEchoServer.stop()
 						break;
 					} catch (IOException e) {
 						this.logger.warn(String.format(
@@ -84,6 +85,7 @@ public final class DatagramEchoServer {
 						this.packet.getAddress(),
 						this.packet.getPort()));
 			} catch (SocketException ignored) {
+				// closed by DatagramEchoServer.stop()
 			} catch (IOException e) {
 				this.logger.warn(String.format(
 						"%s: An error occurred in sending the UDP packet",
@@ -96,7 +98,6 @@ public final class DatagramEchoServer {
 	
 	public static final int BUFFER_SIZE = 1024;
 	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
-	public static final int PORT = 1081;
 
 	private final InetAddress bindInetAddress;
 	private ExecutorService executor;
@@ -105,8 +106,8 @@ public final class DatagramEchoServer {
 	private final int specifiedPort;
 	private State state;
 
-	public DatagramEchoServer() {
-		this(PORT, INET_ADDRESS);
+	public DatagramEchoServer(final int prt) {
+		this(prt, INET_ADDRESS);
 	}
 
 	public DatagramEchoServer(final int prt, final InetAddress bindInetAddr) {

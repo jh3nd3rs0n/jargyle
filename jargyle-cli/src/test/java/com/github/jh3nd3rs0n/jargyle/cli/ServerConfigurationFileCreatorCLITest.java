@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -20,8 +22,9 @@ public class ServerConfigurationFileCreatorCLITest {
 	private Path documentedCombinedConfigurationFile = null;
 	private Path emptyConfigurationFile = null;	
 	private Path generalConfigurationFile = null;
+	private Path socks5ConfigurationFile = null;
 	private Path supplementedGeneralConfigurationFile = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		this.baseDir = Files.createTempDirectory("com.github.jh3nd3rs0n.jargyle-");
@@ -29,6 +32,7 @@ public class ServerConfigurationFileCreatorCLITest {
 		this.documentedCombinedConfigurationFile = this.baseDir.resolve("documented_combined_configuration.xml");
 		this.emptyConfigurationFile = this.baseDir.resolve("empty_configuration.xml");
 		this.generalConfigurationFile = this.baseDir.resolve("general_configuration.xml");
+		this.socks5ConfigurationFile = this.baseDir.resolve("socks5_configuration.xml");
 		this.supplementedGeneralConfigurationFile = this.baseDir.resolve("supplemented_general_configuration.xml");		
 	}
 
@@ -37,6 +41,10 @@ public class ServerConfigurationFileCreatorCLITest {
 		if (this.supplementedGeneralConfigurationFile != null) {
 			Files.deleteIfExists(this.supplementedGeneralConfigurationFile);
 			this.supplementedGeneralConfigurationFile = null;
+		}
+		if (this.socks5ConfigurationFile != null) {
+			Files.deleteIfExists(this.socks5ConfigurationFile);
+			this.socks5ConfigurationFile = null;
 		}
 		if (this.generalConfigurationFile != null) {
 			Files.deleteIfExists(this.generalConfigurationFile);
@@ -62,11 +70,19 @@ public class ServerConfigurationFileCreatorCLITest {
 
 	@Test
 	public void testMainForCombiningConfigurationFiles() throws IOException {
+		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getInputStream()) {
+			IoHelper.copyInputStreamToFile(
+					in, this.supplementedGeneralConfigurationFile.toFile());
+		}
+		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getInputStream()) {
+			IoHelper.copyInputStreamToFile(
+					in, this.socks5ConfigurationFile.toFile());
+		}
 		String[] args = new String[] {
 				"--config-file=".concat(
-						TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getFile().getAbsolutePath()),
+						this.supplementedGeneralConfigurationFile.toAbsolutePath().toString()),
 				"--config-file=".concat(
-						TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getFile().getAbsolutePath()),
+						this.socks5ConfigurationFile.toAbsolutePath().toString()),
 				this.combinedConfigurationFile.toAbsolutePath().toString()
 		};
 		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);
@@ -110,14 +126,22 @@ public class ServerConfigurationFileCreatorCLITest {
 
 	@Test
 	public void testMainForCreatingADocumentedConfigurationFile() throws IOException {
+		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getInputStream()) {
+			IoHelper.copyInputStreamToFile(
+					in, this.supplementedGeneralConfigurationFile.toFile());
+		}
+		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getInputStream()) {
+			IoHelper.copyInputStreamToFile(
+					in, this.socks5ConfigurationFile.toFile());
+		}
 		String[] args = new String[] {
 				"--setting=doc=Start of general settings",
 				"--config-file=".concat(
-						TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getFile().getAbsolutePath()),
+						this.supplementedGeneralConfigurationFile.toAbsolutePath().toString()),
 				"--setting=doc=End of general settings",
 				"--setting=doc=Start of SOCKS5 settings",
 				"--config-file=".concat(
-						TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getFile().getAbsolutePath()),
+						this.socks5ConfigurationFile.toAbsolutePath().toString()),
 				"--setting=doc=End of SOCKS5 settings",
 				this.documentedCombinedConfigurationFile.toAbsolutePath().toString()
 		};
@@ -160,9 +184,13 @@ public class ServerConfigurationFileCreatorCLITest {
 	
 	@Test
 	public void testMainForSupplementingAConfigurationFile() throws IOException {
+		try (InputStream in = TestResourceConstants.JARGYLE_CLI_GENERAL_CONFIGURATION_FILE.getInputStream()) {
+			IoHelper.copyInputStreamToFile(
+					in, this.generalConfigurationFile.toFile());
+		}
 		String[] args = new String[] {
 				"--config-file=".concat(
-						TestResourceConstants.JARGYLE_CLI_GENERAL_CONFIGURATION_FILE.getFile().getAbsolutePath()),
+						this.generalConfigurationFile.toAbsolutePath().toString()),
 				"--setting=socksServerSocketSettings=SO_TIMEOUT=0",
 				this.supplementedGeneralConfigurationFile.toAbsolutePath().toString()
 		};

@@ -6,11 +6,13 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.test.help.io.MeasuredIoHelper;
 
 public final class EchoClient {
 	
@@ -37,8 +39,9 @@ public final class EchoClient {
 		this.socketSettings = socketSttngs; 
 	}
 	
-	public String echo(final String string) throws IOException {
-		return this.echo(string, EchoServer.INET_ADDRESS, EchoServer.PORT);
+	public String echo(
+			final String string, final int echoServerPort) throws IOException {
+		return this.echo(string, EchoServer.INET_ADDRESS, echoServerPort);
 	}
 	
 	public String echo(
@@ -54,9 +57,11 @@ public final class EchoClient {
 					echoServerInetAddress, echoServerPort));
 			InputStream in = socket.getInputStream();
 			OutputStream out = socket.getOutputStream();
-			MeasuredIoHelper.writeThenFlush(string.getBytes(), out);
+			MeasuredIoHelper.writeThenFlush(
+					string.getBytes(StandardCharsets.UTF_8),
+					out);
 			byte[] bytes = MeasuredIoHelper.readFrom(in);
-			returningString = new String(bytes);
+            returningString = new String(bytes, StandardCharsets.UTF_8);
 		} finally {
 			if (socket != null) {
 				socket.close();

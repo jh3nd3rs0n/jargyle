@@ -13,13 +13,6 @@
 	<properties>
 		<maven.site.skip>true</maven.site.skip>
 		<maven.deploy.skip>true</maven.deploy.skip>
-		<exportJargyleInternalConcurrent>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.concurrent=ALL-UNNAMED</exportJargyleInternalConcurrent>
-		<exportJargyleInternalLogging>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.logging=ALL-UNNAMED</exportJargyleInternalLogging>
-		<exportJargyleInternalNet>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.net=ALL-UNNAMED</exportJargyleInternalNet>
-		<exportJargyleInternalNetSsl>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.net.ssl=ALL-UNNAMED</exportJargyleInternalNetSsl>
-		<exportJargyleInternalThrowable>com.github.jh3nd3rs0n.jargyle.internal/com.github.jh3nd3rs0n.jargyle.internal.throwable=ALL-UNNAMED</exportJargyleInternalThrowable>
-		<argLine/>
-		<addExports>--add-exports ${exportJargyleInternalConcurrent} --add-exports ${exportJargyleInternalLogging} --add-exports ${exportJargyleInternalNet} --add-exports ${exportJargyleInternalNetSsl} --add-exports ${exportJargyleInternalThrowable}</addExports>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -46,30 +39,11 @@
 			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-test-help</artifactId>
 			<version>${project.parent.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerb-server-api-all</artifactId>
-			<version>2.0.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerb-simplekdc</artifactId>
-			<version>2.0.3</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.kerby</groupId>
-			<artifactId>kerby-asn1</artifactId>
-			<version>2.0.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -81,29 +55,14 @@
 	<build>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>testCompile</id>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-						<configuration>
-							<compilerArgs>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalConcurrent}</arg>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalLogging}</arg>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalNet}</arg>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalNetSsl}</arg>
-								<arg>--add-exports</arg>
-								<arg>${exportJargyleInternalThrowable}</arg>
-							</compilerArgs>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Automatic-Module-Name>com.github.jh3nd3rs0n.jargyle.integration.test</Automatic-Module-Name>
+						</manifestEntries>
+					</archive>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -111,7 +70,6 @@
 					<systemPropertyVariables>
 						<jdk.virtualThreadScheduler.parallelism>10</jdk.virtualThreadScheduler.parallelism>
 					</systemPropertyVariables>
-					<argLine>@{argLine} ${addExports}</argLine>
 				</configuration>
 			</plugin>
 		</plugins>

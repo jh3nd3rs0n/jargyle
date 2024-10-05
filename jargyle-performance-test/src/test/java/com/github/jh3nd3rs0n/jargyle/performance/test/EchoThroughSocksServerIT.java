@@ -11,7 +11,7 @@ import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.test.help.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -129,7 +129,7 @@ public class EchoThroughSocksServerIT {
                             .newSocksNetObjectFactory());
             try {
                 datagramEchoClient.echo(
-                        TestStringConstants.STRING_03,
+                        TestStringConstants.STRING_04,
                         this.datagramEchoServerInetAddress,
                         this.datagramEchoServerPort);
             } catch (IOException e) {
@@ -179,7 +179,7 @@ public class EchoThroughSocksServerIT {
                             .newSocksNetObjectFactory());
             try {
                 echoClient.echo(
-                        TestStringConstants.STRING_03,
+                        TestStringConstants.STRING_04,
                         this.echoServerInetAddress,
                         this.echoServerPort);
             } catch (IOException e) {

@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.test.help.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +42,7 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertEquals(udpRequest, udpRequest);
 	}
 
@@ -52,7 +52,7 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest, null);
 	}
 
@@ -62,7 +62,7 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Object obj2 = new Object();
 		Assert.assertNotEquals(obj1, obj2);
 	}
@@ -73,12 +73,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(255),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest1, udpRequest2);
 	}
 
@@ -88,12 +88,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("::1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest1, udpRequest2);
 	}
 
@@ -103,12 +103,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(65535),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest1, udpRequest2);
 	}
 
@@ -118,12 +118,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_02.getBytes());
+				TestStringConstants.STRING_03.getBytes());
 		Assert.assertNotEquals(udpRequest1, udpRequest2);
 	}
 
@@ -133,12 +133,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertEquals(udpRequest1, udpRequest2);
 	}
 
@@ -148,12 +148,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(255),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest1.hashCode(), udpRequest2.hashCode());
 	}
 
@@ -163,12 +163,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("::1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest1.hashCode(), udpRequest2.hashCode());
 	}
 
@@ -178,12 +178,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(65535),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertNotEquals(udpRequest1.hashCode(), udpRequest2.hashCode());
 	}
 
@@ -193,12 +193,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_02.getBytes());
+				TestStringConstants.STRING_03.getBytes());
 		Assert.assertNotEquals(udpRequest1.hashCode(), udpRequest2.hashCode());
 	}
 
@@ -208,12 +208,12 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpRequest2 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("127.0.0.1"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		Assert.assertEquals(udpRequest1.hashCode(), udpRequest2.hashCode());
 	}
 
@@ -223,7 +223,7 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(0),
 				Address.newInstanceFrom("12.216.103.24"),
 				Port.valueOf(0),
-				TestStringConstants.STRING_01.getBytes());
+				TestStringConstants.STRING_02.getBytes());
 		UdpRequest udpDatagram2 = UdpRequest.newInstanceFrom(
 				udpDatagram1.toByteArray());
 		Assert.assertEquals(udpDatagram1, udpDatagram2);
@@ -235,7 +235,7 @@ public class UdpRequestTest {
 				UnsignedByte.valueOf(1),
 				Address.newInstanceFrom("google.com"),
 				Port.valueOf(1234),
-				TestStringConstants.STRING_02.getBytes());
+				TestStringConstants.STRING_03.getBytes());
 		UdpRequest udpDatagram2 = UdpRequest.newInstanceFrom(
 				udpDatagram1.toByteArray());
 		Assert.assertEquals(udpDatagram1, udpDatagram2);
@@ -244,10 +244,22 @@ public class UdpRequestTest {
 	@Test
 	public void testToByteArray03() {
 		UdpRequest udpDatagram1 = UdpRequest.newInstance(
+				UnsignedByte.valueOf(123),
+				Address.newInstanceFrom("4256:1234:ef56:dcba:789e:f123:456a:abcd"),
+				Port.valueOf(0x9999),
+				TestStringConstants.STRING_03.getBytes());
+		UdpRequest udpDatagram2 = UdpRequest.newInstanceFrom(
+				udpDatagram1.toByteArray());
+		Assert.assertEquals(udpDatagram1, udpDatagram2);
+	}
+
+	@Test
+	public void testToByteArray04() {
+		UdpRequest udpDatagram1 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(255),
 				Address.newInstanceFrom("abcd:1234:ef56:abcd:789e:f123:456a:b789"),
 				Port.valueOf(0xffff),
-				TestStringConstants.STRING_03.getBytes());
+				TestStringConstants.STRING_04.getBytes());
 		UdpRequest udpDatagram2 = UdpRequest.newInstanceFrom(
 				udpDatagram1.toByteArray());
 		Assert.assertEquals(udpDatagram1, udpDatagram2);

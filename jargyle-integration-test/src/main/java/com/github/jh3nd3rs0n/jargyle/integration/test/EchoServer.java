@@ -4,6 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.io.MeasuredIoHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,6 +43,7 @@ public final class EchoServer {
 					} catch (IOException e) {
 						if (ThrowableHelper.isOrHasInstanceOf(
 								e, SocketException.class)) {
+							// closed by EchoServer.stop()
 							break;
 						}
 						this.logger.warn(String.format(
@@ -103,7 +106,6 @@ public final class EchoServer {
 	
 	public static final int BACKLOG = 50;
 	public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
-	public static final int PORT = 1084;
 	public static final SocketSettings SOCKET_SETTINGS = SocketSettings.of();
 	
 	private final int backlog;
@@ -116,10 +118,10 @@ public final class EchoServer {
 	private final int specifiedPort;
 	private State state;
 
-	public EchoServer() {
+	public EchoServer(final int prt) {
 		this(
 				NetObjectFactory.getDefault(), 
-				PORT, 
+				prt,
 				BACKLOG, 
 				INET_ADDRESS, 
 				SOCKET_SETTINGS);

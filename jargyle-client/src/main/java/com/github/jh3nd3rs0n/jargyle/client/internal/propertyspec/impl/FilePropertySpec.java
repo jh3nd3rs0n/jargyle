@@ -19,12 +19,12 @@ public final class FilePropertySpec extends PropertySpec<File> {
 	protected File validate(final File value) {
 		if (!value.exists()) {
 			throw new IllegalArgumentException(String.format(
-					"file `%s' does not exist",
+					"`%s' does not exist",
 					value));
 		}
 		if (!value.isFile()) {
 			throw new IllegalArgumentException(String.format(
-					"file `%s' must be a file",
+					"`%s' must be a file",
 					value));
 		}
 		return value;

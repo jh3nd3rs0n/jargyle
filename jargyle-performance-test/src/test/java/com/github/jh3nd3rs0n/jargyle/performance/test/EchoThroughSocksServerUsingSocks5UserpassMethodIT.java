@@ -17,7 +17,7 @@ import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.test.help.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -148,7 +148,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
                             .newSocksNetObjectFactory());
             try {
                 datagramEchoClient.echo(
-                        TestStringConstants.STRING_03,
+                        TestStringConstants.STRING_04,
                         this.datagramEchoServerInetAddress,
                         this.datagramEchoServerPort);
             } catch (IOException e) {
@@ -198,7 +198,7 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
                             .newSocksNetObjectFactory());
             try {
                 echoClient.echo(
-                        TestStringConstants.STRING_03,
+                        TestStringConstants.STRING_04,
                         this.echoServerInetAddress,
                         this.echoServerPort);
             } catch (IOException e) {

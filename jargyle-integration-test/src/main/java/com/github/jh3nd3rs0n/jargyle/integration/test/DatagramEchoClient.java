@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
@@ -36,8 +37,13 @@ public final class DatagramEchoClient {
 		this.socketSettings = socketSttngs;
 	}
 	
-	public String echo(final String string) throws IOException {
-		return this.echo(string, DatagramEchoServer.INET_ADDRESS, DatagramEchoServer.PORT);
+	public String echo(
+			final String string,
+			final int datagramEchoServerPort) throws IOException {
+		return this.echo(
+				string,
+				DatagramEchoServer.INET_ADDRESS,
+				datagramEchoServerPort);
 	}
 
 	public String echo(
@@ -52,7 +58,7 @@ public final class DatagramEchoClient {
 			datagramSocket.bind(null);
 			datagramSocket.connect(
 					datagramEchoServerInetAddress, datagramEchoServerPort);
-			byte[] buffer = string.getBytes();
+			byte[] buffer = string.getBytes(StandardCharsets.UTF_8);
 			DatagramPacket packet = new DatagramPacket(
 					buffer,
 					buffer.length,
@@ -62,8 +68,12 @@ public final class DatagramEchoClient {
 			buffer = new byte[DatagramEchoServer.BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
 			datagramSocket.receive(packet);
-			returningString = new String(Arrays.copyOfRange(
-					packet.getData(), packet.getOffset(), packet.getLength()));
+			returningString = new String(
+					Arrays.copyOfRange(
+							packet.getData(),
+							packet.getOffset(),
+							packet.getLength()),
+					StandardCharsets.UTF_8);
 		} finally {
 			if (datagramSocket != null) {
 				datagramSocket.close();

@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
-import com.github.jh3nd3rs0n.jargyle.test.help.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,13 +53,13 @@ public class FileSourceConfigurationRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGURATION_FILE.getContentAsString(),
 				configFile);
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */
 		configFile.setLastModified(System.currentTimeMillis());
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		Configuration configuration = 
 				this.fileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
@@ -80,13 +80,13 @@ public class FileSourceConfigurationRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGURATION_FILE.getContentAsString(),
 				configFile);
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */		
 		configFile.setLastModified(System.currentTimeMillis());		
-		ThreadHelper.sleepForThreeSeconds();
+		ThreadHelper.interruptableSleepForThreeSeconds();
 		Configuration configuration = 
 				this.fileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();

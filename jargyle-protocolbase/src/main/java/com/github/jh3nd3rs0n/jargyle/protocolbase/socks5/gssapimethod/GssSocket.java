@@ -8,6 +8,7 @@ import org.ietf.jgss.MessageProp;
 import java.io.*;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -65,14 +66,21 @@ final class GssSocket extends FilterSocket {
 
     @Override
     public synchronized void close() throws IOException {
+        super.close();
+        this.inputStream.close();
+        this.outputStream.close();
         try {
             this.gssContext.dispose();
         } catch (GSSException e) {
             throw new IOException(e);
         }
-        this.socket.close();
     }
 
+    /**
+     * Throws an {@code UnsupportedOperationException}.
+     *
+     * @return {@code null}
+     */
     @Override
     public SocketChannel getChannel() {
         throw new UnsupportedOperationException();
@@ -97,7 +105,7 @@ final class GssSocket extends FilterSocket {
         InputStream inStream = this.socket.getInputStream();
         if (this.messageProp != null) {
             this.inputStream = new GssUnwrappedInputStream(
-                    this.gssContext, inStream);
+                    this.gssContext, this.messageProp, inStream);
         } else {
             this.inputStream = inStream;
         }
@@ -160,6 +168,11 @@ final class GssSocket extends FilterSocket {
         private final GSSContext gssContext;
 
         /**
+         * The {@code MessageProp} used per-message.
+         */
+        private final MessageProp messageProp;
+
+        /**
          * The underlying {@code InputStream}.
          */
         private final InputStream in;
@@ -170,74 +183,57 @@ final class GssSocket extends FilterSocket {
         private ByteArrayInputStream bufferIn;
 
         /**
-         * The {@code boolean} value to indicate if this
-         * {@code GssUnwrappedInputStream}.
-         */
-        private boolean closed;
-
-        /**
          * Constructs a {@code GssUnwrappedInputStream} with the provided
-         * {@code GSSContext} to be used in de-encapsulating data and the
+         * {@code GSSContext} to be used in de-encapsulating data, the
+         * provided {@code MessageProp} used per-message, and the
          * provided underlying {@code InputStream}.
          *
          * @param context  the provided {@code GSSContext} to be used in
          *                 de-encapsulating data
+         * @param prop     the provided {@code MessageProp} used per-message
          * @param inStream the provided underlying {@code InputStream}
          */
         public GssUnwrappedInputStream(
                 final GSSContext context,
+                final MessageProp prop,
                 final InputStream inStream) {
             this.bufferIn = new ByteArrayInputStream(new byte[]{});
-            this.closed = false;
             this.gssContext = Objects.requireNonNull(context);
             this.in = Objects.requireNonNull(inStream);
+            this.messageProp = new MessageProp(
+                    prop.getQOP(), prop.getPrivacy());
         }
 
         @Override
         public int available() throws IOException {
-            if (this.closed) {
-                throw new IOException("stream closed");
-            }
             int bufferInAvailable = this.bufferIn.available();
             if (bufferInAvailable > 0) {
                 return bufferInAvailable;
             }
-            return this.in.available();
+            try {
+                this.readInputToBuffer();
+            } catch (EOFException e) {
+                return 0;
+            }
+            return this.bufferIn.available();
         }
 
         @Override
         public void close() throws IOException {
             this.bufferIn = new ByteArrayInputStream(new byte[]{});
             this.in.close();
-            this.closed = true;
         }
 
         @Override
         public int read() throws IOException {
-            if (this.closed) {
-                return -1;
+            int b = this.bufferIn.read();
+            if (b != -1) {
+                return b;
             }
-            if (this.bufferIn.available() == 0) {
-                int b = this.in.read();
-                if (b == -1) {
-                    this.closed = true;
-                    return b;
-                }
-                EncapsulatedUserDataMessage message =
-                        EncapsulatedUserDataMessage.newInstanceFrom(
-                                new SequenceInputStream(
-                                        new ByteArrayInputStream(
-                                                new byte[]{(byte) b}),
-                                        this.in));
-                byte[] token = message.getToken().getBytes();
-                MessageProp prop = new MessageProp(0, false);
-                try {
-                    token = this.gssContext.unwrap(
-                            token, 0, token.length, prop);
-                } catch (GSSException e) {
-                    throw new IOException(e);
-                }
-                this.bufferIn = new ByteArrayInputStream(token);
+            try {
+                this.readInputToBuffer();
+            } catch (EOFException e) {
+                return -1;
             }
             return this.bufferIn.read();
         }
@@ -269,28 +265,55 @@ final class GssSocket extends FilterSocket {
                         b.length,
                         off));
             }
-            if (this.closed) {
-                return -1;
+            if (len == 0) {
+                return len;
             }
             int offset = off;
-            int bufferInAvailable = this.bufferIn.available();
-            if (bufferInAvailable == 0) {
-                int by = this.read();
-                if (by == -1) {
-                    return by;
-                }
-                b[offset] = (byte) by;
-                offset++;
-                bufferInAvailable = 1 + this.bufferIn.available();
-            }
             int length = len;
-            if (length > bufferInAvailable) {
-                length = bufferInAvailable;
+            int totalBytesRead = -1;
+            do {
+                int bytesRead = this.bufferIn.read(b, offset, length);
+                if (bytesRead == -1) {
+                    try {
+                        this.readInputToBuffer();
+                    } catch (EOFException e) {
+                        break;
+                    }
+                    continue;
+                }
+                if (totalBytesRead == -1) {
+                    totalBytesRead = 0;
+                }
+                offset += bytesRead;
+                length -= bytesRead;
+                totalBytesRead += bytesRead;
+            } while (length > 0);
+            return totalBytesRead;
+        }
+
+        /**
+         * Reads and unwraps GSS wrapped data from the underlying
+         * {@code InputStream} and creates a new buffer {@code InputStream} of
+         * the unwrapped data. An {@code EOFException} is thrown if the end of
+         * the underlying {@code InputStream} has been reached.
+         *
+         * @throws IOException if the end of the underlying {@code InputStream}
+         *                     has been reached ({@code EOFException}) or if
+         *                     an I/O error occurs
+         */
+        private void readInputToBuffer() throws IOException {
+            EncapsulatedUserDataMessage message =
+                    EncapsulatedUserDataMessage.newInstanceFrom(this.in);
+            byte[] token = message.getToken().getBytes();
+            MessageProp prop = new MessageProp(
+                    this.messageProp.getQOP(), this.messageProp.getPrivacy());
+            try {
+                token = this.gssContext.unwrap(
+                        token, 0, token.length, prop);
+            } catch (GSSException e) {
+                throw new IOException(e);
             }
-            for (int i = offset; i < off + length; i++) {
-                b[i] = (byte) this.bufferIn.read();
-            }
-            return length;
+            this.bufferIn = new ByteArrayInputStream(token);
         }
 
     }
@@ -338,7 +361,8 @@ final class GssSocket extends FilterSocket {
          *
          * @param context   the provided {@code GSSContext} to be used in
          *                  encapsulating data
-         * @param prop      the provided {@code MessageProp} to used per-message
+         * @param prop      the provided {@code MessageProp} to be used
+         *                  per-message
          * @param outStream the provided underlying {@code OutputStream}
          */
         public GssWrappedOutputStream(
@@ -372,22 +396,10 @@ final class GssSocket extends FilterSocket {
 
         @Override
         public void flush() throws IOException {
-            byte[] bytes = this.bufferOut.toByteArray();
-            MessageProp prop = new MessageProp(
-                    this.messageProp.getQOP(),
-                    this.messageProp.getPrivacy());
-            byte[] token;
-            try {
-                token = this.gssContext.wrap(
-                        bytes, 0, bytes.length, prop);
-            } catch (GSSException e) {
-                throw new IOException(e);
+            if (this.bufferOutLength > 0) {
+                this.writeBufferToOutput();
             }
-            this.out.write(EncapsulatedUserDataMessage.newInstance(
-                    Token.newInstance(token)).toByteArray());
             this.out.flush();
-            this.bufferOut = new ByteArrayOutputStream();
-            this.bufferOutLength = 0;
         }
 
         @Override
@@ -417,17 +429,55 @@ final class GssSocket extends FilterSocket {
                         len,
                         b.length));
             }
-            for (int i = off; i < off + len; i++) {
-                this.write(b[i]);
-            }
+            int offset = off;
+            int length = len;
+            do {
+                if (length >= this.wrapSizeLimit) {
+                    this.bufferOut.write(Arrays.copyOfRange(
+                            b, offset, offset + this.wrapSizeLimit));
+                    this.writeBufferToOutput();
+                    offset += this.wrapSizeLimit;
+                    length -= this.wrapSizeLimit;
+                } else {
+                    this.bufferOut.write(Arrays.copyOfRange(
+                            b, offset, offset + length));
+                    this.writeBufferToOutput();
+                    offset = length;
+                    length = 0;
+                }
+            } while (length > 0);
         }
 
         @Override
         public void write(int b) throws IOException {
             this.bufferOut.write(b);
             if (++this.bufferOutLength == this.wrapSizeLimit) {
-                this.flush();
+                this.writeBufferToOutput();
             }
+        }
+
+        /**
+         * Writes and wraps the data from the buffer {@code OutputStream} to
+         * the underlying {@code OutputStream}.
+         *
+         * @throws IOException if an I/O error occurs
+         */
+        private void writeBufferToOutput() throws IOException {
+            byte[] bytes = this.bufferOut.toByteArray();
+            MessageProp prop = new MessageProp(
+                    this.messageProp.getQOP(),
+                    this.messageProp.getPrivacy());
+            byte[] token;
+            try {
+                token = this.gssContext.wrap(
+                        bytes, 0, bytes.length, prop);
+            } catch (GSSException e) {
+                throw new IOException(e);
+            }
+            this.out.write(EncapsulatedUserDataMessage.newInstance(
+                    Token.newInstance(token)).toByteArray());
+            this.bufferOut = new ByteArrayOutputStream();
+            this.bufferOutLength = 0;
         }
 
     }

@@ -1,9 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.internal.security;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -22,24 +20,25 @@ public final class KeyStoreHelper {
     }
 
     /**
-     * Returns a {@code KeyStore} from the provided {@code File} of the key
-     * store, the provided password for the key store, and the type of key
-     * store.
+     * Returns a {@code KeyStore} from the provided {@code InputStream} of
+     * the key store, the provided password for the key store, and the type
+     * of key store.
      *
-     * @param keyStoreFile     the provided {@code File} of the key store
-     * @param keyStorePassword the provided password for the key store
-     * @param keyStoreType     the type of key store (can be {@code null})
-     * @return a {@code KeyStore} from the provided {@code File} of the key
-     * store, the provided password for the key store, and the type of key
-     * store
+     * @param keyStoreInputStream the provided {@code InputStream} of the key
+     *                            store
+     * @param keyStorePassword    the provided password for the key store
+     * @param keyStoreType        the type of key store (can be {@code null})
+     * @return a {@code KeyStore} from the provided {@code InputStream} of
+     * the key store, the provided password for the key store, and the type
+     * of key store
      * @throws IOException if an I/O error occurs when reading the provided
-     *                     {@code File}
+     *                     {@code InputStream}
      */
     public static KeyStore getKeyStore(
-            final File keyStoreFile,
+            final InputStream keyStoreInputStream,
             final char[] keyStorePassword,
             final String keyStoreType) throws IOException {
-        Objects.requireNonNull(keyStoreFile);
+        Objects.requireNonNull(keyStoreInputStream);
         Objects.requireNonNull(keyStorePassword);
         String type = keyStoreType;
         if (type == null) {
@@ -51,8 +50,8 @@ public final class KeyStoreHelper {
         } catch (KeyStoreException e) {
             throw new IllegalArgumentException(e);
         }
-        try (InputStream in = Files.newInputStream(keyStoreFile.toPath())) {
-            keyStore.load(in, keyStorePassword);
+        try {
+            keyStore.load(keyStoreInputStream, keyStorePassword);
         } catch (NoSuchAlgorithmException | CertificateException e) {
             throw new IOException(e);
         }

@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecD
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +100,16 @@ public final class SslPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
+     * {@code socksClient.ssl.keyStoreInputStream}: the {@code InputStream}
+     * of the key store for the SSL/TLS connections to the SOCKS server.
+     */
+    public static final PropertySpec<InputStream> SSL_KEY_STORE_INPUT_STREAM =
+            PROPERTY_SPECS.addThenGet(new InputStreamPropertySpec(
+                    "socksClient.ssl.keyStoreInputStream",
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
      * {@code socksClient.ssl.keyStorePassword}: the {@code EncryptedPassword}
      * for the password for the key store for the SSL/TLS connections to the
      * SOCKS server.
@@ -164,6 +175,16 @@ public final class SslPropertySpecConstants {
     public static final PropertySpec<File> SSL_TRUST_STORE_FILE =
             PROPERTY_SPECS.addThenGet(new FilePropertySpec(
                     "socksClient.ssl.trustStoreFile",
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.ssl.trustStoreInputStream}: the {@code InputStream}
+     * for the trust store for the SSL/TLS connections to the SOCKS server.
+     */
+    public static final PropertySpec<InputStream> SSL_TRUST_STORE_INPUT_STREAM =
+            PROPERTY_SPECS.addThenGet(new InputStreamPropertySpec(
+                    "socksClient.ssl.trustStoreInputStream",
                     null));
 
     /**

@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -10,12 +11,7 @@ import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.BooleanSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.CommaSeparatedValuesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.EncryptedPasswordSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.FileSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -98,7 +94,12 @@ public final class ChainingDtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"chaining.dtls.trustStoreFile", 
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.getDefaultProperty().getValue()));
-	
+
+	public static final SettingSpec<InputStream> CHAINING_DTLS_TRUST_STORE_INPUT_STREAM =
+			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
+					"chaining.dtls.trustStoreInputStream",
+					DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The password for the trust store for the DTLS "
 					+ "connections to the other SOCKS server",

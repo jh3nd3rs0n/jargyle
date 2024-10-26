@@ -6,13 +6,14 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.*;
-import com.github.jh3nd3rs0n.jargyle.test.help.gss.kerberos.TestKerberosEnvironment;
-import com.github.jh3nd3rs0n.jargyle.test.help.gss.kerberos.TestKerberosEnvironmentException;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
@@ -23,50 +24,29 @@ import org.junit.rules.Timeout;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
 public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 
-	private static final String BASE_DIR_PREFIX =
-			"com.github.jh3nd3rs0n.jargyle.integration.test-";
-
-	private static final String KDC_REALM = "EXAMPLE.COM";
-	private static final String KDC_HOST = 
-			InetAddress.getLoopbackAddress().getHostAddress();
-	private static final int KDC_PORT = 8000;
-
-	private static final String PRINCIPAL = "alice";
-	private static final String PRINCIPAL_PASSWORD = "87654321";
-
-	private static final String RCMD_SERVICE_PRINCIPAL = String.format(
-			"rcmd/%s", InetAddress.getLoopbackAddress().getHostAddress());
-	private static final String RCMD_SERVICE_PRINCIPAL_PASSWORD = "12345678";
-
-	private static Path baseDir = null;
-
-	private static TestKerberosEnvironment testKerberosEnvironment;
-
-	private static DatagramEchoServer datagramEchoServer;
-	private static int datagramEchoServerPort;
-	private static EchoServer echoServer;
-	private static int echoServerPort;
+	private static DatagramTestServer echoDatagramTestServer;
+	private static int echoDatagramTestServerPort;
+	private static TestServer echoTestServer;
+	private static int echoTestServerPort;
 
 	private static SocksServer socksServerUsingSocks5GssapiMethod;
-	private static int socksServerPortUsingSocks5Gssapimethod;
+	private static int socksServerPortUsingSocks5GssapiMethod;
 	private static SocksServer socksServerUsingSocks5GssapiMethodNecReferenceImpl;
-	private static int socksServerPortUsingSocks5GssapimethodNecReferenceImpl;
+	private static int socksServerPortUsingSocks5GssapiMethodNecReferenceImpl;
 	private static SocksServer socksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection;
-	private static int socksServerPortUsingSocks5GssapimethodWithSelectiveIntegOrConfProtection;
+	private static int socksServerPortUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection;
 	private static SocksServer socksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection;
-	private static int socksServerPortUsingSocks5GssapimethodNecReferenceImplWithSelectiveIntegOrConfProtection;
+	private static int socksServerPortUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection;
 
 	@Rule
 	public Timeout globalTimeout = Timeout.builder()
-			.withTimeout(5, TimeUnit.SECONDS)
+			.withTimeout(60, TimeUnit.SECONDS)
 			.withLookingForStuckThread(true)
 			.build();
 
@@ -77,9 +57,11 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(0)),
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-						Methods.of(Method.GSSAPI)))));
+						Methods.of(Method.GSSAPI)),
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+						PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
 		socksServer.start();
-		socksServerPortUsingSocks5Gssapimethod = socksServer.getPort().intValue();
+		socksServerPortUsingSocks5GssapiMethod = socksServer.getPort().intValue();
 		return socksServer;
 	}
 
@@ -92,9 +74,11 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
 						Methods.of(Method.GSSAPI)),
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL.newSetting(
-						Boolean.TRUE))));
+						Boolean.TRUE),
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+						PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
 		socksServer.start();
-		socksServerPortUsingSocks5GssapimethodNecReferenceImpl = socksServer.getPort().intValue();
+		socksServerPortUsingSocks5GssapiMethodNecReferenceImpl = socksServer.getPort().intValue();
 		return socksServer;
 	}
 
@@ -111,9 +95,11 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG.newSetting(
 						1),
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF.newSetting(
-						Boolean.TRUE))));
+						Boolean.TRUE),
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+						PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
 		socksServer.start();
-		socksServerPortUsingSocks5GssapimethodWithSelectiveIntegOrConfProtection =
+		socksServerPortUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection =
 				socksServer.getPort().intValue();
 		return socksServer;
 	}
@@ -133,9 +119,11 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG.newSetting(
 						1),
 				Socks5SettingSpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF.newSetting(
-						Boolean.TRUE))));
+						Boolean.TRUE),
+				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+						PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
 		socksServer.start();
-		socksServerPortUsingSocks5GssapimethodNecReferenceImplWithSelectiveIntegOrConfProtection =
+		socksServerPortUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection =
 				socksServer.getPort().intValue();
 		return socksServer;
 	}
@@ -145,13 +133,15 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 		Properties properties = Properties.of(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.of(Method.GSSAPI)),
+				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID.newPropertyWithParsedValue(
+						TestGssEnvironment.MECHANISM_OID),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME.newProperty(
-						RCMD_SERVICE_PRINCIPAL),
+						TestGssEnvironment.SERVICE_NAME),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS.newProperty(
 						protectionLevels));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(),
-						socksServerPortUsingSocks5Gssapimethod)
+						socksServerPortUsingSocks5GssapiMethod)
 				.newSocksClient(properties);		
 	}
 	
@@ -160,15 +150,17 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 		Properties properties = Properties.of(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.of(Method.GSSAPI)),
+				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID.newPropertyWithParsedValue(
+						TestGssEnvironment.MECHANISM_OID),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME.newProperty(
-						RCMD_SERVICE_PRINCIPAL),
+						TestGssEnvironment.SERVICE_NAME),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.TRUE),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS.newProperty(
 						protectionLevels));
 		return Scheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(),
-						socksServerPortUsingSocks5GssapimethodNecReferenceImpl)
+						socksServerPortUsingSocks5GssapiMethodNecReferenceImpl)
 				.newSocksClient(properties);		
 	}
 
@@ -176,8 +168,10 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 		Properties properties = Properties.of(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.of(Method.GSSAPI)),
+				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID.newPropertyWithParsedValue(
+						TestGssEnvironment.MECHANISM_OID),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME.newProperty(
-						RCMD_SERVICE_PRINCIPAL),
+						TestGssEnvironment.SERVICE_NAME),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS.newProperty(
 						ProtectionLevels.of(ProtectionLevel.SELECTIVE_INTEG_OR_CONF)),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG.newProperty(
@@ -186,7 +180,7 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						Boolean.TRUE));
 		return Scheme.SOCKS5.newSocksServerUri(
 						InetAddress.getLoopbackAddress().getHostAddress(),
-						socksServerPortUsingSocks5GssapimethodWithSelectiveIntegOrConfProtection)
+						socksServerPortUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection)
 				.newSocksClient(properties);
 	}
 
@@ -194,8 +188,10 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 		Properties properties = Properties.of(
 				Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
 						Methods.of(Method.GSSAPI)),
+				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID.newPropertyWithParsedValue(
+						TestGssEnvironment.MECHANISM_OID),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME.newProperty(
-						RCMD_SERVICE_PRINCIPAL),
+						TestGssEnvironment.SERVICE_NAME),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL.newProperty(
 						Boolean.TRUE),
 				Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS.newProperty(
@@ -206,32 +202,20 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 						Boolean.TRUE));
 		return Scheme.SOCKS5.newSocksServerUri(
 						InetAddress.getLoopbackAddress().getHostAddress(),
-						socksServerPortUsingSocks5GssapimethodNecReferenceImplWithSelectiveIntegOrConfProtection)
+						socksServerPortUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection)
 				.newSocksClient(properties);
 	}
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws IOException, TestKerberosEnvironmentException {
-		
-		baseDir = Files.createTempDirectory(BASE_DIR_PREFIX);
-
-		testKerberosEnvironment = new TestKerberosEnvironment.Builder(
-				KDC_REALM, KDC_HOST, KDC_PORT, baseDir)
-				.setAcceptorPrincipal(
-						RCMD_SERVICE_PRINCIPAL,
-						RCMD_SERVICE_PRINCIPAL_PASSWORD)
-				.setInitiatorPrincipal(
-						PRINCIPAL,
-						PRINCIPAL_PASSWORD)
-				.build();
-		testKerberosEnvironment.setUp();
-
-		datagramEchoServer = new DatagramEchoServer(0);
-		datagramEchoServer.start();
-		datagramEchoServerPort = datagramEchoServer.getPort();
-		echoServer = new EchoServer(0);
-		echoServer.start();
-		echoServerPort = echoServer.getPort();
+	public static void setUpBeforeClass() throws IOException {
+		TestGssEnvironment.setUpBeforeClass(
+				EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT.class);
+		echoDatagramTestServer = EchoDatagramTestServerHelper.newEchoDatagramTestServer(0);
+		echoDatagramTestServer.start();
+		echoDatagramTestServerPort = echoDatagramTestServer.getPort();
+		echoTestServer = EchoTestServerHelper.newEchoTestServer(0);
+		echoTestServer.start();
+		echoTestServerPort = echoTestServer.getPort();
 		socksServerUsingSocks5GssapiMethod = newSocksServerUsingSocks5GssapiMethod();
 		socksServerUsingSocks5GssapiMethodNecReferenceImpl =
 				newSocksServerUsingSocks5GssapiMethodNecReferenceImpl();
@@ -242,20 +226,16 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 	}
 
 	@AfterClass
-	public static void tearDownAfterClass() throws IOException, TestKerberosEnvironmentException {
-		if (testKerberosEnvironment != null) {
-			testKerberosEnvironment.tearDown();
+	public static void tearDownAfterClass() throws IOException {
+		TestGssEnvironment.tearDownAfterClass(
+				EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT.class);
+		if (echoDatagramTestServer != null
+				&& !echoDatagramTestServer.getState().equals(DatagramTestServer.State.STOPPED)) {
+			echoDatagramTestServer.stop();
 		}
-		if (baseDir != null) {
-			Files.deleteIfExists(baseDir);
-		}
-		if (datagramEchoServer != null
-				&& !datagramEchoServer.getState().equals(DatagramEchoServer.State.STOPPED)) {
-			datagramEchoServer.stop();
-		}
-		if (echoServer != null
-				&& !echoServer.getState().equals(EchoServer.State.STOPPED)) {
-			echoServer.stop();
+		if (echoTestServer != null
+				&& !echoTestServer.getState().equals(TestServer.State.STOPPED)) {
+			echoTestServer.stop();
 		}
 		if (socksServerUsingSocks5GssapiMethod != null
 				&& !socksServerUsingSocks5GssapiMethod.getState().equals(SocksServer.State.STOPPED)) {
@@ -273,1029 +253,1285 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5GssapiMethodIT {
 				&& !socksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection.getState().equals(SocksServer.State.STOPPED)) {
 			socksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection.stop();
 		}
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 	}
 	
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection01() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection01() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection02() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection02() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection03() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection03() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection04() throws IOException {
-		DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection04() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection05() throws IOException {
+		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection01() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection01() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection02() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection02() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection03() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection03() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection04() throws IOException {
-		EchoClient echoClient = new EchoClient(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection04() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoClient.echo(string, echoServerPort);
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection05() throws IOException {
+		EchoTestClient echoTestClient = new EchoTestClient(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection().newSocksNetObjectFactory());
+		String string = TestStringConstants.STRING_05;
+		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImpl05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(ProtectionLevel.NONE)).newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegAndConfProtection05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithIntegProtection05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImpl(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegAndConfProtection05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG_AND_CONF)).newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
-		EchoServer echServer = new EchoServer(newSocks5ClientUsingSocks5GssapiMethod(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(newSocks5ClientUsingSocks5GssapiMethod(
 				ProtectionLevels.of(
 						ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithIntegProtection05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethod(
+						ProtectionLevels.of(
+								ProtectionLevel.REQUIRED_INTEG)).newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection01() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethodWithSelectiveIntegOrConfProtection()
+						.newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection01() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection02() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection02() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection03() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection03() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection04() throws IOException {
-		EchoServer echServer = new EchoServer(
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection04() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
 				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection()
 						.newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoServerHelper.startThenEchoThenStop(
-				echServer, new EchoClient(), string);
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
+		assertEquals(string, returningString);
+	}
+
+	@Test
+	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection05() throws IOException {
+		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+				newSocks5ClientUsingSocks5GssapiMethodNecReferenceImplWithSelectiveIntegOrConfProtection()
+						.newSocksNetObjectFactory(), 0);
+		String string = TestStringConstants.STRING_05;
+		String returningString = EchoTestServerHelper.startThenEchoThenStop(
+				echTestServer, new EchoTestClient(), string);
 		assertEquals(string, returningString);
 	}
 

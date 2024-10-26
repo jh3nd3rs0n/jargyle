@@ -21,18 +21,21 @@ public final class KeyStoreHelper {
 
     /**
      * Returns a {@code KeyStore} from the provided {@code InputStream} of
-     * the key store, the provided password for the key store, and the type
-     * of key store.
+     * the key store, the provided password for the key store, and the
+     * optionally provided type of key store. An
+     * {@code IllegalArgumentException} is thrown if the provided type of key
+     * store is not supported.
      *
      * @param keyStoreInputStream the provided {@code InputStream} of the key
      *                            store
      * @param keyStorePassword    the provided password for the key store
-     * @param keyStoreType        the type of key store (can be {@code null})
+     * @param keyStoreType        the optionally provided type of key store
+     *                            (can be {@code null})
      * @return a {@code KeyStore} from the provided {@code InputStream} of
-     * the key store, the provided password for the key store, and the type
-     * of key store
+     * the key store, the provided password for the key store, and the
+     * optionally provided type of key store
      * @throws IOException if an I/O error occurs when reading the provided
-     *                     {@code InputStream}
+     *                     {@code InputStream} of the key store
      */
     public static KeyStore getKeyStore(
             final InputStream keyStoreInputStream,

@@ -40,7 +40,13 @@ public final class TestServer {
      * The {@code ExecutorFactory} used for creating an {@code Executor} to
      * execute {@code Worker}s.
      */
-    private final ExecutorFactory executorFactory;
+    private final ExecutorFactory multipleThreadsExecutorFactory;
+
+    /**
+     * The {@code ServerSocketFactory} used for creating a
+     * {@code ServerSocket}.
+     */
+    private final ServerSocketFactory serverSocketFactory;
 
     /**
      * The specified binding port of this {@code TestServer}.
@@ -73,48 +79,97 @@ public final class TestServer {
     private State state;
 
     /**
-     * Constructs a {@code TestServer} with the provided specified port, the
-     * provided {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
+     * Constructs a {@code TestServer} with the provided
+     * {@code ServerSocketFactory} used for creating a {@code ServerSocket},
+     * the provided specified port, the provided {@code ExecutorFactory} used
+     * for creating an {@code Executor} to execute {@code Worker}s, and the
+     * provided {@code WorkerFactory} used for creating {@code Worker}s.
      *
-     * @param prt      the provided specified port
-     * @param factory1 the provided {@code ExecutorFactory}
-     * @param factory2 the provided {@code WorkerFactory}
+     * @param serverSockFactory           the provided
+     *                                    {@code ServerSocketFactory} used for
+     *                                    creating a {@code ServerSocket}
+     * @param prt                         the provided specified port
+     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
+     *                                    used for creating an
+     *                                    {@code Executor} to execute
+     *                                    {@code Worker}s
+     * @param factory                     the provided {@code WorkerFactory}
+     *                                    used for creating {@code Worker}s
      */
     public TestServer(
+            final ServerSocketFactory serverSockFactory,
             final int prt,
-            final ExecutorFactory factory1,
-            final WorkerFactory factory2) {
-        this(prt, BACKLOG, INET_ADDRESS, factory1, factory2);
+            final ExecutorFactory multiThreadsExecutorFactory,
+            final WorkerFactory factory) {
+        this(
+                serverSockFactory,
+                prt,
+                BACKLOG,
+                INET_ADDRESS,
+                multiThreadsExecutorFactory,
+                factory);
     }
 
     /**
-     * Constructs a {@code TestServer} with the provided specified port, the
-     * provided maximum length of the queue of incoming connections, the
-     * provided binding {@code InetAddress}, the provided
-     * {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
+     * Constructs a {@code TestServer} with the provided
+     * {@code ServerSocketFactory} used for creating a {@code ServerSocket},
+     * the provided specified port, the provided maximum length of the queue
+     * of incoming connections, the provided binding {@code InetAddress}, the
+     * provided {@code ExecutorFactory} used for creating an {@code Executor}
+     * to execute {@code Worker}s, and the provided {@code WorkerFactory} used
+     * for creating {@code Worker}s.
      *
-     * @param prt          the provided specified port
-     * @param bklog        the provided maximum length of the queue of incoming
-     *                     connections
-     * @param bindInetAddr the provided binding {@code InetAddress}
-     * @param factory1     the provided {@code ExecutorFactory}
-     * @param factory2     the provided {@code WorkerFactory}
+     * @param serverSockFactory           the provided
+     *                                    {@code ServerSocketFactory} used for
+     *                                    creating a {@code ServerSocket}
+     * @param prt                         the provided specified port
+     * @param bklog                       the provided maximum length of the
+     *                                    queue of incoming connections
+     * @param bindInetAddr                the provided binding
+     *                                    {@code InetAddress}
+     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
+     *                                    used for creating an
+     *                                    {@code Executor} to execute
+     *                                    {@code Worker}s
+     * @param factory                     the provided {@code WorkerFactory}
+     *                                    used for creating {@code Worker}s
      */
     public TestServer(
+            final ServerSocketFactory serverSockFactory,
             final int prt,
             final int bklog,
             final InetAddress bindInetAddr,
-            final ExecutorFactory factory1,
-            final WorkerFactory factory2) {
+            final ExecutorFactory multiThreadsExecutorFactory,
+            final WorkerFactory factory) {
         this.backlog = bklog;
         this.bindInetAddress = bindInetAddr;
         this.executor = null;
-        this.executorFactory = factory1;
+        this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
         this.port = -1;
         this.serverSocket = null;
+        this.serverSocketFactory = serverSockFactory;
         this.specifiedPort = prt;
         this.state = State.STOPPED;
-        this.workerFactory = factory2;
+        this.workerFactory = factory;
+    }
+
+    /**
+     * Returns the {@code boolean} value indicating if the provided
+     * {@code Throwable} is an instance of {@code SocketException} or has
+     * an instance of {@code SocketException}.
+     *
+     * @param t the provided {@code Throwable}
+     * @return the {@code boolean} value indicating if the provided
+     * {@code Throwable} is an instance of {@code SocketException} or has
+     * an instance of {@code SocketException}
+     */
+    private static boolean isOrHasInstanceOfSocketException(
+            final Throwable t) {
+        if (t instanceof SocketException) {
+            return true;
+        }
+        Throwable cause = t.getCause();
+        return cause != null && isOrHasInstanceOfSocketException(cause);
     }
 
     /**
@@ -151,12 +206,14 @@ public final class TestServer {
      *                     {@code TestServer}
      */
     public void start() throws IOException {
-        this.serverSocket = new ServerSocket(
+        this.serverSocket = this.serverSocketFactory.newServerSocket(
                 this.specifiedPort, this.backlog, this.bindInetAddress);
         this.port = this.serverSocket.getLocalPort();
         this.executor = Executors.newSingleThreadExecutor();
         this.executor.execute(new Listener(
-                this.serverSocket, this.executorFactory, this.workerFactory));
+                this.serverSocket,
+                this.multipleThreadsExecutorFactory,
+                this.workerFactory));
         this.state = State.STARTED;
     }
 
@@ -189,6 +246,29 @@ public final class TestServer {
          * The {@code TestServer} has been stopped.
          */
         STOPPED;
+
+    }
+
+    /**
+     * A default implementation of {@code ServerSocketFactory}. This
+     * implementation creates a plain {@code ServerSocket}.
+     */
+    public static final class DefaultServerSocketFactory
+            extends ServerSocketFactory {
+
+        /**
+         * Constructs a {@code DefaultServerSocketFactory}.
+         */
+        public DefaultServerSocketFactory() {
+        }
+
+        @Override
+        public ServerSocket newServerSocket(
+                final int port,
+                final int backlog,
+                final InetAddress bindInetAddress) throws IOException {
+            return new ServerSocket(port, backlog, bindInetAddress);
+        }
 
     }
 
@@ -242,15 +322,15 @@ public final class TestServer {
     private static final class Listener implements Runnable {
 
         /**
-         * The {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute {@code Worker}s.
-         */
-        private final ExecutorFactory executorFactory;
-
-        /**
          * The {@code Logger}.
          */
         private final Logger logger;
+
+        /**
+         * The {@code ExecutorFactory} used for creating an {@code Executor} to
+         * execute {@code Worker}s.
+         */
+        private final ExecutorFactory multiThreadsExecutorFactory;
 
         /**
          * The {@code ServerSocket}.
@@ -258,54 +338,95 @@ public final class TestServer {
         private final ServerSocket serverSocket;
 
         /**
-         * The {@code WorkerFactory} used to create {@code Worker}s.
+         * The {@code WorkerFactory} used for creating {@code Worker}s.
          */
         private final WorkerFactory workerFactory;
 
         /**
          * Constructs a {@code Listener} with the provided
-         * {@code ServerSocket}, the provided {@code ExecutorFactory}, and the
-         * provided {@code WorkerFactory}.
+         * {@code ServerSocket}, the provided {@code ExecutorFactory} used for
+         * creating an {@code Executor} to execute {@code Worker}s, and the
+         * provided {@code WorkerFactory} used for creating {@code Worker}s.
          *
-         * @param serverSock the provided {@code ServerSocket}
-         * @param factory1   the provided {@code ExecutorFactory}
-         * @param factory2   the provided {@code WorkerFactory}
+         * @param serverSock                  the provided {@code ServerSocket}
+         * @param multiThreadsExecutorFactory the provided
+         *                                    {@code ExecutorFactory} used for
+         *                                    creating an {@code Executor} to
+         *                                    execute {@code Worker}s
+         * @param factory                     the provided
+         *                                    {@code WorkerFactory} used for
+         *                                    creating {@code Worker}s
          */
         public Listener(
                 final ServerSocket serverSock,
-                final ExecutorFactory factory1,
-                final WorkerFactory factory2) {
-            this.executorFactory = factory1;
+                final ExecutorFactory multiThreadsExecutorFactory,
+                final WorkerFactory factory) {
+            this.multiThreadsExecutorFactory = multiThreadsExecutorFactory;
             this.logger = LoggerFactory.getLogger(Listener.class);
             this.serverSocket = serverSock;
-            this.workerFactory = factory2;
+            this.workerFactory = factory;
         }
 
         @Override
         public void run() {
-            ExecutorService executor = this.executorFactory.newExecutor();
+            ExecutorService executor =
+                    this.multiThreadsExecutorFactory.newExecutor();
             try {
                 while (true) {
                     try {
                         Socket clientSocket = this.serverSocket.accept();
                         executor.execute(this.workerFactory.newWorker(
                                 clientSocket));
-                    } catch (SocketException e) {
-                        // closed by TestServer.stop()
-                        break;
                     } catch (IOException e) {
+                        if (isOrHasInstanceOfSocketException(e)) {
+                            // closed by TestServer.stop()
+                            break;
+                        }
                         this.logger.warn(String.format(
-                                        "%s: An error occurred in waiting "
-                                                + "for a client socket",
+                                        "%s: An exception occurred in "
+                                                + "waiting for a client "
+                                                + "socket",
                                         this.getClass().getSimpleName()),
                                 e);
-                        break;
                     }
                 }
             } finally {
                 executor.shutdownNow();
             }
         }
+    }
+
+    /**
+     * A factory that creates {@code ServerSocket}s.
+     */
+    public static abstract class ServerSocketFactory {
+
+        /**
+         * Allows the construction of subclass instances.
+         */
+        public ServerSocketFactory() {
+        }
+
+        /**
+         * Returns a new {@code ServerSocket} with the provided specified
+         * port, the provided maximum length of the queue of incoming
+         * connections, the provided binding {@code InetAddress}.
+         *
+         * @param port            the provided specified port
+         * @param backlog         the provided maximum length of the queue of
+         *                        incoming connections
+         * @param bindInetAddress the provided binding {@code InetAddress}
+         * @return a new {@code ServerSocket} with the provided specified
+         * port, the provided maximum length of the queue of incoming
+         * connections, the provided binding {@code InetAddress}
+         * @throws IOException if there is an error in creating the
+         *                     {@code ServerSocket}
+         */
+        public abstract ServerSocket newServerSocket(
+                final int port,
+                final int backlog,
+                final InetAddress bindInetAddress) throws IOException;
+
     }
 
     /**
@@ -334,25 +455,6 @@ public final class TestServer {
         }
 
         /**
-         * Returns the {@code boolean} value indicating if the provided
-         * {@code Throwable} is an instance of {@code SocketException} or has
-         * an instance of {@code SocketException}.
-         *
-         * @param t the provided {@code Throwable}
-         * @return the {@code boolean} value indicating if the provided
-         * {@code Throwable} is an instance of {@code SocketException} or has
-         * an instance of {@code SocketException}
-         */
-        private static boolean isOrHasInstanceOfSocketException(
-                final Throwable t) {
-            if (t instanceof SocketException) {
-                return true;
-            }
-            Throwable cause = t.getCause();
-            return cause != null && isOrHasInstanceOfSocketException(cause);
-        }
-
-        /**
          * Performs the work on the client {@code Socket}.
          *
          * @throws IOException if there is an error in handling the client
@@ -367,6 +469,17 @@ public final class TestServer {
          */
         protected final Socket getClientSocket() {
             return this.clientSocket;
+        }
+
+        /**
+         * Sets the client {@code Socket} with the provided {@code Socket}.
+         * This method is for setting the {@code Socket} with a wrapped
+         * {@code Socket} of the other.
+         *
+         * @param clientSock the provided {@code Socket}
+         */
+        protected final void setClientSocket(final Socket clientSock) {
+            this.clientSocket = clientSock;
         }
 
         @Override
@@ -386,22 +499,12 @@ public final class TestServer {
                     this.clientSocket.close();
                 } catch (IOException e) {
                     this.logger.warn(String.format(
-                                    "%s: An error occurred in closing the client socket",
+                                    "%s: An exception occurred in closing "
+                                            + "the client socket",
                                     this.getClass().getSimpleName()),
                             e);
                 }
             }
-        }
-
-        /**
-         * Sets the client {@code Socket} with the provided {@code Socket}.
-         * This method is for setting the {@code Socket} with a wrapped
-         * {@code Socket} of the other.
-         *
-         * @param clientSock the provided {@code Socket}
-         */
-        protected final void setClientSocket(final Socket clientSock) {
-            this.clientSocket = clientSock;
         }
 
     }

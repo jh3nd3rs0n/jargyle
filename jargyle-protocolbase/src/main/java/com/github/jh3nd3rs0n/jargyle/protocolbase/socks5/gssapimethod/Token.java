@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedShort;
+import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedShortIoHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
 
@@ -66,7 +67,7 @@ public final class Token {
                 in);
         byte[] bytes = new byte[len.intValue()];
         if (len.intValue() > 0) {
-            int bytesRead = in.read(bytes);
+            int bytesRead = InputStreamHelper.continuouslyReadFrom(in, bytes);
             if (len.intValue() != bytesRead) {
                 throw new Socks5Exception(String.format(
                         "expected token length is %s byte(s). "

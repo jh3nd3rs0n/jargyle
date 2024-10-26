@@ -7,8 +7,8 @@ import org.ietf.jgss.MessageProp;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -66,14 +66,18 @@ final class GssSocket extends FilterSocket {
 
     @Override
     public synchronized void close() throws IOException {
-        super.close();
-        this.inputStream.close();
-        this.outputStream.close();
         try {
             this.gssContext.dispose();
         } catch (GSSException e) {
             throw new IOException(e);
         }
+        if (this.inputStream != null) {
+            this.inputStream.close();
+        }
+        if (this.outputStream != null) {
+            this.outputStream.close();
+        }
+        super.close();
     }
 
     /**
@@ -104,8 +108,8 @@ final class GssSocket extends FilterSocket {
         }
         InputStream inStream = this.socket.getInputStream();
         if (this.messageProp != null) {
-            this.inputStream = new GssUnwrappedInputStream(
-                    this.gssContext, this.messageProp, inStream);
+            this.inputStream = new GssSocketInputStream(
+                    this.gssContext, inStream);
         } else {
             this.inputStream = inStream;
         }
@@ -132,7 +136,7 @@ final class GssSocket extends FilterSocket {
         }
         OutputStream outStream = this.socket.getOutputStream();
         if (this.messageProp != null) {
-            this.outputStream = new GssWrappedOutputStream(
+            this.outputStream = new GssSocketOutputStream(
                     this.gssContext, this.messageProp, outStream);
         } else {
             this.outputStream = outStream;
@@ -160,17 +164,12 @@ final class GssSocket extends FilterSocket {
     /**
      * A {@code InputStream} that uses GSS-API to de-encapsulate data received.
      */
-    private static final class GssUnwrappedInputStream extends InputStream {
+    private static final class GssSocketInputStream extends InputStream {
 
         /**
          * The {@code GSSContext} used to de-encapsulate data.
          */
         private final GSSContext gssContext;
-
-        /**
-         * The {@code MessageProp} used per-message.
-         */
-        private final MessageProp messageProp;
 
         /**
          * The underlying {@code InputStream}.
@@ -183,59 +182,90 @@ final class GssSocket extends FilterSocket {
         private ByteArrayInputStream bufferIn;
 
         /**
-         * Constructs a {@code GssUnwrappedInputStream} with the provided
-         * {@code GSSContext} to be used in de-encapsulating data, the
-         * provided {@code MessageProp} used per-message, and the
+         * The {@code boolean} value to indicate if this
+         * {@code GssSocketInputStream} is closed.
+         */
+        private boolean closed;
+
+        /**
+         * Constructs a {@code GssSocketInputStream} with the provided
+         * {@code GSSContext} to be used in de-encapsulating data and the
          * provided underlying {@code InputStream}.
          *
          * @param context  the provided {@code GSSContext} to be used in
          *                 de-encapsulating data
-         * @param prop     the provided {@code MessageProp} used per-message
          * @param inStream the provided underlying {@code InputStream}
          */
-        public GssUnwrappedInputStream(
+        public GssSocketInputStream(
                 final GSSContext context,
-                final MessageProp prop,
                 final InputStream inStream) {
             this.bufferIn = new ByteArrayInputStream(new byte[]{});
+            this.closed = false;
             this.gssContext = Objects.requireNonNull(context);
             this.in = Objects.requireNonNull(inStream);
-            this.messageProp = new MessageProp(
-                    prop.getQOP(), prop.getPrivacy());
         }
 
         @Override
         public int available() throws IOException {
-            int bufferInAvailable = this.bufferIn.available();
-            if (bufferInAvailable > 0) {
-                return bufferInAvailable;
+            if (this.closed) {
+                throw new SocketException("input stream closed");
             }
-            try {
-                this.readInputToBuffer();
-            } catch (EOFException e) {
-                return 0;
-            }
-            return this.bufferIn.available();
+            return 0;
         }
 
         @Override
         public void close() throws IOException {
             this.bufferIn = new ByteArrayInputStream(new byte[]{});
             this.in.close();
+            this.closed = true;
+        }
+
+        /**
+         * Reads and unwraps GSS wrapped data from the underlying
+         * {@code InputStream} and creates a new buffer {@code InputStream} of
+         * the unwrapped data. An {@code EOFException} is thrown if the end of
+         * the underlying {@code InputStream} has been reached.
+         *
+         * @throws IOException if the end of the underlying {@code InputStream}
+         *                     has been reached ({@code EOFException}) or if
+         *                     an I/O error occurs
+         */
+        private void inputToBuffer() throws IOException {
+            EncapsulatedUserDataMessage message =
+                    EncapsulatedUserDataMessage.newInstanceFrom(this.in);
+            byte[] token = message.getToken().getBytes();
+            MessageProp prop = new MessageProp(0, false);
+            try {
+                token = this.gssContext.unwrap(
+                        token, 0, token.length, prop);
+            } catch (GSSException e) {
+                throw new IOException(e);
+            }
+            this.bufferIn = new ByteArrayInputStream(token);
         }
 
         @Override
         public int read() throws IOException {
-            int b = this.bufferIn.read();
-            if (b != -1) {
-                return b;
+            if (this.closed) {
+                throw new SocketException("input stream closed");
             }
-            try {
-                this.readInputToBuffer();
-            } catch (EOFException e) {
-                return -1;
-            }
-            return this.bufferIn.read();
+            int b;
+            boolean inputToBufferInvoked = false;
+            do {
+                b = this.bufferIn.read();
+                if (b == -1) {
+                    if (inputToBufferInvoked) {
+                        break;
+                    }
+                    try {
+                        this.inputToBuffer();
+                        inputToBufferInvoked = true;
+                    } catch (EOFException e) {
+                        break;
+                    }
+                }
+            } while (b == -1);
+            return b;
         }
 
         @Override
@@ -245,6 +275,9 @@ final class GssSocket extends FilterSocket {
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
+            if (this.closed) {
+                throw new SocketException("input stream closed");
+            }
             Objects.requireNonNull(b);
             if (off < 0) {
                 throw new IndexOutOfBoundsException(String.format(
@@ -265,55 +298,23 @@ final class GssSocket extends FilterSocket {
                         b.length,
                         off));
             }
-            if (len == 0) {
-                return len;
-            }
-            int offset = off;
-            int length = len;
-            int totalBytesRead = -1;
+            int bytesRead;
+            boolean inputToBufferInvoked = false;
             do {
-                int bytesRead = this.bufferIn.read(b, offset, length);
+                bytesRead = this.bufferIn.read(b, off, len);
                 if (bytesRead == -1) {
+                    if (inputToBufferInvoked) {
+                        break;
+                    }
                     try {
-                        this.readInputToBuffer();
+                        this.inputToBuffer();
+                        inputToBufferInvoked = true;
                     } catch (EOFException e) {
                         break;
                     }
-                    continue;
                 }
-                if (totalBytesRead == -1) {
-                    totalBytesRead = 0;
-                }
-                offset += bytesRead;
-                length -= bytesRead;
-                totalBytesRead += bytesRead;
-            } while (length > 0);
-            return totalBytesRead;
-        }
-
-        /**
-         * Reads and unwraps GSS wrapped data from the underlying
-         * {@code InputStream} and creates a new buffer {@code InputStream} of
-         * the unwrapped data. An {@code EOFException} is thrown if the end of
-         * the underlying {@code InputStream} has been reached.
-         *
-         * @throws IOException if the end of the underlying {@code InputStream}
-         *                     has been reached ({@code EOFException}) or if
-         *                     an I/O error occurs
-         */
-        private void readInputToBuffer() throws IOException {
-            EncapsulatedUserDataMessage message =
-                    EncapsulatedUserDataMessage.newInstanceFrom(this.in);
-            byte[] token = message.getToken().getBytes();
-            MessageProp prop = new MessageProp(
-                    this.messageProp.getQOP(), this.messageProp.getPrivacy());
-            try {
-                token = this.gssContext.unwrap(
-                        token, 0, token.length, prop);
-            } catch (GSSException e) {
-                throw new IOException(e);
-            }
-            this.bufferIn = new ByteArrayInputStream(token);
+            } while (bytesRead == -1);
+            return bytesRead;
         }
 
     }
@@ -321,7 +322,7 @@ final class GssSocket extends FilterSocket {
     /**
      * A {@code OutputStream} that uses GSS-API to encapsulate data to be sent.
      */
-    private static final class GssWrappedOutputStream extends OutputStream {
+    private static final class GssSocketOutputStream extends OutputStream {
 
         /**
          * The {@code GSSContext} used to encapsulate data.
@@ -354,6 +355,12 @@ final class GssSocket extends FilterSocket {
         private int bufferOutLength;
 
         /**
+         * The {@code boolean} value to indicate if this
+         * {@code GssSocketOutputStream} is closed.
+         */
+        private boolean closed;
+
+        /**
          * Constructs a {@code GssUnwrappedOutputStream} with the provided
          * {@code GSSContext} to be used in encapsulating data, the provided
          * {@code MessageProp} to be used per-message, and the provided
@@ -361,11 +368,10 @@ final class GssSocket extends FilterSocket {
          *
          * @param context   the provided {@code GSSContext} to be used in
          *                  encapsulating data
-         * @param prop      the provided {@code MessageProp} to be used
-         *                  per-message
+         * @param prop      the provided {@code MessageProp} to used per-message
          * @param outStream the provided underlying {@code OutputStream}
          */
-        public GssWrappedOutputStream(
+        public GssSocketOutputStream(
                 final GSSContext context,
                 final MessageProp prop,
                 final OutputStream outStream) {
@@ -380,6 +386,7 @@ final class GssSocket extends FilterSocket {
             }
             this.bufferOut = new ByteArrayOutputStream();
             this.bufferOutLength = 0;
+            this.closed = false;
             this.gssContext = Objects.requireNonNull(context);
             this.messageProp = new MessageProp(
                     prop.getQOP(), prop.getPrivacy());
@@ -387,82 +394,13 @@ final class GssSocket extends FilterSocket {
             this.wrapSizeLimit = sizeLimit;
         }
 
-        @Override
-        public synchronized void close() throws IOException {
-            this.bufferOut = new ByteArrayOutputStream();
-            this.bufferOutLength = 0;
-            this.out.close();
-        }
-
-        @Override
-        public void flush() throws IOException {
-            if (this.bufferOutLength > 0) {
-                this.writeBufferToOutput();
-            }
-            this.out.flush();
-        }
-
-        @Override
-        public void write(byte[] b) throws IOException {
-            this.write(b, 0, b.length);
-        }
-
-        @Override
-        public void write(byte[] b, int off, int len) throws IOException {
-            Objects.requireNonNull(b);
-            if (off < 0) {
-                throw new IndexOutOfBoundsException(String.format(
-                        "offset is negative: %s",
-                        off));
-            }
-            if (len < 0) {
-                throw new IndexOutOfBoundsException(String.format(
-                        "specified length is negative: %s",
-                        len));
-            }
-            if (off + len > b.length) {
-                throw new IndexOutOfBoundsException(String.format(
-                        "offset and specified length is greater than "
-                                + "the length of the array: "
-                                + "off (%s) + len (%s) > length of array (%s)",
-                        off,
-                        len,
-                        b.length));
-            }
-            int offset = off;
-            int length = len;
-            do {
-                if (length >= this.wrapSizeLimit) {
-                    this.bufferOut.write(Arrays.copyOfRange(
-                            b, offset, offset + this.wrapSizeLimit));
-                    this.writeBufferToOutput();
-                    offset += this.wrapSizeLimit;
-                    length -= this.wrapSizeLimit;
-                } else {
-                    this.bufferOut.write(Arrays.copyOfRange(
-                            b, offset, offset + length));
-                    this.writeBufferToOutput();
-                    offset = length;
-                    length = 0;
-                }
-            } while (length > 0);
-        }
-
-        @Override
-        public void write(int b) throws IOException {
-            this.bufferOut.write(b);
-            if (++this.bufferOutLength == this.wrapSizeLimit) {
-                this.writeBufferToOutput();
-            }
-        }
-
         /**
-         * Writes and wraps the data from the buffer {@code OutputStream} to
-         * the underlying {@code OutputStream}.
+         * Wraps the data from the buffer {@code OutputStream} and writes the
+         * wrapped data to the underlying {@code OutputStream}.
          *
          * @throws IOException if an I/O error occurs
          */
-        private void writeBufferToOutput() throws IOException {
+        private void bufferToOutput() throws IOException {
             byte[] bytes = this.bufferOut.toByteArray();
             MessageProp prop = new MessageProp(
                     this.messageProp.getQOP(),
@@ -478,6 +416,100 @@ final class GssSocket extends FilterSocket {
                     Token.newInstance(token)).toByteArray());
             this.bufferOut = new ByteArrayOutputStream();
             this.bufferOutLength = 0;
+        }
+
+        @Override
+        public synchronized void close() throws IOException {
+            this.bufferOut = new ByteArrayOutputStream();
+            this.bufferOutLength = 0;
+            this.out.close();
+            this.closed = true;
+        }
+
+        @Override
+        public void flush() throws IOException {
+            if (this.closed) {
+                throw new SocketException("output stream closed");
+            }
+            if (this.bufferOutLength > 0) {
+                this.bufferToOutput();
+            }
+            this.out.flush();
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            if (this.closed) {
+                throw new SocketException("output stream closed");
+            }
+            if (this.bufferOutLength == this.wrapSizeLimit) {
+                this.bufferToOutput();
+            }
+            if (b < 0 || b > 255) {
+                return;
+            }
+            this.bufferOut.write(b);
+            this.bufferOutLength++;
+        }
+
+        @Override
+        public void write(byte[] b) throws IOException {
+            this.write(b, 0, b.length);
+        }
+
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            if (this.closed) {
+                throw new SocketException("output stream closed");
+            }
+            Objects.requireNonNull(b);
+            if (off < 0) {
+                throw new IndexOutOfBoundsException(String.format(
+                        "offset is negative: %s",
+                        off));
+            }
+            if (len < 0) {
+                throw new IndexOutOfBoundsException(String.format(
+                        "specified length is negative: %s",
+                        len));
+            }
+            if (off + len > b.length) {
+                throw new IndexOutOfBoundsException(String.format(
+                        "offset plus specified length is greater than the " +
+                                "length of the array: "
+                                + "off (%s) + len (%s) > length of array (%s)",
+                        off,
+                        len,
+                        b.length));
+            }
+            int offset = off;
+            int length = len;
+            do {
+                /*
+                 * We include this.bufferOutLength in the calculation in case
+                 * this.bufferOutLength has been incremented by
+                 * this.write(int) or this method.
+                 */
+                if (this.bufferOutLength + length > this.wrapSizeLimit) {
+                    /*
+                     * this.bufferOutLength should not be equal to or greater
+                     * than this.wrapSizeLimit. Method this.write(int) and
+                     * this method make sure that it does not happen. So it is
+                     * OK to subtract this.bufferOutLength from
+                     * this.wrapSizeLimit.
+                     */
+                    int newLength = this.wrapSizeLimit - this.bufferOutLength;
+                    this.bufferOut.write(b, offset, newLength);
+                    this.bufferToOutput();
+                    offset += newLength;
+                    length -= newLength;
+                } else {
+                    this.bufferOut.write(b, offset, length);
+                    this.bufferOutLength += length;
+                    offset = length;
+                    length = 0;
+                }
+            } while (length > 0);
         }
 
     }

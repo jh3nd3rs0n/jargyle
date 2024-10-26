@@ -10,6 +10,8 @@ The following are the types of releases:
 
 The build system dependency provides both the client API and the server API.
 
+**Note:** The build system dependency is only available on GitHub for now.
+
 Requirements:
 
 -   Java 9 or higher

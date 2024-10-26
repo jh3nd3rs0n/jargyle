@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.*;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
@@ -82,24 +83,6 @@ public final class DtlsPropertySpecConstants {
                     null));
 
     /**
-     * {@code PropertySpec} constant for
-     * {@code socksClient.dtls.maxPacketSize}: the {@code PositiveInteger} for
-	 * the maximum packet size for the DTLS connections to SOCKS server
-	 * (default is {@code 32768}).
-     */
-    @NameValuePairValueSpecDoc(
-            description = "The maximum packet size for the DTLS connections to "
-                    + "the SOCKS server (default is 32768)",
-            name = "socksClient.dtls.maxPacketSize",
-            syntax = "socksClient.dtls.maxPacketSize=POSITIVE_INTEGER",
-            valueType = PositiveInteger.class
-    )
-    public static final PropertySpec<PositiveInteger> DTLS_MAX_PACKET_SIZE =
-            PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
-                    "socksClient.dtls.maxPacketSize",
-                    PositiveInteger.valueOf(32768)));
-
-    /**
      * {@code PropertySpec} constant for {@code socksClient.dtls.protocol}:
      * the protocol version for the DTLS connections to the SOCKS server
      * (default is {@code DTLSv1.2}).
@@ -178,6 +161,24 @@ public final class DtlsPropertySpecConstants {
             PROPERTY_SPECS.addThenGet(new StringPropertySpec(
                     "socksClient.dtls.trustStoreType",
                     "PKCS12"));
+
+    /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.dtls.wrappedReceiveBufferSize}: the
+     * {@code PositiveInteger} for the buffer size for receiving DTLS wrapped
+     * datagrams for the DTLS connections to the SOCKS server.
+     */
+    @NameValuePairValueSpecDoc(
+            description = "The buffer size for receiving DTLS wrapped "
+                    + "datagrams for the DTLS connections to the SOCKS server",
+            name = "socksClient.dtls.wrappedReceiveBufferSize",
+            syntax = "socksClient.dtls.wrappedReceiveBufferSize=POSITIVE_INTEGER",
+            valueType = PositiveInteger.class
+    )
+    public static final PropertySpec<PositiveInteger> DTLS_WRAPPED_RECEIVE_BUFFER_SIZE =
+            PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
+                    "socksClient.dtls.wrappedReceiveBufferSize",
+                    null));
 
     /**
      * Prevents the construction of unnecessary instances.

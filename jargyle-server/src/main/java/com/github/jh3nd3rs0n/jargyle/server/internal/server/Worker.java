@@ -182,13 +182,13 @@ public class Worker implements Runnable {
 		try {
 			socketSettings.applyTo(clientSock);
 		} catch (UnsupportedOperationException e) {
-			this.logger.error(
+			this.logger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the client socket"), 
 					e);
 			return false;			
 		} catch (SocketException e) {
-			this.logger.error(
+			this.logger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the client socket"), 
 					e);
@@ -363,7 +363,7 @@ public class Worker implements Runnable {
 			this.logger.debug(message, e);
 			return;
 		}
-		this.logger.error(message, e);		
+		this.logger.warn(message, e);
 	}
 	
 	private RuleContext newClientRuleContext() {
@@ -388,7 +388,7 @@ public class Worker implements Runnable {
 			this.ruleContext = this.newClientRuleContext();
 			this.applicableRule = this.rules.firstAppliesTo(this.ruleContext);
 			if (this.applicableRule == null) {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",
@@ -427,13 +427,13 @@ public class Worker implements Runnable {
 				Socks5Worker socks5Worker = new Socks5Worker(this);
 				socks5Worker.run();
 			} else {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"Unknown SOCKS version: %s",
 						version));
 			}
 		} catch (Throwable t) {
-			this.logger.error(
+			this.logger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Internal server error"), 
 					t);
@@ -443,7 +443,7 @@ public class Worker implements Runnable {
 				try {
 					this.getClientSocket().close();
 				} catch (IOException e) {
-					this.logger.error(
+					this.logger.warn(
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error upon closing connection to the "
@@ -553,7 +553,7 @@ public class Worker implements Runnable {
 				return this.clientSslSocketFactory.newSocket(
 						clientSock, null, true);
 			} catch (IOException e) {
-				this.logger.error(
+				this.logger.warn(
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in wrapping the client socket"), 
 						e);

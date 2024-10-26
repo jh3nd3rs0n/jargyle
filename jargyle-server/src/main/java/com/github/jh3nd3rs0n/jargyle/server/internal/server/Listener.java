@@ -55,7 +55,9 @@ public final class Listener implements Runnable {
 				} catch (IOException e) {
 					this.logger.error(
 							ObjectLogMessageHelper.objectLogMessage(
-									this, "Error in waiting for a connection"), 
+									this,
+									"An exception occurred in waiting for a "
+											+ "connection"),
 							e);
 					continue;
 				}

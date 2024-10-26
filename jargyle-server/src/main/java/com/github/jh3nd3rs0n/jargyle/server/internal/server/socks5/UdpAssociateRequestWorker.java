@@ -58,7 +58,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			socketSettings.applyTo(clientFacingDatagramSock);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the client-facing UDP socket"), 
@@ -76,7 +76,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			socketSettings.applyTo(peerFacingDatagramSock);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the peer-facing UDP socket"), 
@@ -530,7 +530,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 						clientFacingDatagramSock, 
 						outboundBandwidthLimit.intValue());
 			} catch (SocketException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in creating the bandwidth-limited "
@@ -551,7 +551,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 						peerFacingDatagramSock,
 						inboundBandwidthLimit.intValue());
 			} catch (SocketException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in creating the bandwidth-limited "
@@ -569,7 +569,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			bindInetAddress = clientFacingBindHost.toInetAddress();
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the client-facing UDP socket to "
@@ -602,7 +602,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			}
 		}
 		if (!clientFacingDatagramSockBound) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the client-facing UDP socket to "
@@ -624,7 +624,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			clientFacingDatagramSock = new DatagramSocket(null);
 		} catch (SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the client-facing UDP "
@@ -650,7 +650,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 				clientFacingDatagramSock.close();
 				throw new BindException();
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in binding the client-facing UDP "
@@ -670,7 +670,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			bindInetAddress = peerFacingBindHost.toInetAddress();
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the peer-facing UDP socket to "
@@ -703,7 +703,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			}
 		}
 		if (!peerFacingDatagramSockBound) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the peer-facing UDP socket to the "
@@ -727,7 +727,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			peerFacingDatagramSock =
 					netObjectFactory.newDatagramSocket(null);
 		} catch (SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the peer-facing UDP "
@@ -753,7 +753,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 				peerFacingDatagramSock.close();
 				throw new BindException();
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in binding the peer-facing UDP "
@@ -827,7 +827,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			Rule applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
 			if (applicableRule == null) {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",
@@ -875,7 +875,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			try {
 				this.passPackets(udpRelayServer);
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting the UDP association"), 
 						e);
@@ -903,7 +903,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 						clientFacingDtlsDatagramSocketFactory.newDatagramSocket(
 								clientFacingDatagramSck);
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in wrapping the client-facing UDP socket"), 
@@ -918,7 +918,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 					this.getMethodSubNegotiationResults().getDatagramSocket(
 							clientFacingDatagramSck);
 		} catch (IOException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in wrapping the client-facing UDP socket"), 

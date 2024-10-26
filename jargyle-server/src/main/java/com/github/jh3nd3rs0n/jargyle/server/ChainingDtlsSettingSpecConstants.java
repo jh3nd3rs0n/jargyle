@@ -60,18 +60,6 @@ public final class ChainingDtlsSettingSpecConstants {
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
-			description = "The maximum packet size for the DTLS connections to "
-					+ "the other SOCKS server (default is 32768)",
-			name = "chaining.dtls.maxPacketSize",
-			syntax = "chaining.dtls.maxPacketSize=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)	
-	public static final SettingSpec<PositiveInteger> CHAINING_DTLS_MAX_PACKET_SIZE = 
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"chaining.dtls.maxPacketSize", 
-					DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE.getDefaultProperty().getValue()));
-	
-	@NameValuePairValueSpecDoc(
 			description = "The protocol version for the DTLS connections to "
 					+ "the other SOCKS server (default is DTLSv1.2)",
 			name = "chaining.dtls.protocol",
@@ -123,7 +111,20 @@ public final class ChainingDtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"chaining.dtls.trustStoreType", 
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE.getDefaultProperty().getValue()));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The buffer size for receiving DTLS wrapped "
+					+ "datagrams for the DTLS connections to the other SOCKS "
+					+ "server",
+			name = "chaining.dtls.wrappedReceiveBufferSize",
+			syntax = "chaining.dtls.wrappedReceiveBufferSize=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)
+	public static final SettingSpec<PositiveInteger> CHAINING_DTLS_WRAPPED_RECEIVE_BUFFER_SIZE =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"chaining.dtls.wrappedReceiveBufferSize",
+					DtlsPropertySpecConstants.DTLS_WRAPPED_RECEIVE_BUFFER_SIZE.getDefaultProperty().getValue()));
+
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();
 	}

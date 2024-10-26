@@ -24,17 +24,20 @@ public final class TrustManagerHelper {
     /**
      * Returns an array of {@code TrustManager}s from the provided
      * {@code InputStream} of the trust store, the provided password of the
-     * trust store, and the type of trust store.
+     * trust store, and the optionally provided type of trust store. An
+     * {@code IllegalArgumentException} is thrown if the provided type of
+     * trust store is not supported.
      *
      * @param trustStoreInputStream the provided {@code InputStream} of the
      *                              trust store
      * @param trustStorePassword    the provided password of the trust store
-     * @param trustStoreType        the type of trust store (can be {@code null})
+     * @param trustStoreType        the optionally provided type of trust
+     *                              store (can be {@code null})
      * @return an array of {@code TrustManager}s from the provided
      * {@code InputStream} of the trust store, the provided password of the
-     * trust store, and the type of trust store
+     * trust store, and the optionally provided type of trust store
      * @throws IOException if an I/O error occurs when reading the provided
-     *                     {@code InputStream}
+     *                     {@code InputStream} of the trust store
      */
     public static TrustManager[] getTrustManagers(
             final InputStream trustStoreInputStream,

@@ -17,11 +17,11 @@
 <tr><td><code>socksClient.dtls.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)</td></tr>
 <tr><td><code>socksClient.dtls.enabledCipherSuites</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server</td></tr>
 <tr><td><code>socksClient.dtls.enabledProtocols</code></td><td><a href="value-syntaxes.html#comma-separated-values">Comma Separated Values</a></td><td>The comma separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server</td></tr>
-<tr><td><code>socksClient.dtls.maxPacketSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The maximum packet size for the DTLS connections to the SOCKS server (default is 32768)</td></tr>
 <tr><td><code>socksClient.dtls.protocol</code></td><td>java.lang.String</td><td>The protocol version for the DTLS connections to the SOCKS server (default is DTLSv1.2)</td></tr>
 <tr><td><code>socksClient.dtls.trustStoreFile</code></td><td>java.io.File.toString()</td><td>The trust store file for the DTLS connections to the SOCKS server</td></tr>
 <tr><td><code>socksClient.dtls.trustStorePassword</code></td><td>java.lang.String</td><td>The password for the trust store for the DTLS connections to the SOCKS server</td></tr>
 <tr><td><code>socksClient.dtls.trustStoreType</code></td><td>java.lang.String</td><td>The type of trust store file for the DTLS connections to the SOCKS server (default is PKCS12)</td></tr>
+<tr><td><code>socksClient.dtls.wrappedReceiveBufferSize</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the SOCKS server</td></tr>
 <tr><th colspan="3">SOCKS5 Properties</th></tr>
 <tr><th>Name</th><th>Value</th><th>Description</th></tr>
 <tr><td><code>socksClient.socks5.gssapimethod.mechanismOid</code></td><td>org.ietf.jgss.Oid.toString()</td><td>The object ID for the GSS-API authentication mechanism to the SOCKS5 server (default is 1.2.840.113554.1.2.2)</td></tr>

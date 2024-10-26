@@ -17,7 +17,7 @@ public class TestGssEnvironment {
     private static final String KDC_REALM = "EXAMPLE.COM";
     private static final String KDC_HOST =
             InetAddress.getLoopbackAddress().getHostAddress();
-    private static final int KDC_PORT = 9100;
+    private static final int KDC_PORT = 8000;
 
     private static final String PRINCIPAL = "bob";
     private static final String PRINCIPAL_PASSWORD = "87654321";
@@ -72,7 +72,7 @@ public class TestGssEnvironment {
         if (baseDir != null) {
             Files.deleteIfExists(baseDir);
         }
-        ThreadHelper.interruptableSleepForThreeSeconds();
+        ThreadHelper.interruptibleSleepForThreeSeconds();
     }
 
 }

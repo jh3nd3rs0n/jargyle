@@ -141,7 +141,7 @@ public final class TestKerberosEnvironment {
             w.newLine();
             w.write(String.format("    default_realm = %s", this.kdcRealm));
             w.newLine();
-            w.write("    udp_preference_limit = 4096");
+            w.write("    udp_preference_limit = 1");
             w.newLine();
             w.write(String.format("    kdc_tcp_port = %s", this.kdcPort));
             w.newLine();

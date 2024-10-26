@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv6Address;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
 
@@ -72,7 +73,7 @@ public final class Ipv6Address extends Address {
     public static Ipv6Address newIpv6AddressFrom(
             final InputStream in) throws IOException {
         byte[] bytes = new byte[ADDRESS_LENGTH];
-        int bytesRead = in.read(bytes);
+        int bytesRead = InputStreamHelper.continuouslyReadFrom(in, bytes);
         if (bytesRead != ADDRESS_LENGTH) {
             throw new Socks5Exception(String.format(
                     "expected address length is %s. "

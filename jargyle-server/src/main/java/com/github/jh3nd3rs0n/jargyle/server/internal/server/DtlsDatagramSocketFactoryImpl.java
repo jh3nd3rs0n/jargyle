@@ -12,7 +12,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
@@ -20,7 +19,6 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.KeyManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslContextHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.TrustManagerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.DtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
@@ -105,9 +103,12 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 		if (enabledProtocols != null) {
 			dtlsDatagramSocket.setEnabledProtocols(enabledProtocols.toArray());
 		}
-		PositiveInteger maxPacketSize = settings.getLastValue(
-				DtlsSettingSpecConstants.DTLS_MAX_PACKET_SIZE);
-		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
+		PositiveInteger wrappedReceiveBufferSize = settings.getLastValue(
+				DtlsSettingSpecConstants.DTLS_WRAPPED_RECEIVE_BUFFER_SIZE);
+		if (wrappedReceiveBufferSize != null) {
+			dtlsDatagramSocket.setWrappedReceiveBufferSize(
+					wrappedReceiveBufferSize.intValue());
+		}
 		return dtlsDatagramSocket;
 	}
 

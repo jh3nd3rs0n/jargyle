@@ -5,6 +5,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.UdpRequest;
@@ -184,7 +185,7 @@ final class UdpRelayServer {
 				inetAddress = InetAddress.getByName(
 						this.udpRelayServer.getClientAddress());
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -267,12 +268,18 @@ final class UdpRelayServer {
 								break;
 							}
 							continue;
+						} else if (ThrowableHelper.isOrHasInstanceOf(
+								ioe,
+								DtlsDatagramSocket.ConnectionClosedException.class)) {
+							// client or peer has closed the connection
+							continue;
 						} else {
-							this.logger.error( 
+							this.logger.warn( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Error in receiving the packet from "
-											+ "the peer"), 
+											"An exception occurred in "
+													+ "receiving the packet "
+													+ "from the peer"),
 									ioe);
 							continue;
 						}
@@ -290,7 +297,7 @@ final class UdpRelayServer {
 					Rule applicableRule = this.rules.firstAppliesTo(
 							inboundRuleContext);
 					if (applicableRule == null) {
-						this.logger.error(
+						this.logger.warn(
 								ObjectLogMessageHelper.objectLogMessage(
 										this,
 										"No applicable rule found based on "
@@ -324,19 +331,24 @@ final class UdpRelayServer {
 							// socket closed
 							break;
 						} else {
-							this.logger.error( 
-									ObjectLogMessageHelper.objectLogMessage(
-											this, 
-											"Error in sending the packet to the "
-											+ "client"), 
-									ioe);
+							if (!ThrowableHelper.isOrHasInstanceOf(
+									ioe,
+									DtlsDatagramSocket.ConnectionClosedException.class)) {
+								this.logger.warn(
+										ObjectLogMessageHelper.objectLogMessage(
+												this,
+												"An exception occurred in "
+														+ "sending the packet "
+														+ "to the client"),
+										ioe);
+							}
 						}
 					}
 				} catch (Throwable t) {
-					this.logger.error( 
+					this.logger.warn( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
-									"Error occurred in the process of "
+									"An exception occurred in the process of "
 									+ "relaying of a packet from the peer to "
 									+ "the client"), 
 							t);
@@ -367,7 +379,7 @@ final class UdpRelayServer {
 				try {
 					clientInetAddr = InetAddress.getByName(clientAddr);
 				} catch (IOException e) {
-					this.logger.error( 
+					this.logger.warn( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in determining the IP address from "
@@ -379,7 +391,7 @@ final class UdpRelayServer {
 				try {
 					inetAddr = InetAddress.getByName(address);
 				} catch (IOException e) {
-					this.logger.error( 
+					this.logger.warn( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
 									"Error in determining the IP address from "
@@ -468,7 +480,7 @@ final class UdpRelayServer {
 				inetAddress = this.hostResolver.resolve(
 						udpRequest.getDesiredDestinationAddress().toString());
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in determining the IP address from the "
@@ -513,7 +525,7 @@ final class UdpRelayServer {
 								packet.getOffset(),
 								packet.getLength()));
 			} catch (IllegalArgumentException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in parsing the UDP request from "
@@ -546,24 +558,30 @@ final class UdpRelayServer {
 							break;							
 						} else if (ThrowableHelper.isOrHasInstanceOf(
 								ioe, SocketTimeoutException.class)) {
-							long idleStartTime = 
+							long idleStartTime =
 									this.udpRelayServer.getIdleStartTime();
-							long timeSinceIdleStartTime = 
+							long timeSinceIdleStartTime =
 									System.currentTimeMillis() - idleStartTime;
 							if (timeSinceIdleStartTime >= this.idleTimeout) {
 								this.logger.trace(
 										ObjectLogMessageHelper.objectLogMessage(
-												this, 
+												this,
 												"Timeout reached for idle relay!"));
 								break;
 							}
-							continue;							
+							continue;
+						} else if (ThrowableHelper.isOrHasInstanceOf(
+								ioe,
+								DtlsDatagramSocket.ConnectionClosedException.class)) {
+							// client or peer has closed the connection
+							continue;
 						} else {
-							this.logger.error( 
+							this.logger.warn( 
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Error in receiving packet from the "
-											+ "client"), 
+											"An exception occurred in "
+													+ "receiving packet from "
+													+ "the client"),
 									ioe);
 							continue;							
 						}
@@ -594,7 +612,7 @@ final class UdpRelayServer {
 					Rule applicableRule = this.rules.firstAppliesTo(
 							outboundRuleContext);
 					if (applicableRule == null) {
-						this.logger.error(
+						this.logger.warn(
 								ObjectLogMessageHelper.objectLogMessage(
 										this,
 										"No applicable rule found based on "
@@ -620,21 +638,26 @@ final class UdpRelayServer {
 						if (ThrowableHelper.isOrHasInstanceOf(
 								ioe, SocketException.class)) {
 							// socket closed
-							break;							
+							break;
 						} else {
-							this.logger.error( 
-									ObjectLogMessageHelper.objectLogMessage(
-											this, 
-											"Error in sending the packet to the "
-											+ "peer"), 
-									ioe);							
+							if (!ThrowableHelper.isOrHasInstanceOf(
+									ioe,
+									DtlsDatagramSocket.ConnectionClosedException.class)) {
+								this.logger.warn(
+										ObjectLogMessageHelper.objectLogMessage(
+												this,
+												"An exception occurred in "
+														+ "sending the packet "
+														+ "to the peer"),
+										ioe);
+							}
 						}
 					}
 				} catch (Throwable t) {
-					this.logger.error( 
+					this.logger.warn( 
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
-									"Error occurred in the process of "
+									"An exception occurred in the process of "
 									+ "relaying of a packet from the client to "
 									+ "the peer"), 
 							t);

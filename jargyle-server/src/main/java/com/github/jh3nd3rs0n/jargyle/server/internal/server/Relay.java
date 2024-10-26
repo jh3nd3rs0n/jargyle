@@ -120,13 +120,14 @@ public final class Relay {
 								ioe, SocketTimeoutException.class)) {
 							bytesRead = 0;
 						} else {
-							this.logger.error(
+							this.logger.warn(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Error occurred in the process of "
-											+ "reading in data"), 
+											"An exception occurred in the "
+													+ "process of reading in "
+													+ "data"),
 									ioe);
-							break;
+							continue;
 						}
 					}
 					if (bytesRead == -1) {
@@ -157,13 +158,14 @@ public final class Relay {
 							// socket closed
 							break;
 						} else {
-							this.logger.error(
+							this.logger.warn(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Error occurred in the process of " 
-											+ "writing out data"), 
+											"An exception occurred in the "
+													+ "process of writing "
+													+ "out data"),
 									ioe);
-							break;
+							continue;
 						}						
 					}
 					ioe = null;
@@ -178,23 +180,22 @@ public final class Relay {
 							// socket closed
 							break;
 						} else {
-							this.logger.error(
+							this.logger.warn(
 									ObjectLogMessageHelper.objectLogMessage(
 											this, 
-											"Error occurred in the process of " 
-											+ "flushing out any data"), 
+											"An exception occurred in the "
+													+ "process of flushing "
+													+ "out any data"),
 									ioe);
-							break;
-						}						
+						}
 					}					
 				} catch (Throwable t) {
-					this.logger.error(
+					this.logger.warn(
 							ObjectLogMessageHelper.objectLogMessage(
 									this, 
-									"Error occurred in the process of "
+									"An exception occurred in the process of "
 									+ "relaying the data"), 
 							t);
-					break;
 				}
 			}
 			this.relay.stopIfNotStopped();

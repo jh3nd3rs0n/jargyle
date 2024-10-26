@@ -88,6 +88,7 @@ public class GssObjectTestHelper {
             final GssObjectTester clientGssObjectTester,
             final GssObjectTester serverGssObjectTester) throws IOException, GSSException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new GssTestServerWorkerFactory(serverGssObjectTester));

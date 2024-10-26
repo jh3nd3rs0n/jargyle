@@ -6,19 +6,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReferenceArray;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A {@code DatagramSocket} layered with Datagram Transport Layer Security
  * (DTLS).
  */
 public final class DtlsDatagramSocket extends FilterDatagramSocket {
+
+    /**
+     * The default buffer size for receiving DTLS wrapped datagrams.
+     */
+    public static final int DEFAULT_WRAPPED_RECEIVE_BUFFER_SIZE = 65535;
 
     /**
      * A half second in milliseconds.
@@ -42,34 +47,20 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
     private final AtomicInteger establishedConnectionCount;
 
     /**
-     * The maximum size of a datagram packet.
+     * The {@code SSLEngine}.
      */
-    private final AtomicInteger maximumPacketSize;
+    private final SSLEngine sslEngine;
 
     /**
-     * The {@code String} array of acceptable cipher suites enabled for DTLS
-     * connections.
+     * The {@code ReentrantLock} for controlling thread access to the
+     * {@code SSLEngine}.
      */
-    private AtomicReferenceArray<String> enabledCipherSuites;
+    private final ReentrantLock sslEngineLock;
 
     /**
-     * The {@code String} array of acceptable protocol versions enabled for
-     * DTLS connections.
+     * The buffer size for receiving DTLS wrapped datagrams.
      */
-    private AtomicReferenceArray<String> enabledProtocols;
-
-    /**
-     * The {@code boolean} value to indicate that this
-     * {@code DtlsDatagramSocket} is in use (sending and/or receiving packets).
-     */
-    private volatile boolean inUse;
-
-    /**
-     * The {@code boolean} value to indicate that this
-     * {@code DtlsDatagramSocket} will operate in client mode, meaning it will
-     * initiate the communication with the peer.
-     */
-    private volatile boolean useClientMode;
+    private final AtomicInteger wrappedReceiveBufferSize;
 
     /**
      * Constructs a {@code DtlsDatagramSocket} with the existing
@@ -85,14 +76,38 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             final DatagramSocket datagramSock,
             final SSLContext dtlsCntxt) throws SocketException {
         super(datagramSock);
-        this.dtlsContext = Objects.requireNonNull(dtlsCntxt);
-        this.connections = new HashMap<>();
-        this.enabledCipherSuites = new AtomicReferenceArray<>(0);
-        this.enabledProtocols = new AtomicReferenceArray<>(0);
+        Objects.requireNonNull(dtlsCntxt);
+        SSLEngine engine = dtlsCntxt.createSSLEngine();
+        this.dtlsContext = dtlsCntxt;
+        this.connections = Collections.synchronizedMap(new HashMap<>());
         this.establishedConnectionCount = new AtomicInteger(0);
-        this.inUse = false;
-        this.maximumPacketSize = new AtomicInteger(0);
-        this.useClientMode = false;
+        this.sslEngine = engine;
+        this.sslEngineLock = new ReentrantLock();
+        this.wrappedReceiveBufferSize = new AtomicInteger(
+                DEFAULT_WRAPPED_RECEIVE_BUFFER_SIZE);
+    }
+
+    /**
+     * Closes this {@code DtlsDatagramSocket}. An
+     * {@code UncheckedIOException} is thrown if any of the DTLS
+     * connections is unable to close properly.
+     */
+    @Override
+    public void close() {
+        List<IOException> ioExceptions = new ArrayList<>();
+        for (Connection connection : new ArrayList<>(
+                this.connections.values())) {
+            try {
+                connection.close();
+            } catch (IOException e) {
+                ioExceptions.add(e);
+            }
+        }
+        if (!ioExceptions.isEmpty()) {
+            throw new UncheckedIOException(new ConnectionsCloseException(
+                    ioExceptions));
+        }
+        super.close();
     }
 
     /**
@@ -108,180 +123,182 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
     /**
      * Returns a {@code String} array of acceptable cipher suites enabled for
      * DTLS connections.
+     * <p>
+     * See {@link SSLEngine#getEnabledCipherSuites()} for further details.
+     * </p>
      *
      * @return a {@code String} array of acceptable cipher suites enabled for
      * DTLS connections
      */
     public String[] getEnabledCipherSuites() {
-        int length = this.enabledCipherSuites.length();
-        String[] array = new String[length];
-        for (int i = 0; i < length; i++) {
-            array[i] = this.enabledCipherSuites.get(i);
+        this.sslEngineLock.lock();
+        try {
+            return this.sslEngine.getEnabledCipherSuites();
+        } finally {
+            this.sslEngineLock.unlock();
         }
-        return array;
     }
 
     /**
      * Sets the {@code String} array of acceptable cipher suites enabled for
-     * DTLS connections with a provided {@code String} array. An
-     * {@code IllegalStateException} is thrown if this
-     * {@code DtlsDatagramSocket} is in use (sending and/or receiving packets).
+     * DTLS connections with a provided {@code String} array.
+     * <p>
+     * See {@link SSLEngine#setEnabledCipherSuites(String[])} for further
+     * details.
+     * </p>
      *
      * @param suites the provided {@code String} array of acceptable cipher
      *               suites enabled for DTLS connections
      */
     public void setEnabledCipherSuites(final String[] suites) {
-        if (this.inUse) {
-            throw new IllegalStateException("DtlsDatagramSocket in use");
+        this.sslEngineLock.lock();
+        try {
+            this.sslEngine.setEnabledCipherSuites(suites);
+        } finally {
+            this.sslEngineLock.unlock();
         }
-        this.enabledCipherSuites = new AtomicReferenceArray<>(suites);
     }
 
     /**
      * Returns a {@code String} array of acceptable protocol versions enabled
      * for DTLS connections.
+     * <p>
+     * See {@link SSLEngine#getEnabledProtocols()} for further details.
+     * </p>
      *
      * @return a {@code String} array of acceptable protocol versions enabled
      * for DTLS connections
      */
     public String[] getEnabledProtocols() {
-        int length = this.enabledProtocols.length();
-        String[] array = new String[length];
-        for (int i = 0; i < length; i++) {
-            array[i] = this.enabledProtocols.get(i);
+        this.sslEngineLock.lock();
+        try {
+            return this.sslEngine.getEnabledProtocols();
+        } finally {
+            this.sslEngineLock.unlock();
         }
-        return array;
     }
 
     /**
      * Sets the {@code String} array of acceptable protocol versions enabled
-     * for DTLS connections with the provided {@code String} array. An
-     * {@code IllegalStateException} is thrown if this
-     * {@code DtlsDatagramSocket} is in use (sending and/or receiving packets).
+     * for DTLS connections with the provided {@code String} array.
+     * <p>
+     * See {@link SSLEngine#setEnabledProtocols(String[])} for further details.
+     * </p>
      *
      * @param protocols the provided {@code String} array of acceptable
      *                  protocol versions enabled for DTLS connections
      */
     public void setEnabledProtocols(final String[] protocols) {
-        if (this.inUse) {
-            throw new IllegalStateException("DtlsDatagramSocket in use");
+        this.sslEngineLock.lock();
+        try {
+            this.sslEngine.setEnabledProtocols(protocols);
+        } finally {
+            this.sslEngineLock.unlock();
         }
-        this.enabledProtocols = new AtomicReferenceArray<>(protocols);
-    }
-
-    /**
-     * Returns the maximum size of a datagram packet.
-     *
-     * @return the maximum size of a datagram packet
-     */
-    public int getMaximumPacketSize() {
-        return this.maximumPacketSize.get();
-    }
-
-    /**
-     * Sets the maximum size of a datagram packet with the provided maximum
-     * size. An {@code IllegalStateException} is thrown if this
-     * {@code DtlsDatagramSocket} is in use (sending and/or receiving packets).
-     * An {@code IllegalArgumentException} is thrown if the provided maximum
-     * size is less than zero.
-     *
-     * @param maxPacketSize the provided maximum size
-     */
-    public void setMaximumPacketSize(final int maxPacketSize) {
-        if (this.inUse) {
-            throw new IllegalStateException("DtlsDatagramSocket in use");
-        }
-        if (maxPacketSize < 0) {
-            throw new IllegalArgumentException(
-                    "maximum packet size must be at least 0");
-        }
-        this.maximumPacketSize.set(maxPacketSize);
     }
 
     /**
      * Returns the {@code boolean} value to indicate that this
      * {@code DtlsDatagramSocket} will operate in client mode, meaning it will
      * initiate the communication with the peer.
+     * <p>
+     * See {@link SSLEngine#getUseClientMode()} for further details.
+     * </p>
      *
      * @return the {@code boolean} value to indicate that this
      * {@code DtlsDatagramSocket} will operate in client mode
      */
     public boolean getUseClientMode() {
-        return this.useClientMode;
+        this.sslEngineLock.lock();
+        try {
+            return this.sslEngine.getUseClientMode();
+        } finally {
+            this.sslEngineLock.unlock();
+        }
     }
 
     /**
      * Sets the {@code boolean} value to indicate that this
-     * {@code DtlsDatagramSocket} will operate in client mode with the provided
-     * {@code boolean} value. An {@code IllegalStateException} is thrown if
-     * this {@code DtlsDatagramSocket} is in use (sending and/or receiving
-     * packets).
+     * {@code DtlsDatagramSocket} will operate in client mode.
+     * <p>
+     * See {@link SSLEngine#setUseClientMode(boolean)} for further details.
+     * </p>
      *
      * @param mode the provided {@code boolean} value to indicate that this
-     *             {@code DtlsDatagramSocket} will operate in client mode with
-     *             the provided {@code boolean} value
+     *             {@code DtlsDatagramSocket} will operate in client mode
      */
     public void setUseClientMode(final boolean mode) {
-        if (this.inUse) {
-            throw new IllegalStateException("DtlsDatagramSocket in use");
+        this.sslEngineLock.lock();
+        try {
+            this.sslEngine.setUseClientMode(mode);
+        } finally {
+            this.sslEngineLock.unlock();
         }
-        this.useClientMode = mode;
+    }
+
+    /**
+     * Returns the buffer size for receiving DTLS wrapped datagrams. The
+     * default is {@link #DEFAULT_WRAPPED_RECEIVE_BUFFER_SIZE}.
+     *
+     * @return the buffer size for receiving DTLS wrapped datagrams
+     */
+    public int getWrappedReceiveBufferSize() {
+        return this.wrappedReceiveBufferSize.get();
+    }
+
+    /**
+     * Sets the buffer size for receiving DTLS wrapped datagrams. An
+     * {@code IllegalArgumentException} is thrown if the provided buffer size
+     * for receiving wrapped datagrams is less than one.
+     *
+     * @param wrapReceiveBufferSize the provided buffer size for receiving
+     *                              DTLS wrapped datagrams
+     */
+    public void setWrappedReceiveBufferSize(
+            final int wrapReceiveBufferSize) {
+        if (wrapReceiveBufferSize < 1) {
+            throw new IllegalArgumentException(
+                    "wrapped receive buffer size must be at least 1");
+        }
+        this.wrappedReceiveBufferSize.set(wrapReceiveBufferSize);
     }
 
     @Override
     public synchronized void receive(
             final DatagramPacket p) throws IOException {
-        this.inUse = true;
-        if (this.useClientMode) {
+        if (this.getUseClientMode()) {
             this.waitForEstablishedConnections();
         }
-        byte[] buffer = new byte[this.maximumPacketSize.get()];
+        byte[] buffer = new byte[this.wrappedReceiveBufferSize.get()];
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         this.datagramSocket.receive(packet);
         SocketAddress socketAddress = packet.getSocketAddress();
         Connection connection = this.connections.get(
                 packet.getSocketAddress());
-        boolean connectionPresent = connection != null;
-        if (!connectionPresent) {
+        if (connection == null) {
             connection = new Connection(this, socketAddress);
             this.connections.put(socketAddress, connection);
         }
-        try {
-            connection.receive(buffer, packet, p);
-        } catch (Throwable t) {
-            this.connections.remove(socketAddress);
-            if (connectionPresent && connection.isEstablished()) {
-                this.establishedConnectionCount.decrementAndGet();
-            }
-            throw t;
-        }
-        if (!connectionPresent && connection.isEstablished()) {
-            this.establishedConnectionCount.incrementAndGet();
-        }
+        connection.receive(buffer, packet, p);
     }
 
     @Override
     public void send(final DatagramPacket p) throws IOException {
-        this.inUse = true;
         SocketAddress socketAddress = p.getSocketAddress();
+        if (this.isConnected()
+                && !socketAddress.equals(this.getRemoteSocketAddress())) {
+            throw new IllegalArgumentException(String.format(
+                    "packet socket address %s does not match "
+                            + "connected remote socket address %s",
+                    socketAddress,
+                    this.getRemoteSocketAddress()));
+        }
         Connection connection = this.connections.get(p.getSocketAddress());
-        boolean connectionPresent = connection != null;
-        if (!connectionPresent) {
+        if (connection == null) {
             connection = new Connection(this, socketAddress);
             this.connections.put(socketAddress, connection);
         }
-        try {
-            connection.send(p);
-        } catch (Throwable t) {
-            this.connections.remove(socketAddress);
-            if (connectionPresent && connection.isEstablished()) {
-                this.establishedConnectionCount.decrementAndGet();
-            }
-            throw t;
-        }
-        if (!connectionPresent && connection.isEstablished()) {
-            this.establishedConnectionCount.incrementAndGet();
-        }
+        connection.send(p);
     }
 
     @Override
@@ -296,8 +313,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
 
     /**
      * Waits for existing connections to be established. This method is called
-     * when this {@code DtlsDatagramSocket} is in client mode and is about to
-     * wait for receiving any datagram packets.
+     * when {@link #receive(DatagramPacket)} is called and this
+     * {@code DtlsDatagramSocket} is in client mode.
+     * {@link #receive(DatagramPacket)} will wait for existing connections to
+     * be established by {@link #send(DatagramPacket)} before receiving any
+     * datagram packets. This method is useful if this
+     * {@code DtlsDatagramPacket} performs as the outbound part of a UDP relay.
      *
      * @throws IOException if the socket timeout is greater than zero and the
      *                     same socket timeout used for waiting for existing
@@ -357,11 +378,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
         private final Logger logger;
 
         /**
-         * The maximum size of a datagram packet.
-         */
-        private final int maximumPacketSize;
-
-        /**
          * The {@code SocketAddress} of the peer.
          */
         private final SocketAddress peerSocketAddress;
@@ -370,6 +386,11 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
          * The {@code SSLEngine} for DTLS operations.
          */
         private final SSLEngine sslEngine;
+
+        /**
+         * The buffer size for receiving DTLS wrapped datagrams.
+         */
+        private final int wrappedReceiveBufferSize;
 
         /**
          * The {@code boolean} value to indicate that this {@code Connection}
@@ -395,27 +416,75 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             SSLEngine engine = dtlsDatagramSock.dtlsContext.createSSLEngine(
                     peerSockAddr.getHostString(),
                     peerSockAddr.getPort());
-            String[] enabledCipherSuites =
-                    dtlsDatagramSock.getEnabledCipherSuites();
-            if (enabledCipherSuites.length > 0) {
-                engine.setEnabledCipherSuites(enabledCipherSuites);
-            }
-            String[] enabledProtocols = dtlsDatagramSock.getEnabledProtocols();
-            if (enabledProtocols.length > 0) {
-                engine.setEnabledProtocols(enabledProtocols);
-            }
+            engine.setEnabledCipherSuites(
+                    dtlsDatagramSock.getEnabledCipherSuites());
+            engine.setEnabledProtocols(dtlsDatagramSock.getEnabledProtocols());
             engine.setUseClientMode(dtlsDatagramSock.getUseClientMode());
-            int maxPacketSize = dtlsDatagramSock.getMaximumPacketSize();
-            SSLParameters sslParameters = new SSLParameters();
-            sslParameters.setMaximumPacketSize(maxPacketSize);
-            engine.setSSLParameters(sslParameters);
+            int wrapReceiveBufferSize =
+                    dtlsDatagramSock.getWrappedReceiveBufferSize();
             this.datagramSocket = dtlsDatagramSock.datagramSocket;
             this.dtlsDatagramSocket = dtlsDatagramSock;
             this.established = false;
             this.logger = LoggerFactory.getLogger(Connection.class);
-            this.maximumPacketSize = maxPacketSize;
             this.peerSocketAddress = peerSocketAddr;
             this.sslEngine = engine;
+            this.wrappedReceiveBufferSize = wrapReceiveBufferSize;
+        }
+
+        /**
+         * Closes this {@code Connection}.
+         *
+         * @throws IOException if an I/O error occurs
+         */
+        public void close() throws IOException {
+            this.dtlsDatagramSocket.connections.remove(this.peerSocketAddress);
+            if (this.established) {
+                this.dtlsDatagramSocket.establishedConnectionCount.decrementAndGet();
+            }
+            this.established = false;
+            this.sslEngine.closeOutbound();
+            if (!this.sslEngine.isOutboundDone()) {
+                ByteBuffer empty = ByteBuffer.wrap(new byte[]{});
+                ByteBuffer outNetData = ByteBuffer.allocate(
+                        this.sslEngine.getSSLParameters().getMaximumPacketSize());
+                SSLEngineResult r = this.sslEngine.wrap(empty, outNetData);
+                outNetData.flip();
+                SSLEngineResult.Status rs = r.getStatus();
+                this.checkAfterWrappingCloseMessage(rs);
+                if (outNetData.hasRemaining()) {
+                    byte[] bytes = new byte[outNetData.remaining()];
+                    outNetData.get(bytes);
+                    DatagramPacket packet = new DatagramPacket(
+                            bytes, bytes.length, this.peerSocketAddress);
+                    this.datagramSocket.send(packet);
+                }
+            }
+        }
+
+        /**
+         * Checks the provided {@code Status} after wrapping the closing
+         * message.
+         *
+         * @param rs the provided {@code Status}
+         * @throws IOException if an I/O error occurs
+         */
+        private void checkAfterWrappingCloseMessage(
+                final SSLEngineResult.Status rs) throws IOException {
+            switch (rs) {
+                case BUFFER_OVERFLOW:
+                    throw new SSLException(
+                            "Buffer overflow during wrapping");
+                case BUFFER_UNDERFLOW:
+                    throw new SSLException(
+                            "Buffer underflow during wrapping");
+                case CLOSED:
+                    break;
+                default:
+                    throw new SSLException(String.format(
+                            "Can't reach here, result is %s",
+                            rs));
+            }
+            // SSLEngineResult.Status.CLOSED
         }
 
         /**
@@ -440,9 +509,6 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                 final SSLEngineResult.HandshakeStatus hs)
                 throws IOException {
             switch (rs) {
-                case OK:
-                    // OK
-                    break;
                 case BUFFER_OVERFLOW:
                     this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
                             this,
@@ -465,9 +531,13 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                     } // otherwise, ignore this packet
                     break;
                 case CLOSED:
-                    throw new SSLException(String.format(
-                            "SSL engine closed, handshake status is %s",
+                    this.close();
+                    throw new ConnectionClosedException(String.format(
+                            "Connection closed, handshake status is %s",
                             hs));
+                case OK:
+                    // OK
+                    break;
                 default:
                     throw new SSLException(String.format(
                             "Can't reach here, result is %s",
@@ -582,7 +652,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                             DatagramPacket packet;
                             if (receivedDatagramBffr.length == 0
                                     && receivedDatagramPckt == null) {
-                                buffer = new byte[this.maximumPacketSize];
+                                buffer = new byte[this.wrappedReceiveBufferSize];
                                 packet = new DatagramPacket(buffer, buffer.length);
                                 try {
                                     this.datagramSocket.receive(packet);
@@ -608,10 +678,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                             }
                             inNetData = ByteBuffer.wrap(
                                     buffer, 0, packet.getLength());
-                            inAppData = ByteBuffer.allocate(this.maximumPacketSize);
+                            inAppData = ByteBuffer.allocate(
+                                    this.wrappedReceiveBufferSize);
                         } else {
                             inNetData = ByteBuffer.allocate(0);
-                            inAppData = ByteBuffer.allocate(this.maximumPacketSize);
+                            inAppData = ByteBuffer.allocate(
+                                    this.wrappedReceiveBufferSize);
                         }
                         SSLEngineResult r = this.sslEngine.unwrap(
                                 inNetData, inAppData);
@@ -640,6 +712,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                         endLoops = true;
                         break;
                     case FINISHED:
+                        this.close();
                         throw new SSLException(
                                 "Unexpected status, SSLEngine.getHandshakeStatus() "
                                         + "shouldn't return FINISHED");
@@ -674,12 +747,14 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                     "Handshake finished, status is %s",
                     hs));
             if (this.sslEngine.getHandshakeSession() != null) {
+                this.close();
                 throw new SSLException(
                         "Handshake finished, but handshake session is not "
                                 + "null");
             }
             SSLSession session = this.sslEngine.getSession();
             if (session == null) {
+                this.close();
                 throw new SSLException("Handshake finished, but session is "
                         + "null");
             }
@@ -696,81 +771,12 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             // According to the spec, SSLEngine.getHandshakeStatus() can't
             // return FINISHED.
             if (!hs.equals(SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING)) {
+                this.close();
                 throw new SSLException(String.format(
                         "Unexpected handshake status %s", hs));
             }
             this.established = true;
-        }
-
-        /**
-         * Returns the {@code boolean} value to indicate that this
-         * {@code Connection} is established.
-         *
-         * @return the {@code boolean} value to indicate that this
-         * {@code Connection} is established
-         */
-        public boolean isEstablished() {
-            return this.established;
-        }
-
-        /**
-         * Checks the provided {@code Status} before producing application
-         * packets.
-         *
-         * @param rs the provided {@code Status}
-         * @throws IOException if an I/O error occurs
-         */
-        private void checkBeforeProducingApplicationPackets(
-                final SSLEngineResult.Status rs)
-                throws IOException {
-            switch (rs) {
-                case BUFFER_OVERFLOW:
-                    throw new SSLException("Buffer overflow during wrapping");
-                case BUFFER_UNDERFLOW:
-                    throw new SSLException("Buffer underflow during wrapping");
-                case CLOSED:
-                    throw new SSLException("SSLEngine has closed");
-                case OK:
-                    // OK
-                    break;
-                default:
-                    throw new SSLException(String.format(
-                            "Can't reach here, result is %s",
-                            rs));
-            }
-            // SSLEngineResult.Status.OK:
-        }
-
-        /**
-         * Produces a {@code List} of application {@code DatagramPacket}s with
-         * the provided {@code ByteBuffer} of application data to be wrapped
-         * and the provided {@code SocketAddress} of the peer the application
-         * data will be sent to.
-         *
-         * @param outAppData     the provided {@code ByteBuffer} of application
-         *                       data to be wrapped
-         * @param peerSocketAddr the provided {@code SocketAddress} of the peer
-         *                       the application data will be sent to
-         * @return a {@code List} of application {@code DatagramPacket}s
-         * @throws IOException if an I/O error occurs
-         */
-        private List<DatagramPacket> produceApplicationPackets(
-                final ByteBuffer outAppData,
-                final SocketAddress peerSocketAddr) throws IOException {
-            List<DatagramPacket> packets = new ArrayList<>();
-            ByteBuffer outNetData = ByteBuffer.allocate(this.maximumPacketSize);
-            SSLEngineResult r = this.sslEngine.wrap(outAppData, outNetData);
-            outNetData.flip();
-            SSLEngineResult.Status rs = r.getStatus();
-            this.checkBeforeProducingApplicationPackets(rs);
-            if (outNetData.hasRemaining()) {
-                byte[] bytes = new byte[outNetData.remaining()];
-                outNetData.get(bytes);
-                DatagramPacket packet = new DatagramPacket(
-                        bytes, bytes.length, peerSocketAddr);
-                packets.add(packet);
-            }
-            return packets;
+            this.dtlsDatagramSocket.establishedConnectionCount.incrementAndGet();
         }
 
         /**
@@ -807,7 +813,9 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                                 + "server maximum fragment size");
                     } // otherwise, ignore this packet
                 case CLOSED:
-                    throw new SSLException("SSLEngine has closed");
+                    this.close();
+                    throw new ConnectionClosedException(
+                            "Connection has closed");
                 case OK:
                     // OK
                     break;
@@ -840,7 +848,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                 }
                 ByteBuffer outAppData = ByteBuffer.allocate(0);
                 ByteBuffer outNetData = ByteBuffer.allocate(
-                        this.maximumPacketSize);
+                        this.wrappedReceiveBufferSize);
                 SSLEngineResult r = this.sslEngine.wrap(outAppData, outNetData);
                 outNetData.flip();
                 SSLEngineResult.Status rs = r.getStatus();
@@ -885,6 +893,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                             endInnerLoop = true;
                             break;
                         case FINISHED:
+                            this.close();
                             throw new SSLException("Unexpected status, "
                                     + "SSLEngine.getHandshakeStatus() shouldn't "
                                     + "return FINISHED");
@@ -897,6 +906,37 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                 }
             }
             return false;
+        }
+
+        /**
+         * Checks the provided {@code Status} after unwrapping the network
+         * data.
+         *
+         * @param rs the provided {@code Status}
+         * @throws IOException if an I/O error occurs
+         */
+        private void checkAfterUnwrappingNetworkData(
+                final SSLEngineResult.Status rs) throws IOException {
+            switch (rs) {
+                case BUFFER_OVERFLOW:
+                    throw new SSLException(
+                            "Buffer overflow during unwrapping");
+                case BUFFER_UNDERFLOW:
+                    throw new SSLException(
+                            "Buffer underflow during unwrapping");
+                case CLOSED:
+                    this.close();
+                    throw new ConnectionClosedException(
+                            "Connection has closed");
+                case OK:
+                    // OK
+                    break;
+                default:
+                    throw new SSLException(String.format(
+                            "Can't reach here, result is %s",
+                            rs));
+            }
+            // SSLEngineResult.Status.OK:
         }
 
         /**
@@ -933,7 +973,7 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                 DatagramPacket packet;
                 if (receivedDatagramBffr.length == 0
                         && receivedDatagramPckt == null) {
-                    buffer = new byte[this.maximumPacketSize];
+                    buffer = new byte[this.wrappedReceiveBufferSize];
                     packet = new DatagramPacket(buffer, buffer.length);
                     this.datagramSocket.receive(packet);
                 } else {
@@ -942,18 +982,38 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                     receivedDatagramBffr = new byte[]{};
                     receivedDatagramPckt = null;
                 }
-                ByteBuffer inNetData = ByteBuffer.wrap(
-                        buffer, 0, packet.getLength());
-                ByteBuffer inAppData = ByteBuffer.allocate(p.getLength());
-                this.sslEngine.unwrap(inNetData, inAppData);
-                inAppData.flip();
-                if (inAppData.hasRemaining()) {
-                    byte[] bytes = new byte[inAppData.remaining()];
-                    inAppData.get(bytes);
-                    p.setSocketAddress(packet.getSocketAddress());
-                    p.setData(bytes, 0, bytes.length);
-                    p.setLength(bytes.length);
-                    return;
+                buffer = Arrays.copyOf(buffer, packet.getLength());
+                int pLength = p.getLength();
+                ByteArrayOutputStream byteArrayOutputStream =
+                        new ByteArrayOutputStream();
+                while (buffer.length > 0) {
+                    ByteBuffer inNetData = ByteBuffer.wrap(buffer);
+                    ByteBuffer inAppData = ByteBuffer.allocate(pLength);
+                    SSLEngineResult r = this.sslEngine.unwrap(
+                            inNetData, inAppData);
+                    inAppData.flip();
+                    SSLEngineResult.Status rs = r.getStatus();
+                    this.checkAfterUnwrappingNetworkData(rs);
+                    if (inAppData.hasRemaining()) {
+                        byte[] bytes = new byte[inAppData.remaining()];
+                        inAppData.get(bytes);
+                        byteArrayOutputStream.write(bytes);
+                        byteArrayOutputStream.flush();
+                        if (!inNetData.hasRemaining()) {
+                            byte[] totalBytes =
+                                    byteArrayOutputStream.toByteArray();
+                            int length = Math.min(totalBytes.length, pLength);
+                            p.setSocketAddress(packet.getSocketAddress());
+                            p.setData(totalBytes, 0, length);
+                            p.setLength(length);
+                            return;
+                        }
+                    }
+                    buffer = new byte[]{};
+                    if (inNetData.hasRemaining()) {
+                        buffer = new byte[inNetData.remaining()];
+                        inNetData.get(buffer);
+                    }
                 }
             }
         }
@@ -994,9 +1054,41 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             SSLEngineResult.HandshakeStatus hs =
                     this.sslEngine.getHandshakeStatus();
             if (hs.equals(SSLEngineResult.HandshakeStatus.NEED_TASK)) {
+                this.close();
                 throw new SSLException(
                         "Handshake shouldn't need additional tasks");
             }
+        }
+
+        /**
+         * Checks the provided {@code Status} after wrapping the application
+         * data.
+         *
+         * @param rs the provided {@code Status}
+         * @throws IOException if an I/O error occurs
+         */
+        private void checkAfterWrappingApplicationData(
+                final SSLEngineResult.Status rs) throws IOException {
+            switch (rs) {
+                case BUFFER_OVERFLOW:
+                    throw new SSLException(
+                            "Buffer overflow during wrapping");
+                case BUFFER_UNDERFLOW:
+                    throw new SSLException(
+                            "Buffer underflow during wrapping");
+                case CLOSED:
+                    this.close();
+                    throw new ConnectionClosedException(
+                            "Connection has closed");
+                case OK:
+                    // OK
+                    break;
+                default:
+                    throw new SSLException(String.format(
+                            "Can't reach here, result is %s",
+                            rs));
+            }
+            // SSLEngineResult.Status.OK:
         }
 
         /**
@@ -1009,15 +1101,35 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
             if (this.sslEngine.getUseClientMode() && !this.established) {
                 this.startHandshake();
             }
-            ByteBuffer outAppData = ByteBuffer.wrap(Arrays.copyOfRange(
-                    p.getData(), p.getOffset(), p.getLength()));
-            // Note: have not considered the packet losses
-            List<DatagramPacket> packets = this.produceApplicationPackets(
-                    outAppData, p.getSocketAddress());
-            outAppData.flip();
-            for (DatagramPacket packet : packets) {
-                this.datagramSocket.send(packet);
+            ByteArrayOutputStream byteArrayOutputStream =
+                    new ByteArrayOutputStream();
+            byte[] buffer = Arrays.copyOfRange(
+                    p.getData(), p.getOffset(), p.getOffset() + p.getLength());
+            while (buffer.length > 0) {
+                ByteBuffer outAppData = ByteBuffer.wrap(buffer);
+                ByteBuffer outNetData = ByteBuffer.allocate(
+                        this.wrappedReceiveBufferSize);
+                SSLEngineResult r = this.sslEngine.wrap(
+                        outAppData, outNetData);
+                outNetData.flip();
+                SSLEngineResult.Status rs = r.getStatus();
+                this.checkAfterWrappingApplicationData(rs);
+                if (outNetData.hasRemaining()) {
+                    byte[] bytes = new byte[outNetData.remaining()];
+                    outNetData.get(bytes);
+                    byteArrayOutputStream.write(bytes);
+                    byteArrayOutputStream.flush();
+                }
+                buffer = new byte[]{};
+                if (outAppData.hasRemaining()) {
+                    buffer = new byte[outAppData.remaining()];
+                    outAppData.get(buffer);
+                }
             }
+            byte[] totalBytes = byteArrayOutputStream.toByteArray();
+            DatagramPacket packet = new DatagramPacket(
+                    totalBytes, totalBytes.length, p.getSocketAddress());
+            this.datagramSocket.send(packet);
         }
 
         @Override
@@ -1028,6 +1140,104 @@ public final class DtlsDatagramSocket extends FilterDatagramSocket {
                     ", peerSocketAddress=" +
                     this.peerSocketAddress +
                     "]";
+        }
+
+    }
+
+    /**
+     * Thrown when a DTLS connection is closed.
+     */
+    public static final class ConnectionClosedException extends SSLException {
+
+        /**
+         * The default serial version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Constructs a {@code ConnectionClosedException} with the provided
+         * reason.
+         *
+         * @param reason the provided reason
+         */
+        public ConnectionClosedException(final String reason) {
+            super(reason);
+        }
+
+    }
+
+    /**
+     * Thrown when {@code IOException}s occur upon closing DTLS connections.
+     */
+    public static final class ConnectionsCloseException extends IOException {
+
+        /**
+         * The default serial version UID.
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * The {@code IOException}s that occur upon closing DTLS connections.
+         */
+        private final List<IOException> ioExceptions;
+
+        /**
+         * Constructs a {@code ConnectionsCloseException} with the provided
+         * {@code List} of {@code IOException}s that occur upon closing DTLS
+         * connections.
+         *
+         * @param exceptions the provided {@code List} of {@code IOException}s
+         *                   that occur upon closing DTLS connections
+         */
+        public ConnectionsCloseException(final List<IOException> exceptions) {
+            this.ioExceptions = new ArrayList<>(exceptions);
+        }
+
+        /**
+         * Returns an unmodifiable {@code List} of {@code IOException}s that
+         * occur upon closing DTLS connections.
+         *
+         * @return an unmodifiable {@code List} of {@code IOException}s that
+         * occur upon closing DTLS connections
+         */
+        public List<IOException> getIOExceptions() {
+            return Collections.unmodifiableList(this.ioExceptions);
+        }
+
+        @Override
+        public void printStackTrace() {
+            this.printStackTrace(new PrintStream(System.err));
+        }
+
+        @Override
+        public void printStackTrace(PrintStream s) {
+            this.printStackTrace(new PrintWriter(s));
+        }
+
+        @Override
+        public void printStackTrace(PrintWriter w) {
+            super.printStackTrace(w);
+            for (IOException ioException : this.ioExceptions) {
+                ioException.printStackTrace(w);
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder stringBuilder = new StringBuilder(
+                    this.getClass().getName());
+            Iterator<IOException> iterator = ioExceptions.iterator();
+            if (iterator.hasNext()) {
+                stringBuilder.append(": ");
+            }
+            while (iterator.hasNext()) {
+                IOException ioException = iterator.next();
+                stringBuilder.append(ioException);
+                if (iterator.hasNext()) {
+                    stringBuilder.append(", ");
+                }
+            }
+            return stringBuilder.toString();
         }
 
     }

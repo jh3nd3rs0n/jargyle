@@ -40,7 +40,7 @@ final class ResolveRequestWorker extends RequestWorker {
 			inetAddress = hostResolver.resolve(
 					this.getDesiredDestinationAddress().toString());
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 
 					e);
@@ -49,14 +49,14 @@ final class ResolveRequestWorker extends RequestWorker {
 		} catch (IOException e) {
 			if (ThrowableHelper.isOrHasInstanceOf(
 					e, UnknownHostException.class)) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in resolving the hostname"), 
 						e);
 				this.sendReply(Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return;				
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in resolving the hostname"), 
 					e);
@@ -74,7 +74,7 @@ final class ResolveRequestWorker extends RequestWorker {
 		Rule applicableRule = this.getRules().firstAppliesTo(
 				this.getRuleContext());
 		if (applicableRule == null) {
-			this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+			this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 					this, 
 					"No applicable rule found based on the following "
 					+ "context: %s",

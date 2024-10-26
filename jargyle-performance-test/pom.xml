@@ -28,7 +28,6 @@
             <groupId>com.github.jh3nd3rs0n</groupId>
             <artifactId>jargyle-test-help</artifactId>
             <version>${project.parent.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -57,7 +56,12 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
-                        <jdk.virtualThreadScheduler.parallelism>10</jdk.virtualThreadScheduler.parallelism>
+                        <!--
+                        <com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
+                        -->
+                        <!-- -->
+                        <jdk.virtualThreadScheduler.parallelism>20</jdk.virtualThreadScheduler.parallelism>
+                        <!-- -->
                         <performance.reports.directory>${project.build.directory}${file.separator}performance-reports${file.separator}</performance.reports.directory>
                     </systemPropertyVariables>
                 </configuration>

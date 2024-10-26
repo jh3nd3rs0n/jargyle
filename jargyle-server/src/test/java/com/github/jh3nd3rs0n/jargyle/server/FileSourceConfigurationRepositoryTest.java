@@ -53,13 +53,13 @@ public class FileSourceConfigurationRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGURATION_FILE.getContentAsString(),
 				configFile);
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */
 		configFile.setLastModified(System.currentTimeMillis());
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		Configuration configuration = 
 				this.fileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();
@@ -80,13 +80,13 @@ public class FileSourceConfigurationRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_CONFIGURATION_FILE.getContentAsString(),
 				configFile);
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */		
 		configFile.setLastModified(System.currentTimeMillis());		
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		Configuration configuration = 
 				this.fileSourceConfigurationRepository.get();
 		Settings settings = configuration.getSettings();

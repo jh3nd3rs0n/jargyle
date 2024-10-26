@@ -82,12 +82,12 @@ final class GssDatagramSocket extends FilterDatagramSocket {
      */
     @Override
     public void close() {
-        super.close();
         try {
             this.gssContext.dispose();
         } catch (GSSException e) {
             throw new UncheckedIOException(new IOException(e));
         }
+        super.close();
     }
 
     /**
@@ -139,8 +139,9 @@ final class GssDatagramSocket extends FilterDatagramSocket {
             } catch (GSSException e) {
                 throw new IOException(e);
             }
-            p.setData(token, 0, token.length);
-            p.setLength(token.length);
+            int length = Math.min(token.length, data.length);
+            p.setData(token, 0, length);
+            p.setLength(length);
         }
     }
 
@@ -149,16 +150,17 @@ final class GssDatagramSocket extends FilterDatagramSocket {
         if (this.messageProp != null) {
             byte[] data = Arrays.copyOfRange(
                     p.getData(), p.getOffset(), p.getLength());
-            int dataLength = data.length;
-            if (dataLength > this.wrapSizeLimit) {
-                dataLength = this.wrapSizeLimit;
+            if (data.length > this.wrapSizeLimit) {
+                throw new IOException(
+                        "A message sent on a GssDatagramSocket was larger "
+                                + "than the wrap size limit");
             }
             byte[] token;
             MessageProp prop = new MessageProp(
                     this.messageProp.getQOP(),
                     this.messageProp.getPrivacy());
             try {
-                token = this.gssContext.wrap(data, 0, dataLength, prop);
+                token = this.gssContext.wrap(data, 0, data.length, prop);
             } catch (GSSException e) {
                 throw new IOException(e);
             }

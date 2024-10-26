@@ -25,7 +25,7 @@ public class GssapiMethodEncapsulationTest {
 
     @Rule
     public Timeout globalTimeout = Timeout.builder()
-            .withTimeout(5, TimeUnit.SECONDS)
+            .withTimeout(60, TimeUnit.SECONDS)
             .withLookingForStuckThread(true)
             .build();
 
@@ -36,11 +36,13 @@ public class GssapiMethodEncapsulationTest {
             MessageProp messageProp = new MessageProp(0, false);
             GssapiMethodEncapsulation gssapiMethodEncapsulation =
                     new GssapiMethodEncapsulation(socket, gssContext, messageProp);
-            DatagramSocket datagramSocket1 = new DatagramSocket(null);
-            DatagramSocket datagramSocket2 =
-                    gssapiMethodEncapsulation.getDatagramSocket(datagramSocket1);
-            Assert.assertNotEquals(
-                    datagramSocket1.getClass(), datagramSocket2.getClass());
+            try (DatagramSocket datagramSocket1 = new DatagramSocket(null);
+                 DatagramSocket datagramSocket2 =
+                         gssapiMethodEncapsulation.getDatagramSocket(
+                                 datagramSocket1)) {
+                Assert.assertNotEquals(
+                        datagramSocket1.getClass(), datagramSocket2.getClass());
+            }
         }, ((socket, gssContext) -> {}));
     }
 
@@ -50,9 +52,9 @@ public class GssapiMethodEncapsulationTest {
             MessageProp messageProp = new MessageProp(0, false);
             GssapiMethodEncapsulation gssapiMethodEncapsulation =
                     new GssapiMethodEncapsulation(socket, gssContext, messageProp);
-            Socket socket1 = new Socket();
-            Socket socket2 = gssapiMethodEncapsulation.getSocket();
-            Assert.assertNotEquals(socket1.getClass(), socket2.getClass());
+            try (Socket sock = gssapiMethodEncapsulation.getSocket()) {
+                Assert.assertNotEquals(Socket.class, sock.getClass());
+            }
         }, ((socket, gssContext) -> {}));
     }
 

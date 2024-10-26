@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.HostName;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
@@ -81,7 +82,7 @@ public final class DomainName extends Address {
                 UnsignedByteIoHelper.readUnsignedByteFrom(in);
         byte[] stringBytes = new byte[octetCount.intValue()];
         if (octetCount.intValue() > 0) {
-            int bytesRead = in.read(stringBytes);
+            int bytesRead = InputStreamHelper.continuouslyReadFrom(in, stringBytes);
             if (octetCount.intValue() != bytesRead) {
                 throw new Socks5Exception(String.format(
                         "expected address length is %s. "

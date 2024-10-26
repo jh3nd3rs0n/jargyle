@@ -64,13 +64,13 @@ public final class Socks5ServerSocket extends ServerSocket {
 		
 		@Override
 		public synchronized void close() throws IOException {
-			super.close();
 			this.localInetAddress = HostIpv4Address.getAllZerosInetAddress();
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.remoteInetAddress = null;
 			this.remotePort = 0;
 			this.remoteSocketAddress = null;
+			super.close();
 		}
 	
 		@Override

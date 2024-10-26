@@ -97,18 +97,6 @@ public final class DtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"dtls.keyStoreType", 
 					"PKCS12"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The maximum packet size for the DTLS connections to "
-					+ "the SOCKS server (default is 32768)",
-			name = "dtls.maxPacketSize",
-			syntax = "dtls.maxPacketSize=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)	
-	public static final SettingSpec<PositiveInteger> DTLS_MAX_PACKET_SIZE = 
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"dtls.maxPacketSize", 
-					PositiveInteger.valueOf(32768)));
 
 	@NameValuePairValueSpecDoc(
 			description = "The protocol version for the DTLS connections to the "
@@ -121,6 +109,18 @@ public final class DtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"dtls.protocol", 
 					"DTLSv1.2"));
+
+	@NameValuePairValueSpecDoc(
+			description = "The buffer size for receiving DTLS wrapped "
+					+ "datagrams for the DTLS connections to the SOCKS server",
+			name = "dtls.wrappedReceiveBufferSize",
+			syntax = "dtls.wrappedReceiveBufferSize=POSITIVE_INTEGER",
+			valueType = PositiveInteger.class
+	)
+	public static final SettingSpec<PositiveInteger> DTLS_WRAPPED_RECEIVE_BUFFER_SIZE =
+			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+					"dtls.wrappedReceiveBufferSize",
+					null));
 
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();

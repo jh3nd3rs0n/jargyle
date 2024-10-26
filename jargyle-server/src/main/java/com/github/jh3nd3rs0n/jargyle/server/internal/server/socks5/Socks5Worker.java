@@ -122,7 +122,7 @@ public class Socks5Worker extends Worker {
 						e);
 				return null;
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in sub-negotiating with the client using "
@@ -379,7 +379,7 @@ public class Socks5Worker extends Worker {
 			Rule applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
 			if (applicableRule == null) {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",

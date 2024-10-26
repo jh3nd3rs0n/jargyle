@@ -54,9 +54,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		
 		public void close() {
 			this.associated = false;
-			this.datagramSocket.close();
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
+			this.datagramSocket.close();
 			try {
 				this.socket.close();
 			} catch (SocksClientIOException e) {

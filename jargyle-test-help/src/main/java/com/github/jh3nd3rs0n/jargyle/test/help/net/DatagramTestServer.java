@@ -1,15 +1,16 @@
 package com.github.jh3nd3rs0n.jargyle.test.help.net;
 
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A UDP server used for clients to test against.
@@ -17,14 +18,25 @@ import java.util.concurrent.Executors;
 public final class DatagramTestServer {
 
     /**
-     * The default buffer size for receiving {@code DatagramPacket}s.
-     */
-    public static final int BUFFER_SIZE = 1024;
-
-    /**
      * The default binding {@code InetAddress}.
      */
     public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
+
+    /**
+     * The default buffer size for receiving {@code DatagramPacket}s.
+     */
+    public static final int RECEIVE_BUFFER_SIZE = 65535;
+
+    /**
+     * {@code DtlsDatagramSocket$ConnectionClosedException} class name.
+     */
+    private static final String DTLS_DATAGRAM_SOCKET_CONNECTION_CLOSED_EXCEPTION_CLASS_NAME =
+            "com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket$ConnectionClosedException";
+
+    /**
+     * {@code DtlsDatagramSocket$ConnectionClosedException} class.
+     */
+    private static Class<?> dtlsDatagramSocketConnectionClosedExceptionClass;
 
     /**
      * The binding {@code InetAddress} of this {@code DatagramTestServer}.
@@ -32,10 +44,23 @@ public final class DatagramTestServer {
     private final InetAddress bindInetAddress;
 
     /**
+     * The {@code ServerDatagramSocketFactory} used for creating a server
+     * {@code DatagramSocket}.
+     */
+    private final ServerDatagramSocketFactory serverDatagramSocketFactory;
+
+    /**
+     * The {@code ExecutorFactory} used for creating an {@code Executor} to
+     * execute the {@code ReceivingPacketRelay} and the
+     * {@code SendingPacketRelay}.
+     */
+    private final ExecutorFactory doubleThreadExecutorFactory;
+
+    /**
      * The {@code ExecutorFactory} used for creating an {@code Executor} to
      * execute {@code Worker}s.
      */
-    private final ExecutorFactory executorFactory;
+    private final ExecutorFactory multipleThreadsExecutorFactory;
 
     /**
      * The specified binding port of this {@code DatagramTestServer}.
@@ -69,44 +94,120 @@ public final class DatagramTestServer {
     private State state;
 
     /**
-     * Constructs a {@code DatagramTestServer} with the provided specified
-     * binding port, the provided {@code ExecutorFactory}, and the provided
-     * {@code WorkerFactory}.
+     * Constructs a {@code DatagramTestServer} with the provided
+     * {@code ServerDatagramSocketFactory} used for creating a server
+     * {@code DatagramSocket}, the provided specified binding port, the
+     * provided {@code ExecutorFactory} used for creating an {@code Executor}
+     * to execute two threads, the provided {@code ExecutorFactory} used for
+     * creating an {@code Executor} to execute {@code Worker}s, and the
+     * provided {@code WorkerFactory} used for creating {@code Worker}s.
      *
-     * @param prt      the provided specified binding port
-     * @param factory1 the provided {@code ExecutorFactory}
-     * @param factory2 the provided {@code WorkerFactory}
+     * @param serverDatagramSockFactory   the provided
+     *                                    {@code ServerDatagramSocketFactory} used
+     *                                    for creating a server
+     *                                    {@code DatagramSocket}
+     * @param prt                         the provided specified binding port
+     * @param twoThreadExecutorFactory    the provided {@code ExecutorFactory}
+     *                                    used for creating an
+     *                                    {@code Executor} to execute two
+     *                                    threads
+     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
+     *                                    used for creating an
+     *                                    {@code Executor} to execute
+     *                                    {@code Worker}s
+     * @param factory                     the provided {@code WorkerFactory}
+     *                                    used for creating {@code Worker}s
      */
     public DatagramTestServer(
+            final ServerDatagramSocketFactory serverDatagramSockFactory,
             final int prt,
-            final ExecutorFactory factory1,
-            final WorkerFactory factory2) {
-        this(prt, INET_ADDRESS, factory1, factory2);
+            final ExecutorFactory twoThreadExecutorFactory,
+            final ExecutorFactory multiThreadsExecutorFactory,
+            final WorkerFactory factory) {
+        this(
+                serverDatagramSockFactory,
+                prt,
+                INET_ADDRESS,
+                twoThreadExecutorFactory,
+                multiThreadsExecutorFactory,
+                factory);
     }
 
     /**
-     * Constructs a {@code DatagramTestServer} with the provided specified
-     * binding port, the provided binding {@code InetAddress}, the provided
-     * {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
+     * Constructs a {@code DatagramTestServer} with the provided
+     * {@code ServerDatagramSocketFactory} used for creating a server
+     * {@code DatagramSocket}, the provided specified binding port, the
+     * provided binding {@code InetAddress}, the provided
+     * {@code ExecutorFactory} used for creating an {@code Executor} to
+     * execute two threads, the provided {@code ExecutorFactory} used for
+     * creating an {@code Executor} to execute {@code Worker}s, and the
+     * provided {@code WorkerFactory} used for creating {@code Worker}s.
      *
-     * @param prt          the provided specified binding port
-     * @param bindInetAddr the provided binding {@code InetAddress}
-     * @param factory1     the provided {@code ExecutorFactory}
-     * @param factory2     the provided {@code WorkerFactory}
+     * @param serverDatagramSockFactory   the provided
+     *                                    {@code ServerDatagramSocketFactory} used
+     *                                    for creating a server
+     *                                    {@code DatagramSocket}
+     * @param prt                         the provided specified binding port
+     * @param bindInetAddr                the provided binding
+     *                                    {@code InetAddress}
+     * @param twoThreadExecutorFactory    the provided {@code ExecutorFactory}
+     *                                    used for creating an
+     *                                    {@code Executor} to execute two
+     *                                    threads
+     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
+     *                                    used for creating an
+     *                                    {@code Executor} to execute
+     *                                    {@code Worker}s
+     * @param factory                     the provided {@code WorkerFactory}
+     *                                    used for creating {@code Worker}s
      */
     public DatagramTestServer(
+            final ServerDatagramSocketFactory serverDatagramSockFactory,
             final int prt,
             final InetAddress bindInetAddr,
-            final ExecutorFactory factory1,
-            final WorkerFactory factory2) {
+            final ExecutorFactory twoThreadExecutorFactory,
+            final ExecutorFactory multiThreadsExecutorFactory,
+            final WorkerFactory factory) {
         this.bindInetAddress = bindInetAddr;
+        this.serverDatagramSocketFactory = serverDatagramSockFactory;
+        this.doubleThreadExecutorFactory = twoThreadExecutorFactory;
         this.executor = null;
-        this.executorFactory = factory1;
+        this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
         this.port = -1;
         this.serverSocket = null;
         this.specifiedPort = prt;
         this.state = State.STOPPED;
-        this.workerFactory = factory2;
+        this.workerFactory = factory;
+    }
+
+    /**
+     * Returns the {@code boolean} value indicating if the provided
+     * {@code Throwable} is an instance of
+     * {@code DtlsDatagramSocket$ConnectionClosedException} or has an instance
+     * of {@code DtlsDatagramSocket$ConnectionClosedException}.
+     *
+     * @param t the provided {@code Throwable}
+     * @return the {@code boolean} value indicating if the provided
+     * {@code Throwable} is an instance of
+     * {@code DtlsDatagramSocket$ConnectionClosedException} or has an instance
+     * of {@code DtlsDatagramSocket$ConnectionClosedException}
+     */
+    private static boolean isOrHasInstanceOfDtlsDatagramSocketConnectionClosedException(
+            final Throwable t) {
+        if (dtlsDatagramSocketConnectionClosedExceptionClass == null) {
+            try {
+                dtlsDatagramSocketConnectionClosedExceptionClass = Class.forName(
+                        DTLS_DATAGRAM_SOCKET_CONNECTION_CLOSED_EXCEPTION_CLASS_NAME);
+            } catch (ClassNotFoundException ignored) {
+            }
+        }
+        if (dtlsDatagramSocketConnectionClosedExceptionClass != null
+                && dtlsDatagramSocketConnectionClosedExceptionClass.isInstance(t)) {
+            return true;
+        }
+        Throwable cause = t.getCause();
+        return cause != null && isOrHasInstanceOfDtlsDatagramSocketConnectionClosedException(
+                cause);
     }
 
     /**
@@ -145,12 +246,16 @@ public final class DatagramTestServer {
      *                     {@code DatagramTestServer}
      */
     public void start() throws IOException {
-        this.serverSocket = new DatagramSocket(
-                this.specifiedPort, this.bindInetAddress);
+        this.serverSocket =
+                this.serverDatagramSocketFactory.newServerDatagramSocket(
+                        this.specifiedPort, this.bindInetAddress);
         this.port = this.serverSocket.getLocalPort();
         this.executor = Executors.newSingleThreadExecutor();
-        this.executor.execute(new Listener(
-                this.serverSocket, this.executorFactory, this.workerFactory));
+        this.executor.execute(new PacketRelay(
+                this.serverSocket,
+                this.doubleThreadExecutorFactory,
+                this.multipleThreadsExecutorFactory,
+                this.workerFactory));
         this.state = State.STARTED;
     }
 
@@ -187,127 +292,214 @@ public final class DatagramTestServer {
     }
 
     /**
-     * A default implementation of {@code Worker}. This implementation does
-     * nothing.
+     * An {@code Object} of two queues: a queue of received
+     * {@code DatagramPacket}s from the client and a queue of sendable
+     * {@code DatagramPacket} to the client.
      */
-    private static final class DefaultWorker extends Worker {
+    public static final class ClientPackets {
 
         /**
-         * Constructs a {@code DefaultWorker} with the provided
-         * {@code DatagramSocket} for sending {@code DatagramPacket}s to the
-         * client and the provided {@code DatagramPacket} from the client.
+         * The client {@code SocketAddress}
+         */
+        private final SocketAddress clientSocketAddress;
+
+        /**
+         * The {@code Packets}.
+         */
+        private final Packets packets;
+
+        /**
+         * The {@code boolean} value to indicate if this {@code ClientPackets}
+         * is closed for receiving and sending {@code DatagramPacket}s from
+         * and to the client.
+         */
+        private boolean closed;
+
+        /**
+         * Constructs a {@code ClientPackets} with the provided client
+         * {@code SocketAddress} and the provided {@code Packets}.
          *
-         * @param serverSock the provided {@code DatagramSocket} for sending
-         *                   {@code DatagramPacket}s to the client
-         * @param pckt       the provided {@code DatagramPacket} from the client.
+         * @param clientSockAddress the provided client {@code SocketAddress}
+         * @param pckts             the provided {@code Packets}
          */
-        public DefaultWorker(
-                final DatagramSocket serverSock, final DatagramPacket pckt) {
-            super(serverSock, pckt);
+        private ClientPackets(
+                final SocketAddress clientSockAddress, final Packets pckts) {
+            this.clientSocketAddress = clientSockAddress;
+            this.packets = pckts;
+            this.closed = false;
         }
-
-        @Override
-        protected void doWork() {
-            // does nothing
-        }
-
-    }
-
-    /**
-     * A default implementation of {@code WorkerFactory} that creates
-     * {@code Worker}s that do nothing.
-     */
-    public static final class DefaultWorkerFactory extends WorkerFactory {
 
         /**
-         * Constructs a {@code DefaultWorkerFactory}.
+         * Adds to the tail of the queue of sendable {@code DatagramPacket}s
+         * the provided sendable {@code DatagramPacket} to the client. An
+         * {@code IllegalStateException} is thrown if this
+         * {@code ClientPackets} is closed.
+         *
+         * @param packet the provided sendable {@code DatagramPacket} to the
+         *               client
          */
-        public DefaultWorkerFactory() {
+        public void addSendable(final DatagramPacket packet) {
+            if (this.closed) {
+                throw new IllegalStateException("ClientPackets closed");
+            }
+            this.packets.addSendable(packet);
         }
 
-        @Override
-        public Worker newWorker(
-                final DatagramSocket serverSocket, final DatagramPacket packet) {
-            return new DefaultWorker(serverSocket, packet);
+        /**
+         * Closes this {@code ClientPackets} for receiving and sending
+         * {@code DatagramPacket}s from and to the client. An
+         * {@code IllegalStateException} is thrown if this
+         * {@code ClientPackets} is already closed.
+         */
+        public void close() {
+            if (this.closed) {
+                throw new IllegalStateException(
+                        "ClientPackets is already closed");
+            }
+            this.packets.removeReceivedQueue(this.clientSocketAddress);
+            this.closed = true;
+        }
+
+        /**
+         * Returns the {@code boolean} value to indicate if this
+         * {@code ClientPackets} is closed for receiving and sending
+         * {@code DatagramPacket}s from and to the client.
+         *
+         * @return the {@code boolean} value to indicate if this
+         * {@code ClientPackets} is closed for receiving and sending
+         * {@code DatagramPacket}s from and to the client
+         */
+        public boolean isClosed() {
+            return this.closed;
+        }
+
+        /**
+         * Returns a received {@code DatagramPacket} from the client and
+         * removes it from the head of the queue of received
+         * {@code DatagramPacket}s from the client. A
+         * {@code NoSuchElementException} is thrown if there are no received
+         * {@code DatagramPacket}s from the client at this time. An
+         * {@code IllegalStateException} is thrown if this
+         * {@code ClientPackets} is closed.
+         *
+         * @return a received {@code DatagramPacket} from the client
+         */
+        public DatagramPacket removeReceived() {
+            if (this.closed) {
+                throw new IllegalStateException("ClientPackets disposed");
+            }
+            return this.packets.removeReceived(this.clientSocketAddress);
         }
 
     }
 
     /**
-     * Continues to listen for a {@code DatagramPacket} from a client, receive
-     * a {@code DatagramPacket}, and then execute a new {@code Worker} to
-     * handle the received {@code DatagramPacket}.
+     * A default implementation of {@code ServerDatagramSocketFactory}. This
+     * implementation creates a plain server {@code DatagramSocket}.
      */
-    private static final class Listener implements Runnable {
+    public static final class DefaultServerDatagramSocketFactory
+            extends ServerDatagramSocketFactory {
+
+        /**
+         * Constructs a {@code DefaultServerDatagramSocketFactory}.
+         */
+        public DefaultServerDatagramSocketFactory() {
+        }
+
+        @Override
+        public DatagramSocket newServerDatagramSocket(
+                final int port,
+                final InetAddress bindInetAddress) throws SocketException {
+            return new DatagramSocket(port, bindInetAddress);
+        }
+
+    }
+
+    /**
+     * Initiates the {@code ReceivingPacketRelay} and the
+     * {@code SendingPacketRelay}.
+     */
+    private static final class PacketRelay implements Runnable {
+
+        /**
+         * The {@code ExecutorFactory} used for creating an {@code Executor} to
+         * execute the {@code ReceivingPacketRelay} and the
+         * {@code SendingPacketRelay}.
+         */
+        private final ExecutorFactory doubleThreadExecutorFactory;
 
         /**
          * The {@code ExecutorFactory} used for creating an {@code Executor} to
          * execute {@code Worker}s.
          */
-        private final ExecutorFactory executorFactory;
+        private final ExecutorFactory multipleThreadsExecutorFactory;
 
         /**
-         * The {@code Logger}.
+         * The {@code Packets}.
          */
-        private final Logger logger;
+        private final Packets packets;
 
         /**
-         * The {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients.
+         * The server {@code DatagramSocket}.
          */
         private final DatagramSocket serverSocket;
 
         /**
-         * The {@code WorkerFactory} used to create {@code Worker}s.
+         * The {@code WorkerFactory} used for creating {@code Worker}s.
          */
         private final WorkerFactory workerFactory;
 
         /**
-         * Constructs a {@code Listener} with the provided
-         * {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients, the provided
-         * {@code ExecutorFactory}, and the provided {@code WorkerFactory}.
+         * Constructs a {@code PacketRelay} with the provided server
+         * {@code DatagramSocket}, the provided {@code ExecutorFactory} used
+         * for creating an {@code Executor} to execute the
+         * {@code ReceivingPacketRelay} and the {@code SendingPacketRelay},
+         * the provided {@code ExecutorFactory} used for creating an
+         * {@code Executor} to execute {@code Worker}s, and the provided
+         * {@code WorkerFactory} used for creating {@code Worker}s.
          *
-         * @param serverSock the provided {@code DatagramSocket} that receives
-         *                   {@code DatagramPacket}s from clients and sends
-         *                   {@code DatagramPacket}s to clients
-         * @param factory1   the provided {@code ExecutorFactory}
-         * @param factory2   the provided {@code WorkerFactory}
+         * @param serverSock                  the provided server
+         *                                    {@code DatagramSocket}
+         * @param twoThreadExecutorFactory    the provided
+         *                                    {@code ExecutorFactory} used for
+         *                                    creating an {@code Executor} to
+         *                                    execute the
+         *                                    {@code ReceivingPacketRelay} and
+         *                                    the {@code SendingPacketRelay}
+         * @param multiThreadsExecutorFactory the provided
+         *                                    {@code ExecutorFactory} used for
+         *                                    creating an {@code Executor} to
+         *                                    execute {@code Worker}s
+         * @param factory                     the provided
+         *                                    {@code WorkerFactory} used for
+         *                                    creating {@code Worker}s
          */
-        public Listener(
+        public PacketRelay(
                 final DatagramSocket serverSock,
-                final ExecutorFactory factory1,
-                final WorkerFactory factory2) {
-            this.executorFactory = factory1;
-            this.logger = LoggerFactory.getLogger(Listener.class);
+                final ExecutorFactory twoThreadExecutorFactory,
+                final ExecutorFactory multiThreadsExecutorFactory,
+                final WorkerFactory factory) {
+            this.doubleThreadExecutorFactory = twoThreadExecutorFactory;
+            this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
+            this.packets = new Packets();
             this.serverSocket = serverSock;
-            this.workerFactory = factory2;
+            this.workerFactory = factory;
         }
 
-        @Override
         public void run() {
-            ExecutorService executor = this.executorFactory.newExecutor();
+            ExecutorService executor =
+                    this.doubleThreadExecutorFactory.newExecutor();
             try {
-                while (true) {
-                    try {
-                        byte[] buffer = new byte[BUFFER_SIZE];
-                        DatagramPacket packet = new DatagramPacket(
-                                buffer, buffer.length);
-                        this.serverSocket.receive(packet);
-                        executor.execute(
-                                this.workerFactory.newWorker(
-                                        this.serverSocket, packet));
-                    } catch (SocketException e) {
-                        // closed by DatagramTestServer.stop()
-                        break;
-                    } catch (IOException e) {
-                        this.logger.warn(String.format(
-                                        "%s: An error occurred in waiting for a UDP packet",
-                                        this.getClass().getSimpleName()),
-                                e);
-                        break;
-                    }
-                }
+                executor.execute(new ReceivingPacketRelay(
+                        this.serverSocket,
+                        this.multipleThreadsExecutorFactory,
+                        this.packets,
+                        this.workerFactory));
+                executor.execute(new SendingPacketRelay(
+                        this.serverSocket, this.packets));
+                do {
+                    ThreadHelper.interruptibleSleepForThreeSeconds();
+                } while (!this.serverSocket.isClosed());
             } finally {
                 executor.shutdownNow();
             }
@@ -316,9 +508,182 @@ public final class DatagramTestServer {
     }
 
     /**
-     * Performs work on the {@code DatagramPacket} from the client.
+     * An {@code Object} of queues: queues of received {@code DatagramPacket}s
+     * with each queue associated with a client's {@code SocketAddress} and a
+     * queue of sendable {@code DatagramPacket} to the clients.
      */
-    public static abstract class Worker implements Runnable {
+    private static final class Packets {
+
+        /**
+         * The {@code ReentrantLock} for controlling thread access to the
+         * {@code Map} of queues of received {@code DatagramPacket}s with each
+         * queue associated with a client's {@code SocketAddress}.
+         */
+        private final ReentrantLock receivedPacketListMapLock;
+
+        /**
+         * The {@code Map} of queues of received {@code DatagramPacket}s with
+         * each queue associated with a client's {@code SocketAddress}.
+         */
+        private final Map<SocketAddress, List<DatagramPacket>> receivedPacketListMap;
+
+        /**
+         * The queue of sendable {@code DatagramPacket}s to the clients.
+         */
+        private final List<DatagramPacket> sendablePacketList;
+
+        /**
+         * The {@code ReentrantLock} for controlling thread access to the
+         * queue of sendable {@code DatagramPacket}s to the clients.
+         */
+        private final ReentrantLock sendablePacketListLock;
+
+        /**
+         * Constructs a {@code Packets}.
+         */
+        public Packets() {
+            this.receivedPacketListMapLock = new ReentrantLock();
+            this.receivedPacketListMap = new HashMap<>();
+            this.sendablePacketList = new ArrayList<>();
+            this.sendablePacketListLock = new ReentrantLock();
+        }
+
+        /**
+         * Adds to the tail of the queue of received {@code DatagramPacket}s
+         * from the client the provided received {@code DatagramPacket} from
+         * the client. If the queue of received {@code DatagramPacket}s from
+         * the client does not exist, one will be created with the provided
+         * received {@code DatagramPacket} added.
+         *
+         * @param packet the provided received {@code DatagramPacket} from the
+         *               client
+         */
+        public void addReceived(final DatagramPacket packet) {
+            SocketAddress socketAddress = packet.getSocketAddress();
+            this.receivedPacketListMapLock.lock();
+            try {
+                if (!this.hasReceivedFrom(socketAddress)) {
+                    List<DatagramPacket> list = new ArrayList<>();
+                    list.add(0, packet);
+                    this.receivedPacketListMap.put(socketAddress, list);
+                } else {
+                    this.receivedPacketListMap.get(socketAddress).add(
+                            0, packet);
+                }
+            } finally {
+                this.receivedPacketListMapLock.unlock();
+            }
+        }
+
+        /**
+         * Adds to the tail of the queue of sendable {@code DatagramPacket}s
+         * to the clients the provided sendable {@code DatagramPacket} to the
+         * client.
+         *
+         * @param packet the provided sendable {@code DatagramPacket} to the
+         *               client
+         */
+        public void addSendable(final DatagramPacket packet) {
+            this.sendablePacketListLock.lock();
+            try {
+                this.sendablePacketList.add(0, packet);
+            } finally {
+                this.sendablePacketListLock.unlock();
+            }
+        }
+
+        /**
+         * Returns the {@code boolean} value to indicate if this
+         * {@code Packets} has a received {@code DatagramPacket} from the
+         * client based on the provided client's {@code SocketAddress}.
+         *
+         * @param socketAddress the provided client's {@code SocketAddress}
+         * @return the {@code boolean} value to indicate if this
+         * {@code Packets} has a received {@code DatagramPacket} from the
+         * client based on the provided client's {@code SocketAddress}
+         */
+        public boolean hasReceivedFrom(final SocketAddress socketAddress) {
+            this.receivedPacketListMapLock.lock();
+            try {
+                return this.receivedPacketListMap.containsKey(socketAddress)
+                        && !this.receivedPacketListMap.get(socketAddress).isEmpty();
+            } finally {
+                this.receivedPacketListMapLock.unlock();
+            }
+        }
+
+        /**
+         * Returns a received {@code DatagramPacket} from the client based on
+         * the provided client's {@code SocketAddress} and removes it from the
+         * head of the queue of received {@code DatagramPacket}s from the
+         * client. A {@code NoSuchElementException} is thrown if there are no
+         * received {@code DatagramPacket}s from the client at this time.
+         *
+         * @return a received {@code DatagramPacket} from the client based on
+         * the client's {@code SocketAddress}
+         */
+        public DatagramPacket removeReceived(
+                final SocketAddress socketAddress) {
+            this.receivedPacketListMapLock.lock();
+            try {
+                if (this.hasReceivedFrom(socketAddress)) {
+                    List<DatagramPacket> list =
+                            this.receivedPacketListMap.get(socketAddress);
+                    return list.remove(list.size() - 1);
+                }
+            } finally {
+                this.receivedPacketListMapLock.unlock();
+            }
+            throw new NoSuchElementException();
+        }
+
+        /**
+         * Removes from this {@code Packets} the queue of received
+         * {@code DatagramPacket}s from the client based on the provided
+         * client's {@code SocketAddress}.
+         *
+         * @param socketAddress the provided client's {@code SocketAddress}
+         */
+        public void removeReceivedQueue(final SocketAddress socketAddress) {
+            this.receivedPacketListMapLock.lock();
+            try {
+                if (this.receivedPacketListMap.containsKey(socketAddress)) {
+                    this.receivedPacketListMap.get(socketAddress).clear();
+                    this.receivedPacketListMap.remove(socketAddress);
+                }
+            } finally {
+                this.receivedPacketListMapLock.unlock();
+            }
+        }
+
+        /**
+         * Returns a sendable {@code DatagramPacket} to the client and removes
+         * it from the head of the queue of sendable {@code DatagramPacket}s
+         * to the clients. A {@code NoSuchElementException} is thrown if there
+         * are no sendable {@code DatagramPacket}s to the client at this time.
+         *
+         * @return a sendable {@code DatagramPacket} to the client
+         */
+        public DatagramPacket removeSendable() {
+            this.sendablePacketListLock.lock();
+            try {
+                if (!this.sendablePacketList.isEmpty()) {
+                    return this.sendablePacketList.remove(
+                            this.sendablePacketList.size() - 1);
+                }
+            } finally {
+                this.sendablePacketListLock.unlock();
+            }
+            throw new NoSuchElementException();
+        }
+
+    }
+
+    /**
+     * Receives a {@code DatagramPacket} from the client and sends them to a
+     * {@code Worker}.
+     */
+    private static final class ReceivingPacketRelay implements Runnable {
 
         /**
          * The {@code Logger}.
@@ -326,92 +691,230 @@ public final class DatagramTestServer {
         private final Logger logger;
 
         /**
-         * The {@code DatagramPacket} from the client.
+         * The {@code ExecutorFactory} used for creating an {@code Executor} to
+         * execute {@code Worker}s.
          */
-        private final DatagramPacket packet;
+        private final ExecutorFactory multipleThreadsExecutorFactory;
 
         /**
-         * The {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients.
+         * The {@code Packets}.
          */
-        private DatagramSocket serverSocket;
+        private final Packets packets;
 
         /**
-         * Constructs a {@code Worker} with the provided
-         * {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients and the
-         * provided {@code DatagramPacket} from the client.
+         * The server {@code DatagramSocket}.
+         */
+        private final DatagramSocket serverSocket;
+
+        /**
+         * The {@code WorkerFactory} used for creating {@code Worker}s.
+         */
+        private final WorkerFactory workerFactory;
+
+        /**
+         * Constructs a {@code ReceivingPacketRelay} with the provided server
+         * {@code DatagramSocket}, the provided {@code ExecutorFactory} used
+         * for creating an {@code Executor} to execute {@code Worker}s, the
+         * provided {@code Packets}, and the provided
+         * {@code WorkerFactory} used for creating {@code Worker}s.
          *
-         * @param serverSock the provided {@code DatagramSocket} that receives
-         *                   {@code DatagramPacket}s from clients and sends
-         *                   {@code DatagramPacket}s to clients
-         * @param pckt       the provided {@code DatagramPacket} from the client
+         * @param serverSock                  the provided server
+         *                                    {@code DatagramSocket}
+         * @param multiThreadsExecutorFactory the provided
+         *                                    {@code ExecutorFactory} used for
+         *                                    creating an {@code Executor} to
+         *                                    execute {@code Worker}s
+         * @param queues                      the provided {@code Packets}
+         * @param factory                     the provided
+         *                                    {@code WorkerFactory} used for
+         *                                    creating {@code Worker}s
          */
-        public Worker(
+        public ReceivingPacketRelay(
                 final DatagramSocket serverSock,
-                final DatagramPacket pckt) {
-            this.logger = LoggerFactory.getLogger(Worker.class);
-            this.packet = pckt;
+                final ExecutorFactory multiThreadsExecutorFactory,
+                final Packets queues,
+                final WorkerFactory factory) {
+            this.logger = LoggerFactory.getLogger(ReceivingPacketRelay.class);
+            this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
+            this.packets = queues;
+            this.serverSocket = serverSock;
+            this.workerFactory = factory;
+        }
+
+        @Override
+        public void run() {
+            ExecutorService executor =
+                    this.multipleThreadsExecutorFactory.newExecutor();
+            try {
+                while (true) {
+                    try {
+                        byte[] buffer = new byte[RECEIVE_BUFFER_SIZE];
+                        DatagramPacket receivedPacket = new DatagramPacket(
+                                buffer, buffer.length);
+                        this.serverSocket.receive(receivedPacket);
+                        if (this.packets.hasReceivedFrom(
+                                receivedPacket.getSocketAddress())) {
+                            this.packets.addReceived(receivedPacket);
+                        } else {
+                            this.packets.addReceived(receivedPacket);
+                            Worker worker = this.workerFactory.newWorker(
+                                    new ClientPackets(
+                                            receivedPacket.getSocketAddress(),
+                                            this.packets));
+                            executor.execute(worker);
+                        }
+                    } catch (SocketException e) {
+                        // closed by DatagramTestServer.stop()
+                        break;
+                    } catch (IOException e) {
+                        if (!isOrHasInstanceOfDtlsDatagramSocketConnectionClosedException(e)) {
+                            this.logger.warn(String.format(
+                                            "%s: An exception occurred in " +
+                                                    "waiting for a UDP packet",
+                                            this.getClass().getSimpleName()),
+                                    e);
+                        }
+                    }
+                }
+            } finally {
+                executor.shutdownNow();
+            }
+        }
+    }
+
+    /**
+     * Sends {@code DatagramPacket}s from the {@code Worker}s to the clients.
+     */
+    private static final class SendingPacketRelay implements Runnable {
+
+        /**
+         * The {@code Logger}.
+         */
+        private final Logger logger;
+
+        /**
+         * The {@code Packets}.
+         */
+        private final Packets packets;
+
+        /**
+         * The server {@code DatagramSocket}.
+         */
+        private final DatagramSocket serverSocket;
+
+        /**
+         * Constructs a {@code SendingPacketRelay} with the provided server
+         * {@code DatagramSocket} and the provided {@code Packets}.
+         *
+         * @param serverSock the provided server {@code DatagramSocket}
+         * @param queues     the provided {@code Packets}
+         */
+        public SendingPacketRelay(
+                final DatagramSocket serverSock, final Packets queues) {
+            this.logger = LoggerFactory.getLogger(SendingPacketRelay.class);
+            this.packets = queues;
             this.serverSocket = serverSock;
         }
 
-        /**
-         * Performs the work on the {@code DatagramPacket} from the client.
-         *
-         * @throws IOException if there is an error in handing the
-         *                     {@code DatagramPacket} from the client
-         */
-        protected abstract void doWork() throws IOException;
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    DatagramPacket sentPacket;
+                    try {
+                        sentPacket = this.packets.removeSendable();
+                    } catch (NoSuchElementException e) {
+                        continue;
+                    }
+                    this.serverSocket.send(sentPacket);
+                } catch (SocketException e) {
+                    // closed by DatagramTestServer.stop()
+                    break;
+                } catch (IOException e) {
+                    if (!isOrHasInstanceOfDtlsDatagramSocketConnectionClosedException(e)) {
+                        this.logger.warn(String.format(
+                                        "%s: An exception occurred in "
+                                                + "sending a UDP packet",
+                                        this.getClass().getSimpleName()),
+                                e);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * A factory that creates server {@code DatagramSocket}s.
+     */
+    public static abstract class ServerDatagramSocketFactory {
 
         /**
-         * Returns the {@code DatagramPacket} from the client.
-         *
-         * @return the {@code DatagramPacket} from the client
+         * Allows the construction of subclass instances.
          */
-        protected final DatagramPacket getPacket() {
-            return this.packet;
+        public ServerDatagramSocketFactory() {
         }
 
         /**
-         * Returns the {@code DatagramSocket} that receives
-         * {@code DatagramPacket}s from clients and sends
-         * {@code DatagramPacket}s to clients.
+         * Returns a new server {@code DatagramSocket} with the provided
+         * specified port and the provided binding {@code InetAddress}.
          *
-         * @return the {@code DatagramSocket} that receives
-         * {@code DatagramPacket}s from clients and sends
-         * {@code DatagramPacket}s to clients
+         * @param port            the provided specified port
+         * @param bindInetAddress the provided binding {@code InetAddress}
+         * @return a new server {@code DatagramSocket} with the provided
+         * specified port and the provided binding {@code InetAddress}
+         * @throws SocketException if there is an error in creating the
+         *                         server {@code DatagramSocket}
          */
-        protected final DatagramSocket getServerSocket() {
-            return this.serverSocket;
+        public abstract DatagramSocket newServerDatagramSocket(
+                final int port,
+                final InetAddress bindInetAddress) throws SocketException;
+
+    }
+
+    /**
+     * Performs work on the received {@code DatagramPacket}s from the client
+     * and provides if any to the client sendable {@code DatagramPacket}s.
+     */
+    public static abstract class Worker implements Runnable {
+
+        /**
+         * The {@code ClientPackets}.
+         */
+        private final ClientPackets clientPackets;
+
+        /**
+         * Constructs a {@code Worker} with the provided {@code ClientPackets}.
+         *
+         * @param clientPckts the provided {@code ClientPackets}
+         */
+        public Worker(final ClientPackets clientPckts) {
+            this.clientPackets = clientPckts;
+        }
+
+        /**
+         * Performs work on the received {@code DatagramPacket}s from the
+         * client.
+         */
+        protected abstract void doWork();
+
+        /**
+         * Returns the {@code ClientPackets}.
+         *
+         * @return the {@code ClientPackets}
+         */
+        protected final ClientPackets getClientPackets() {
+            return this.clientPackets;
         }
 
         @Override
         public final void run() {
             try {
                 this.doWork();
-            } catch (SocketException ignored) {
-                // closed by DatagramTestServer.stop()
-            } catch (IOException e) {
-                this.logger.warn(String.format(
-                                "%s: %s",
-                                this.getClass().getSimpleName(),
-                                e),
-                        e);
+            } finally {
+                if (!this.clientPackets.isClosed()) {
+                    this.clientPackets.close();
+                }
             }
-        }
-
-        /**
-         * Sets the {@code DatagramSocket} that receives
-         * {@code DatagramPacket}s from clients and sends
-         * {@code DatagramPacket}s to clients with the provided
-         * {@code DatagramSocket}. This method is for setting the
-         * {@code DatagramSocket} with a wrapped {@code DatagramSocket} of
-         * the other.
-         *
-         * @param serverSock the provided {@code DatagramSocket}
-         */
-        protected final void setServerSocket(final DatagramSocket serverSock) {
-            this.serverSocket = serverSock;
         }
 
     }
@@ -429,21 +932,12 @@ public final class DatagramTestServer {
 
         /**
          * Returns a new {@code Worker} with the provided
-         * {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients and the
-         * provided {@code DatagramPacket} from the client.
+         * {@code ClientPackets}.
          *
-         * @param serverSocket the provided {@code DatagramSocket} that receives
-         *                     {@code DatagramPacket}s from clients and sends
-         *                     {@code DatagramPacket}s to clients
-         * @param packet       the provided {@code DatagramPacket} from the client
-         * @return a new {@code Worker} with the provided
-         * {@code DatagramSocket} that receives {@code DatagramPacket}s from
-         * clients and sends {@code DatagramPacket}s to clients and the
-         * provided {@code DatagramPacket} from the client
+         * @param clientPckts the provided {@code ClientPackets}
+         * @return a new {@code Worker} with the provided {@code ClientPackets}
          */
-        public abstract Worker newWorker(
-                final DatagramSocket serverSocket, final DatagramPacket packet);
+        public abstract Worker newWorker(final ClientPackets clientPckts);
 
     }
 

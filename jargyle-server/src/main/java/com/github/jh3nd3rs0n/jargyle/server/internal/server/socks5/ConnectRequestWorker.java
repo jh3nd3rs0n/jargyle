@@ -69,7 +69,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 		try {
 			socketSettings.applyTo(targetFacingSocket);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the target-facing socket"), 
 					e);
@@ -391,7 +391,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 					bindInetAddress, 
 					bindPort.intValue());
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the target-facing "
@@ -406,7 +406,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			}
 			if (ThrowableHelper.isOrHasInstanceOf(
 					e, UnknownHostException.class)) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in creating the target-facing "
@@ -417,7 +417,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			}
 			if (ThrowableHelper.isOrHasInstanceOf(
 					e, SocketException.class)) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in connecting the target-facing "
@@ -426,7 +426,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 				this.sendReply(Reply.newFailureInstance(ReplyCode.NETWORK_UNREACHABLE));
 				return null;						
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in connecting the target-facing "
@@ -464,7 +464,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			}
 		}
 		if (!targetFacingSocketBound) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the target-facing socket to the "
@@ -519,7 +519,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 				}
 				throw new SocketException();
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in binding the target-facing "
@@ -551,7 +551,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			}
 			if (ThrowableHelper.isOrHasInstanceOf(
 					e, SocketException.class)) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in connecting the target-facing "
@@ -565,7 +565,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 				}						
 				return null;						
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in connecting the target-facing "
@@ -607,7 +607,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			}
 		}
 		if (!targetFacingSocketBound) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the target-facing socket to the "
@@ -627,7 +627,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 		try {
 			bindInetAddress = targetFacingBindHost.toInetAddress();
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the target-facing socket to the "
@@ -655,7 +655,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			desiredDestinationInetAddress = hostResolver.resolve(
 					desiredDestinationAddress);
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to resolve the desired destination "
@@ -667,7 +667,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 		} catch (IOException e) {
 			if (ThrowableHelper.isOrHasInstanceOf(
 					e, UnknownHostException.class)) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Unable to resolve the desired destination "
@@ -677,7 +677,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 				this.sendReply(Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return null;				
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in resolving the desired destination "
@@ -712,7 +712,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			Rule applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
 			if (applicableRule == null) {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",
@@ -744,7 +744,7 @@ final class ConnectRequestWorker extends TcpBasedRequestWorker {
 			try {
 				this.passData(relay);				
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting to pass data"), 
 						e);

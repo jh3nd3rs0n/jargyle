@@ -68,7 +68,12 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
 					<systemPropertyVariables>
-						<jdk.virtualThreadScheduler.parallelism>10</jdk.virtualThreadScheduler.parallelism>
+						<!--
+						<com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
+						-->
+						<!-- -->
+						<jdk.virtualThreadScheduler.parallelism>20</jdk.virtualThreadScheduler.parallelism>
+						<!-- -->
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>

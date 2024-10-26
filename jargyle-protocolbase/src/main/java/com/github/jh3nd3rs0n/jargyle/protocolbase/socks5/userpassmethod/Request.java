@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
+import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.internal.UnsignedByteIoHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Socks5Exception;
 
@@ -130,7 +131,7 @@ public final class Request {
         UnsignedByte ulen = UnsignedByteIoHelper.readUnsignedByteFrom(in);
         byte[] bytes = new byte[ulen.intValue()];
         if (ulen.intValue() > 0) {
-            int bytesRead = in.read(bytes);
+            int bytesRead = InputStreamHelper.continuouslyReadFrom(in, bytes);
             if (ulen.intValue() != bytesRead) {
                 throw new Socks5Exception(String.format(
                         "expected username length is %s byte(s). "
@@ -143,7 +144,7 @@ public final class Request {
         UnsignedByte plen = UnsignedByteIoHelper.readUnsignedByteFrom(in);
         bytes = new byte[plen.intValue()];
         if (plen.intValue() > 0) {
-            int bytesRead = in.read(bytes);
+            int bytesRead = InputStreamHelper.continuouslyReadFrom(in, bytes);
             if (plen.intValue() != bytesRead) {
                 throw new Socks5Exception(String.format(
                         "expected password length is %s byte(s). "

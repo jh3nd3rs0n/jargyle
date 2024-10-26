@@ -53,13 +53,13 @@ public class FileSourceUserRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_USERS_FILE.getContentAsString(),
 				usrsFile);
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */
 		usrsFile.setLastModified(System.currentTimeMillis());
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		final int userCount = 3; 
 		assertTrue(this.fileSourceUserRepository.getAll().toMap().size() == userCount);
 	}
@@ -76,13 +76,13 @@ public class FileSourceUserRepositoryTest {
 		IoHelper.writeStringToFile(
 				TestResourceConstants.JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_ADDED_USER_TO_USERS_FILE.getContentAsString(),
 				usrsFile);
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		/* 
 		 * get FileMonitor to recognize file has been modified if it hasn't already
 		 * (occurs intermittently in Windows) 
 		 */		
 		usrsFile.setLastModified(System.currentTimeMillis());
-		ThreadHelper.interruptableSleepForThreeSeconds();
+		ThreadHelper.interruptibleSleepForThreeSeconds();
 		final int userCount = 4; 
 		assertTrue(this.fileSourceUserRepository.getAll().toMap().size() == userCount);
 	}

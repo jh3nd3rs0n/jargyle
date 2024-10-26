@@ -143,6 +143,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketInetAddressInt01() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -178,6 +179,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketInetAddressIntInetAddressInt01() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -204,6 +206,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketInetAddressIntInetAddressInt02() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -253,6 +256,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketStringInt01() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -277,6 +281,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketStringInt02() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -313,6 +318,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketStringIntInetAddressInt01() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -339,6 +345,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketStringIntInetAddressInt02() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -364,6 +371,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketStringIntInetAddressInt03() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());
@@ -392,6 +400,7 @@ public class DefaultNetObjectFactoryTest {
     @Test
     public void testNewSocketStringIntInetAddressInt04() throws IOException {
         TestServer testServer = new TestServer(
+                new TestServer.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new TestServer.DefaultWorkerFactory());

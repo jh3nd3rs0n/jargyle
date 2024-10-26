@@ -58,7 +58,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 		try {
 			inboundSocket = listenSocket.accept();
 		} catch (IOException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in waiting for an inbound socket"), 
@@ -154,7 +154,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 		try {
 			socketSettings.applyTo(inboundSocket);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
@@ -170,7 +170,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 		try {
 			socketSettings.applyTo(listenSocket);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the listen socket"), 
 					e);
@@ -531,7 +531,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			try {
 				bindInetAddress = listenBindHost.toInetAddress();
 			} catch (UnknownHostException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Unable to bind the listen socket to the "
@@ -568,7 +568,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			}
 		}
 		if (!listenSocketBound) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the listen socket to the "
@@ -591,7 +591,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 		try {
 			listenSocket = netObjectFactory.newServerSocket();
 		} catch (IOException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the listen socket"), 
@@ -627,7 +627,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 				}
 				throw new BindException();
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in binding the listen socket"), 
@@ -667,7 +667,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			desiredDestinationInetAddress = hostResolver.resolve(
 					desiredDestinationAddress);
 		} catch (UnknownHostException e) {
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to resolve the desired destination "
@@ -679,7 +679,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 		} catch (IOException e) {
 			if (ThrowableHelper.isOrHasInstanceOf(
 					e, UnknownHostException.class)) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Unable to resolve the desired destination "
@@ -689,7 +689,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 				this.sendReply(Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return null;				
 			}
-			this.logger.error( 
+			this.logger.warn( 
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in resolving the desired destination "
@@ -725,7 +725,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			Rule applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
 			if (applicableRule == null) {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",
@@ -745,7 +745,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			try {
 				listenSocket.close();
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in closing the listen socket"), 
 						e);
@@ -771,7 +771,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			applicableRule = this.getRules().firstAppliesTo(
 					this.getRuleContext());
 			if (applicableRule == null) {
-				this.logger.error(ObjectLogMessageHelper.objectLogMessage(
+				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
 						this, 
 						"No applicable rule found based on the following "
 						+ "context: %s",
@@ -797,7 +797,7 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 			try {
 				this.passData(relay);
 			} catch (IOException e) {
-				this.logger.error( 
+				this.logger.warn( 
 						ObjectLogMessageHelper.objectLogMessage(
 								this, "Error in starting to pass data"), 
 						e);				

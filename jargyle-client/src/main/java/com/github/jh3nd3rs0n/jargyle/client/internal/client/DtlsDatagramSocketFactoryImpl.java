@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
@@ -100,9 +101,12 @@ final class DtlsDatagramSocketFactoryImpl extends DtlsDatagramSocketFactory {
 			dtlsDatagramSocket.setEnabledProtocols(
 					enabledProtocols.toArray());
 		}
-		PositiveInteger maxPacketSize = this.properties.getValue(
-				DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE);
-		dtlsDatagramSocket.setMaximumPacketSize(maxPacketSize.intValue());
+		PositiveInteger wrappedReceiveBufferSize = this.properties.getValue(
+				DtlsPropertySpecConstants.DTLS_WRAPPED_RECEIVE_BUFFER_SIZE);
+		if (wrappedReceiveBufferSize != null) {
+			dtlsDatagramSocket.setWrappedReceiveBufferSize(
+					wrappedReceiveBufferSize.intValue());
+		}
 		return dtlsDatagramSocket;
 	}
 

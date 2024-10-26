@@ -87,10 +87,6 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_MAX_PACKET_SIZE, 
-				new SettingToPropertyConverter(
-						DtlsPropertySpecConstants.DTLS_MAX_PACKET_SIZE));
-		SETTING_CONVERTER_MAP.put(
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_PROTOCOL, 
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_PROTOCOL));
@@ -110,6 +106,10 @@ public final class Routes {
 				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_TRUST_STORE_TYPE, 
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_TRUST_STORE_TYPE));
+		SETTING_CONVERTER_MAP.put(
+				ChainingDtlsSettingSpecConstants.CHAINING_DTLS_WRAPPED_RECEIVE_BUFFER_SIZE,
+				new SettingToPropertyConverter(
+						DtlsPropertySpecConstants.DTLS_WRAPPED_RECEIVE_BUFFER_SIZE));
 		SETTING_CONVERTER_MAP.put(
 				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_BIND_HOST, 
 				new SettingToPropertyConverter(

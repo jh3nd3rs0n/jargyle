@@ -6,11 +6,14 @@ import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
+import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
@@ -30,26 +33,26 @@ import static org.junit.Assert.assertEquals;
 
 public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMethodIT {
 
-    private static DatagramEchoServer datagramEchoServer;
-    private static int datagramEchoServerPort;
-    private static EchoServer echoServer;
-    private static int echoServerPort;
+    private static DatagramTestServer echoDatagramTestServer;
+    private static int echoDatagramTestServerPort;
+    private static TestServer echoTestServer;
+    private static int echoTestServerPort;
 
     private static List<SocksServer> socksServersUsingSocks5UserpassMethod;
-    private static int socksServerPort1UsingSocks5Userpassmethod;
-    private static int socksServerPort2UsingSocks5Userpassmethod;
-    private static int socksServerPort3UsingSocks5Userpassmethod;
+    private static int socksServerPort1UsingSocks5UserpassMethod;
+    private static int socksServerPort2UsingSocks5UserpassMethod;
+    private static int socksServerPort3UsingSocks5UserpassMethod;
 
     @Rule
     public Timeout globalTimeout = Timeout.builder()
-            .withTimeout(5, TimeUnit.SECONDS)
+            .withTimeout(60, TimeUnit.SECONDS)
             .withLookingForStuckThread(true)
             .build();
 
     private static SocksClient newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod() {
         SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        socksServerPort1UsingSocks5Userpassmethod)
+                        socksServerPort1UsingSocks5UserpassMethod)
                 .newSocksClient(Properties.of(
                         Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                 Methods.of(Method.USERNAME_PASSWORD)),
@@ -60,7 +63,7 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                                         "opensesame".toCharArray()))));
         SocksClient client2 = Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        socksServerPort2UsingSocks5Userpassmethod)
+                        socksServerPort2UsingSocks5UserpassMethod)
                 .newSocksClient(Properties.of(
                                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                         Methods.of(Method.USERNAME_PASSWORD)),
@@ -72,7 +75,7 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                         client1);
         return Scheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        socksServerPort3UsingSocks5Userpassmethod)
+                        socksServerPort3UsingSocks5UserpassMethod)
                 .newSocksClient(Properties.of(
                                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                                         Methods.of(Method.USERNAME_PASSWORD)),
@@ -95,9 +98,11 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                         Methods.of(Method.USERNAME_PASSWORD)),
                 Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
                         UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
-                                "Aladdin:opensesame")))));
+                                "Aladdin:opensesame")),
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+                        PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
         socksServer1.start();
-        socksServerPort1UsingSocks5Userpassmethod = socksServer1.getPort().intValue();
+        socksServerPort1UsingSocks5UserpassMethod = socksServer1.getPort().intValue();
         socksServerList.add(socksServer1);
         SocksServer socksServer2 = new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
@@ -108,9 +113,11 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                         Methods.of(Method.USERNAME_PASSWORD)),
                 Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
                         UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
-                                "Jasmine:mission%3Aimpossible")))));
+                                "Jasmine:mission%3Aimpossible")),
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+                        PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
         socksServer2.start();
-        socksServerPort2UsingSocks5Userpassmethod = socksServer2.getPort().intValue();
+        socksServerPort2UsingSocks5UserpassMethod = socksServer2.getPort().intValue();
         socksServerList.add(socksServer2);
         SocksServer socksServer3 = new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
@@ -121,150 +128,180 @@ public class EchoThroughChainedSocks5ClientToSocksServersUsingSocks5UserpassMeth
                         Methods.of(Method.USERNAME_PASSWORD)),
                 Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
                         UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
-                                "Abu:safeDriversSave40%25")))));
+                                "Abu:safeDriversSave40%25")),
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+                        PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
         socksServer3.start();
-        socksServerPort3UsingSocks5Userpassmethod = socksServer3.getPort().intValue();
+        socksServerPort3UsingSocks5UserpassMethod = socksServer3.getPort().intValue();
         socksServerList.add(socksServer3);
         return socksServerList;
     }
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        datagramEchoServer = new DatagramEchoServer(0);
-        datagramEchoServer.start();
-        datagramEchoServerPort = datagramEchoServer.getPort();
-        echoServer = new EchoServer(0);
-        echoServer.start();
-        echoServerPort = echoServer.getPort();
+        echoDatagramTestServer = EchoDatagramTestServerHelper.newEchoDatagramTestServer(0);
+        echoDatagramTestServer.start();
+        echoDatagramTestServerPort = echoDatagramTestServer.getPort();
+        echoTestServer = EchoTestServerHelper.newEchoTestServer(0);
+        echoTestServer.start();
+        echoTestServerPort = echoTestServer.getPort();
         socksServersUsingSocks5UserpassMethod =
                 newSocksServersUsingSocks5UserpassMethod();
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        if (datagramEchoServer != null
-                && !datagramEchoServer.getState().equals(DatagramEchoServer.State.STOPPED)) {
-            datagramEchoServer.stop();
+        if (echoDatagramTestServer != null
+                && !echoDatagramTestServer.getState().equals(DatagramTestServer.State.STOPPED)) {
+            echoDatagramTestServer.stop();
         }
-        if (echoServer != null
-                && !echoServer.getState().equals(EchoServer.State.STOPPED)) {
-            echoServer.stop();
+        if (echoTestServer != null
+                && !echoTestServer.getState().equals(TestServer.State.STOPPED)) {
+            echoTestServer.stop();
         }
         if (socksServersUsingSocks5UserpassMethod != null) {
             stopSocksServers(socksServersUsingSocks5UserpassMethod);
         }
-        ThreadHelper.interruptableSleepForThreeSeconds();
+        ThreadHelper.interruptibleSleepForThreeSeconds();
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod01() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod01() throws IOException {
+        EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_01;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod02() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod02() throws IOException {
+        EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_02;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod03() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod03() throws IOException {
+        EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_03;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod04() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod04() throws IOException {
+        EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_04;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod01() throws IOException {
-        EchoClient echoClient = new EchoClient(
+    public void testEchoDatagramTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod05() throws IOException {
+        EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+                newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
+        String string = TestStringConstants.STRING_05;
+        String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+        assertEquals(string, returningString);
+    }
+
+    @Test
+    public void testEchoTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod01() throws IOException {
+        EchoTestClient echoTestClient = new EchoTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_01;
-        String returningString = echoClient.echo(string, echoServerPort);
+        String returningString = echoTestClient.echo(string, echoTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod02() throws IOException {
-        EchoClient echoClient = new EchoClient(
+    public void testEchoTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod02() throws IOException {
+        EchoTestClient echoTestClient = new EchoTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_02;
-        String returningString = echoClient.echo(string, echoServerPort);
+        String returningString = echoTestClient.echo(string, echoTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod03() throws IOException {
-        EchoClient echoClient = new EchoClient(
+    public void testEchoTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod03() throws IOException {
+        EchoTestClient echoTestClient = new EchoTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_03;
-        String returningString = echoClient.echo(string, echoServerPort);
+        String returningString = echoTestClient.echo(string, echoTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod04() throws IOException {
-        EchoClient echoClient = new EchoClient(
+    public void testEchoTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod04() throws IOException {
+        EchoTestClient echoTestClient = new EchoTestClient(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
         String string = TestStringConstants.STRING_04;
-        String returningString = echoClient.echo(string, echoServerPort);
+        String returningString = echoTestClient.echo(string, echoTestServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod01() throws IOException {
-        EchoServer echServer = new EchoServer(
+    public void testEchoTestClientUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod05() throws IOException {
+        EchoTestClient echoTestClient = new EchoTestClient(
+                newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory());
+        String string = TestStringConstants.STRING_05;
+        String returningString = echoTestClient.echo(string, echoTestServerPort);
+        assertEquals(string, returningString);
+    }
+
+    @Test
+    public void testEchoTestServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod01() throws IOException {
+        TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_01;
-        String returningString = EchoServerHelper.startThenEchoThenStop(
-                echServer, new EchoClient(), string);
+        String returningString = EchoTestServerHelper.startThenEchoThenStop(
+                echTestServer, new EchoTestClient(), string);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod02() throws IOException {
-        EchoServer echServer = new EchoServer(
+    public void testEchoTestServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod02() throws IOException {
+        TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_02;
-        String returningString = EchoServerHelper.startThenEchoThenStop(
-                echServer, new EchoClient(), string);
+        String returningString = EchoTestServerHelper.startThenEchoThenStop(
+                echTestServer, new EchoTestClient(), string);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod03() throws IOException {
-        EchoServer echServer = new EchoServer(
+    public void testEchoTestServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod03() throws IOException {
+        TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_03;
-        String returningString = EchoServerHelper.startThenEchoThenStop(
-                echServer, new EchoClient(), string);
+        String returningString = EchoTestServerHelper.startThenEchoThenStop(
+                echTestServer, new EchoTestClient(), string);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod04() throws IOException {
-        EchoServer echServer = new EchoServer(
+    public void testEchoTestServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod04() throws IOException {
+        TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
                 newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory(), 0);
         String string = TestStringConstants.STRING_04;
-        String returningString = EchoServerHelper.startThenEchoThenStop(
-                echServer, new EchoClient(), string);
+        String returningString = EchoTestServerHelper.startThenEchoThenStop(
+                echTestServer, new EchoTestClient(), string);
+        assertEquals(string, returningString);
+    }
+
+    @Test
+    public void testEchoTestServerUsingChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod05() throws IOException {
+        TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+                newChainedSocks5ClientToSocksServersUsingSocks5UserpassMethod().newSocksNetObjectFactory(), 0);
+        String string = TestStringConstants.STRING_04;
+        String returningString = EchoTestServerHelper.startThenEchoThenStop(
+                echTestServer, new EchoTestClient(), string);
         assertEquals(string, returningString);
     }
 

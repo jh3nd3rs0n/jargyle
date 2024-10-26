@@ -1,0 +1,74 @@
+package com.github.jh3nd3rs0n.jargyle.integration.test;
+
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+
+public final class EchoTestClient {
+	
+	private static final int SO_TIMEOUT = 60000;
+	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.of(
+			StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+					NonNegativeInteger.valueOf(SO_TIMEOUT)));
+	
+	private final NetObjectFactory netObjectFactory;
+	private final SocketSettings socketSettings;
+	
+	public EchoTestClient() {
+		this(NetObjectFactory.getDefault(), SOCKET_SETTINGS);
+	}
+	
+	public EchoTestClient(final NetObjectFactory netObjFactory) {
+		this(netObjFactory, SOCKET_SETTINGS); 
+	}
+	
+	public EchoTestClient(
+			final NetObjectFactory netObjFactory, 
+			final SocketSettings socketSttngs) {
+		this.netObjectFactory = netObjFactory;
+		this.socketSettings = socketSttngs; 
+	}
+	
+	public String echo(
+			final String string,
+			final int echoTestServerPort) throws IOException {
+		return this.echo(string, TestServer.INET_ADDRESS, echoTestServerPort);
+	}
+	
+	public String echo(
+			final String string, 
+			final InetAddress echoTestServerInetAddress,
+			final int echoTestServerPort) throws IOException {
+		Socket socket = null;
+		String returningString = null;
+		try {
+			socket = this.netObjectFactory.newSocket();
+			this.socketSettings.applyTo(socket);
+			socket.connect(new InetSocketAddress(
+					echoTestServerInetAddress, echoTestServerPort));
+			InputStream in = socket.getInputStream();
+			OutputStream out = socket.getOutputStream();
+			MeasuredIoHelper.writeThenFlush(
+					string.getBytes(StandardCharsets.UTF_8),
+					out);
+			byte[] bytes = MeasuredIoHelper.readFrom(in);
+            returningString = new String(bytes, StandardCharsets.UTF_8);
+		} finally {
+			if (socket != null) {
+				socket.close();
+			}
+		}
+		return returningString;		
+	}
+
+}

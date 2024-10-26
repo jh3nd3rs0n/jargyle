@@ -20,7 +20,7 @@ public final class ThreadHelper {
      * Causes the currently executing thread to sleep with allowed
      * interruption for 3 seconds.
      */
-    public static void interruptableSleepForThreeSeconds() {
+    public static void interruptibleSleepForThreeSeconds() {
         try {
             Thread.sleep(THREE_SECONDS);
         } catch (InterruptedException e) {

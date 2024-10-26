@@ -11,6 +11,8 @@ server chaining. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
 You can find more information about Jargyle 
 [here](https://jh3nd3rs0n.github.io/jargyle).
 
+**Warning:** Jargyle is not production ready. Breaking changes may occur.
+
 ## Contents
 
 -   [License](#license)
@@ -134,12 +136,21 @@ The aggregated test coverage reports can be found in
 The option `-Pcoverage` can be removed if you do not want the aggregated test 
 coverage reports produced.
 
+When executing the tests, the tests use only the loopback address and the 
+local port numbers assigned by the local system. However, the following 
+specified local port numbers need to be open:
+
+-   `1080`: This default port number is used for a SOCKS server set up for 
+    testing.
+-   `8000`: This port number is used for a Kerberos Key Distribution Center
+    (KDC) set up for testing.
+
 `mvn clean verify --projects=\!jargyle-performance-test,\!jargyle-distribution -Pcoverage`: 
 Performs a clean build, executes all tests including integration tests except 
 the ones from the project `jargyle-performance-test`, skips building the 
 binary distribution, and produces the aggregated test coverage reports. 
 
-The argument `\!jargyle-performance-test` for the option `--projects` can be 
+The argument `\!jargyle-performance-test,` for the option `--projects` can be 
 removed if you want the performance tests to be executed. If the performance 
 tests are executed, the results can be found in
 `jargyle-performance-test/target/performance-results/`. 
@@ -149,3 +160,14 @@ The aggregated test coverage reports can be found in
 
 The option `-Pcoverage` can be removed if you do not want the aggregated test 
 coverage reports produced.
+
+When executing the tests, the tests use only the loopback address and the
+local port numbers assigned by the local system. However, the following
+specified local port numbers need to be open:
+
+-   `1080`: This default port number is used for a SOCKS server set up for
+    testing.
+-   `8000`: This port number is used for a Kerberos Key Distribution Center
+    (KDC) set up for testing.
+-   `9000`: This port number is used for a Kerberos Key Distribution Center
+    (KDC) set up for integration testing.

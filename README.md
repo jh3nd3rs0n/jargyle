@@ -8,8 +8,10 @@ server chaining. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
 
-**Warning:** Jargyle is not production ready. Breaking changes may occur, but 
-any existing documentation will be updated to reflect the changes.
+**Warning:** Jargyle is not production ready. The user guide is complete, but
+the reference documentation and the Javadocs are incomplete. Breaking changes
+may occur, but any existing documentation will be updated to reflect the
+changes.
 
 You can find more information about Jargyle 
 [here](https://jh3nd3rs0n.github.io/jargyle).

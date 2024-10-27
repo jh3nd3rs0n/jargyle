@@ -103,10 +103,9 @@ public class DtlsDatagramSocketTest {
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
         // System.clearProperty("javax.net.debug");
-        if (echoDtlsDatagramTestServerUsingDtlsv1point2 != null) {
-            if (!echoDtlsDatagramTestServerUsingDtlsv1point2.getState().equals(DatagramTestServer.State.STOPPED)) {
-                echoDtlsDatagramTestServerUsingDtlsv1point2.stop();
-            }
+        if (echoDtlsDatagramTestServerUsingDtlsv1point2 != null
+                && !echoDtlsDatagramTestServerUsingDtlsv1point2.getState().equals(DatagramTestServer.State.STOPPED)) {
+            echoDtlsDatagramTestServerUsingDtlsv1point2.stop();
         }
     }
 

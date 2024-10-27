@@ -33,10 +33,9 @@ public class DefaultSslSocketFactoryTest {
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        if (testServer != null) {
-            if (!testServer.getState().equals(TestServer.State.STOPPED)) {
-                testServer.stop();
-            }
+        if (testServer != null
+                && !testServer.getState().equals(TestServer.State.STOPPED)) {
+            testServer.stop();
         }
         ThreadHelper.interruptibleSleepForThreeSeconds();
     }

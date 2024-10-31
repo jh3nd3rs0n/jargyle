@@ -1,7 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.performance.test;
 
-import com.github.jh3nd3rs0n.jargyle.integration.test.EchoDatagramTestClient;
-import com.github.jh3nd3rs0n.jargyle.integration.test.EchoTestClient;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoDatagramClient;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoDatagramServerHelper;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoClient;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoServerHelper;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -28,12 +30,14 @@ public class EchoIT {
     }
 
     @Test
-    public void testDatagramTestServer() throws IOException {
-        LoadTestRunnerResults results = new EchoDatagramTestServerLoadTestRunner(
+    public void testEchoDatagramServer() throws IOException {
+        LoadTestRunnerResults results = new EchoDatagramServerLoadTestRunner(
+                new EchoDatagramServerInterfaceImpl(
+                        EchoDatagramServerHelper.newEchoDatagramServer(0)),
                 null,
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
-                new EchoDatagramTestServerTestRunnerFactoryImpl(),
+                new EchoDatagramServerTestRunnerFactoryImpl(),
                 TIMEOUT)
                 .run();
         String methodName =
@@ -46,12 +50,14 @@ public class EchoIT {
     }
 
     @Test
-    public void testTestServer() throws IOException {
-        LoadTestRunnerResults results = new EchoTestServerLoadTestRunner(
+    public void testEchoServer() throws IOException {
+        LoadTestRunnerResults results = new EchoServerLoadTestRunner(
+                new EchoServerInterfaceImpl(
+                        EchoServerHelper.newEchoServer(0)),
                 null,
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
-                new EchoTestServerTestRunnerFactoryImpl(),
+                new EchoServerTestRunnerFactoryImpl(),
                 TIMEOUT)
                 .run();
         String methodName =
@@ -63,33 +69,33 @@ public class EchoIT {
         Assert.assertNotNull(results);
     }
 
-    private static final class EchoDatagramTestServerTestRunnerFactoryImpl extends EchoDatagramTestServerTestRunnerFactory {
+    private static final class EchoDatagramServerTestRunnerFactoryImpl extends EchoDatagramServerTestRunnerFactory {
 
         @Override
-        public EchoDatagramTestServerTestRunner newEchoDatagramTestServerTestRunner(
-                InetAddress echDatagramTestServerInetAddress,
-                int echDatagramTestServerPort,
+        public EchoDatagramServerTestRunner newEchoDatagramServerTestRunner(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new EchoDatagramTestServerTestRunnerImpl(
-                    echDatagramTestServerInetAddress,
-                    echDatagramTestServerPort,
+            return new EchoDatagramServerTestRunnerImpl(
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
     }
 
-    private static final class EchoDatagramTestServerTestRunnerImpl extends EchoDatagramTestServerTestRunner {
+    private static final class EchoDatagramServerTestRunnerImpl extends EchoDatagramServerTestRunner {
 
-        public EchoDatagramTestServerTestRunnerImpl(
-                InetAddress echDatagramTestServerInetAddress,
-                int echDatagramTestServerPort,
+        public EchoDatagramServerTestRunnerImpl(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
             super(
-                    echDatagramTestServerInetAddress,
-                    echDatagramTestServerPort,
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
@@ -97,10 +103,10 @@ public class EchoIT {
         @Override
         public void run() {
             try {
-                new EchoDatagramTestClient().echo(
+                new EchoDatagramClient().echo(
                         TestStringConstants.STRING_05,
-                        this.echoDatagramTestServerInetAddress,
-                        this.echoDatagramTestServerPort);
+                        this.echoDatagramServerInetAddress,
+                        this.echoDatagramServerPort);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -108,33 +114,33 @@ public class EchoIT {
 
     }
 
-    private static final class EchoTestServerTestRunnerFactoryImpl extends EchoTestServerTestRunnerFactory {
+    private static final class EchoServerTestRunnerFactoryImpl extends EchoServerTestRunnerFactory {
 
         @Override
-        public EchoTestServerTestRunner newEchoTestServerTestRunner(
-                InetAddress echTestServerInetAddress,
-                int echTestServerPort,
+        public EchoServerTestRunner newEchoServerTestRunner(
+                InetAddress echServerInetAddress,
+                int echServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new EchoTestServerTestRunnerImpl(
-                    echTestServerInetAddress,
-                    echTestServerPort,
+            return new EchoServerTestRunnerImpl(
+                    echServerInetAddress,
+                    echServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
     }
 
-    private static final class EchoTestServerTestRunnerImpl extends EchoTestServerTestRunner {
+    private static final class EchoServerTestRunnerImpl extends EchoServerTestRunner {
 
-        public EchoTestServerTestRunnerImpl(
-                InetAddress echTestServerInetAddress,
-                int echTestServerPort,
+        public EchoServerTestRunnerImpl(
+                InetAddress echServerInetAddress,
+                int echServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
             super(
-                    echTestServerInetAddress,
-                    echTestServerPort,
+                    echServerInetAddress,
+                    echServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
@@ -142,10 +148,10 @@ public class EchoIT {
         @Override
         public void run() {
             try {
-                new EchoTestClient().echo(
+                new EchoClient().echo(
                         TestStringConstants.STRING_05,
-                        this.echoTestServerInetAddress,
-                        this.echoTestServerPort);
+                        this.echoServerInetAddress,
+                        this.echoServerPort);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }

@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.security.TestKeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.*;
@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 public class DtlsDatagramSocketTest {
 
     private static final int RECEIVE_BUFFER_SIZE =
-            DatagramTestServer.RECEIVE_BUFFER_SIZE;
+            DatagramServer.RECEIVE_BUFFER_SIZE;
 
     private static SSLContext clientDtlsContextUsingDtlsv1point2;
 
-    private static DatagramTestServer echoDtlsDatagramTestServerUsingDtlsv1point2;
-    private static int echoDtlsDatagramTestServerPortUsingDtlsv1point2;
+    private static DatagramServer echoDtlsDatagramServerUsingDtlsv1Point2;
+    private static int echoDtlsDatagramServerPortUsingDtlsv1point2;
 
     @Rule
     public Timeout globalTimeout = Timeout.builder()
@@ -47,7 +47,7 @@ public class DtlsDatagramSocketTest {
             DatagramPacket packet = new DatagramPacket(
                     stringBytes,
                     stringBytes.length,
-                    DatagramTestServer.INET_ADDRESS,
+                    DatagramServer.INET_ADDRESS,
                     echoDtlsDatagramEchoServerPort);
             dtlsDatagramSocket.send(packet);
             byte[] buffer = new byte[RECEIVE_BUFFER_SIZE];
@@ -61,9 +61,9 @@ public class DtlsDatagramSocketTest {
         return returningString;
     }
 
-    private static DatagramTestServer newEchoDtlsDatagramTestServer(
+    private static DatagramServer newEchoDtlsDatagramServer(
             final ServerDtlsDatagramSocketFactory serverDtlsDatagramSocketFactory) {
-        return new DatagramTestServer(
+        return new DatagramServer(
                 serverDtlsDatagramSocketFactory,
                 0,
                 new VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory(),
@@ -92,20 +92,20 @@ public class DtlsDatagramSocketTest {
                         null),
                 null);
 
-        echoDtlsDatagramTestServerUsingDtlsv1point2 = newEchoDtlsDatagramTestServer(
+        echoDtlsDatagramServerUsingDtlsv1Point2 = newEchoDtlsDatagramServer(
                 new ServerDtlsDatagramSocketFactory(serverDtlsContextUsingDtlsv1point2));
-        echoDtlsDatagramTestServerUsingDtlsv1point2.start();
-        echoDtlsDatagramTestServerPortUsingDtlsv1point2 =
-                echoDtlsDatagramTestServerUsingDtlsv1point2.getPort();
+        echoDtlsDatagramServerUsingDtlsv1Point2.start();
+        echoDtlsDatagramServerPortUsingDtlsv1point2 =
+                echoDtlsDatagramServerUsingDtlsv1Point2.getPort();
 
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
         // System.clearProperty("javax.net.debug");
-        if (echoDtlsDatagramTestServerUsingDtlsv1point2 != null
-                && !echoDtlsDatagramTestServerUsingDtlsv1point2.getState().equals(DatagramTestServer.State.STOPPED)) {
-            echoDtlsDatagramTestServerUsingDtlsv1point2.stop();
+        if (echoDtlsDatagramServerUsingDtlsv1Point2 != null
+                && !echoDtlsDatagramServerUsingDtlsv1Point2.getState().equals(DatagramServer.State.STOPPED)) {
+            echoDtlsDatagramServerUsingDtlsv1Point2.stop();
         }
     }
 
@@ -115,7 +115,7 @@ public class DtlsDatagramSocketTest {
         String returningString = echo(
                 new ClientDtlsDatagramSocketFactory(clientDtlsContextUsingDtlsv1point2),
                 string,
-                echoDtlsDatagramTestServerPortUsingDtlsv1point2);
+                echoDtlsDatagramServerPortUsingDtlsv1point2);
         Assert.assertEquals(string, returningString);
     }
 
@@ -125,7 +125,7 @@ public class DtlsDatagramSocketTest {
         String returningString = echo(
                 new ClientDtlsDatagramSocketFactory(clientDtlsContextUsingDtlsv1point2),
                 string,
-                echoDtlsDatagramTestServerPortUsingDtlsv1point2);
+                echoDtlsDatagramServerPortUsingDtlsv1point2);
         Assert.assertEquals(string, returningString);
     }
 
@@ -135,7 +135,7 @@ public class DtlsDatagramSocketTest {
         String returningString = echo(
                 new ClientDtlsDatagramSocketFactory(clientDtlsContextUsingDtlsv1point2),
                 string,
-                echoDtlsDatagramTestServerPortUsingDtlsv1point2);
+                echoDtlsDatagramServerPortUsingDtlsv1point2);
         Assert.assertEquals(string, returningString);
     }
 
@@ -145,7 +145,7 @@ public class DtlsDatagramSocketTest {
         String returningString = echo(
                 new ClientDtlsDatagramSocketFactory(clientDtlsContextUsingDtlsv1point2),
                 string,
-                echoDtlsDatagramTestServerPortUsingDtlsv1point2);
+                echoDtlsDatagramServerPortUsingDtlsv1point2);
         Assert.assertEquals(string, returningString);
     }
 
@@ -155,7 +155,7 @@ public class DtlsDatagramSocketTest {
         String returningString = echo(
                 new ClientDtlsDatagramSocketFactory(clientDtlsContextUsingDtlsv1point2),
                 string,
-                echoDtlsDatagramTestServerPortUsingDtlsv1point2);
+                echoDtlsDatagramServerPortUsingDtlsv1point2);
         Assert.assertEquals(string, returningString);
     }
 
@@ -212,9 +212,9 @@ public class DtlsDatagramSocketTest {
 
     }
 
-    private static final class EchoWorker extends DatagramTestServer.Worker {
+    private static final class EchoWorker extends DatagramServer.Worker {
 
-        public EchoWorker(final DatagramTestServer.ClientPackets clientPckts) {
+        public EchoWorker(final DatagramServer.ClientPackets clientPckts) {
             super(clientPckts);
         }
 
@@ -235,21 +235,21 @@ public class DtlsDatagramSocketTest {
     }
 
     private static final class EchoWorkerFactory
-            extends DatagramTestServer.WorkerFactory {
+            extends DatagramServer.WorkerFactory {
 
         public EchoWorkerFactory() {
         }
 
         @Override
-        public DatagramTestServer.Worker newWorker(
-                final DatagramTestServer.ClientPackets clientPckts) {
+        public DatagramServer.Worker newWorker(
+                final DatagramServer.ClientPackets clientPckts) {
             return new EchoWorker(clientPckts);
         }
 
     }
 
     private static final class ServerDtlsDatagramSocketFactory
-            extends DatagramTestServer.ServerDatagramSocketFactory {
+            extends DatagramServer.ServerDatagramSocketFactory {
 
         private final SSLContext serverDtlsContext;
 

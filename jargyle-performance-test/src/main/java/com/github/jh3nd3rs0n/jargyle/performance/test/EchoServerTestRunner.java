@@ -2,21 +2,21 @@ package com.github.jh3nd3rs0n.jargyle.performance.test;
 
 import java.net.InetAddress;
 
-public abstract class EchoTestServerTestRunner implements Runnable {
+public abstract class EchoServerTestRunner implements Runnable {
 
-    protected final InetAddress echoTestServerInetAddress;
-    protected final int echoTestServerPort;
+    protected final InetAddress echoServerInetAddress;
+    protected final int echoServerPort;
 
     protected final String socksServerHostAddress;
     protected final int socksServerPort;
 
-    public EchoTestServerTestRunner(
-            final InetAddress echTestServerInetAddress,
-            final int echTestServerPort,
+    public EchoServerTestRunner(
+            final InetAddress echServerInetAddress,
+            final int echServerPort,
             final String scksServerHostAddress,
             final int scksServerPort) {
-        this.echoTestServerInetAddress = echTestServerInetAddress;
-        this.echoTestServerPort = echTestServerPort;
+        this.echoServerInetAddress = echServerInetAddress;
+        this.echoServerPort = echServerPort;
         this.socksServerHostAddress = scksServerHostAddress;
         this.socksServerPort = scksServerPort;
     }

@@ -12,8 +12,8 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
@@ -30,10 +30,10 @@ import static org.junit.Assert.assertEquals;
 
 public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 
-	private static DatagramTestServer echoDatagramTestServer;
-	private static int echoDatagramTestServerPort;
-	private static TestServer echoTestServer;
-	private static int echoTestServerPort;
+	private static DatagramServer echoDatagramServer;
+	private static int echoDatagramServerPort;
+	private static Server echoServer;
+	private static int echoServerPort;
 	
 	private static SocksServer socksServerUsingSocks5UserpassMethod;
 	private static int socksServerPortUsingSocks5UserpassMethod;
@@ -60,7 +60,7 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 						UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
 								s)),
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
-						PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE)))));
+						PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
 		socksServer.start();
 		socksServerPortUsingSocks5UserpassMethod = socksServer.getPort().intValue();
 		return socksServer;
@@ -84,25 +84,25 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		echoDatagramTestServer = EchoDatagramTestServerHelper.newEchoDatagramTestServer(0);
-		echoDatagramTestServer.start();
-		echoDatagramTestServerPort = echoDatagramTestServer.getPort();
-		echoTestServer = EchoTestServerHelper.newEchoTestServer(0);
-		echoTestServer.start();
-		echoTestServerPort = echoTestServer.getPort();
+		echoDatagramServer = EchoDatagramServerHelper.newEchoDatagramServer(0);
+		echoDatagramServer.start();
+		echoDatagramServerPort = echoDatagramServer.getPort();
+		echoServer = EchoServerHelper.newEchoServer(0);
+		echoServer.start();
+		echoServerPort = echoServer.getPort();
 		socksServerUsingSocks5UserpassMethod =
 				newSocksServerUsingSocks5UserpassMethod();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		if (echoDatagramTestServer != null
-				&& !echoDatagramTestServer.getState().equals(DatagramTestServer.State.STOPPED)) {
-			echoDatagramTestServer.stop();
+		if (echoDatagramServer != null
+				&& !echoDatagramServer.getState().equals(DatagramServer.State.STOPPED)) {
+			echoDatagramServer.stop();
 		}
-		if (echoTestServer != null
-				&& !echoTestServer.getState().equals(TestServer.State.STOPPED)) {
-			echoTestServer.stop();
+		if (echoServer != null
+				&& !echoServer.getState().equals(Server.State.STOPPED)) {
+			echoServer.stop();
 		}		
 		if (socksServerUsingSocks5UserpassMethod != null
 				&& !socksServerUsingSocks5UserpassMethod.getState().equals(SocksServer.State.STOPPED)) {
@@ -112,172 +112,172 @@ public class EchoThroughSocks5ClientToSocksServerUsingSocks5UserpassMethodIT {
 	}
 	
 	@Test
-	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
-		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+	public void testEchoDatagramClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
+		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Aladdin", 
 						"opensesame".toCharArray()).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
-		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+	public void testEchoDatagramClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
+		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jasmine", 
 						"mission:impossible".toCharArray()).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
-		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+	public void testEchoDatagramClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
+		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Abu", 
 						"safeDriversSave40%".toCharArray()).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod04() throws IOException {
-		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+	public void testEchoDatagramClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod04() throws IOException {
+		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jafar",
 						"opensesame".toCharArray()).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoDatagramTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod05() throws IOException {
-		EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+	public void testEchoDatagramClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod05() throws IOException {
+		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jafar",
 						"opensesame".toCharArray()).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_05;
-		String returningString = echoDatagramTestClient.echo(string, echoDatagramTestServerPort);
+		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
-		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
+		Server echServer = EchoServerHelper.newEchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Aladdin", 
 						"opensesame".toCharArray()).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = EchoTestServerHelper.startThenEchoThenStop(
-				echTestServer, new EchoTestClient(), string);
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
-		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
+		Server echServer = EchoServerHelper.newEchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jasmine", 
 						"mission:impossible".toCharArray()).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = EchoTestServerHelper.startThenEchoThenStop(
-				echTestServer, new EchoTestClient(), string);
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
-		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
+		Server echServer = EchoServerHelper.newEchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Abu", 
 						"safeDriversSave40%".toCharArray()).newSocksNetObjectFactory(), 0); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = EchoTestServerHelper.startThenEchoThenStop(
-				echTestServer, new EchoTestClient(), string);
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod04() throws IOException {
-		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod04() throws IOException {
+		Server echServer = EchoServerHelper.newEchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jafar",
 						"opensesame".toCharArray()).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_04;
-		String returningString = EchoTestServerHelper.startThenEchoThenStop(
-				echTestServer, new EchoTestClient(), string);
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod05() throws IOException {
-		TestServer echTestServer = EchoTestServerHelper.newEchoTestServer(
+	public void testEchoServerUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod05() throws IOException {
+		Server echServer = EchoServerHelper.newEchoServer(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jafar",
 						"opensesame".toCharArray()).newSocksNetObjectFactory(), 0);
 		String string = TestStringConstants.STRING_05;
-		String returningString = EchoTestServerHelper.startThenEchoThenStop(
-				echTestServer, new EchoTestClient(), string);
+		String returningString = EchoServerHelper.startThenEchoThenStop(
+				echServer, new EchoClient(), string);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
-		EchoTestClient echoTestClient = new EchoTestClient(
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod01() throws IOException {
+		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Aladdin", 
 						"opensesame".toCharArray()).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_01;
-		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
-		EchoTestClient echoTestClient = new EchoTestClient(
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod02() throws IOException {
+		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jasmine", 
 						"mission:impossible".toCharArray()).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_02;
-		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 	
 	@Test
-	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
-		EchoTestClient echoTestClient = new EchoTestClient(
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod03() throws IOException {
+		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Abu", 
 						"safeDriversSave40%".toCharArray()).newSocksNetObjectFactory()); 
 		String string = TestStringConstants.STRING_03;
-		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod04() throws IOException {
-		EchoTestClient echoTestClient = new EchoTestClient(
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod04() throws IOException {
+		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jafar",
 						"opensesame".toCharArray()).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_04;
-		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testEchoTestClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod05() throws IOException {
-		EchoTestClient echoTestClient = new EchoTestClient(
+	public void testEchoClientUsingSocks5ClientToSocksServerUsingSocks5UserpassMethod05() throws IOException {
+		EchoClient echoClient = new EchoClient(
 				newSocks5ClientUsingSocks5UserpassMethod(
 						"Jafar",
 						"opensesame".toCharArray()).newSocksNetObjectFactory());
 		String string = TestStringConstants.STRING_05;
-		String returningString = echoTestClient.echo(string, echoTestServerPort);
+		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 

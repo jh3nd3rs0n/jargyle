@@ -1,0 +1,7 @@
+This product contains modified version of the SOCKS proxy example in the
+Netty Project:
+
+  * LICENSE:
+    * LICENSE.txt (Apache License, version 2.0)
+  * HOMEPAGE:
+    * https://netty.io/

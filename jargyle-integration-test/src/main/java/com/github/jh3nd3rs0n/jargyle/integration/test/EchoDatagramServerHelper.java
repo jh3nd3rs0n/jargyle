@@ -1,24 +1,24 @@
 package com.github.jh3nd3rs0n.jargyle.integration.test;
 
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-public final class EchoDatagramTestServerHelper {
+public final class EchoDatagramServerHelper {
 
-    private EchoDatagramTestServerHelper() {
+    private EchoDatagramServerHelper() {
     }
 
-    public static DatagramTestServer newEchoDatagramTestServer(final int port) {
-        return newEchoDatagramTestServer(port, DatagramTestServer.INET_ADDRESS);
+    public static DatagramServer newEchoDatagramServer(final int port) {
+        return newEchoDatagramServer(port, DatagramServer.INET_ADDRESS);
     }
 
-    public static DatagramTestServer newEchoDatagramTestServer(
+    public static DatagramServer newEchoDatagramServer(
             final int port, final InetAddress inetAddress) {
-        return new DatagramTestServer(
-                new DatagramTestServer.DefaultServerDatagramSocketFactory(),
+        return new DatagramServer(
+                new DatagramServer.DefaultServerDatagramSocketFactory(),
                 port,
                 inetAddress,
                 new VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory(),
@@ -26,9 +26,9 @@ public final class EchoDatagramTestServerHelper {
                 new EchoWorkerFactory());
     }
 
-    private static final class EchoWorker extends DatagramTestServer.Worker {
+    private static final class EchoWorker extends DatagramServer.Worker {
 
-        public EchoWorker(final DatagramTestServer.ClientPackets clientPckts) {
+        public EchoWorker(final DatagramServer.ClientPackets clientPckts) {
             super(clientPckts);
         }
 
@@ -49,14 +49,14 @@ public final class EchoDatagramTestServerHelper {
     }
 
     private static final class EchoWorkerFactory
-            extends DatagramTestServer.WorkerFactory {
+            extends DatagramServer.WorkerFactory {
 
         public EchoWorkerFactory() {
         }
 
         @Override
-        public DatagramTestServer.Worker newWorker(
-                final DatagramTestServer.ClientPackets clientPckts) {
+        public DatagramServer.Worker newWorker(
+                final DatagramServer.ClientPackets clientPckts) {
             return new EchoWorker(clientPckts);
         }
 

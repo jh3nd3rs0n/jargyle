@@ -1,8 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.performance.test;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.integration.test.EchoDatagramTestClient;
-import com.github.jh3nd3rs0n.jargyle.integration.test.EchoTestClient;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoDatagramClient;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoDatagramServerHelper;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
@@ -11,15 +12,13 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.integration.test.EchoServerHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Method;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -45,22 +44,6 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
                 className + ".txt", "Class " + className);
     }
 
-    private static Configuration newConfigurationUsingSocks5UserpassMethod() {
-        return Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
-                        Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
-                GeneralSettingSpecConstants.PORT.newSetting(Port.valueOf(0)),
-                GeneralSettingSpecConstants.BACKLOG.newSetting(
-                        NonNegativeInteger.valueOf(TestServer.BACKLOG)),
-                Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
-                        Methods.of(Method.USERNAME_PASSWORD)),
-                Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
-                        UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
-                                "Aladdin:opensesame")),
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
-                        PositiveInteger.valueOf(DatagramTestServer.RECEIVE_BUFFER_SIZE))));
-    }
-
     private static SocksClient newSocks5ClientUsingSocks5UserpassMethod(
             final String socksServerHostAddress,
             final int socksServerPort) {
@@ -77,13 +60,31 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
                 .newSocksClient(properties);
     }
 
+    private static SocksServer newSocksServerUsingSocks5UserpassMethod() {
+        return new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                        Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
+                GeneralSettingSpecConstants.PORT.newSetting(Port.valueOf(0)),
+                GeneralSettingSpecConstants.BACKLOG.newSetting(
+                        NonNegativeInteger.valueOf(Server.BACKLOG)),
+                Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
+                        Methods.of(Method.USERNAME_PASSWORD)),
+                Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
+                        UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
+                                "Aladdin:opensesame")),
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
+                        PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
+    }
+
     @Test
-    public void testDatagramTestServerThroughSocksServerUsingSocks5UserpassMethod() throws IOException {
-        LoadTestRunnerResults results = new EchoDatagramTestServerLoadTestRunner(
-                newConfigurationUsingSocks5UserpassMethod(),
+    public void testEchoDatagramServerThroughSocksServerUsingSocks5UserpassMethod() throws IOException {
+        LoadTestRunnerResults results = new EchoDatagramServerLoadTestRunner(
+                new EchoDatagramServerInterfaceImpl(
+                        EchoDatagramServerHelper.newEchoDatagramServer(0)),
+                new SocksServerInterfaceImpl(newSocksServerUsingSocks5UserpassMethod()),
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
-                new EchoDatagramTestServerTestRunnerFactoryImpl(),
+                new EchoDatagramServerTestRunnerFactoryImpl(),
                 TIMEOUT)
                 .run();
         String methodName =
@@ -96,12 +97,14 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
     }
 
     @Test
-    public void testTestServerThroughSocksServerUsingSocks5UserpassMethod() throws IOException {
-        LoadTestRunnerResults results = new EchoTestServerLoadTestRunner(
-                newConfigurationUsingSocks5UserpassMethod(),
+    public void testEchoServerThroughSocksServerUsingSocks5UserpassMethod() throws IOException {
+        LoadTestRunnerResults results = new EchoServerLoadTestRunner(
+                new EchoServerInterfaceImpl(
+                        EchoServerHelper.newEchoServer(0)),
+                new SocksServerInterfaceImpl(newSocksServerUsingSocks5UserpassMethod()),
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
-                new EchoTestServerTestRunnerFactoryImpl(),
+                new EchoServerTestRunnerFactoryImpl(),
                 TIMEOUT)
                 .run();
         String methodName =
@@ -113,49 +116,49 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
         Assert.assertNotNull(results);
     }
 
-    private static final class EchoDatagramTestServerTestRunnerFactoryImpl extends EchoDatagramTestServerTestRunnerFactory {
+    private static final class EchoDatagramServerTestRunnerFactoryImpl extends EchoDatagramServerTestRunnerFactory {
 
         @Override
-        public EchoDatagramTestServerTestRunner newEchoDatagramTestServerTestRunner(
-                InetAddress echDatagramTestServerInetAddress,
-                int echDatagramTestServerPort,
+        public EchoDatagramServerTestRunner newEchoDatagramServerTestRunner(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new EchoDatagramTestServerTestRunnerImpl(
-                    echDatagramTestServerInetAddress,
-                    echDatagramTestServerPort,
+            return new EchoDatagramServerTestRunnerImpl(
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
     }
 
-    private static final class EchoDatagramTestServerTestRunnerImpl extends EchoDatagramTestServerTestRunner {
+    private static final class EchoDatagramServerTestRunnerImpl extends EchoDatagramServerTestRunner {
 
-        public EchoDatagramTestServerTestRunnerImpl(
-                InetAddress echDatagramTestServerInetAddress,
-                int echDatagramTestServerPort,
+        public EchoDatagramServerTestRunnerImpl(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
             super(
-                    echDatagramTestServerInetAddress,
-                    echDatagramTestServerPort,
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
         @Override
         public void run() {
-            EchoDatagramTestClient echoDatagramTestClient = new EchoDatagramTestClient(
+            EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                     newSocks5ClientUsingSocks5UserpassMethod(
                             this.socksServerHostAddress,
                             this.socksServerPort)
                             .newSocksNetObjectFactory());
             try {
-                echoDatagramTestClient.echo(
+                echoDatagramClient.echo(
                         TestStringConstants.STRING_05,
-                        this.echoDatagramTestServerInetAddress,
-                        this.echoDatagramTestServerPort);
+                        this.echoDatagramServerInetAddress,
+                        this.echoDatagramServerPort);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -163,49 +166,49 @@ public class EchoThroughSocksServerUsingSocks5UserpassMethodIT {
 
     }
 
-    private static final class EchoTestServerTestRunnerFactoryImpl extends EchoTestServerTestRunnerFactory {
+    private static final class EchoServerTestRunnerFactoryImpl extends EchoServerTestRunnerFactory {
 
         @Override
-        public EchoTestServerTestRunner newEchoTestServerTestRunner(
-                InetAddress echTestServerInetAddress,
-                int echTestServerPort,
+        public EchoServerTestRunner newEchoServerTestRunner(
+                InetAddress echServerInetAddress,
+                int echServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new EchoTestServerTestRunnerImpl(
-                    echTestServerInetAddress,
-                    echTestServerPort,
+            return new EchoServerTestRunnerImpl(
+                    echServerInetAddress,
+                    echServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
     }
 
-    private static final class EchoTestServerTestRunnerImpl extends EchoTestServerTestRunner {
+    private static final class EchoServerTestRunnerImpl extends EchoServerTestRunner {
 
-        public EchoTestServerTestRunnerImpl(
-                InetAddress echTestServerInetAddress,
-                int echTestServerPort,
+        public EchoServerTestRunnerImpl(
+                InetAddress echServerInetAddress,
+                int echServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
             super(
-                    echTestServerInetAddress,
-                    echTestServerPort,
+                    echServerInetAddress,
+                    echServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
         @Override
         public void run() {
-            EchoTestClient echoTestClient = new EchoTestClient(
+            EchoClient echoClient = new EchoClient(
                     newSocks5ClientUsingSocks5UserpassMethod(
                             this.socksServerHostAddress,
                             this.socksServerPort)
                             .newSocksNetObjectFactory());
             try {
-                echoTestClient.echo(
+                echoClient.echo(
                         TestStringConstants.STRING_05,
-                        this.echoTestServerInetAddress,
-                        this.echoTestServerPort);
+                        this.echoServerInetAddress,
+                        this.echoServerPort);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }

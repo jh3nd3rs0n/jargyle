@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -142,24 +142,24 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketInetAddressInt01() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            InetAddress inetAddress = testServer.getInetAddress();
-            int port = testServer.getPort();
+            server.start();
+            InetAddress inetAddress = server.getInetAddress();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(inetAddress, port);
             Assert.assertTrue(socket.isConnected());
         } finally {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
@@ -178,16 +178,16 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketInetAddressIntInetAddressInt01() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            InetAddress inetAddress = testServer.getInetAddress();
-            int port = testServer.getPort();
+            server.start();
+            InetAddress inetAddress = server.getInetAddress();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     inetAddress, port, null, 0);
             Assert.assertTrue(socket.isConnected());
@@ -197,24 +197,24 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
 
     @Test
     public void testNewSocketInetAddressIntInetAddressInt02() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            InetAddress inetAddress = testServer.getInetAddress();
-            int port = testServer.getPort();
+            server.start();
+            InetAddress inetAddress = server.getInetAddress();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     inetAddress, port, InetAddress.getLoopbackAddress(), 0);
             Assert.assertTrue(socket.isConnected());
@@ -223,8 +223,8 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
@@ -255,15 +255,15 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringInt01() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            int port = testServer.getPort();
+            server.start();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     (String) null, port);
             Assert.assertTrue(socket.isConnected());
@@ -272,25 +272,25 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
 
     @Test
     public void testNewSocketStringInt02() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            InetAddress inetAddress = testServer.getInetAddress();
+            server.start();
+            InetAddress inetAddress = server.getInetAddress();
             String host = inetAddress.getHostAddress();
-            int port = testServer.getPort();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     host, port);
             Assert.assertTrue(socket.isConnected());
@@ -299,8 +299,8 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
@@ -317,15 +317,15 @@ public class DefaultNetObjectFactoryTest {
 
     @Test
     public void testNewSocketStringIntInetAddressInt01() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            int port = testServer.getPort();
+            server.start();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     (String) null, port, null, 0);
             Assert.assertTrue(socket.isConnected());
@@ -336,23 +336,23 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
 
     @Test
     public void testNewSocketStringIntInetAddressInt02() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            int port = testServer.getPort();
+            server.start();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     (String) null, port, InetAddress.getLoopbackAddress(), 0);
             Assert.assertTrue(socket.isConnected());
@@ -362,25 +362,25 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
 
     @Test
     public void testNewSocketStringIntInetAddressInt03() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            InetAddress inetAddress = testServer.getInetAddress();
+            server.start();
+            InetAddress inetAddress = server.getInetAddress();
             String host = inetAddress.getHostAddress();
-            int port = testServer.getPort();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     host, port, null, 0);
             Assert.assertTrue(socket.isConnected());
@@ -391,25 +391,25 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }
 
     @Test
     public void testNewSocketStringIntInetAddressInt04() throws IOException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
+                new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
-            testServer.start();
-            InetAddress inetAddress = testServer.getInetAddress();
+            server.start();
+            InetAddress inetAddress = server.getInetAddress();
             String host = inetAddress.getHostAddress();
-            int port = testServer.getPort();
+            int port = server.getPort();
             socket = DefaultNetObjectFactory.getDefault().newSocket(
                     host, port, InetAddress.getLoopbackAddress(), 0);
             Assert.assertTrue(socket.isConnected());
@@ -419,8 +419,8 @@ public class DefaultNetObjectFactoryTest {
             if (socket != null) {
                 socket.close();
             }
-            if (testServer.getState().equals(TestServer.State.STARTED)) {
-                testServer.stop();
+            if (server.getState().equals(Server.State.STARTED)) {
+                server.stop();
             }
         }
     }

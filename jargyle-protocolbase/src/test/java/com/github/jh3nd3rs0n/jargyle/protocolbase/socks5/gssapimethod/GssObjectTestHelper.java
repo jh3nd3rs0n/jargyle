@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import org.ietf.jgss.*;
 
 import java.io.IOException;
@@ -87,17 +87,17 @@ public class GssObjectTestHelper {
     public static void testClientAndServerGssObjects(
             final GssObjectTester clientGssObjectTester,
             final GssObjectTester serverGssObjectTester) throws IOException, GSSException {
-        TestServer testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        Server server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new GssTestServerWorkerFactory(serverGssObjectTester));
+                new GssServerWorkerFactory(serverGssObjectTester));
         Socket socket = null;
         GSSContext gssContext = null;
         try {
-            testServer.start();
+            server.start();
             socket = new Socket(
-                    testServer.getInetAddress(), testServer.getPort());
+                    server.getInetAddress(), server.getPort());
             gssContext = newEstablishedClientGSSContext(socket);
             clientGssObjectTester.testGssObject(socket, gssContext);
         } finally {
@@ -107,8 +107,8 @@ public class GssObjectTestHelper {
             if (socket != null) {
                 socket.close();
             }
-            if (!testServer.getState().equals(TestServer.State.STOPPED)) {
-                testServer.stop();
+            if (!server.getState().equals(Server.State.STOPPED)) {
+                server.stop();
             }
         }
     }
@@ -122,12 +122,12 @@ public class GssObjectTestHelper {
 
     }
 
-    private static final class GssTestServerWorker extends TestServer.Worker {
+    private static final class GssServerWorker extends Server.Worker {
 
         private GSSContext gssContext;
         private final GssObjectTester serverGssObjectTester;
 
-        public GssTestServerWorker(
+        public GssServerWorker(
                 final Socket clientSock,
                 final GssObjectTester serverGssObjTester) {
             super(clientSock);
@@ -160,19 +160,19 @@ public class GssObjectTestHelper {
         }
     }
 
-    private static final class GssTestServerWorkerFactory
-            extends TestServer.WorkerFactory {
+    private static final class GssServerWorkerFactory
+            extends Server.WorkerFactory {
 
         private final GssObjectTester serverGssObjectTester;
 
-        public GssTestServerWorkerFactory(
+        public GssServerWorkerFactory(
                 final GssObjectTester serverGssObjTester) {
             this.serverGssObjectTester = serverGssObjTester;
         }
 
         @Override
-        public TestServer.Worker newWorker(final Socket clientSocket) {
-            return new GssTestServerWorker(
+        public Server.Worker newWorker(final Socket clientSocket) {
+            return new GssServerWorker(
                     clientSocket, this.serverGssObjectTester);
         }
     }

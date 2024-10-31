@@ -9,13 +9,12 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A UDP server used for clients to test against.
  */
-public final class DatagramTestServer {
+public final class DatagramServer {
 
     /**
      * The default binding {@code InetAddress}.
@@ -39,7 +38,7 @@ public final class DatagramTestServer {
     private static Class<?> dtlsDatagramSocketConnectionClosedExceptionClass;
 
     /**
-     * The binding {@code InetAddress} of this {@code DatagramTestServer}.
+     * The binding {@code InetAddress} of this {@code DatagramServer}.
      */
     private final InetAddress bindInetAddress;
 
@@ -63,7 +62,7 @@ public final class DatagramTestServer {
     private final ExecutorFactory multipleThreadsExecutorFactory;
 
     /**
-     * The specified binding port of this {@code DatagramTestServer}.
+     * The specified binding port of this {@code DatagramServer}.
      */
     private final int specifiedPort;
 
@@ -78,7 +77,7 @@ public final class DatagramTestServer {
     private ExecutorService executor;
 
     /**
-     * The actual binding port of this {@code DatagramTestServer}.
+     * The actual binding port of this {@code DatagramServer}.
      */
     private int port;
 
@@ -89,12 +88,12 @@ public final class DatagramTestServer {
     private DatagramSocket serverSocket;
 
     /**
-     * The {@code State} of this {@code DatagramTestServer}.
+     * The {@code State} of this {@code DatagramServer}.
      */
     private State state;
 
     /**
-     * Constructs a {@code DatagramTestServer} with the provided
+     * Constructs a {@code DatagramServer} with the provided
      * {@code ServerDatagramSocketFactory} used for creating a server
      * {@code DatagramSocket}, the provided specified binding port, the
      * provided {@code ExecutorFactory} used for creating an {@code Executor}
@@ -118,7 +117,7 @@ public final class DatagramTestServer {
      * @param factory                     the provided {@code WorkerFactory}
      *                                    used for creating {@code Worker}s
      */
-    public DatagramTestServer(
+    public DatagramServer(
             final ServerDatagramSocketFactory serverDatagramSockFactory,
             final int prt,
             final ExecutorFactory twoThreadExecutorFactory,
@@ -134,7 +133,7 @@ public final class DatagramTestServer {
     }
 
     /**
-     * Constructs a {@code DatagramTestServer} with the provided
+     * Constructs a {@code DatagramServer} with the provided
      * {@code ServerDatagramSocketFactory} used for creating a server
      * {@code DatagramSocket}, the provided specified binding port, the
      * provided binding {@code InetAddress}, the provided
@@ -161,7 +160,7 @@ public final class DatagramTestServer {
      * @param factory                     the provided {@code WorkerFactory}
      *                                    used for creating {@code Worker}s
      */
-    public DatagramTestServer(
+    public DatagramServer(
             final ServerDatagramSocketFactory serverDatagramSockFactory,
             final int prt,
             final InetAddress bindInetAddr,
@@ -212,38 +211,38 @@ public final class DatagramTestServer {
 
     /**
      * Returns the binding {@code InetAddress} of this
-     * {@code DatagramTestServer}.
+     * {@code DatagramServer}.
      *
      * @return the binding {@code InetAddress} of this
-     * {@code DatagramTestServer}
+     * {@code DatagramServer}
      */
     public InetAddress getInetAddress() {
         return this.bindInetAddress;
     }
 
     /**
-     * Returns the actual binding port of this {@code DatagramTestServer}.
+     * Returns the actual binding port of this {@code DatagramServer}.
      *
-     * @return the actual binding port of this {@code DatagramTestServer}
+     * @return the actual binding port of this {@code DatagramServer}
      */
     public int getPort() {
         return this.port;
     }
 
     /**
-     * Returns the {@code State} of this {@code DatagramTestServer}.
+     * Returns the {@code State} of this {@code DatagramServer}.
      *
-     * @return the {@code State} of this {@code DatagramTestServer}
+     * @return the {@code State} of this {@code DatagramServer}
      */
     public State getState() {
         return this.state;
     }
 
     /**
-     * Starts this {@code DatagramTestServer}.
+     * Starts this {@code DatagramServer}.
      *
      * @throws IOException if there is an error in starting this
-     *                     {@code DatagramTestServer}
+     *                     {@code DatagramServer}
      */
     public void start() throws IOException {
         this.serverSocket =
@@ -260,10 +259,10 @@ public final class DatagramTestServer {
     }
 
     /**
-     * Stops this {@code DatagramTestServer}.
+     * Stops this {@code DatagramServer}.
      *
      * @throws IOException if there is an error in stopping this
-     *                     {@code DatagramTestServer}
+     *                     {@code DatagramServer}
      */
     public void stop() throws IOException {
         this.serverSocket.close();
@@ -275,17 +274,17 @@ public final class DatagramTestServer {
     }
 
     /**
-     * The state of the {@code DatagramTestServer}.
+     * The state of the {@code DatagramServer}.
      */
     public enum State {
 
         /**
-         * The {@code DatagramTestServer} has been started.
+         * The {@code DatagramServer} has been started.
          */
         STARTED,
 
         /**
-         * The {@code DatagramTestServer} has been stopped.
+         * The {@code DatagramServer} has been stopped.
          */
         STOPPED;
 
@@ -386,7 +385,7 @@ public final class DatagramTestServer {
          */
         public DatagramPacket removeReceived() {
             if (this.closed) {
-                throw new IllegalStateException("ClientPackets disposed");
+                throw new IllegalStateException("ClientPackets closed");
             }
             return this.packets.removeReceived(this.clientSocketAddress);
         }
@@ -764,7 +763,7 @@ public final class DatagramTestServer {
                             executor.execute(worker);
                         }
                     } catch (SocketException e) {
-                        // closed by DatagramTestServer.stop()
+                        // closed by DatagramServer.stop()
                         break;
                     } catch (IOException e) {
                         if (!isOrHasInstanceOfDtlsDatagramSocketConnectionClosedException(e)) {
@@ -828,7 +827,7 @@ public final class DatagramTestServer {
                     }
                     this.serverSocket.send(sentPacket);
                 } catch (SocketException e) {
-                    // closed by DatagramTestServer.stop()
+                    // closed by DatagramServer.stop()
                     break;
                 } catch (IOException e) {
                     if (!isOrHasInstanceOfDtlsDatagramSocketConnectionClosedException(e)) {

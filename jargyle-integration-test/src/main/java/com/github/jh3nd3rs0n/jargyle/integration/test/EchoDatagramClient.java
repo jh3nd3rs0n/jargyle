@@ -11,9 +11,9 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 
-public final class EchoDatagramTestClient {
+public final class EchoDatagramClient {
 	
 	private static final int SO_TIMEOUT = 60000;
 	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.of(
@@ -23,15 +23,15 @@ public final class EchoDatagramTestClient {
 	private final NetObjectFactory netObjectFactory;
 	private final SocketSettings socketSettings;
 
-	public EchoDatagramTestClient() {
+	public EchoDatagramClient() {
 		this(NetObjectFactory.getDefault(), SOCKET_SETTINGS);
 	}
 	
-	public EchoDatagramTestClient(final NetObjectFactory netObjFactory) {
+	public EchoDatagramClient(final NetObjectFactory netObjFactory) {
 		this(netObjFactory, SOCKET_SETTINGS);
 	}
 	
-	public EchoDatagramTestClient(
+	public EchoDatagramClient(
 			final NetObjectFactory netObjFactory, 
 			final SocketSettings socketSttngs) {
 		this.netObjectFactory = netObjFactory;
@@ -43,7 +43,7 @@ public final class EchoDatagramTestClient {
 			final int echoTestDatagramServerPort) throws IOException {
 		return this.echo(
 				string,
-				DatagramTestServer.INET_ADDRESS,
+				DatagramServer.INET_ADDRESS,
 				echoTestDatagramServerPort);
 	}
 
@@ -68,7 +68,7 @@ public final class EchoDatagramTestClient {
 					echoTestDatagramServerPort);
 			packet.setLength(buffer.length);
 			datagramSocket.send(packet);
-			buffer = new byte[DatagramTestServer.RECEIVE_BUFFER_SIZE];
+			buffer = new byte[DatagramServer.RECEIVE_BUFFER_SIZE];
 			packet = new DatagramPacket(buffer, buffer.length);
 			datagramSocket.receive(packet);
 			returningString = new String(

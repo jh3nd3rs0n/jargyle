@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public final class EchoTestClient {
+public final class EchoClient {
 	
 	private static final int SO_TIMEOUT = 60000;
 	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.of(
@@ -24,15 +24,15 @@ public final class EchoTestClient {
 	private final NetObjectFactory netObjectFactory;
 	private final SocketSettings socketSettings;
 	
-	public EchoTestClient() {
+	public EchoClient() {
 		this(NetObjectFactory.getDefault(), SOCKET_SETTINGS);
 	}
 	
-	public EchoTestClient(final NetObjectFactory netObjFactory) {
+	public EchoClient(final NetObjectFactory netObjFactory) {
 		this(netObjFactory, SOCKET_SETTINGS); 
 	}
 	
-	public EchoTestClient(
+	public EchoClient(
 			final NetObjectFactory netObjFactory, 
 			final SocketSettings socketSttngs) {
 		this.netObjectFactory = netObjFactory;
@@ -41,21 +41,21 @@ public final class EchoTestClient {
 	
 	public String echo(
 			final String string,
-			final int echoTestServerPort) throws IOException {
-		return this.echo(string, TestServer.INET_ADDRESS, echoTestServerPort);
+			final int echoServerPort) throws IOException {
+		return this.echo(string, Server.INET_ADDRESS, echoServerPort);
 	}
 	
 	public String echo(
 			final String string, 
-			final InetAddress echoTestServerInetAddress,
-			final int echoTestServerPort) throws IOException {
+			final InetAddress echoServerInetAddress,
+			final int echoServerPort) throws IOException {
 		Socket socket = null;
 		String returningString = null;
 		try {
 			socket = this.netObjectFactory.newSocket();
 			this.socketSettings.applyTo(socket);
 			socket.connect(new InetSocketAddress(
-					echoTestServerInetAddress, echoTestServerPort));
+					echoServerInetAddress, echoServerPort));
 			InputStream in = socket.getInputStream();
 			OutputStream out = socket.getOutputStream();
 			MeasuredIoHelper.writeThenFlush(

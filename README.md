@@ -143,7 +143,7 @@ When executing the tests, the tests use only the loopback address and the
 local port numbers assigned by the local system. However, the following 
 specified local port numbers need to be open:
 
--   `1080`: This default port number is used for a SOCKS server set up for 
+-   `1080`: This default port number is used for SOCKS servers set up for 
     testing.
 -   `8000`: This port number is used for a Kerberos Key Distribution Center
     (KDC) set up for testing.
@@ -168,8 +168,8 @@ When executing the tests, the tests use only the loopback address and the
 local port numbers assigned by the local system. However, the following
 specified local port numbers need to be open:
 
--   `1080`: This default port number is used for a SOCKS server set up for
-    testing.
+-   `1080`: This default port number is used for SOCKS servers set up for
+    testing, integration testing, and performance testing.
 -   `8000`: This port number is used for a Kerberos Key Distribution Center
     (KDC) set up for testing.
 -   `9000`: This port number is used for a Kerberos Key Distribution Center

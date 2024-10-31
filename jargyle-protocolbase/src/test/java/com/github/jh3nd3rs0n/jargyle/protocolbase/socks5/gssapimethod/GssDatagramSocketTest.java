@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramTestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.ietf.jgss.GSSException;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class GssDatagramSocketTest {
 
     private static final int RECEIVE_BUFFER_SIZE =
-            DatagramTestServer.RECEIVE_BUFFER_SIZE;
+            DatagramServer.RECEIVE_BUFFER_SIZE;
 
     private static String echo(
             final String string,

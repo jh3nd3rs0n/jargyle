@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.security.TestKeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
@@ -17,25 +17,25 @@ import java.security.NoSuchAlgorithmException;
 
 public class DefaultSslSocketFactoryTest {
 
-    private static TestServer testServer;
+    private static Server server;
     private static int testServerPort;
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        testServer = new TestServer(
-                new TestServer.DefaultServerSocketFactory(),
+        server = new Server(
+                new Server.DefaultServerSocketFactory(),
                 0,
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
-                new TestServer.DefaultWorkerFactory());
-        testServer.start();
-        testServerPort = testServer.getPort();
+                new Server.DefaultWorkerFactory());
+        server.start();
+        testServerPort = server.getPort();
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        if (testServer != null
-                && !testServer.getState().equals(TestServer.State.STOPPED)) {
-            testServer.stop();
+        if (server != null
+                && !server.getState().equals(Server.State.STOPPED)) {
+            server.stop();
         }
         ThreadHelper.interruptibleSleepForThreeSeconds();
     }

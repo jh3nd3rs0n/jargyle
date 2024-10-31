@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 /**
  * A server used for clients to test against.
  */
-public final class TestServer {
+public final class Server {
 
     /**
      * The default maximum length of the queue of incoming connections.
@@ -32,7 +32,7 @@ public final class TestServer {
     private final int backlog;
 
     /**
-     * The binding {@code InetAddress} of this {@code TestServer}.
+     * The binding {@code InetAddress} of this {@code Server}.
      */
     private final InetAddress bindInetAddress;
 
@@ -49,7 +49,7 @@ public final class TestServer {
     private final ServerSocketFactory serverSocketFactory;
 
     /**
-     * The specified binding port of this {@code TestServer}.
+     * The specified binding port of this {@code Server}.
      */
     private final int specifiedPort;
 
@@ -64,7 +64,7 @@ public final class TestServer {
     private ExecutorService executor;
 
     /**
-     * The actual binding port of this {@code TestServer}.
+     * The actual binding port of this {@code Server}.
      */
     private int port;
 
@@ -74,12 +74,12 @@ public final class TestServer {
     private ServerSocket serverSocket;
 
     /**
-     * The {@code State} of this {@code TestServer}.
+     * The {@code State} of this {@code Server}.
      */
     private State state;
 
     /**
-     * Constructs a {@code TestServer} with the provided
+     * Constructs a {@code Server} with the provided
      * {@code ServerSocketFactory} used for creating a {@code ServerSocket},
      * the provided specified port, the provided {@code ExecutorFactory} used
      * for creating an {@code Executor} to execute {@code Worker}s, and the
@@ -96,7 +96,7 @@ public final class TestServer {
      * @param factory                     the provided {@code WorkerFactory}
      *                                    used for creating {@code Worker}s
      */
-    public TestServer(
+    public Server(
             final ServerSocketFactory serverSockFactory,
             final int prt,
             final ExecutorFactory multiThreadsExecutorFactory,
@@ -111,7 +111,7 @@ public final class TestServer {
     }
 
     /**
-     * Constructs a {@code TestServer} with the provided
+     * Constructs a {@code Server} with the provided
      * {@code ServerSocketFactory} used for creating a {@code ServerSocket},
      * the provided specified port, the provided maximum length of the queue
      * of incoming connections, the provided binding {@code InetAddress}, the
@@ -134,7 +134,7 @@ public final class TestServer {
      * @param factory                     the provided {@code WorkerFactory}
      *                                    used for creating {@code Worker}s
      */
-    public TestServer(
+    public Server(
             final ServerSocketFactory serverSockFactory,
             final int prt,
             final int bklog,
@@ -173,37 +173,37 @@ public final class TestServer {
     }
 
     /**
-     * Returns the binding {@code InetAddress} of this {@code TestServer}.
+     * Returns the binding {@code InetAddress} of this {@code Server}.
      *
-     * @return the binding {@code InetAddress} of this {@code TestServer}
+     * @return the binding {@code InetAddress} of this {@code Server}
      */
     public InetAddress getInetAddress() {
         return this.bindInetAddress;
     }
 
     /**
-     * Returns the actual binding port of this {@code TestServer}.
+     * Returns the actual binding port of this {@code Server}.
      *
-     * @return the actual binding port of this {@code TestServer}
+     * @return the actual binding port of this {@code Server}
      */
     public int getPort() {
         return this.port;
     }
 
     /**
-     * Returns the {@code State} of this {@code TestServer}.
+     * Returns the {@code State} of this {@code Server}.
      *
-     * @return the {@code State} of this {@code TestServer}
+     * @return the {@code State} of this {@code Server}
      */
     public State getState() {
         return this.state;
     }
 
     /**
-     * Starts this {@code TestServer}.
+     * Starts this {@code Server}.
      *
      * @throws IOException if there is an error in starting the
-     *                     {@code TestServer}
+     *                     {@code Server}
      */
     public void start() throws IOException {
         this.serverSocket = this.serverSocketFactory.newServerSocket(
@@ -218,10 +218,10 @@ public final class TestServer {
     }
 
     /**
-     * Stops this {@code TestServer}.
+     * Stops this {@code Server}.
      *
      * @throws IOException if there is an error in stopping the
-     *                     {@code TestServer}
+     *                     {@code Server}
      */
     public void stop() throws IOException {
         this.serverSocket.close();
@@ -233,17 +233,17 @@ public final class TestServer {
     }
 
     /**
-     * The state of the {@code TestServer}.
+     * The state of the {@code Server}.
      */
     public enum State {
 
         /**
-         * The {@code TestServer} has been started.
+         * The {@code Server} has been started.
          */
         STARTED,
 
         /**
-         * The {@code TestServer} has been stopped.
+         * The {@code Server} has been stopped.
          */
         STOPPED;
 
@@ -379,7 +379,7 @@ public final class TestServer {
                                 clientSocket));
                     } catch (IOException e) {
                         if (isOrHasInstanceOfSocketException(e)) {
-                            // closed by TestServer.stop()
+                            // closed by Server.stop()
                             break;
                         }
                         this.logger.warn(String.format(

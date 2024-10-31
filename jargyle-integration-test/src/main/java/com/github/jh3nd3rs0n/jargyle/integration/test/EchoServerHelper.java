@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.integration.test;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.TestServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,42 +10,42 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public final class EchoTestServerHelper {
+public final class EchoServerHelper {
 
-    private EchoTestServerHelper() {
+    private EchoServerHelper() {
     }
 
-    public static TestServer newEchoTestServer(final int port) {
-        return newEchoTestServer(
+    public static Server newEchoServer(final int port) {
+        return newEchoServer(
                 port,
-                TestServer.BACKLOG,
-                TestServer.INET_ADDRESS);
+                Server.BACKLOG,
+                Server.INET_ADDRESS);
     }
 
-    public static TestServer newEchoTestServer(
+    public static Server newEchoServer(
             final int port, final int backlog, final InetAddress inetAddress) {
-        return newEchoTestServer(
+        return newEchoServer(
                 NetObjectFactory.getDefault(),
                 port,
                 backlog,
                 inetAddress);
     }
 
-    public static TestServer newEchoTestServer(
+    public static Server newEchoServer(
             final NetObjectFactory netObjectFactory, final int port) {
-        return newEchoTestServer(
+        return newEchoServer(
                 netObjectFactory,
                 port,
-                TestServer.BACKLOG,
-                TestServer.INET_ADDRESS);
+                Server.BACKLOG,
+                Server.INET_ADDRESS);
     }
 
-    public static TestServer newEchoTestServer(
+    public static Server newEchoServer(
             final NetObjectFactory netObjectFactory,
             final int port,
             final int backlog,
             final InetAddress inetAddress) {
-        return new TestServer(
+        return new Server(
                 new ServerSocketFactory(netObjectFactory),
                 port,
                 backlog,
@@ -55,23 +55,23 @@ public final class EchoTestServerHelper {
     }
 
     public static String startThenEchoThenStop(
-            final TestServer echoTestServer,
-            final EchoTestClient echoTestClient,
+            final Server echoServer,
+            final EchoClient echoClient,
             final String string) throws IOException {
         String returningString;
-        echoTestServer.start();
+        echoServer.start();
         try {
-            returningString = echoTestClient.echo(
-                    string, echoTestServer.getInetAddress(), echoTestServer.getPort());
+            returningString = echoClient.echo(
+                    string, echoServer.getInetAddress(), echoServer.getPort());
         } finally {
-            if (!echoTestServer.getState().equals(TestServer.State.STOPPED)) {
-                echoTestServer.stop();
+            if (!echoServer.getState().equals(Server.State.STOPPED)) {
+                echoServer.stop();
             }
         }
         return returningString;
     }
 
-    private static final class EchoWorker extends TestServer.Worker {
+    private static final class EchoWorker extends Server.Worker {
 
         public EchoWorker(Socket clientSock) {
             super(clientSock);
@@ -89,20 +89,20 @@ public final class EchoTestServerHelper {
     }
 
     private static final class EchoWorkerFactory
-            extends TestServer.WorkerFactory {
+            extends Server.WorkerFactory {
 
         public EchoWorkerFactory() {
         }
 
         @Override
-        public TestServer.Worker newWorker(final Socket clientSocket) {
+        public Server.Worker newWorker(final Socket clientSocket) {
             return new EchoWorker(clientSocket);
         }
 
     }
 
     private static final class ServerSocketFactory
-            extends TestServer.ServerSocketFactory {
+            extends Server.ServerSocketFactory {
 
         private final NetObjectFactory netObjectFactory;
 

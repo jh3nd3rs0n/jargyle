@@ -27,7 +27,7 @@ public final class EchoDatagramServerInterfaceImpl
 
     @Override
     public State getState() {
-        State state = null;
+        State state;
         switch (this.echoDatagramServer.getState()) {
             case STARTED:
                 state = State.STARTED;
@@ -35,6 +35,10 @@ public final class EchoDatagramServerInterfaceImpl
             case STOPPED:
                 state = State.STOPPED;
                 break;
+            default:
+                throw new AssertionError(String.format(
+                        "unhandled state: %s",
+                        this.echoDatagramServer.getState()));
         }
         return state;
     }

@@ -26,7 +26,7 @@ public final class EchoServerInterfaceImpl
 
     @Override
     public State getState() {
-        State state = null;
+        State state;
         switch (this.echoServer.getState()) {
             case STARTED:
                 state = State.STARTED;
@@ -34,6 +34,10 @@ public final class EchoServerInterfaceImpl
             case STOPPED:
                 state = State.STOPPED;
                 break;
+            default:
+                throw new AssertionError(String.format(
+                        "unhandled state: %s",
+                        this.echoServer.getState()));
         }
         return state;
     }

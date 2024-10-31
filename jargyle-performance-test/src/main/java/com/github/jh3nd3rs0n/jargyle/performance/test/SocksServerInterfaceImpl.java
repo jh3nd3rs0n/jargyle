@@ -24,7 +24,7 @@ public final class SocksServerInterfaceImpl extends SocksServerInterface {
 
     @Override
     public State getState() {
-        State state = null;
+        State state;
         switch (this.socksServer.getState()) {
             case STARTED:
                 state = State.STARTED;
@@ -32,6 +32,10 @@ public final class SocksServerInterfaceImpl extends SocksServerInterface {
             case STOPPED:
                 state = State.STOPPED;
                 break;
+            default:
+                throw new AssertionError(String.format(
+                        "unhandled state: %s",
+                        this.socksServer.getState()));
         }
         return state;
     }

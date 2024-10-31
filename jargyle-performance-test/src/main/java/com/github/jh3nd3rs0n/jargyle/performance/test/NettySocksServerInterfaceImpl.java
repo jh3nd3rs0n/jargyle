@@ -24,7 +24,7 @@ public final class NettySocksServerInterfaceImpl extends SocksServerInterface {
 
     @Override
     public State getState() {
-        State state = null;
+        State state;
         switch (this.nettySocksServer.getState()) {
             case STARTED:
                 state = State.STARTED;
@@ -32,6 +32,10 @@ public final class NettySocksServerInterfaceImpl extends SocksServerInterface {
             case STOPPED:
                 state = State.STOPPED;
                 break;
+            default:
+                throw new AssertionError(String.format(
+                        "unhandled state: %s",
+                        this.nettySocksServer.getState()));
         }
         return state;
     }

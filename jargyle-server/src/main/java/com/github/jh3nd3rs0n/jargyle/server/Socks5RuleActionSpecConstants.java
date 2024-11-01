@@ -171,7 +171,7 @@ public final class Socks5RuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the target-facing "
 					+ "socket (can be specified multiple times with each rule "
-					+ "result specifying another port range)",
+					+ "action specifying another port range)",
 			name = "socks5.onConnectRequest.targetFacingBindPortRange",
 			syntax = "socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE",
 			valueType = PortRange.class
@@ -192,7 +192,7 @@ public final class Socks5RuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the target-facing "
 					+ "socket (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "socks5.onConnectRequest.targetFacingSocketSetting",
 			syntax = "socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
@@ -269,7 +269,7 @@ public final class Socks5RuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all external-facing "
 					+ "sockets (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "socks5.onRequest.externalFacingSocketSetting",
 			syntax = "socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
@@ -302,7 +302,7 @@ public final class Socks5RuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all internal-facing "
 					+ "sockets (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "socks5.onRequest.internalFacingSocketSetting",
 			syntax = "socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
@@ -385,7 +385,7 @@ public final class Socks5RuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the client-facing UDP "
 					+ "socket (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "socks5.onUdpAssociateRequest.clientFacingSocketSetting",
 			syntax = "socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
@@ -417,7 +417,7 @@ public final class Socks5RuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the peer-facing UDP "
 					+ "socket (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "socks5.onUdpAssociateRequest.peerFacingSocketSetting",
 			syntax = "socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class

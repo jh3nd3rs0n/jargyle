@@ -572,7 +572,7 @@ SETTING VALUE SYNTAXES:
             Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
 
         externalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
 
         firewallAction=FIREWALL_ACTION
             Specifies the firewall action to take
@@ -593,7 +593,7 @@ SETTING VALUE SYNTAXES:
             Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
 
         internalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
 
         routeSelectionLogAction=LOG_ACTION
             Specifies the logging action to take if a route ID is selected
@@ -652,13 +652,13 @@ SETTING VALUE SYNTAXES:
             Specifies the binding host name or address for the target-facing socket
 
         socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE
-            Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule result specifying another port range)
+            Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule action specifying another port range)
 
         socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER
             Specifies the timeout in milliseconds on waiting for the target-facing socket to connect
 
         socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule action specifying another socket setting)
 
         socks5.onRequest.bindHost=HOST
             Specifies the binding host name or address for all sockets
@@ -679,7 +679,7 @@ SETTING VALUE SYNTAXES:
             Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
 
         socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
 
         socks5.onRequest.internalFacingBindHost=HOST
             Specifies the binding host name or address for all internal-facing sockets
@@ -688,7 +688,7 @@ SETTING VALUE SYNTAXES:
             Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
 
         socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
 
         socks5.onRequest.relayBufferSize=POSITIVE_INTEGER
             Specifies the buffer size in bytes for relaying the data
@@ -712,7 +712,7 @@ SETTING VALUE SYNTAXES:
             Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
 
         socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)
 
         socks5.onUdpAssociateRequest.peerFacingBindHost=HOST
             Specifies the binding host name or address for the peer-facing UDP socket
@@ -721,7 +721,7 @@ SETTING VALUE SYNTAXES:
             Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
 
         socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
+            Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)
 
         socks5.onUdpAssociateRequest.relayBufferSize=POSITIVE_INTEGER
             Specifies the buffer size in bytes for relaying the data

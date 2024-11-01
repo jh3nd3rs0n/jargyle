@@ -99,7 +99,7 @@ public final class GeneralRuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all external-facing "
 					+ "sockets (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "externalFacingSocketSetting",
 			syntax = "externalFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
@@ -172,7 +172,7 @@ public final class GeneralRuleActionSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all internal-facing "
 					+ "sockets (can be specified multiple times with each rule "
-					+ "result specifying another socket setting)",
+					+ "action specifying another socket setting)",
 			name = "internalFacingSocketSetting",
 			syntax = "internalFacingSocketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class

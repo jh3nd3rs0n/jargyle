@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.*;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationSchema;
 import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
 import java.io.*;
@@ -18,10 +18,10 @@ final class ReferenceDocsGenerator {
             "client-properties.xhtml";
     private static final String CLI_HELP_INFO_FILENAME =
             "cli-help-info.xhtml";
+    private static final String RULE_ACTIONS_FILENAME =
+            "rule-actions.xhtml";
     private static final String RULE_CONDITIONS_FILENAME =
             "rule-conditions.xhtml";
-    private static final String RULE_RESULTS_FILENAME =
-            "rule-results.xhtml";
     private static final String SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME =
             "server-configuration-file-schema.xhtml";
     private static final String SERVER_CONFIGURATION_SETTINGS_FILENAME =
@@ -62,16 +62,16 @@ final class ReferenceDocsGenerator {
             this.printCliHelpInfo(cliHelpInfoWriter);
         }
         System.out.println("Done.");
+        System.out.printf("Creating '%s'...", RULE_ACTIONS_FILENAME);
+        try (PrintWriter ruleActionsWriter = new PrintWriter(
+                RULE_ACTIONS_FILENAME, "UTF-8")) {
+            this.printRuleActions(ruleActionsWriter);
+        }
+        System.out.println("Done.");
         System.out.printf("Creating '%s'...", RULE_CONDITIONS_FILENAME);
         try (PrintWriter ruleConditionsWriter = new PrintWriter(
                 RULE_CONDITIONS_FILENAME, "UTF-8")) {
             this.printRuleConditions(ruleConditionsWriter);
-        }
-        System.out.println("Done.");
-        System.out.printf("Creating '%s'...", RULE_RESULTS_FILENAME);
-        try (PrintWriter ruleResultsWriter = new PrintWriter(
-                RULE_RESULTS_FILENAME, "UTF-8")) {
-            this.printRuleResults(ruleResultsWriter);
         }
         System.out.println("Done.");
         System.out.printf(
@@ -95,7 +95,7 @@ final class ReferenceDocsGenerator {
         this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
         this.putFromRootNameValuePairValueType(
                 valueTypeMap, RuleCondition.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, RuleResult.class);
+        this.putFromRootNameValuePairValueType(valueTypeMap, RuleAction.class);
         this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
         System.out.printf("Creating '%s'...", VALUE_SYNTAXES_FILENAME);
         try (PrintWriter valueSyntaxesWriter = new PrintWriter(
@@ -463,19 +463,19 @@ final class ReferenceDocsGenerator {
         }
     }
 
+    private void printRuleActions(final PrintWriter pw) {
+        pw.println(DOCUMENT_START_TAGS);
+        pw.println(this.getHeader1("Rule Actions"));
+        this.printTableFromRootNameValuePairValueType(
+                RuleAction.class, pw);
+        pw.println(DOCUMENT_END_TAGS);
+    }
+
     private void printRuleConditions(final PrintWriter pw) {
         pw.println(DOCUMENT_START_TAGS);
         pw.println(this.getHeader1("Rule Conditions"));
         this.printTableFromRootNameValuePairValueType(
                 RuleCondition.class, pw);
-        pw.println(DOCUMENT_END_TAGS);
-    }
-
-    private void printRuleResults(final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Rule Results"));
-        this.printTableFromRootNameValuePairValueType(
-                RuleResult.class, pw);
         pw.println(DOCUMENT_END_TAGS);
     }
 

@@ -29,7 +29,7 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Version;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleActionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
@@ -100,20 +100,20 @@ public class Worker implements Runnable {
 			return;
 		}
 		FirewallAction firewallAction = 
-				belowAllowLimitRl.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+				belowAllowLimitRl.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null 
 				|| !firewallAction.equals(FirewallAction.ALLOW)) {
 			throw new IllegalArgumentException(String.format(
-					"rule must have a rule result of a firewall action of %s", 
+					"rule must have a rule action of a firewall action of %s", 
 					FirewallAction.ALLOW));
 		}
 		NonNegativeIntegerLimit firewallActionAllowLimit =
-				belowAllowLimitRl.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+				belowAllowLimitRl.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		if (firewallActionAllowLimit == null) {
 			throw new IllegalArgumentException(
-					"rule must have a rule result of a firewall action allow "
+					"rule must have a rule action of a firewall action allow "
 					+ "limit");
 		}
 		this.belowAllowLimitRules.add(Objects.requireNonNull(
@@ -122,14 +122,14 @@ public class Worker implements Runnable {
 	
 	private boolean canAllowClientSocket() {
 		FirewallAction firewallAction = 
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+				this.applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			return false;
 		}
 		LogAction firewallActionLogAction = 
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+				this.applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowClientSocketWithinLimit()) {
 				return false;
@@ -154,11 +154,11 @@ public class Worker implements Runnable {
 	
 	private boolean canAllowClientSocketWithinLimit() {
 		NonNegativeIntegerLimit firewallActionAllowLimit =
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+				this.applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
+				this.applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {
@@ -201,11 +201,11 @@ public class Worker implements Runnable {
 	private void decrementAllCurrentAllowedCounts() {
 		for (Rule belowAllowLimitRule : this.belowAllowLimitRules) {
 			FirewallAction firewallAction = 
-					belowAllowLimitRule.getLastRuleResultValue(
-							GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+					belowAllowLimitRule.getLastRuleActionValue(
+							GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 			NonNegativeIntegerLimit firewallActionAllowLimit =
-					belowAllowLimitRule.getLastRuleResultValue(
-							GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+					belowAllowLimitRule.getLastRuleActionValue(
+							GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 			if (firewallAction != null 
 					&& firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionAllowLimit != null) {
@@ -236,8 +236,8 @@ public class Worker implements Runnable {
 	}
 	
 	private Routes getClientRoutes() {
-		List<Route> rtes = this.applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)
+		List<Route> rtes = this.applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.SELECTABLE_ROUTE_ID)
 				.stream()
 				.map(rteId -> this.routes.get(rteId))
 				.filter(rte -> rte != null)
@@ -250,8 +250,8 @@ public class Worker implements Runnable {
 	
 	private LogAction getClientRouteSelectionLogAction() {
 		LogAction routeSelectionLogAction = 
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION);
+				this.applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 		if (routeSelectionLogAction != null) {
 			return routeSelectionLogAction;
 		}
@@ -261,8 +261,8 @@ public class Worker implements Runnable {
 	
 	private SelectionStrategy getClientRouteSelectionStrategy() {
 		SelectionStrategy routeSelectionStrategy =
-				this.applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY);
+				this.applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.ROUTE_SELECTION_STRATEGY);
 		if (routeSelectionStrategy != null) {
 			return routeSelectionStrategy;
 		}
@@ -279,14 +279,14 @@ public class Worker implements Runnable {
 	
 	private SocketSettings getClientSocketSettings() {
 		List<SocketSetting<Object>> socketSettings = 
-				this.applicableRule.getRuleResultValues(
-						GeneralRuleResultSpecConstants.CLIENT_SOCKET_SETTING);
+				this.applicableRule.getRuleActionValues(
+						GeneralRuleActionSpecConstants.CLIENT_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = this.applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.SOCKET_SETTING);
+		socketSettings = this.applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
@@ -468,12 +468,12 @@ public class Worker implements Runnable {
 		Route selectedRte = rteSelectionStrategy.selectFrom(
 				rtes.toMap().values().stream().collect(Collectors.toList()));
 		if (rteSelectionLogAction != null) {
-			if (this.applicableRule.hasRuleResult(
-					GeneralRuleResultSpecConstants.ROUTE_SELECTION_LOG_ACTION)
-					|| this.applicableRule.hasRuleResult(
-							GeneralRuleResultSpecConstants.ROUTE_SELECTION_STRATEGY)
-					|| this.applicableRule.hasRuleResult(
-							GeneralRuleResultSpecConstants.SELECTABLE_ROUTE_ID)) {
+			if (this.applicableRule.hasRuleAction(
+					GeneralRuleActionSpecConstants.ROUTE_SELECTION_LOG_ACTION)
+					|| this.applicableRule.hasRuleAction(
+							GeneralRuleActionSpecConstants.ROUTE_SELECTION_STRATEGY)
+					|| this.applicableRule.hasRuleAction(
+							GeneralRuleActionSpecConstants.SELECTABLE_ROUTE_ID)) {
 				rteSelectionLogAction.invoke(
 						ObjectLogMessageHelper.objectLogMessage(
 								this,

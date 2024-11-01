@@ -27,8 +27,8 @@
 		<menu name="Reference">
 			<item name="Client Properties" href="reference/client-properties.html" />
 			<item name="Command Line Interface Help Information" href="reference/cli-help-info.html" />
+			<item name="Rule Actions" href="reference/rule-actions.html" />
 			<item name="Rule Conditions" href="reference/rule-conditions.html" />
-			<item name="Rule Results" href="reference/rule-results.html" />
 			<item name="Server Configuration File Schema" href="reference/server-configuration-file-schema.html" />
 			<item name="Server Configuration Settings" href="reference/server-configuration-settings.html" />
 			<item name="SOCKS5 RESOLVE Request" href="reference/socks5-resolve-request.html" />

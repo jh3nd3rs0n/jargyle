@@ -29,12 +29,12 @@ import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleActionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleActionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedDatagramSocket;
 
@@ -90,28 +90,28 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private Host getClientFacingBindHost() {
 		Rule applicableRule = this.getApplicableRule();
-		Host host = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST);
+		Host host = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.INTERNAL_FACING_BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				GeneralRuleActionSpecConstants.BIND_HOST);
 		if (host != null) {
 			return host;
 		}
@@ -143,28 +143,28 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private PortRanges getClientFacingBindPortRanges() {
 		Rule applicableRule = this.getApplicableRule();
-		List<PortRange> portRanges = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE);
+		List<PortRange> portRanges = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
@@ -197,32 +197,32 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private SocketSettings getClientFacingSocketSettings() {
 		Rule applicableRule = this.getApplicableRule();
 		List<SocketSetting<Object>> socketSettings =
-				applicableRule.getRuleResultValues(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING);
+				applicableRule.getRuleActionValues(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.INTERNAL_FACING_SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.INTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
@@ -255,28 +255,28 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private Host getPeerFacingBindHost() {
 		Rule applicableRule = this.getApplicableRule();
-		Host host = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST);
+		Host host = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST);
 		if (host != null) {
 			return host;
 		}
-		host = applicableRule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.BIND_HOST);
+		host = applicableRule.getLastRuleActionValue(
+				GeneralRuleActionSpecConstants.BIND_HOST);
 		if (host != null) {
 			return host;
 		}
@@ -308,28 +308,28 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private PortRanges getPeerFacingBindPortRanges() {
 		Rule applicableRule = this.getApplicableRule();
-		List<PortRange> portRanges = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE);
+		List<PortRange> portRanges = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
-		portRanges = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.BIND_UDP_PORT_RANGE);
+		portRanges = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.BIND_UDP_PORT_RANGE);
 		if (portRanges.size() > 0) {
 			return PortRanges.of(portRanges);
 		}
@@ -362,32 +362,32 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private SocketSettings getPeerFacingSocketSettings() {
 		Rule applicableRule = this.getApplicableRule();
 		List<SocketSetting<Object>> socketSettings =
-				applicableRule.getRuleResultValues(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING);
+				applicableRule.getRuleActionValues(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
 		}
-		socketSettings = applicableRule.getRuleResultValues(
-				GeneralRuleResultSpecConstants.SOCKET_SETTING);
+		socketSettings = applicableRule.getRuleActionValues(
+				GeneralRuleActionSpecConstants.SOCKET_SETTING);
 		if (socketSettings.size() > 0) {
 			return SocketSettings.of(
 					socketSettings.stream().collect(Collectors.toList()));
@@ -421,13 +421,13 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private int getRelayBufferSize() {
 		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayBufferSize =
-				applicableRule.getLastRuleResultValue(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE);
+				applicableRule.getLastRuleActionValue(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
-		relayBufferSize = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE);
+		relayBufferSize = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE);
 		if (relayBufferSize != null) {
 			return relayBufferSize.intValue();
 		}
@@ -445,13 +445,13 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private int getRelayIdleTimeout() {
 		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayIdleTimeout =
-				applicableRule.getLastRuleResultValue(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_IDLE_TIMEOUT);
+				applicableRule.getLastRuleActionValue(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
-		relayIdleTimeout = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT);
+		relayIdleTimeout = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT);
 		if (relayIdleTimeout != null) {
 			return relayIdleTimeout.intValue();
 		}
@@ -469,13 +469,13 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private Integer getRelayInboundBandwidthLimit() {
 		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayInboundBandwidthLimit =
-				applicableRule.getLastRuleResultValue(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
+				applicableRule.getLastRuleActionValue(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
-		relayInboundBandwidthLimit = applicableRule.getLastRuleResultValue(
-				Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
+		relayInboundBandwidthLimit = applicableRule.getLastRuleActionValue(
+				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
 		if (relayInboundBandwidthLimit != null) {
 			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
 		}
@@ -496,14 +496,14 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private Integer getRelayOutboundBandwidthLimit() {
 		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayOutboundBandwidthLimit =
-				applicableRule.getLastRuleResultValue(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+				applicableRule.getLastRuleActionValue(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}
 		relayOutboundBandwidthLimit =
-				applicableRule.getLastRuleResultValue(
-						Socks5RuleResultSpecConstants.SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+				applicableRule.getLastRuleActionValue(
+						Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
 		if (relayOutboundBandwidthLimit != null) {
 			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
 		}

@@ -14,7 +14,7 @@ public class RuleTest {
 				.toString());
 		Rule actualRule = new Rule.Builder()
 				.addRuleCondition(GeneralRuleConditionSpecConstants.CLIENT_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.ALLOW))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.ALLOW))
 				.build();
 		Assert.assertEquals(expectedRule, actualRule);
 	}
@@ -29,7 +29,7 @@ public class RuleTest {
 		Rule actualRule = new Rule.Builder()
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_COMMAND.newRuleCondition(Command.BIND.toString()))
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE.toString()))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.DENY))
 				.build();
 		Assert.assertEquals(expectedRule, actualRule);
 	}
@@ -43,8 +43,8 @@ public class RuleTest {
 				.toString());
 		Rule actualRule = new Rule.Builder()
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REPLY_SERVER_BOUND_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION.newRuleResult(LogAction.LOG_AS_WARNING))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.DENY))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION.newRuleAction(LogAction.LOG_AS_WARNING))
 				.build();
 		Assert.assertEquals(expectedRule, actualRule);
 	}

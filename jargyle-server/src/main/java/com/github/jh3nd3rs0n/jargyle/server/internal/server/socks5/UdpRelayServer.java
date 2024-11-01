@@ -120,13 +120,13 @@ final class UdpRelayServer {
 			if (!this.hasInboundRuleCondition(rule)) {
 				return true;
 			}
-			FirewallAction firewallAction = rule.getLastRuleResultValue(
-					GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+			FirewallAction firewallAction = rule.getLastRuleActionValue(
+					GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 			if (firewallAction == null) {
 				return false;
 			}
-			LogAction firewallActionLogAction =	rule.getLastRuleResultValue(
-					GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+			LogAction firewallActionLogAction =	rule.getLastRuleActionValue(
+					GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(
@@ -421,13 +421,13 @@ final class UdpRelayServer {
 			if (!this.hasOutboundRuleCondition(rule)) {
 				return true;
 			}
-			FirewallAction firewallAction =	rule.getLastRuleResultValue(
-					GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+			FirewallAction firewallAction =	rule.getLastRuleActionValue(
+					GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 			if (firewallAction == null) {
 				return false;
 			}
-			LogAction firewallActionLogAction =	rule.getLastRuleResultValue(
-					GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+			LogAction firewallActionLogAction =	rule.getLastRuleActionValue(
+					GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 			if (firewallAction.equals(FirewallAction.ALLOW)
 					&& firewallActionLogAction != null) {
 				firewallActionLogAction.invoke(

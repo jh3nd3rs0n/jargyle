@@ -544,7 +544,205 @@ SETTING VALUE SYNTAXES:
 
   POSITIVE_INTEGER: 1-2147483647
 
-  RULE: [RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]
+  RULE: [RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_ACTION1[,RULE_ACTION2[...]]
+
+  RULE_ACTION: NAME=VALUE
+
+    GENERAL RULE ACTIONS:
+
+        bindHost=HOST
+            Specifies the binding host name or address for all sockets
+
+        bindTcpPortRange=PORT_RANGE
+            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        bindUdpPortRange=PORT_RANGE
+            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule action specifying another port ranges)
+
+        clientSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for the client socket (can be specified multiple times with each rule action specifying another socket setting)
+
+        externalFacingBindHost=HOST
+            Specifies the binding host name or address for all external-facing sockets
+
+        externalFacingBindTcpPortRange=PORT_RANGE
+            Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        externalFacingBindUdpPortRange=PORT_RANGE
+            Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        externalFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+
+        firewallAction=FIREWALL_ACTION
+            Specifies the firewall action to take
+
+        firewallActionAllowLimit=NON_NEGATIVE_INTEGER
+            Specifies the limit on the number of simultaneous instances of the rule's firewall action ALLOW
+
+        firewallActionAllowLimitReachedLogAction=LOG_ACTION
+            Specifies the logging action to take if the limit on the number of simultaneous instances of the rule's firewall action ALLOW has been reached
+
+        firewallActionLogAction=LOG_ACTION
+            Specifies the logging action to take if the firewall action is applied
+
+        internalFacingBindHost=HOST
+            Specifies the binding host name or address for all internal-facing sockets
+
+        internalFacingBindUdpPortRange=PORT_RANGE
+            Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        internalFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+
+        routeSelectionLogAction=LOG_ACTION
+            Specifies the logging action to take if a route ID is selected
+
+        routeSelectionStrategy=SELECTION_STRATEGY
+            Specifies the selection strategy for the next route ID
+
+        selectableRouteId=ROUTE_ID
+            Specifies the ID for a selectable route (can be specified multiple times with each rule action specifying another ID for a selectable route)
+
+        socketSetting=SOCKET_SETTING
+            Specifies a socket setting for all sockets (can be specified multiple times with each rule action specifying another socket setting)
+
+    SOCKS5 RULE ACTIONS:
+
+        socks5.onBindRequest.inboundSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for the inbound socket (can be specified multiple times with each rule action specifying another socket setting)
+
+        socks5.onBindRequest.listenBindHost=HOST
+            Specifies the binding host name or address for the listen socket if the provided host address is all zeros
+
+        socks5.onBindRequest.listenBindPortRange=PORT_RANGE
+            Specifies a binding port range for the listen socket if the provided port is zero (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onBindRequest.listenSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for the listen socket (can be specified multiple times with each rule action specifying another socket setting)
+
+        socks5.onBindRequest.relayBufferSize=POSITIVE_INTEGER
+            Specifies the buffer size in bytes for relaying the data
+
+        socks5.onBindRequest.relayIdleTimeout=POSITIVE_INTEGER
+            Specifies the timeout in milliseconds on relaying no data
+
+        socks5.onBindRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+        socks5.onBindRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+        socks5.onConnectRequest.prepareTargetFacingSocket=true|false
+            Specifies the boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
+
+        socks5.onConnectRequest.relayBufferSize=POSITIVE_INTEGER
+            Specifies the buffer size in bytes for relaying the data
+
+        socks5.onConnectRequest.relayIdleTimeout=POSITIVE_INTEGER
+            Specifies the timeout in milliseconds on relaying no data
+
+        socks5.onConnectRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+        socks5.onConnectRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+        socks5.onConnectRequest.targetFacingBindHost=HOST
+            Specifies the binding host name or address for the target-facing socket
+
+        socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE
+            Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule result specifying another port range)
+
+        socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER
+            Specifies the timeout in milliseconds on waiting for the target-facing socket to connect
+
+        socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule result specifying another socket setting)
+
+        socks5.onRequest.bindHost=HOST
+            Specifies the binding host name or address for all sockets
+
+        socks5.onRequest.bindTcpPortRange=PORT_RANGE
+            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onRequest.bindUdpPortRange=PORT_RANGE
+            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onRequest.externalFacingBindHost=HOST
+            Specifies the binding host name or address for all external-facing sockets
+
+        socks5.onRequest.externalFacingBindTcpPortRange=PORT_RANGE
+            Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onRequest.externalFacingBindUdpPortRange=PORT_RANGE
+            Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+
+        socks5.onRequest.internalFacingBindHost=HOST
+            Specifies the binding host name or address for all internal-facing sockets
+
+        socks5.onRequest.internalFacingBindUdpPortRange=PORT_RANGE
+            Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
+
+        socks5.onRequest.relayBufferSize=POSITIVE_INTEGER
+            Specifies the buffer size in bytes for relaying the data
+
+        socks5.onRequest.relayIdleTimeout=POSITIVE_INTEGER
+            Specifies the timeout in milliseconds on relaying no data
+
+        socks5.onRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+        socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+        socks5.onRequest.socketSetting=SOCKET_SETTING
+            Specifies a socket setting for all sockets (can be specified multiple times with each rule action specifying another socket setting)
+
+        socks5.onUdpAssociateRequest.clientFacingBindHost=HOST
+            Specifies the binding host name or address for the client-facing UDP socket
+
+        socks5.onUdpAssociateRequest.clientFacingBindPortRange=PORT_RANGE
+            Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
+
+        socks5.onUdpAssociateRequest.peerFacingBindHost=HOST
+            Specifies the binding host name or address for the peer-facing UDP socket
+
+        socks5.onUdpAssociateRequest.peerFacingBindPortRange=PORT_RANGE
+            Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING
+            Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
+
+        socks5.onUdpAssociateRequest.relayBufferSize=POSITIVE_INTEGER
+            Specifies the buffer size in bytes for relaying the data
+
+        socks5.onUdpAssociateRequest.relayIdleTimeout=POSITIVE_INTEGER
+            Specifies the timeout in milliseconds on relaying no data
+
+        socks5.onUdpAssociateRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+        socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
+            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+        socks5.request.desiredDestinationAddressRedirect=SOCKS5_ADDRESS
+            Specifies the desired destination address redirect for the request
+
+        socks5.request.desiredDestinationPortRedirect=PORT
+            Specifies the desired destination port redirect for the request
+
+        socks5.request.desiredDestinationRedirectLogAction=LOG_ACTION
+            Specifies the logging action to take if the desired destination of the request is redirected
 
   RULE_CONDITION: NAME=VALUE
 
@@ -608,204 +806,6 @@ SETTING VALUE SYNTAXES:
 
         socks5.user=USER
             Specifies the user if any after the negotiated method
-
-  RULE_RESULT: NAME=VALUE
-
-    GENERAL RULE RESULTS:
-
-        bindHost=HOST
-            Specifies the binding host name or address for all sockets
-
-        bindTcpPortRange=PORT_RANGE
-            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        bindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule result specifying another port ranges)
-
-        clientSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the client socket (can be specified multiple times with each rule result specifying another socket setting)
-
-        externalFacingBindHost=HOST
-            Specifies the binding host name or address for all external-facing sockets
-
-        externalFacingBindTcpPortRange=PORT_RANGE
-            Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        externalFacingBindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        externalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
-
-        firewallAction=FIREWALL_ACTION
-            Specifies the firewall action to take
-
-        firewallActionAllowLimit=NON_NEGATIVE_INTEGER
-            Specifies the limit on the number of simultaneous instances of the rule's firewall action ALLOW
-
-        firewallActionAllowLimitReachedLogAction=LOG_ACTION
-            Specifies the logging action to take if the limit on the number of simultaneous instances of the rule's firewall action ALLOW has been reached
-
-        firewallActionLogAction=LOG_ACTION
-            Specifies the logging action to take if the firewall action is applied
-
-        internalFacingBindHost=HOST
-            Specifies the binding host name or address for all internal-facing sockets
-
-        internalFacingBindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        internalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
-
-        routeSelectionLogAction=LOG_ACTION
-            Specifies the logging action to take if a route ID is selected
-
-        routeSelectionStrategy=SELECTION_STRATEGY
-            Specifies the selection strategy for the next route ID
-
-        selectableRouteId=ROUTE_ID
-            Specifies the ID for a selectable route (can be specified multiple times with each rule result specifying another ID for a selectable route)
-
-        socketSetting=SOCKET_SETTING
-            Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
-
-    SOCKS5 RULE RESULTS:
-
-        socks5.onBindRequest.inboundSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the inbound socket (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onBindRequest.listenBindHost=HOST
-            Specifies the binding host name or address for the listen socket if the provided host address is all zeros
-
-        socks5.onBindRequest.listenBindPortRange=PORT_RANGE
-            Specifies a binding port range for the listen socket if the provided port is zero (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onBindRequest.listenSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the listen socket (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onBindRequest.relayBufferSize=POSITIVE_INTEGER
-            Specifies the buffer size in bytes for relaying the data
-
-        socks5.onBindRequest.relayIdleTimeout=POSITIVE_INTEGER
-            Specifies the timeout in milliseconds on relaying no data
-
-        socks5.onBindRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-        socks5.onBindRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-        socks5.onConnectRequest.prepareTargetFacingSocket=true|false
-            Specifies the boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
-
-        socks5.onConnectRequest.relayBufferSize=POSITIVE_INTEGER
-            Specifies the buffer size in bytes for relaying the data
-
-        socks5.onConnectRequest.relayIdleTimeout=POSITIVE_INTEGER
-            Specifies the timeout in milliseconds on relaying no data
-
-        socks5.onConnectRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-        socks5.onConnectRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-        socks5.onConnectRequest.targetFacingBindHost=HOST
-            Specifies the binding host name or address for the target-facing socket
-
-        socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE
-            Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER
-            Specifies the timeout in milliseconds on waiting for the target-facing socket to connect
-
-        socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onRequest.bindHost=HOST
-            Specifies the binding host name or address for all sockets
-
-        socks5.onRequest.bindTcpPortRange=PORT_RANGE
-            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onRequest.bindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onRequest.externalFacingBindHost=HOST
-            Specifies the binding host name or address for all external-facing sockets
-
-        socks5.onRequest.externalFacingBindTcpPortRange=PORT_RANGE
-            Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onRequest.externalFacingBindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onRequest.internalFacingBindHost=HOST
-            Specifies the binding host name or address for all internal-facing sockets
-
-        socks5.onRequest.internalFacingBindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onRequest.relayBufferSize=POSITIVE_INTEGER
-            Specifies the buffer size in bytes for relaying the data
-
-        socks5.onRequest.relayIdleTimeout=POSITIVE_INTEGER
-            Specifies the timeout in milliseconds on relaying no data
-
-        socks5.onRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-        socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-        socks5.onRequest.socketSetting=SOCKET_SETTING
-            Specifies a socket setting for all sockets (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onUdpAssociateRequest.clientFacingBindHost=HOST
-            Specifies the binding host name or address for the client-facing UDP socket
-
-        socks5.onUdpAssociateRequest.clientFacingBindPortRange=PORT_RANGE
-            Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onUdpAssociateRequest.peerFacingBindHost=HOST
-            Specifies the binding host name or address for the peer-facing UDP socket
-
-        socks5.onUdpAssociateRequest.peerFacingBindPortRange=PORT_RANGE
-            Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another port range)
-
-        socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING
-            Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule result specifying another socket setting)
-
-        socks5.onUdpAssociateRequest.relayBufferSize=POSITIVE_INTEGER
-            Specifies the buffer size in bytes for relaying the data
-
-        socks5.onUdpAssociateRequest.relayIdleTimeout=POSITIVE_INTEGER
-            Specifies the timeout in milliseconds on relaying no data
-
-        socks5.onUdpAssociateRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-        socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
-            Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-        socks5.request.desiredDestinationAddressRedirect=SOCKS5_ADDRESS
-            Specifies the desired destination address redirect for the request
-
-        socks5.request.desiredDestinationPortRedirect=PORT
-            Specifies the desired destination port redirect for the request
-
-        socks5.request.desiredDestinationRedirectLogAction=LOG_ACTION
-            Specifies the logging action to take if the desired destination of the request is redirected
 
   SCHEME: socks5
 

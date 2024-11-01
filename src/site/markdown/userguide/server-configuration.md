@@ -23,7 +23,7 @@ the command line.
 -   [Chaining to Specified Chains of Other SOCKS Servers](#chaining-to-specified-chains-of-other-socks-servers)
 -   [Using Rules to Manage Traffic](#using-rules-to-manage-traffic)
     -   [Rule Conditions](#rule-conditions)
-    -   [Rule Results](#rule-results)
+    -   [Rule Actions](#rule-actions)
     -   [Allowing or Denying Traffic](#allowing-or-denying-traffic)
     -   [Allowing a Limited Number of Simultaneous Instances of Traffic](#allowing-a-limited-number-of-simultaneous-instances-of-traffic)
     -   [Routing Traffic Through a Selection of Specified Chains of SOCKS Servers](#routing-traffic-through-a-selection-of-specified-chains-of-socks-servers)
@@ -2472,17 +2472,17 @@ A rule consists of the following:
 
 -   Rule conditions: fields that altogether evaluates as true if they match a 
 specific instance of traffic
--   Rule results: fields that are applied if the aforementioned rule conditions 
+-   Rule actions: fields that are applied if the aforementioned rule conditions 
 evaluate as true for matching a specific instance of traffic
 
 From the API and from the command line, a rule consists of a comma separated 
-list of both rule conditions and rule results. 
+list of both rule conditions and rule actions. 
 
 In the server configuration file, a rule is expressed as a `<rule/>` XML 
-element with a `<ruleConditions/>` XML element and a `<ruleResults/>` XML 
+element with a `<ruleConditions/>` XML element and a `<ruleActions/>` XML 
 element. 
 
-See [Rule Conditions](#rule-conditions) and [Rule Results](#rule-results) for 
+See [Rule Conditions](#rule-conditions) and [Rule Actions](#rule-actions) for 
 more information.
 
 To specify a rule, you would need to have the setting `rule` specify the rule. 
@@ -2528,12 +2528,12 @@ Server configuration file example:
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
     </settings>
@@ -2617,12 +2617,12 @@ Server configuration file example:
                         <value>443</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
@@ -2634,24 +2634,24 @@ Server configuration file example:
                         <value>CONNECT</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>DENY</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>    
     </settings>
@@ -2731,12 +2731,12 @@ Partial API examples:
 A complete listing of rule conditions can be found 
 [here](../reference/rule-conditions.md).
 
-### Rule Results
+### Rule Actions
 
-From the API and from the command line, rule results consist of a comma 
-separated list of rule results. Each rule result consists of the syntax of 
-`NAME=VALUE` where `NAME` is expressed as the name of the rule result and 
-`VALUE` is expressed as the value assigned to the rule result. 
+From the API and from the command line, rule actions consist of a comma 
+separated list of rule actions. Each rule action consists of the syntax of 
+`NAME=VALUE` where `NAME` is expressed as the name of the rule action and 
+`VALUE` is expressed as the value assigned to the rule action. 
 
 Partial API and command line example:
 
@@ -2744,47 +2744,47 @@ Partial API and command line example:
 firewallAction=ALLOW,firewallActionLogAction=LOG_AS_INFO
 ```
 
-In the server configuration file, rule result are expressed in a `<ruleResults/>` 
-XML element with zero to many `<ruleResult/>` XML elements. Each 
-`<ruleResult/>` XML element contains a `<name/>` XML element for the name of 
-the rule result and the `<value/>` XML element of the value assigned to the 
-rule result.
+In the server configuration file, rule action are expressed in a `<ruleActions/>` 
+XML element with zero to many `<ruleAction/>` XML elements. Each 
+`<ruleAction/>` XML element contains a `<name/>` XML element for the name of 
+the rule action and the `<value/>` XML element of the value assigned to the 
+rule action.
 
 Partial server configuration file example:
 
 ```xml
-<ruleResults>
-    <ruleResult>
+<ruleActions>
+    <ruleAction>
         <name>firewallAction</name>
         <value>ALLOW</value>
-    </ruleResult>
-    <ruleResult>
+    </ruleAction>
+    <ruleAction>
         <name>firewallActionLogAction</name>
         <value>LOG_AS_INFO</value>
-    </ruleResult>
-</ruleResults>
+    </ruleAction>
+</ruleActions>
 ```
 
-Unless otherwise stated, if a rule result of the same name appears more than 
-once in the comma separated list or in the `<ruleResults/>` XML element, then 
-only the last rule result of the same name is recognized.
+Unless otherwise stated, if a rule action of the same name appears more than 
+once in the comma separated list or in the `<ruleActions/>` XML element, then 
+only the last rule action of the same name is recognized.
 
-A complete listing of rule results can be found 
-[here](../reference/rule-results.md).
+A complete listing of rule actions can be found 
+[here](../reference/rule-actions.md).
 
 ### Allowing or Denying Traffic
 
 To allow or deny a specific instance of traffic, you will need the following 
-rule result:
+rule action:
 
 -   `firewallAction`
 
-The value given to the rule result must be either of the following values:
+The value given to the rule action must be either of the following values:
 
 -   `ALLOW`
 -   `DENY`
 
-This rule result can be used with the following rule conditions:
+This rule action can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method`
@@ -2806,15 +2806,15 @@ This rule result can be used with the following rule conditions:
 -   `socks5.user`
 -   `socksServerAddress`
 
-**Note**: for any other rule results to be applied, the rule result 
+**Note**: for any other rule actions to be applied, the rule action 
 `firewallAction` with the value of `ALLOW` must be present.
 
-You can also specify the logging action to take if the rule result 
-`firewallAction` is applied by adding the following rule result:
+You can also specify the logging action to take if the rule action 
+`firewallAction` is applied by adding the following rule action:
 
 -   `firewallActionLogAction`
 
-The rule result `firewallActionLogAction` is optional.
+The rule action `firewallActionLogAction` is optional.
 
 API example:
 
@@ -2878,28 +2878,28 @@ Server configuration file example:
                         <value>UDP_ASSOCIATE</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>DENY</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>firewallActionLogAction</name>
                         <value>LOG_AS_WARNING</value>
-                    </ruleResult>                
-                </ruleResults>
+                    </ruleAction>                
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>    
     </settings>
@@ -2909,14 +2909,14 @@ Server configuration file example:
 ### Allowing a Limited Number of Simultaneous Instances of Traffic
 
 To allow a limited number of simultaneous specific instances of traffic, you 
-will need the following rule result:
+will need the following rule action:
 
 -   `firewallActionAllowLimit`
 
-The value given to the rule result must be an integer between 0 (inclusive) and 
+The value given to the rule action must be an integer between 0 (inclusive) and 
 2147483647 (inclusive)
 
-This rule result can be used with the following rule conditions:
+This rule action can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method`
@@ -2932,11 +2932,11 @@ This rule result can be used with the following rule conditions:
 
 You can also specify the logging action to take if the limit on the number of 
 simultaneous specific instances of traffic has been reached by adding the 
-following rule result:
+following rule action:
 
 -   `firewallActionAllowLimitReachedLogAction`
 
-The rule result `firewallActionAllowLimitReachedLogAction` is optional.
+The rule action `firewallActionAllowLimitReachedLogAction` is optional.
 
 API example:
 
@@ -3003,32 +3003,32 @@ Server configuration file example:
                         <value>guest</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>firewallActionAllowLimit</name>
                         <value>50</value>
-                    </ruleResult>                
-                    <ruleResult>
+                    </ruleAction>                
+                    <ruleAction>
                         <name>firewallActionAllowLimitReachedLogAction</name>
                         <value>LOG_AS_INFO</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
     </settings>
@@ -3039,19 +3039,19 @@ Server configuration file example:
 ### Routing Traffic Through a Selection of Specified Chains of SOCKS Servers
 
 To route traffic through a selection of specified chains of SOCKS servers, you 
-can use the following rule results:
+can use the following rule actions:
 
 -   `routeSelectionStrategy`: Specifies the selection strategy for the next 
-route (This rule result is optional. If this rule result is not specified, the 
+route (This rule action is optional. If this rule action is not specified, the 
 setting `routeSelectionStrategy` is used.)
 -   `selectableRouteId`: Specifies the ID for a selectable 
 [route](#chaining-to-specified-chains-of-other-socks-servers) (This rule 
-result is optional. This rule result can be specified multiple times with each 
-rule result specifying another ID for a selectable route. If this rule result 
+action is optional. This rule action can be specified multiple times with each 
+rule action specifying another ID for a selectable route. If this rule action 
 is not specified, all the routes defined by the settings `chaining.routeId` 
 and `lastRouteId` are selectable.)
 
-These rule results can be used with the following rule conditions:
+These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method` 
@@ -3062,11 +3062,11 @@ These rule results can be used with the following rule conditions:
 -   `socksServerAddress`
 
 You can also specify the logging action to take if a route is selected by adding 
-the following rule result:
+the following rule action:
 
 -   `routeSelectionLogAction`
 
-The rule result `routeSelectionLogAction` is optional. If the rule result is 
+The rule action `routeSelectionLogAction` is optional. If the rule action is 
 not specified, the setting `routeSelectionLogAction` is used.
 
 API example:
@@ -3227,48 +3227,48 @@ Server configuration file example:
                         <value>CONNECT</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>routeSelectionStrategy</name>
                         <value>RANDOM</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>selectableRouteId</name>
                         <value>alpha</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>selectableRouteId</name>
                         <value>beta</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>routeSelectionLogAction</name>
                         <value>LOG_AS_INFO</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>routeSelectionStrategy</name>
                         <value>CYCLICAL</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>selectableRouteId</name>
                         <value>omega</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>    
     </settings>
@@ -3278,14 +3278,14 @@ Server configuration file example:
 ### Redirecting the Desired Destination
 
 To redirect the desired destination, you will need either or both of the 
-following rule results:
+following rule actions:
 
 -   `socks5.request.desiredDestinationAddressRedirect`: Specifies the desired 
 destination address redirect
 -   `socks5.request.desiredDestinationPortRedirect`: Specifies the desired 
 destination port redirect
 
-These rule results can be used with the following rule conditions:
+These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method` 
@@ -3296,11 +3296,11 @@ These rule results can be used with the following rule conditions:
 -   `socksServerAddress`
 
 You can also specify the logging action to take if the desired destination is 
-redirected by adding the following rule result:
+redirected by adding the following rule action:
 
 -   `socks5.request.desiredDestinationRedirectLogAction`
 
-The rule result `socks5.request.desiredDestinationRedirectLogAction` is optional.
+The rule action `socks5.request.desiredDestinationRedirectLogAction` is optional.
 
 API example:
 
@@ -3361,32 +3361,32 @@ Server configuration file example:
                         <value>discontinuedserver.com</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>socks5.request.desiredDestinationAddressRedirect</name>
                         <value>newserver.com</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>socks5.request.desiredDestinationRedirectLogAction</name>
                         <value>LOG_AS_INFO</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>    
     </settings>
@@ -3395,55 +3395,55 @@ Server configuration file example:
 
 ### Configuring Sockets
 
-To configure the sockets, you will need any of the following rule results:
+To configure the sockets, you will need any of the following rule actions:
 
 -   `bindHost`: Specifies the binding host name or address for all sockets 
 -   `bindTcpPortRange`: Specifies a binding port range for all TCP sockets 
-(This rule result can be specified multiple times with each rule result 
+(This rule action can be specified multiple times with each rule action 
 specifying another port range)
 -   `bindUdpPortRange`: Specifies a binding port range for all UDP sockets 
-(This rule result can be specified multiple times with each rule result 
+(This rule action can be specified multiple times with each rule action 
 specifying another port range)
 -   `clientSocketSetting`: Specifies a socket setting for the client socket 
-(This rule result can be specified multiple times with each rule result 
+(This rule action can be specified multiple times with each rule action 
 specifying another socket setting)
 -   `externalFacingBindHost`: Specifies the binding host name or address 
 for all external-facing sockets 
 -   `externalFacingBindTcpPortRange`: Specifies a binding 
 port range for all external-facing TCP 
-sockets (This rule result can be specified multiple times with each rule result 
+sockets (This rule action can be specified multiple times with each rule action 
 specifying another port range)
 -   `externalFacingBindUdpPortRange`: Specifies a binding 
 port range for all external-facing UDP 
-sockets (This rule result can be specified multiple times with each rule result 
+sockets (This rule action can be specified multiple times with each rule action 
 specifying another port range)
 -   `externalFacingSocketSetting`: Specifies a socket setting for all 
-external-facing sockets (This rule result can be specified multiple times with 
-each rule result specifying another socket setting)
+external-facing sockets (This rule action can be specified multiple times with 
+each rule action specifying another socket setting)
 -   `internalFacingBindHost`: Specifies the binding host name or address for 
 all internal-facing sockets
 -   `internalFacingBindUdpPortRange`: Specifies a binding 
 port range for all internal-facing UDP 
-sockets (This rule result can be specified multiple times with each rule result 
+sockets (This rule action can be specified multiple times with each rule action 
 specifying another port range)
 -   `internalFacingSocketSetting`: Specifies a socket setting for all 
-internal-facing sockets (This rule result can be specified multiple times with 
-each rule result specifying another socket setting)
+internal-facing sockets (This rule action can be specified multiple times with 
+each rule action specifying another socket setting)
 -   `socketSetting`: Specifies a socket setting for all sockets (This rule 
-result can be specified multiple times with each rule result specifying another 
+action can be specified multiple times with each rule action specifying another 
 socket setting)
 -   `socks5.onBindRequest.inboundSocketSetting`: Specifies a socket setting for 
-the inbound socket (This rule result can be specified multiple times with each 
-rule result specifying another socket setting)
+the inbound socket (This rule action can be specified multiple times with each 
+rule action specifying another socket setting)
 -   `socks5.onBindRequest.listenBindHost`: Specifies the binding host name or 
 address for the listen socket if the provided host address is all zeros
 -   `socks5.onBindRequest.listenBindPortRange`: Specifies a binding 
 port range for the listen socket if the provided port is zero (This rule 
-result can be specified multiple times with each rule result specifying another 
+action can be specified multiple times with each rule action specifying another 
 port range)
 -   `socks5.onBindRequest.listenSocketSetting`: Specifies a socket setting for 
-the listen socket (This rule result can be specified multiple times with each 
-rule result specifying another socket setting)
+the listen socket (This rule action can be specified multiple times with each 
+rule action specifying another socket setting)
 -   `socks5.onConnectRequest.prepareTargetFacingSocket`: Specifies the boolean 
 value to indicate if the target-facing socket is to be prepared before 
 connecting (involves applying the specified socket settings, resolving the 
@@ -3451,63 +3451,63 @@ target host name, and setting the specified timeout on waiting to connect)
 -   `socks5.onConnectRequest.targetFacingBindHost`: Specifies the binding host 
 name or address for the target-facing socket
 -   `socks5.onConnectRequest.targetFacingBindPortRange`: Specifies a binding 
-port range for the target-facing socket (This rule result can be specified 
-multiple times with each rule result specifying another port range)
+port range for the target-facing socket (This rule action can be specified 
+multiple times with each rule action specifying another port range)
 -   `socks5.onConnectRequest.targetFacingConnectTimeout`: Specifies the timeout 
 in milliseconds on waiting for the target-facing socket to connect (Value must 
 be an integer between 1 (inclusive) and 2147483647 (inclusive))
 -   `socks5.onConnectRequest.targetFacingSocketSetting`: Specifies a socket 
-setting for the target-facing socket (This rule result can be specified multiple 
-times with each rule result specifying another socket setting)
+setting for the target-facing socket (This rule action can be specified multiple 
+times with each rule action specifying another socket setting)
 -   `socks5.onRequest.bindHost`: Specifies the binding host name or address
 for all sockets
 -   `socks5.onRequest.bindTcpPortRange`: Specifies a binding
-port range for all TCP sockets (This rule result can be specified multiple
-times with each rule result specifying another port range)
+port range for all TCP sockets (This rule action can be specified multiple
+times with each rule action specifying another port range)
 -   `socks5.onRequest.bindUdpPortRange`: Specifies a binding
-port range for all UDP sockets (This rule result can be specified multiple
-times with each rule result specifying another port range)
+port range for all UDP sockets (This rule action can be specified multiple
+times with each rule action specifying another port range)
 -   `socks5.onRequest.externalFacingBindHost`: Specifies the binding host
 name or address for all external-facing sockets
 -   `socks5.onRequest.externalFacingBindTcpPortRange`: Specifies a
-binding port range for all external-facing TCP sockets (This rule result can be
-specified multiple times with each rule result specifying another port range)
+binding port range for all external-facing TCP sockets (This rule action can be
+specified multiple times with each rule action specifying another port range)
 -   `socks5.onRequest.externalFacingBindUdpPortRange`: Specifies a
-binding port range for all external-facing UDP sockets (This rule result can be
-specified multiple times with each rule result specifying another port range)
+binding port range for all external-facing UDP sockets (This rule action can be
+specified multiple times with each rule action specifying another port range)
 -   `socks5.onRequest.externalFacingSocketSetting`: Specifies a socket
-setting for all external-facing sockets (This rule result can be specified
-multiple times with each rule result specifying another socket setting)
+setting for all external-facing sockets (This rule action can be specified
+multiple times with each rule action specifying another socket setting)
 -   `socks5.onRequest.internalFacingBindHost`: Specifies the binding
 host name or address for all internal-facing sockets
 -   `socks5.onRequest.internalFacingBindUdpPortRange`: Specifies a
-binding port range for all internal-facing UDP sockets (This rule result can be
-specified multiple times with each rule result specifying another port range)
+binding port range for all internal-facing UDP sockets (This rule action can be
+specified multiple times with each rule action specifying another port range)
 -   `socks5.onRequest.internalFacingSocketSetting`: Specifies a socket
-setting for all internal-facing sockets (This rule result can be specified
-multiple times with each rule result specifying another socket setting)
+setting for all internal-facing sockets (This rule action can be specified
+multiple times with each rule action specifying another socket setting)
 -   `socks5.onRequest.socketSetting`: Specifies a socket setting for all
-sockets (This rule result can be specified multiple times with each rule result
+sockets (This rule action can be specified multiple times with each rule action
 specifying another socket setting)
 -   `socks5.onUdpAssociateRequest.clientFacingBindHost`: Specifies the binding 
 host name or address for the client-facing UDP socket
 -   `socks5.onUdpAssociateRequest.clientFacingBindPortRange`: Specifies a 
-binding port range for the client-facing UDP socket (This rule result can be 
-specified multiple times with each rule result specifying another port range)
+binding port range for the client-facing UDP socket (This rule action can be 
+specified multiple times with each rule action specifying another port range)
 -   `socks5.onUdpAssociateRequest.clientFacingSocketSetting`: Specifies a 
-socket setting for the client-facing UDP socket (This rule result can be 
-specified multiple times with each rule result specifying another socket 
+socket setting for the client-facing UDP socket (This rule action can be 
+specified multiple times with each rule action specifying another socket 
 setting)
 -   `socks5.onUdpAssociateRequest.peerFacingBindHost`: Specifies the binding 
 host name or address for the peer-facing UDP socket
 -   `socks5.onUdpAssociateRequest.peerFacingBindPortRange`: Specifies a 
-binding port range for the peer-facing UDP socket (This rule result can be 
-specified multiple times with each rule result specifying another port range)
+binding port range for the peer-facing UDP socket (This rule action can be 
+specified multiple times with each rule action specifying another port range)
 -   `socks5.onUdpAssociateRequest.peerFacingSocketSetting`: Specifies a socket 
-setting for the peer-facing UDP socket (This rule result can be specified 
-multiple times with each rule result specifying another socket setting)
+setting for the peer-facing UDP socket (This rule action can be specified 
+multiple times with each rule action specifying another socket setting)
 
-These rule results can be used with the following rule conditions:
+These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method` 
@@ -3517,7 +3517,7 @@ These rule results can be used with the following rule conditions:
 -   `socks5.user`
 -   `socksServerAddress`
 
-The rule result `socks5.onBindRequest.inboundSocketSetting` can also be used with 
+The rule action `socks5.onBindRequest.inboundSocketSetting` can also be used with 
 the following rule conditions:
 
 -   `socks5.reply.serverBoundAddress`
@@ -3588,42 +3588,42 @@ Server configuration file example:
                         <value>specialserver.com</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>socks5.onConnectRequest.prepareTargetFacingSocket</name>
                         <value>true</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>socks5.onConnectRequest.targetFacingSocketSetting</name>
                         <socketSetting>
                             <name>SO_RCVBUF</name>
                             <value>256</value>
                         </socketSetting>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>socks5.onConnectRequest.targetFacingSocketSetting</name>
                         <socketSetting>
                             <name>SO_SNDBUF</name>
                             <value>256</value>
                         </socketSetting>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
     </settings>
@@ -3632,7 +3632,7 @@ Server configuration file example:
 
 ### Configuring Relay Settings
 
-To configure the relay settings, you will need any of the following rule results:
+To configure the relay settings, you will need any of the following rule actions:
 
 -   `socks5.onBindRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
@@ -3659,7 +3659,7 @@ bytes for relaying the data (Value must be an integer between 1 (inclusive) and
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
 
-These rule results can be used with the following rule conditions:
+These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method`
@@ -3736,28 +3736,28 @@ Server configuration file example:
                         <value>intermittent-idling-server.com</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                         <name>socks5.onConnectRequest.relayIdleTimeout</name>
                         <value>1024000</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>    
     </settings>
@@ -3766,7 +3766,7 @@ Server configuration file example:
 
 ### Limiting Relay Bandwidth
 
-To limit the relay bandwidth, you will need any of the following rule results:
+To limit the relay bandwidth, you will need any of the following rule actions:
 
 -   `socks5.onBindRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
@@ -3787,10 +3787,10 @@ relayed
 upper limit on bandwidth in bytes per second of receiving outbound data to be 
 relayed
 
-The value given to any of the rule results must be an integer between 1 
+The value given to any of the rule actions must be an integer between 1 
 (inclusive) and 2147483647 (inclusive)
 
-These rule results can be used with the following rule conditions:
+These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
 -   `socks5.method` 
@@ -3869,32 +3869,32 @@ Server configuration file example:
                         <value>streamingwebsite.com</value>
                     </ruleCondition>
                 </ruleConditions>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                          <name>socks5.onConnectRequest.relayInboundBandwidthLimit</name>
                         <value>1024000</value>
-                    </ruleResult>
-                    <ruleResult>
+                    </ruleAction>
+                    <ruleAction>
                          <name>socks5.onConnectRequest.relayOutboundBandwidthLimit</name>
                         <value>1024000</value>
-                    </ruleResult>                
-                </ruleResults>
+                    </ruleAction>                
+                </ruleActions>
             </rule>
         </setting>
         <setting>
             <name>rule</name>
             <rule>
                 <ruleConditions/>
-                <ruleResults>
-                    <ruleResult>
+                <ruleActions>
+                    <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleResult>
-                </ruleResults>
+                    </ruleAction>
+                </ruleActions>
             </rule>
         </setting>    
     </settings>

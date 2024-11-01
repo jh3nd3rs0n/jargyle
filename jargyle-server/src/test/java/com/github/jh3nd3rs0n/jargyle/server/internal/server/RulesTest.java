@@ -12,18 +12,18 @@ public class RulesTest {
 		Rule expectedRule = new Rule.Builder()
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_COMMAND.newRuleCondition(Command.BIND.toString()))
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_COMMAND.newRuleCondition(Command.UDP_ASSOCIATE.toString()))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.DENY))
 				.build(); 
 		Rules rules = Rules.of(
 				new Rule.Builder()
 				.addRuleCondition(GeneralRuleConditionSpecConstants.CLIENT_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.ALLOW))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.ALLOW))
 				.build(),
 				expectedRule,
 				new Rule.Builder()
 				.addRuleCondition(Socks5RuleConditionSpecConstants.SOCKS5_REPLY_SERVER_BOUND_ADDRESS.newRuleConditionWithParsedValue("127.0.0.1"))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.DENY))
-				.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION.newRuleResult(LogAction.LOG_AS_WARNING))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.DENY))
+				.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION.newRuleAction(LogAction.LOG_AS_WARNING))
 				.build());
 		RuleContext ruleContext = new RuleContext();
 		ruleContext.putRuleArgValue(Socks5RuleArgSpecConstants.SOCKS5_REQUEST_COMMAND, Command.UDP_ASSOCIATE.toString());

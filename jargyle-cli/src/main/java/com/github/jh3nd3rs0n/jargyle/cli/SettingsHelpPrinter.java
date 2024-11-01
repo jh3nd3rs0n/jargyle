@@ -16,7 +16,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.ValuesValueTypeDoc;
 import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
 final class SettingsHelpPrinter {
@@ -194,7 +194,7 @@ final class SettingsHelpPrinter {
 		Map<String, Class<?>> valueTypeMap = new TreeMap<String, Class<?>>();
 		this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
 		this.putFromValueType(valueTypeMap, RuleCondition.class);
-		this.putFromValueType(valueTypeMap, RuleResult.class);
+		this.putFromValueType(valueTypeMap, RuleAction.class);
 		this.putFromValueType(valueTypeMap, Scheme.class);
 		pw.println("SETTINGS:");
 		pw.println();

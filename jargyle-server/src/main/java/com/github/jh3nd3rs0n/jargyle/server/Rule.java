@@ -12,7 +12,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
 @SingleValueTypeDoc(
 		description = "",
 		name = "Rule",
-		syntax = "[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_RESULT1[,RULE_RESULT2[...]]",
+		syntax = "[RULE_CONDITION1,[RULE_CONDITION2,[...]]]RULE_ACTION1[,RULE_ACTION2[...]]",
 		syntaxName = "RULE"
 )
 public final class Rule {
@@ -20,11 +20,11 @@ public final class Rule {
 	public static final class Builder {
 		
 		private final List<RuleCondition<Object, Object>> ruleConditions;
-		private final List<RuleResult<Object>> ruleResults;
+		private final List<RuleAction<Object>> ruleActions;
 		
 		public Builder() {
 			this.ruleConditions = new ArrayList<RuleCondition<Object, Object>>();
-			this.ruleResults = new ArrayList<RuleResult<Object>>();
+			this.ruleActions = new ArrayList<RuleAction<Object>>();
 		}
 		
 		public Builder addRuleCondition(
@@ -36,11 +36,11 @@ public final class Rule {
 			return this;
 		}
 		
-		public Builder addRuleResult(
-				final RuleResult<? extends Object> ruleResult) {
+		public Builder addRuleAction(
+				final RuleAction<? extends Object> ruleAction) {
 			@SuppressWarnings("unchecked")
-			RuleResult<Object> rlResult = (RuleResult<Object>) ruleResult;
-			this.ruleResults.add(rlResult);
+            RuleAction<Object> rlResult = (RuleAction<Object>) ruleAction;
+			this.ruleActions.add(rlResult);
 			return this;
 		}
 		
@@ -51,7 +51,7 @@ public final class Rule {
 	}
 
 	private static final Rule DEFAULT_INSTANCE = new Rule.Builder()
-			.addRuleResult(GeneralRuleResultSpecConstants.FIREWALL_ACTION.newRuleResult(FirewallAction.ALLOW))
+			.addRuleAction(GeneralRuleActionSpecConstants.FIREWALL_ACTION.newRuleAction(FirewallAction.ALLOW))
 			.build();
 	
 	public static Rule getDefault() {
@@ -76,16 +76,16 @@ public final class Rule {
 			}
 			ex = null;
 			try {
-				RuleResultSpecConstants.valueOfName(name);
+				RuleActionSpecConstants.valueOfName(name);
 			} catch (IllegalArgumentException e) {
 				ex = e;
 			}
 			if (ex == null) {
-				builder.addRuleResult(RuleResult.newInstanceFrom(entry));
+				builder.addRuleAction(RuleAction.newInstanceFrom(entry));
 				continue;
 			}
 			throw new IllegalArgumentException(String.format(
-					"unknown rule condition or rule result: %s", 
+					"unknown rule condition or rule action: %s", 
 					name));			
 		}
 		return builder.build();
@@ -93,8 +93,8 @@ public final class Rule {
 	
 	private final Map<RuleConditionSpec<Object, Object>, List<RuleCondition<Object, Object>>> ruleConditionListMap;
 	private final List<RuleCondition<Object, Object>> ruleConditions;
-	private final Map<RuleResultSpec<Object>, List<RuleResult<Object>>> ruleResultListMap;
-	private final List<RuleResult<Object>> ruleResults;
+	private final Map<RuleActionSpec<Object>, List<RuleAction<Object>>> ruleActionListMap;
+	private final List<RuleAction<Object>> ruleActions;
 	
 	private Rule(final Builder builder) {
 		List<RuleCondition<Object, Object>> rlConditions = 
@@ -113,23 +113,23 @@ public final class Rule {
 			}
 			conditions.add(rlCondition);
 		}
-		List<RuleResult<Object>> rlResults = 
-				new ArrayList<RuleResult<Object>>(builder.ruleResults);
-		Map<RuleResultSpec<Object>, List<RuleResult<Object>>> rlResultListMap = 
-				new LinkedHashMap<RuleResultSpec<Object>, List<RuleResult<Object>>>();
-		for (RuleResult<Object> rlResult : rlResults) {
-			RuleResultSpec<Object> rlResultSpec = rlResult.getRuleResultSpec();
-			List<RuleResult<Object>> results = rlResultListMap.get(rlResultSpec);
+		List<RuleAction<Object>> rlResults = 
+				new ArrayList<RuleAction<Object>>(builder.ruleActions);
+		Map<RuleActionSpec<Object>, List<RuleAction<Object>>> rlResultListMap = 
+				new LinkedHashMap<RuleActionSpec<Object>, List<RuleAction<Object>>>();
+		for (RuleAction<Object> rlResult : rlResults) {
+			RuleActionSpec<Object> rlResultSpec = rlResult.getRuleActionSpec();
+			List<RuleAction<Object>> results = rlResultListMap.get(rlResultSpec);
 			if (results == null) {
-				results = new ArrayList<RuleResult<Object>>();
+				results = new ArrayList<RuleAction<Object>>();
 				rlResultListMap.put(rlResultSpec, results);
 			}
 			results.add(rlResult);
 		}
 		this.ruleConditionListMap = rlConditionListMap;
 		this.ruleConditions = rlConditions;
-		this.ruleResultListMap = rlResultListMap;
-		this.ruleResults = rlResults;
+		this.ruleActionListMap = rlResultListMap;
+		this.ruleActions = rlResults;
 	}
 	
 	public boolean appliesTo(final RuleContext context) {
@@ -168,24 +168,24 @@ public final class Rule {
 		} else if (!this.ruleConditions.equals(other.ruleConditions)) {
 			return false;
 		}
-		if (this.ruleResults == null) {
-			if (other.ruleResults != null) {
+		if (this.ruleActions == null) {
+			if (other.ruleActions != null) {
 				return false;
 			}
-		} else if (!this.ruleResults.equals(other.ruleResults)) {
+		} else if (!this.ruleActions.equals(other.ruleActions)) {
 			return false;
 		}
 		return true;
 	}
 	
-	public <V> V getLastRuleResultValue(final RuleResultSpec<V> ruleResultSpec) {
-		List<RuleResult<Object>> ruleResultList = this.ruleResultListMap.get(
-				ruleResultSpec);
+	public <V> V getLastRuleActionValue(final RuleActionSpec<V> ruleActionSpec) {
+		List<RuleAction<Object>> ruleActionList = this.ruleActionListMap.get(
+				ruleActionSpec);
 		V value = null;
-		if (ruleResultList != null && ruleResultList.size() > 0) {
-			RuleResult<Object> ruleResult = ruleResultList.get(
-					ruleResultList.size() - 1);
-			value = ruleResultSpec.getValueType().cast(ruleResult.getValue());
+		if (ruleActionList != null && ruleActionList.size() > 0) {
+			RuleAction<Object> ruleAction = ruleActionList.get(
+					ruleActionList.size() - 1);
+			value = ruleActionSpec.getValueType().cast(ruleAction.getValue());
 		}
 		return value;
 	}
@@ -194,18 +194,18 @@ public final class Rule {
 		return Collections.unmodifiableList(this.ruleConditions);
 	}
 	
-	public List<RuleResult<Object>> getRuleResults() {
-		return Collections.unmodifiableList(this.ruleResults);
+	public List<RuleAction<Object>> getRuleActions() {
+		return Collections.unmodifiableList(this.ruleActions);
 	}
 	
-	public <V> List<V> getRuleResultValues(final RuleResultSpec<V> ruleResultSpec) {
-		List<RuleResult<Object>> ruleResultList = this.ruleResultListMap.get(
-				ruleResultSpec);
+	public <V> List<V> getRuleActionValues(final RuleActionSpec<V> ruleActionSpec) {
+		List<RuleAction<Object>> ruleActionList = this.ruleActionListMap.get(
+				ruleActionSpec);
 		List<V> values = new ArrayList<V>();
-		if (ruleResultList != null) {
-			for (RuleResult<Object> ruleResult : ruleResultList) {
-				values.add(ruleResultSpec.getValueType().cast(
-						ruleResult.getValue()));
+		if (ruleActionList != null) {
+			for (RuleAction<Object> ruleAction : ruleActionList) {
+				values.add(ruleActionSpec.getValueType().cast(
+						ruleAction.getValue()));
 			}
 		}
 		return Collections.unmodifiableList(values);
@@ -217,8 +217,8 @@ public final class Rule {
 		int result = 1;
 		result = prime * result + ((this.ruleConditions == null) ? 
 				0 : this.ruleConditions.hashCode());
-		result = prime * result + ((this.ruleResults == null) ? 
-				0 : this.ruleResults.hashCode());
+		result = prime * result + ((this.ruleActions == null) ? 
+				0 : this.ruleActions.hashCode());
 		return result;
 	}
 	
@@ -227,16 +227,16 @@ public final class Rule {
 		return this.ruleConditionListMap.containsKey(ruleConditionSpec);
 	}
 	
-	public boolean hasRuleResult(
-			final RuleResultSpec<? extends Object> ruleResultSpec) {
-		return this.ruleResultListMap.containsKey(ruleResultSpec);
+	public boolean hasRuleAction(
+			final RuleActionSpec<? extends Object> ruleActionSpec) {
+		return this.ruleActionListMap.containsKey(ruleActionSpec);
 	}
 
 	@Override
 	public String toString() {
 		List<Object> list = new ArrayList<Object>();
 		list.addAll(this.ruleConditions);
-		list.addAll(this.ruleResults);
+		list.addAll(this.ruleActions);
 		return list.stream()
 				.map(Object::toString)
 				.collect(Collectors.joining(","));

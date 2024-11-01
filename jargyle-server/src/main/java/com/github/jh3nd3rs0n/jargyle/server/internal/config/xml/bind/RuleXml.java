@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind;
 
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
-import com.github.jh3nd3rs0n.jargyle.server.RuleResult;
+import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -17,23 +17,23 @@ class RuleXml extends ValueXml {
 
 	@XmlElement(name = "ruleConditions")
 	protected RuleConditionsXml ruleConditionsXml;
-	@XmlElement(name = "ruleResults")
-	protected RuleResultsXml ruleResultsXml;
+	@XmlElement(name = "ruleActions")
+	protected RuleActionsXml ruleActionsXml;
 	
 	public RuleXml() {
 		this.ruleConditionsXml = null;
-		this.ruleResultsXml = null;
+		this.ruleActionsXml = null;
 	}
 	
 	public RuleXml(final Rule rule) {
 		List<RuleCondition<? extends Object, ? extends Object>> ruleConditions =
 				new ArrayList<RuleCondition<? extends Object, ? extends Object>>(
 						rule.getRuleConditions());
-		List<RuleResult<? extends Object>> ruleResults = 
-				new ArrayList<RuleResult<? extends Object>>(
-						rule.getRuleResults());
+		List<RuleAction<? extends Object>> ruleActions = 
+				new ArrayList<RuleAction<? extends Object>>(
+						rule.getRuleActions());
 		this.ruleConditionsXml = new RuleConditionsXml(ruleConditions);
-		this.ruleResultsXml = new RuleResultsXml(ruleResults);
+		this.ruleActionsXml = new RuleActionsXml(ruleActions);
 	}
 	
 	public Rule toRule() {
@@ -42,9 +42,9 @@ class RuleXml extends ValueXml {
 				: this.ruleConditionsXml.toRuleConditions()) {
 			builder.addRuleCondition(ruleCondition);
 		}
-		for (RuleResult<Object> ruleResult 
-				: this.ruleResultsXml.toRuleResults()) {
-			builder.addRuleResult(ruleResult);
+		for (RuleAction<Object> ruleAction 
+				: this.ruleActionsXml.toRuleActions()) {
+			builder.addRuleAction(ruleAction);
 		}
 		return builder.build();
 	}

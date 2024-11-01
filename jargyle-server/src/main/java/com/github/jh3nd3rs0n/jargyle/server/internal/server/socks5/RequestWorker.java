@@ -6,7 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleResultSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleActionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.LogAction;
 import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
@@ -36,16 +36,16 @@ class RequestWorker extends Socks5Worker {
 		if (!this.hasReplyRuleCondition()) {
 			return true;
 		}
-		FirewallAction firewallAction = applicableRule.getLastRuleResultValue(
-				GeneralRuleResultSpecConstants.FIREWALL_ACTION);
+		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
+				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
 			this.sendReply(
 					Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 			return false;			
 		}
 		LogAction firewallActionLogAction =	
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+				applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION);
 		if (firewallAction.equals(FirewallAction.ALLOW)) {
 			if (!this.canAllowReplyWithinLimit()) {
 				return false;
@@ -81,11 +81,11 @@ class RequestWorker extends Socks5Worker {
 		Rule applicableRule = this.getApplicableRule();
 		RuleContext ruleContext = this.getRuleContext();
 		NonNegativeIntegerLimit firewallActionAllowLimit =
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+				applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
 		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRule.getLastRuleResultValue(
-						GeneralRuleResultSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
+				applicableRule.getLastRuleActionValue(
+						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
 		if (firewallActionAllowLimit != null) {
 			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
 				if (firewallActionAllowLimitReachedLogAction != null) {

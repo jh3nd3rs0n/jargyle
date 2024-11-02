@@ -25,13 +25,13 @@ public final class RuleCondition<C, A> {
 		return newInstanceWithParsedValue(name, value);
 	}
 	
-	public static <V1, V2> RuleCondition<V1, V2> newInstance(
-			final String name, final V1 value) {
+	public static <C, A> RuleCondition<C, A> newInstance(
+			final String name, final C value) {
 		RuleConditionSpec<Object, Object> ruleConditionSpec = 
 				RuleConditionSpecConstants.valueOfName(name);
 		@SuppressWarnings("unchecked")
-		RuleCondition<V1, V2> ruleCondition = 
-				(RuleCondition<V1, V2>) ruleConditionSpec.newRuleCondition(
+		RuleCondition<C, A> ruleCondition =
+				(RuleCondition<C, A>) ruleConditionSpec.newRuleCondition(
 						value);
 		return ruleCondition;
 	}

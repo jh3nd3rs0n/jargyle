@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
@@ -85,12 +85,12 @@ public class GssDatagramSocketTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        TestGssEnvironment.setUpBeforeClass(GssDatagramSocketTest.class);
+        GssEnvironment.setUpBeforeClass(GssDatagramSocketTest.class);
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        TestGssEnvironment.tearDownAfterClass(GssDatagramSocketTest.class);
+        GssEnvironment.tearDownAfterClass(GssDatagramSocketTest.class);
     }
 
     @Rule
@@ -116,287 +116,287 @@ public class GssDatagramSocketTest {
 
     @Test
     public void testEcho01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
     
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0FalseForIOException06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0FalseForIOException07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0FalseForIOException08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0FalseForIOException09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0TrueForIOException06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0TrueForIOException07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0TrueForIOException08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp0TrueForIOException09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1FalseForIOException06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1FalseForIOException07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1FalseForIOException08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1FalseForIOException09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1TrueForIOException06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1TrueForIOException07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1TrueForIOException08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test(expected = IOException.class)
     public void testEchoWithMessageProp1TrueForIOException09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }

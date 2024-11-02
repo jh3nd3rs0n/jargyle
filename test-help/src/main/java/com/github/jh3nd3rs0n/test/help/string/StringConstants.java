@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.test.help.string;
 /**
  * Class of {@code String} constants used for testing.
  */
-public final class TestStringConstants {
+public final class StringConstants {
 
     /**
      * Test {@code String} constant: {@code Hello, World!} (13 bytes in UTF-8).
@@ -28,41 +28,41 @@ public final class TestStringConstants {
             "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     
     /**
-     * Test {@code String} constant of {@link TestStringConstants#STRING_03} 
+     * Test {@code String} constant of {@link StringConstants#STRING_03}
      * repeating 100 times (6200 bytes in UTF-8).
      */
     public static final String STRING_04;
 
     /**
-     * Test {@code String} constant of {@link TestStringConstants#STRING_03}
+     * Test {@code String} constant of {@link StringConstants#STRING_03}
      * repeating 1000 times (62000 bytes in UTF-8).
      */
     public static final String STRING_05;
 
     /**
      * Test {@code String} constant of the characters in 
-     * {@link TestStringConstants#STRING_03} repeating until the total number 
+     * {@link StringConstants#STRING_03} repeating until the total number
      * of bytes of 65535 in UTF-8 is reached.
      */    
     public static final String STRING_06;
 
     /**
      * Test {@code String} constant of the characters in 
-     * {@link TestStringConstants#STRING_03} repeating until the total number 
+     * {@link StringConstants#STRING_03} repeating until the total number
      * of bytes of 65535 + 1 in UTF-8 is reached.
      */    
     public static final String STRING_07;
 
     /**
      * Test {@code String} constant of the characters in 
-     * {@link TestStringConstants#STRING_03} repeating until the total number 
+     * {@link StringConstants#STRING_03} repeating until the total number
      * of bytes of 65535 * 2 in UTF-8 is reached.
      */    
     public static final String STRING_08;
 
     /**
      * Test {@code String} constant of the characters in 
-     * {@link TestStringConstants#STRING_03} repeating until the total number 
+     * {@link StringConstants#STRING_03} repeating until the total number
      * of bytes of 65535 * 2 + 1 in UTF-8 is reached.
      */    
     public static final String STRING_09;
@@ -115,7 +115,7 @@ public final class TestStringConstants {
     /**
      * Prevents the construction of unnecessary instances.
      */
-    private TestStringConstants() {
+    private StringConstants() {
     }
 
 }

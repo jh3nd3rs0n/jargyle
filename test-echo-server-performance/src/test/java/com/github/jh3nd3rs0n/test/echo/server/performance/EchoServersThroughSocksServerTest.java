@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.test.echo.server.performance;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.test.echo.DatagramEchoClient;
-import com.github.jh3nd3rs0n.test.echo.DatagramEchoServerHelper;
+import com.github.jh3nd3rs0n.test.echo.EchoDatagramClient;
+import com.github.jh3nd3rs0n.test.echo.EchoDatagramServerHelper;
 import com.github.jh3nd3rs0n.test.echo.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
@@ -14,7 +14,7 @@ import com.github.jh3nd3rs0n.test.echo.EchoServerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.test.help.net.Server;
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,14 +59,14 @@ public class EchoServersThroughSocksServerTest {
     }
 
     @Test
-    public void testDatagramEchoServerThroughSocksServer() throws IOException {
-        LoadTestRunnerResults results = new DatagramEchoServerLoadTestRunner(
-                new DatagramEchoServerInterfaceImpl(
-                        DatagramEchoServerHelper.newDatagramEchoServer(0)),
+    public void testEchoDatagramServerThroughSocksServer() throws IOException {
+        LoadTestRunnerResults results = new EchoDatagramServerLoadTestRunner(
+                new EchoDatagramServerInterfaceImpl(
+                        EchoDatagramServerHelper.newEchoDatagramServer(0)),
                 new SocksServerInterfaceImpl(newSocksServer()),
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
-                new DatagramEchoServerTestRunnerFactoryImpl(),
+                new EchoDatagramServerTestRunnerFactoryImpl(),
                 TIMEOUT)
                 .run();
         String methodName =
@@ -118,49 +118,49 @@ public class EchoServersThroughSocksServerTest {
         Assert.assertNotNull(results);
     }
 
-    private static final class DatagramEchoServerTestRunnerFactoryImpl extends DatagramEchoServerTestRunnerFactory {
+    private static final class EchoDatagramServerTestRunnerFactoryImpl extends EchoDatagramServerTestRunnerFactory {
 
         @Override
-        public DatagramEchoServerTestRunner newDatagramEchoServerTestRunner(
-                InetAddress datagramEchServerInetAddress,
-                int datagramEchServerPort,
+        public EchoDatagramServerTestRunner newEchoDatagramServerTestRunner(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new DatagramEchoServerTestRunnerImpl(
-                    datagramEchServerInetAddress,
-                    datagramEchServerPort,
+            return new EchoDatagramServerTestRunnerImpl(
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
     }
 
-    private static final class DatagramEchoServerTestRunnerImpl extends DatagramEchoServerTestRunner {
+    private static final class EchoDatagramServerTestRunnerImpl extends EchoDatagramServerTestRunner {
 
-        public DatagramEchoServerTestRunnerImpl(
-                InetAddress datagramEchServerInetAddress,
-                int datagramEchServerPort,
+        public EchoDatagramServerTestRunnerImpl(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
             super(
-                    datagramEchServerInetAddress,
-                    datagramEchServerPort,
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
         @Override
         public void run() {
-            DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+            EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                     newSocks5Client(
                             this.socksServerHostAddress,
                             this.socksServerPort)
                             .newSocksNetObjectFactory());
             try {
-                datagramEchoClient.echo(
-                        TestStringConstants.STRING_05,
-                        this.datagramEchoServerInetAddress,
-                        this.datagramEchoServerPort);
+                echoDatagramClient.echo(
+                        StringConstants.STRING_05,
+                        this.echoDatagramServerInetAddress,
+                        this.echoDatagramServerPort);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -208,7 +208,7 @@ public class EchoServersThroughSocksServerTest {
                             .newSocksNetObjectFactory());
             try {
                 echoClient.echo(
-                        TestStringConstants.STRING_05,
+                        StringConstants.STRING_05,
                         this.echoServerInetAddress,
                         this.echoServerPort);
             } catch (IOException e) {

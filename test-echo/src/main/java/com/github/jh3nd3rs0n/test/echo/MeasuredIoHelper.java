@@ -67,15 +67,22 @@ final class MeasuredIoHelper {
         while (true) {
             int b = in.read();
             if (b == -1) {
-                break;
+                throw new EOFException("unexpected end of the input stream");
             }
             int bytesToRead = (b < MAX_BYTES_TO_READ + 1) ? b : b - 1;
             byte[] bytes = new byte[bytesToRead];
-            int bytesRead = InputStreamHelper.continuouslyReadFrom(in, bytes);
-            if (bytesRead == -1) {
-                break;
+            if (bytesToRead > 0) {
+                int bytesRead = InputStreamHelper.continuouslyReadFrom(
+                        in, bytes);
+                if (bytesToRead != bytesRead) {
+                    throw new IOException(String.format(
+                            "expected bytes to read is %s byte(s). "
+                                    + "actual bytes read is %s byte(s)",
+                            bytesToRead,
+                            (bytesRead == -1) ? 0 : bytesRead));
+                }
+                bytesOut.write(Arrays.copyOf(bytes, bytesRead));
             }
-            bytesOut.write(Arrays.copyOf(bytes, bytesRead));
             if (b < MAX_BYTES_TO_READ + 1) {
                 break;
             }

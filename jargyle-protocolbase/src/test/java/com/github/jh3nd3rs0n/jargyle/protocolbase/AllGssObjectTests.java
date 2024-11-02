@@ -17,12 +17,12 @@ public class AllGssObjectTests {
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        TestGssEnvironment.setUpBeforeClass(AllGssObjectTests.class);
+        GssEnvironment.setUpBeforeClass(AllGssObjectTests.class);
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        TestGssEnvironment.tearDownAfterClass(AllGssObjectTests.class);
+        GssEnvironment.tearDownAfterClass(AllGssObjectTests.class);
     }
 
 }

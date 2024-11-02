@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase;
 
-import com.github.jh3nd3rs0n.test.help.gss.kerberos.TestKerberosEnvironment;
-import com.github.jh3nd3rs0n.test.help.gss.kerberos.TestKerberosEnvironmentException;
+import com.github.jh3nd3rs0n.test.help.gss.kerberos.KerberosEnvironment;
+import com.github.jh3nd3rs0n.test.help.gss.kerberos.KerberosEnvironmentException;
 import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class TestGssEnvironment {
+public class GssEnvironment {
 
     private static final String BASE_DIR_PREFIX =
             "com.github.jh3nd3rs0n.jargyle.protocolbase-";
@@ -31,7 +31,7 @@ public class TestGssEnvironment {
 
     private static Path baseDir = null;
     private static Class<?> testClass = null;
-    private static TestKerberosEnvironment testKerberosEnvironment;
+    private static KerberosEnvironment kerberosEnvironment;
 
     public static void setUpBeforeClass(
             final Class<?> testCls) throws IOException {
@@ -41,7 +41,7 @@ public class TestGssEnvironment {
             return;
         }
         baseDir = Files.createTempDirectory(BASE_DIR_PREFIX);
-        testKerberosEnvironment = new TestKerberosEnvironment.Builder(
+        kerberosEnvironment = new KerberosEnvironment.Builder(
                 KDC_REALM, KDC_HOST, KDC_PORT, baseDir)
                 .setAcceptorPrincipal(
                         RCMD_SERVICE_PRINCIPAL,
@@ -51,8 +51,8 @@ public class TestGssEnvironment {
                         PRINCIPAL_PASSWORD)
                 .build();
         try {
-            testKerberosEnvironment.setUp();
-        } catch (TestKerberosEnvironmentException e) {
+            kerberosEnvironment.setUp();
+        } catch (KerberosEnvironmentException e) {
             throw new IOException(e);
         }
     }
@@ -62,10 +62,10 @@ public class TestGssEnvironment {
         if (testClass != null && !testClass.equals(testCls)) {
             return;
         }
-        if (testKerberosEnvironment != null) {
+        if (kerberosEnvironment != null) {
             try {
-                testKerberosEnvironment.tearDown();
-            } catch (TestKerberosEnvironmentException e) {
+                kerberosEnvironment.tearDown();
+            } catch (KerberosEnvironmentException e) {
                 throw new IOException(e);
             }
         }

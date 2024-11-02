@@ -92,8 +92,7 @@ public final class SocksServer {
         boolean socksServerActive = false;
         Exception e = null;
         do {
-            try (Socket socket = new Socket(
-                    SocksServer.INET_ADDRESS, SocksServer.PORT)) {
+            try (Socket socket = new Socket(INET_ADDRESS, PORT)) {
                 socksServerActive = socket.isConnected();
             } catch (IOException ignored) {
             }

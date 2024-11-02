@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 import org.junit.*;
@@ -183,12 +183,12 @@ public class GssSocketTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        TestGssEnvironment.setUpBeforeClass(GssSocketTest.class);
+        GssEnvironment.setUpBeforeClass(GssSocketTest.class);
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        TestGssEnvironment.tearDownAfterClass(GssSocketTest.class);
+        GssEnvironment.tearDownAfterClass(GssSocketTest.class);
     }
 
     @Rule
@@ -211,315 +211,315 @@ public class GssSocketTest {
 
     @Test
     public void testEcho01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEcho09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, null);
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0False09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(0, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp0True09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(0, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1False09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(1, false));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
 
     @Test
     public void testEchoWithMessageProp1True09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         String returningString = echo(string, new MessageProp(1, true));
         Assert.assertEquals(string, returningString);
     }
@@ -542,252 +542,252 @@ public class GssSocketTest {
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0False09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp0True09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int available = testGetInputStreamAvailable(string, new MessageProp(0, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1False09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, false));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
 
     @Test
     public void testGetInputStreamAvailableWithWithMessageProp1True09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int available = testGetInputStreamAvailable(string, new MessageProp(1, true));
         Assert.assertEquals(0, available);
     }
@@ -808,252 +808,252 @@ public class GssSocketTest {
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0False09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int b = testGetInputStreamRead(string, new MessageProp(0, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp0True09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int b = testGetInputStreamRead(string, new MessageProp(0, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1False09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int b = testGetInputStreamRead(string, new MessageProp(1, false));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True01() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True02() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True03() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True04() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True05() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True06() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_06;
+        String string = StringConstants.STRING_06;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True07() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_07;
+        String string = StringConstants.STRING_07;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True08() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_08;
+        String string = StringConstants.STRING_08;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
 
     @Test
     public void testGetInputStreamReadWithWithMessageProp1True09() throws GSSException, IOException {
-        String string = TestStringConstants.STRING_09;
+        String string = StringConstants.STRING_09;
         int b = testGetInputStreamRead(string, new MessageProp(1, true));
         Assert.assertEquals(string.getBytes(StandardCharsets.UTF_8)[0], b);
     }
@@ -1155,7 +1155,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False01() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1164,7 +1164,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False02() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1173,7 +1173,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False03() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1182,7 +1182,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False04() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1191,7 +1191,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False05() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1200,7 +1200,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False06() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1209,7 +1209,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False07() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1218,7 +1218,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False08() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1227,7 +1227,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0False09() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1245,7 +1245,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True01() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1254,7 +1254,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True02() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1263,7 +1263,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True03() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1272,7 +1272,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True04() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1281,7 +1281,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True05() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1290,7 +1290,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True06() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1299,7 +1299,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True07() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1308,7 +1308,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True08() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1317,7 +1317,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp0True09() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(0, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1335,7 +1335,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False01() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1344,7 +1344,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False02() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1353,7 +1353,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False03() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1362,7 +1362,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False04() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1371,7 +1371,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False05() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1380,7 +1380,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False06() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1389,7 +1389,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False07() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1398,7 +1398,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False08() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1407,7 +1407,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1False09() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, false));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1425,7 +1425,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True01() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_01.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1434,7 +1434,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True02() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_02.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1443,7 +1443,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True03() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_03.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1452,7 +1452,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True04() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_04.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1461,7 +1461,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True05() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_05.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1470,7 +1470,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True06() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_06.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1479,7 +1479,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True07() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_07.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1488,7 +1488,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True08() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_08.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);
@@ -1497,7 +1497,7 @@ public class GssSocketTest {
     @Test
     public void testGetOutputStreamWriteIntWithMessageProp1True09() throws GSSException, IOException {
         int[] stringIntBytes = toIntBytes(
-                TestStringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
+                StringConstants.STRING_09.getBytes(StandardCharsets.UTF_8));
         int[] returningIntBytes = testGetOutputStreamWriteInt(
                 stringIntBytes, new MessageProp(1, true));
         Assert.assertArrayEquals(stringIntBytes, returningIntBytes);

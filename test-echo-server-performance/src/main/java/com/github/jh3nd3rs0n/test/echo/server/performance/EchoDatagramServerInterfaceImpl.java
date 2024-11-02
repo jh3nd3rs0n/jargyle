@@ -5,30 +5,30 @@ import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public final class DatagramEchoServerInterfaceImpl
-        extends DatagramEchoServerInterface {
+public final class EchoDatagramServerInterfaceImpl
+        extends EchoDatagramServerInterface {
 
-    private final DatagramServer datagramEchoServer;
+    private final DatagramServer echoDatagramServer;
 
-    public DatagramEchoServerInterfaceImpl(
-            final DatagramServer datagramEchServer) {
-        this.datagramEchoServer = datagramEchServer;
+    public EchoDatagramServerInterfaceImpl(
+            final DatagramServer echDatagramServer) {
+        this.echoDatagramServer = echDatagramServer;
     }
 
     @Override
     public InetAddress getInetAddress() {
-        return this.datagramEchoServer.getInetAddress();
+        return this.echoDatagramServer.getInetAddress();
     }
 
     @Override
     public int getPort() {
-        return this.datagramEchoServer.getPort();
+        return this.echoDatagramServer.getPort();
     }
 
     @Override
     public State getState() {
         State state;
-        switch (this.datagramEchoServer.getState()) {
+        switch (this.echoDatagramServer.getState()) {
             case STARTED:
                 state = State.STARTED;
                 break;
@@ -38,19 +38,19 @@ public final class DatagramEchoServerInterfaceImpl
             default:
                 throw new AssertionError(String.format(
                         "unhandled state: %s",
-                        this.datagramEchoServer.getState()));
+                        this.echoDatagramServer.getState()));
         }
         return state;
     }
 
     @Override
     public void start() throws IOException {
-        this.datagramEchoServer.start();
+        this.echoDatagramServer.start();
     }
 
     @Override
     public void stop() throws IOException {
-        this.datagramEchoServer.stop();
+        this.echoDatagramServer.stop();
     }
 
 }

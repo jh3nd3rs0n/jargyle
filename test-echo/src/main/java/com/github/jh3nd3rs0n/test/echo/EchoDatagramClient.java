@@ -13,7 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.StandardSocketSettingSpecConstan
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 
-public final class DatagramEchoClient {
+public final class EchoDatagramClient {
 	
 	private static final int SO_TIMEOUT = 60000;
 	private static final SocketSettings SOCKET_SETTINGS = SocketSettings.of(
@@ -23,15 +23,15 @@ public final class DatagramEchoClient {
 	private final NetObjectFactory netObjectFactory;
 	private final SocketSettings socketSettings;
 
-	public DatagramEchoClient() {
+	public EchoDatagramClient() {
 		this(NetObjectFactory.getDefault(), SOCKET_SETTINGS);
 	}
 	
-	public DatagramEchoClient(final NetObjectFactory netObjFactory) {
+	public EchoDatagramClient(final NetObjectFactory netObjFactory) {
 		this(netObjFactory, SOCKET_SETTINGS);
 	}
 	
-	public DatagramEchoClient(
+	public EchoDatagramClient(
 			final NetObjectFactory netObjFactory, 
 			final SocketSettings socketSttngs) {
 		this.netObjectFactory = netObjFactory;

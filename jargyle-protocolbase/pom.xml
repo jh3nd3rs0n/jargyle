@@ -44,7 +44,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>**/Gss*</exclude>
+						<exclude>**/Gss*Test</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

@@ -6,16 +6,16 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.util.Arrays;
 
-public final class DatagramEchoServerHelper {
+public final class EchoDatagramServerHelper {
 
-    private DatagramEchoServerHelper() {
+    private EchoDatagramServerHelper() {
     }
 
-    public static DatagramServer newDatagramEchoServer(final int port) {
-        return newDatagramEchoServer(port, DatagramServer.INET_ADDRESS);
+    public static DatagramServer newEchoDatagramServer(final int port) {
+        return newEchoDatagramServer(port, DatagramServer.INET_ADDRESS);
     }
 
-    public static DatagramServer newDatagramEchoServer(
+    public static DatagramServer newEchoDatagramServer(
             final int port, final InetAddress inetAddress) {
         return new DatagramServer(
                 new DatagramServer.DefaultServerDatagramSocketFactory(),

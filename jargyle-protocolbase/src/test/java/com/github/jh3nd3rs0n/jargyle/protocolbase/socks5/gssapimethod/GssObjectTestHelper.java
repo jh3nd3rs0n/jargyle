@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
 import com.github.jh3nd3rs0n.test.help.net.Server;
 import org.ietf.jgss.*;
@@ -16,8 +16,8 @@ public class GssObjectTestHelper {
             final Socket socket) throws IOException, GSSException {
         GSSManager manager = GSSManager.getInstance();
         GSSName serverName = manager.createName(
-                TestGssEnvironment.SERVICE_NAME, null);
-        Oid mechOid = new Oid(TestGssEnvironment.MECHANISM_OID);
+                GssEnvironment.SERVICE_NAME, null);
+        Oid mechOid = new Oid(GssEnvironment.MECHANISM_OID);
         GSSContext context = manager.createContext(
                 serverName,
                 mechOid,

@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.test.echo;
 
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.test.help.net.Server;
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -17,8 +17,8 @@ import static org.junit.Assert.assertEquals;
 
 public class EchoObjectsTest {
 
-	private static DatagramServer datagramEchoServer;
-	private static int datagramEchoServerPort;
+	private static DatagramServer echoDatagramServer;
+	private static int echoDatagramServerPort;
 	private static Server echoServer;
 	private static int echoServerPort;
 
@@ -30,9 +30,9 @@ public class EchoObjectsTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		datagramEchoServer = DatagramEchoServerHelper.newDatagramEchoServer(0);
-		datagramEchoServer.start();
-		datagramEchoServerPort = datagramEchoServer.getPort();
+		echoDatagramServer = EchoDatagramServerHelper.newEchoDatagramServer(0);
+		echoDatagramServer.start();
+		echoDatagramServerPort = echoDatagramServer.getPort();
 		echoServer = EchoServerHelper.newEchoServer(0);
 		echoServer.start();
 		echoServerPort = echoServer.getPort();
@@ -40,9 +40,9 @@ public class EchoObjectsTest {
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
-		if (datagramEchoServer != null
-				&& !datagramEchoServer.getState().equals(DatagramServer.State.STOPPED)) {
-			datagramEchoServer.stop();
+		if (echoDatagramServer != null
+				&& !echoDatagramServer.getState().equals(DatagramServer.State.STOPPED)) {
+			echoDatagramServer.stop();
 		}
 		if (echoServer != null
 				&& !echoServer.getState().equals(Server.State.STOPPED)) {
@@ -52,71 +52,71 @@ public class EchoObjectsTest {
 	}
 
 	@Test
-	public void testDatagramEchoClient01() throws IOException {
-		String string = TestStringConstants.STRING_01;
-		String returningString = new DatagramEchoClient().echo(string, datagramEchoServerPort);
+	public void testEchoDatagramClient01() throws IOException {
+		String string = StringConstants.STRING_01;
+		String returningString = new EchoDatagramClient().echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClient02() throws IOException {
-		String string = TestStringConstants.STRING_02;
-		String returningString = new DatagramEchoClient().echo(string, datagramEchoServerPort);
+	public void testEchoDatagramClient02() throws IOException {
+		String string = StringConstants.STRING_02;
+		String returningString = new EchoDatagramClient().echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClient03() throws IOException {
-		String string = TestStringConstants.STRING_03;
-		String returningString = new DatagramEchoClient().echo(string, datagramEchoServerPort);
+	public void testEchoDatagramClient03() throws IOException {
+		String string = StringConstants.STRING_03;
+		String returningString = new EchoDatagramClient().echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClient04() throws IOException {
-		String string = TestStringConstants.STRING_04;
-		String returningString = new DatagramEchoClient().echo(string, datagramEchoServerPort);
+	public void testEchoDatagramClient04() throws IOException {
+		String string = StringConstants.STRING_04;
+		String returningString = new EchoDatagramClient().echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
-	public void testDatagramEchoClient05() throws IOException {
-		String string = TestStringConstants.STRING_05;
-		String returningString = new DatagramEchoClient().echo(string, datagramEchoServerPort);
+	public void testEchoDatagramClient05() throws IOException {
+		String string = StringConstants.STRING_05;
+		String returningString = new EchoDatagramClient().echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testEchoClient01() throws IOException {
-		String string = TestStringConstants.STRING_01;
+		String string = StringConstants.STRING_01;
 		String returningString = new EchoClient().echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testEchoClient02() throws IOException {
-		String string = TestStringConstants.STRING_02;
+		String string = StringConstants.STRING_02;
 		String returningString = new EchoClient().echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testEchoClient03() throws IOException {
-		String string = TestStringConstants.STRING_03;
+		String string = StringConstants.STRING_03;
 		String returningString = new EchoClient().echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testEchoClient04() throws IOException {
-		String string = TestStringConstants.STRING_04;
+		String string = StringConstants.STRING_04;
 		String returningString = new EchoClient().echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}
 
 	@Test
 	public void testEchoClient05() throws IOException {
-		String string = TestStringConstants.STRING_05;
+		String string = StringConstants.STRING_05;
 		String returningString = new EchoClient().echo(string, echoServerPort);
 		assertEquals(string, returningString);
 	}

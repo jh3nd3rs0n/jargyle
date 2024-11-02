@@ -6,30 +6,30 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
-public final class DatagramEchoServerLoadTestRunner {
+public final class EchoDatagramServerLoadTestRunner {
 
     private static final int HALF_SECOND = 500;
 
-    private final DatagramEchoServerInterface datagramEchoServerInterface;
+    private final EchoDatagramServerInterface echoDatagramServerInterface;
     private final SocksServerInterface socksServerInterface;
     private final long delayBetweenThreadsStarting;
-    private final DatagramEchoServerTestRunnerFactory datagramEchoServerTestRunnerFactory;
+    private final EchoDatagramServerTestRunnerFactory echoDatagramServerTestRunnerFactory;
     private final int threadCount;
     private final long timeout;
 
-    public DatagramEchoServerLoadTestRunner(
-            final DatagramEchoServerInterface datagramEchServerInterface,
+    public EchoDatagramServerLoadTestRunner(
+            final EchoDatagramServerInterface echDatagramServerInterface,
             final SocksServerInterface scksServerInterface,
             final int numberOfThreads,
             final long delayBetweenThreadsStart,
-            final DatagramEchoServerTestRunnerFactory datagramEchServerTestRunnerFactory,
+            final EchoDatagramServerTestRunnerFactory echDatagramServerTestRunnerFactory,
             final long tmt) {
-        this.datagramEchoServerInterface = Objects.requireNonNull(
-                datagramEchServerInterface);
+        this.echoDatagramServerInterface = Objects.requireNonNull(
+                echDatagramServerInterface);
         this.socksServerInterface = scksServerInterface;
         this.delayBetweenThreadsStarting = delayBetweenThreadsStart;
-        this.datagramEchoServerTestRunnerFactory = Objects.requireNonNull(
-                datagramEchServerTestRunnerFactory);
+        this.echoDatagramServerTestRunnerFactory = Objects.requireNonNull(
+                echDatagramServerTestRunnerFactory);
         this.threadCount = numberOfThreads;
         this.timeout = tmt;
     }
@@ -48,13 +48,13 @@ public final class DatagramEchoServerLoadTestRunner {
                 socksServerHostAddress = this.socksServerInterface.getHostAddress();
                 socksServerPort = this.socksServerInterface.getPort();
             }
-            this.datagramEchoServerInterface.start();
+            this.echoDatagramServerInterface.start();
             for (int i = 0; i < this.threadCount; i++) {
                 executor.execute(new LoadTestRunnerWorker(
                         i * this.delayBetweenThreadsStarting,
-                        this.datagramEchoServerTestRunnerFactory.newDatagramEchoServerTestRunner(
-                                this.datagramEchoServerInterface.getInetAddress(),
-                                this.datagramEchoServerInterface.getPort(),
+                        this.echoDatagramServerTestRunnerFactory.newEchoDatagramServerTestRunner(
+                                this.echoDatagramServerInterface.getInetAddress(),
+                                this.echoDatagramServerInterface.getPort(),
                                 socksServerHostAddress,
                                 socksServerPort),
                         loadTestRunnerResults));
@@ -70,9 +70,9 @@ public final class DatagramEchoServerLoadTestRunner {
                     && System.currentTimeMillis() - startWaitTime < this.timeout);
         } finally {
             executor.shutdownNow();
-            if (!this.datagramEchoServerInterface.getState().equals(
-                    DatagramEchoServerInterface.State.STOPPED)) {
-                this.datagramEchoServerInterface.stop();
+            if (!this.echoDatagramServerInterface.getState().equals(
+                    EchoDatagramServerInterface.State.STOPPED)) {
+                this.echoDatagramServerInterface.stop();
             }
             if (this.socksServerInterface != null
                     && !this.socksServerInterface.getState().equals(

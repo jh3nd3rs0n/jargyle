@@ -3,7 +3,7 @@ package com.github.jh3nd3rs0n.test.echo.server.performance;
 import java.io.IOException;
 import java.net.InetAddress;
 
-public abstract class DatagramEchoServerInterface {
+public abstract class EchoDatagramServerInterface {
 
     public abstract InetAddress getInetAddress();
 

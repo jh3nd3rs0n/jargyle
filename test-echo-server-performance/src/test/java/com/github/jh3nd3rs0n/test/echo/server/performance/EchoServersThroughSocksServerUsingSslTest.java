@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.test.echo.server.performance;
 
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.test.echo.DatagramEchoClient;
-import com.github.jh3nd3rs0n.test.echo.DatagramEchoServerHelper;
+import com.github.jh3nd3rs0n.test.echo.EchoDatagramClient;
+import com.github.jh3nd3rs0n.test.echo.EchoDatagramServerHelper;
 import com.github.jh3nd3rs0n.test.echo.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.client.*;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
@@ -12,8 +12,8 @@ import com.github.jh3nd3rs0n.test.echo.EchoServerHelper;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.test.help.net.Server;
-import com.github.jh3nd3rs0n.test.help.security.TestKeyStoreResourceConstants;
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,15 +44,15 @@ public class EchoServersThroughSocksServerUsingSslTest {
                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
                         Boolean.TRUE),
                 DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM.newProperty(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                 DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 SslPropertySpecConstants.SSL_ENABLED.newProperty(
                         Boolean.TRUE),
                 SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM.newProperty(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                 SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()));
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()));
         return Scheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
@@ -68,27 +68,27 @@ public class EchoServersThroughSocksServerUsingSslTest {
                         NonNegativeInteger.valueOf(Server.BACKLOG)),
                 DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
                 DtlsSettingSpecConstants.DTLS_KEY_STORE_INPUT_STREAM.newSetting(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                 DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsedValue(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
                 SslSettingSpecConstants.SSL_KEY_STORE_INPUT_STREAM.newSetting(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                 SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsedValue(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
     }
 
     @Test
-    public void testDatagramEchoServerThroughSocksServerUsingSsl() throws IOException {
-        LoadTestRunnerResults results = new DatagramEchoServerLoadTestRunner(
-                new DatagramEchoServerInterfaceImpl(
-                        DatagramEchoServerHelper.newDatagramEchoServer(0)),
+    public void testEchoDatagramServerThroughSocksServerUsingSsl() throws IOException {
+        LoadTestRunnerResults results = new EchoDatagramServerLoadTestRunner(
+                new EchoDatagramServerInterfaceImpl(
+                        EchoDatagramServerHelper.newEchoDatagramServer(0)),
                 new SocksServerInterfaceImpl(newSocksServerUsingSsl()),
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
-                new DatagramEchoServerTestRunnerFactoryImpl(),
+                new EchoDatagramServerTestRunnerFactoryImpl(),
                 TIMEOUT)
                 .run();
         String methodName =
@@ -120,49 +120,49 @@ public class EchoServersThroughSocksServerUsingSslTest {
         Assert.assertNotNull(results);
     }
 
-    private static final class DatagramEchoServerTestRunnerFactoryImpl extends DatagramEchoServerTestRunnerFactory {
+    private static final class EchoDatagramServerTestRunnerFactoryImpl extends EchoDatagramServerTestRunnerFactory {
 
         @Override
-        public DatagramEchoServerTestRunner newDatagramEchoServerTestRunner(
-                InetAddress datagramEchServerInetAddress,
-                int datagramEchServerPort,
+        public EchoDatagramServerTestRunner newEchoDatagramServerTestRunner(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
-            return new DatagramEchoServerTestRunnerImpl(
-                    datagramEchServerInetAddress,
-                    datagramEchServerPort,
+            return new EchoDatagramServerTestRunnerImpl(
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
     }
 
-    private static final class DatagramEchoServerTestRunnerImpl extends DatagramEchoServerTestRunner {
+    private static final class EchoDatagramServerTestRunnerImpl extends EchoDatagramServerTestRunner {
 
-        public DatagramEchoServerTestRunnerImpl(
-                InetAddress datagramEchServerInetAddress,
-                int datagramEchServerPort,
+        public EchoDatagramServerTestRunnerImpl(
+                InetAddress echDatagramServerInetAddress,
+                int echDatagramServerPort,
                 String scksServerHostAddress,
                 int scksServerPort) {
             super(
-                    datagramEchServerInetAddress,
-                    datagramEchServerPort,
+                    echDatagramServerInetAddress,
+                    echDatagramServerPort,
                     scksServerHostAddress,
                     scksServerPort);
         }
 
         @Override
         public void run() {
-            DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+            EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                     newSocks5ClientUsingSsl(
                             this.socksServerHostAddress,
                             this.socksServerPort)
                             .newSocksNetObjectFactory());
             try {
-                datagramEchoClient.echo(
-                        TestStringConstants.STRING_05,
-                        this.datagramEchoServerInetAddress,
-                        this.datagramEchoServerPort);
+                echoDatagramClient.echo(
+                        StringConstants.STRING_05,
+                        this.echoDatagramServerInetAddress,
+                        this.echoDatagramServerPort);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -210,7 +210,7 @@ public class EchoServersThroughSocksServerUsingSslTest {
                             .newSocksNetObjectFactory());
             try {
                 echoClient.echo(
-                        TestStringConstants.STRING_05,
+                        StringConstants.STRING_05,
                         this.echoServerInetAddress,
                         this.echoServerPort);
             } catch (IOException e) {

@@ -7,8 +7,8 @@ import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.test.help.net.Server;
-import com.github.jh3nd3rs0n.test.help.security.TestKeyStoreResourceConstants;
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,8 +27,8 @@ import static org.junit.Assert.assertEquals;
 
 public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
 
-    private static DatagramServer datagramEchoServer;
-    private static int datagramEchoServerPort;
+    private static DatagramServer echoDatagramServer;
+    private static int echoDatagramServerPort;
     private static Server echoServer;
     private static int echoServerPort;
 
@@ -54,15 +54,15 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
                                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
                                         Boolean.TRUE),
                                 DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM.newProperty(
-                                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                                 DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
-                                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
+                                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                                 SslPropertySpecConstants.SSL_ENABLED.newProperty(
                                         Boolean.TRUE),
                                 SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM.newProperty(
-                                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                                 SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
-                                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString())),
+                                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString())),
                         client1);
     }
 
@@ -85,14 +85,14 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
                         Port.valueOf(0)),
                 DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
                 DtlsSettingSpecConstants.DTLS_KEY_STORE_INPUT_STREAM.newSetting(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                 DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsedValue(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
                 SslSettingSpecConstants.SSL_KEY_STORE_INPUT_STREAM.newSetting(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
                 SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsedValue(
-                        TestKeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
+                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
         socksServer2.start();
@@ -103,9 +103,9 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        datagramEchoServer = DatagramEchoServerHelper.newDatagramEchoServer(0);
-        datagramEchoServer.start();
-        datagramEchoServerPort = datagramEchoServer.getPort();
+        echoDatagramServer = EchoDatagramServerHelper.newEchoDatagramServer(0);
+        echoDatagramServer.start();
+        echoDatagramServerPort = echoDatagramServer.getPort();
         echoServer = EchoServerHelper.newEchoServer(0);
         echoServer.start();
         echoServerPort = echoServer.getPort();
@@ -114,9 +114,9 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        if (datagramEchoServer != null
-                && !datagramEchoServer.getState().equals(DatagramServer.State.STOPPED)) {
-            datagramEchoServer.stop();
+        if (echoDatagramServer != null
+                && !echoDatagramServer.getState().equals(DatagramServer.State.STOPPED)) {
+            echoDatagramServer.stop();
         }
         if (echoServer != null
                 && !echoServer.getState().equals(Server.State.STOPPED)) {
@@ -129,47 +129,47 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl01() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramClientUsingChainedSocks5ClientToSocksServersUsingSsl01() throws IOException {
+        EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_01;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String string = StringConstants.STRING_01;
+        String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl02() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramClientUsingChainedSocks5ClientToSocksServersUsingSsl02() throws IOException {
+        EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_02;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String string = StringConstants.STRING_02;
+        String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl03() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramClientUsingChainedSocks5ClientToSocksServersUsingSsl03() throws IOException {
+        EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_03;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String string = StringConstants.STRING_03;
+        String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl04() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramClientUsingChainedSocks5ClientToSocksServersUsingSsl04() throws IOException {
+        EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_04;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String string = StringConstants.STRING_04;
+        String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testDatagramEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl05() throws IOException {
-        DatagramEchoClient datagramEchoClient = new DatagramEchoClient(
+    public void testEchoDatagramClientUsingChainedSocks5ClientToSocksServersUsingSsl05() throws IOException {
+        EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_05;
-        String returningString = datagramEchoClient.echo(string, datagramEchoServerPort);
+        String string = StringConstants.STRING_05;
+        String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
@@ -177,7 +177,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl01() throws IOException {
         EchoClient echoClient = new EchoClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
@@ -186,7 +186,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl02() throws IOException {
         EchoClient echoClient = new EchoClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
@@ -195,7 +195,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl03() throws IOException {
         EchoClient echoClient = new EchoClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
@@ -204,7 +204,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl04() throws IOException {
         EchoClient echoClient = new EchoClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
@@ -213,7 +213,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoClientUsingChainedSocks5ClientToSocksServersUsingSsl05() throws IOException {
         EchoClient echoClient = new EchoClient(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory());
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
@@ -222,7 +222,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSsl01() throws IOException {
         Server echServer = EchoServerHelper.newEchoServer(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory(), 0);
-        String string = TestStringConstants.STRING_01;
+        String string = StringConstants.STRING_01;
         String returningString = EchoServerHelper.startThenEchoThenStop(
                 echServer, new EchoClient(), string);
         assertEquals(string, returningString);
@@ -232,7 +232,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSsl02() throws IOException {
         Server echServer = EchoServerHelper.newEchoServer(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory(), 0);
-        String string = TestStringConstants.STRING_02;
+        String string = StringConstants.STRING_02;
         String returningString = EchoServerHelper.startThenEchoThenStop(
                 echServer, new EchoClient(), string);
         assertEquals(string, returningString);
@@ -242,7 +242,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSsl03() throws IOException {
         Server echServer = EchoServerHelper.newEchoServer(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory(), 0);
-        String string = TestStringConstants.STRING_03;
+        String string = StringConstants.STRING_03;
         String returningString = EchoServerHelper.startThenEchoThenStop(
                 echServer, new EchoClient(), string);
         assertEquals(string, returningString);
@@ -252,7 +252,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSsl04() throws IOException {
         Server echServer = EchoServerHelper.newEchoServer(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory(), 0);
-        String string = TestStringConstants.STRING_04;
+        String string = StringConstants.STRING_04;
         String returningString = EchoServerHelper.startThenEchoThenStop(
                 echServer, new EchoClient(), string);
         assertEquals(string, returningString);
@@ -262,7 +262,7 @@ public class EchoObjectsUsingChainedSocks5ClientToSocksServersUsingSslTest {
     public void testEchoServerUsingChainedSocks5ClientToSocksServersUsingSsl05() throws IOException {
         Server echServer = EchoServerHelper.newEchoServer(
                 newChainedSocks5ClientToSocksServersUsingSsl().newSocksNetObjectFactory(), 0);
-        String string = TestStringConstants.STRING_05;
+        String string = StringConstants.STRING_05;
         String returningString = EchoServerHelper.startThenEchoThenStop(
                 echServer, new EchoClient(), string);
         assertEquals(string, returningString);

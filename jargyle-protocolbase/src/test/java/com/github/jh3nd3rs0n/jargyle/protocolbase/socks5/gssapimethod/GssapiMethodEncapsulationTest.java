@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 import org.junit.*;
@@ -15,12 +15,12 @@ public class GssapiMethodEncapsulationTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
-        TestGssEnvironment.setUpBeforeClass(GssapiMethodEncapsulationTest.class);
+        GssEnvironment.setUpBeforeClass(GssapiMethodEncapsulationTest.class);
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
-        TestGssEnvironment.tearDownAfterClass(GssapiMethodEncapsulationTest.class);
+        GssEnvironment.tearDownAfterClass(GssapiMethodEncapsulationTest.class);
     }
 
     @Rule

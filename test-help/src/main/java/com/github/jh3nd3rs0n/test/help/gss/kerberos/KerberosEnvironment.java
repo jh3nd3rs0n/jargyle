@@ -16,7 +16,7 @@ import java.nio.file.Path;
  * A testing environment set up for running Kerberos within a test class. It
  * can only be used once in a module.
  */
-public final class TestKerberosEnvironment {
+public final class KerberosEnvironment {
 
     /**
      * The system property name for {@code java.security.auth.login.config}:
@@ -108,12 +108,12 @@ public final class TestKerberosEnvironment {
     private KdcServer kdcServer;
 
     /**
-     * Constructs a {@code TestKerberosEnvironment} with the provided
+     * Constructs a {@code KerberosEnvironment} with the provided
      * {@code Builder}.
      *
      * @param builder the provided {@code Builder}
      */
-    private TestKerberosEnvironment(final Builder builder) {
+    private KerberosEnvironment(final Builder builder) {
         this.acceptorPrincipal = builder.acceptorPrincipal;
         this.initiatorPrincipal = builder.initiatorPrincipal;
         this.kdcHost = builder.kdcHost;
@@ -212,25 +212,25 @@ public final class TestKerberosEnvironment {
     }
 
     /**
-     * Sets up this {@code TestKerberosEnvironment}.
+     * Sets up this {@code KerberosEnvironment}.
      *
-     * @throws TestKerberosEnvironmentException if an error occurs in setting
+     * @throws KerberosEnvironmentException if an error occurs in setting
      *                                          up this
-     *                                          {@code TestKerberosEnvironment}
+     *                                          {@code KerberosEnvironment}
      */
-    public void setUp() throws TestKerberosEnvironmentException {
+    public void setUp() throws KerberosEnvironmentException {
         try {
             this.setUpKdcServer();
         } catch (KrbException e) {
             this.tearDown();
-            throw new TestKerberosEnvironmentException(e);
+            throw new KerberosEnvironmentException(e);
         }
         try {
             this.createKrb5ConfFile();
             this.createLoginConfFile();
         } catch (IOException e) {
             this.tearDown();
-            throw new TestKerberosEnvironmentException(e);
+            throw new KerberosEnvironmentException(e);
         }
         System.setProperty(
                 JAVA_SECURITY_KRB5_CONF_PROPERTY_NAME,
@@ -272,18 +272,18 @@ public final class TestKerberosEnvironment {
     }
 
     /**
-     * Tears down this {@code TestKerberosEnvironment}.
+     * Tears down this {@code KerberosEnvironment}.
      *
-     * @throws TestKerberosEnvironmentException if an error occurs in
+     * @throws KerberosEnvironmentException if an error occurs in
      *                                          tearing down this
-     *                                          {@code TestKerberosEnvironment}
+     *                                          {@code KerberosEnvironment}
      */
-    public void tearDown() throws TestKerberosEnvironmentException {
+    public void tearDown() throws KerberosEnvironmentException {
         if (this.kdcServer != null) {
             try {
                 this.kdcServer.stop();
             } catch (KrbException e) {
-                throw new TestKerberosEnvironmentException(e);
+                throw new KerberosEnvironmentException(e);
             }
         }
         try {
@@ -291,7 +291,7 @@ public final class TestKerberosEnvironment {
             Files.deleteIfExists(this.krb5ConfFile);
             Files.deleteIfExists(this.loginConfFile);
         } catch (IOException e) {
-            throw new TestKerberosEnvironmentException(e);
+            throw new KerberosEnvironmentException(e);
         }
         System.clearProperty(JAVA_SECURITY_KRB5_CONF_PROPERTY_NAME);
         System.clearProperty(JAVA_SECURITY_LOGIN_CONFIG_PROPERTY_NAME);
@@ -300,7 +300,7 @@ public final class TestKerberosEnvironment {
     }
 
     /**
-     * The builder for the {@code TestKerberosEnvironment}.
+     * The builder for the {@code KerberosEnvironment}.
      */
     public static final class Builder {
 
@@ -358,12 +358,12 @@ public final class TestKerberosEnvironment {
         }
 
         /**
-         * Builds and returns a new {@code TestKerberosEnvironment}.
+         * Builds and returns a new {@code KerberosEnvironment}.
          *
-         * @return a new {@code TestKerberosEnvironment}
+         * @return a new {@code KerberosEnvironment}
          */
-        public TestKerberosEnvironment build() {
-            return new TestKerberosEnvironment(this);
+        public KerberosEnvironment build() {
+            return new KerberosEnvironment(this);
         }
 
         /**

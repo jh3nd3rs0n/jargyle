@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.internal.io;
 
-import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray01() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_01.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_01.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -49,7 +49,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray02() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_02.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_02.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -62,7 +62,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray03() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_03.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_03.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -75,7 +75,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray04() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_04.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_04.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -88,7 +88,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray05() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_05.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_05.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -101,7 +101,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray06() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_06.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_06.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -114,7 +114,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray07() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_07.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_07.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -127,7 +127,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray08() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_08.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_08.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);
@@ -140,7 +140,7 @@ public class InputStreamHelperTest {
 
     @Test
     public void testContinuouslyReadFromInputStreamByteArray09() throws IOException {
-        byte[] expectedBytes = TestStringConstants.STRING_09.getBytes(
+        byte[] expectedBytes = StringConstants.STRING_09.getBytes(
                 StandardCharsets.UTF_8);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 expectedBytes);

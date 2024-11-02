@@ -51,26 +51,30 @@ when a push has been made to the GitHub repository
 
 `jargyle-distribution`: Maven module for creating the binary distribution
 
-`jargyle-integration-test`: Maven module for integration testing between the
-SOCKS client API and the SOCKS server API.
-
 `jargyle-internal`: Maven module for the internal API used by all modules
 
-`jargyle-performance-test`: Maven module for performance testing of the SOCKS
-server API.
-
-`jargyle-protocolbase`: Maven module for the foundational API for the
-SOCKS client API and the SOCKS server API
+`jargyle-protocolbase`: Maven module for the foundational API for the SOCKS 
+client API and the SOCKS server API
 
 `jargyle-report-aggregate`: Maven module for generating the aggregated
 test coverage reports
 
 `jargyle-server`: Maven module for the SOCKS server API
 
-`jargyle-test-help`: Maven module for the test help API. This module is used
-internally to help with testing.
-
 `src/site`: Contains files used to generate `docs/`
+
+`test-echo`: Maven module for the API of clients and servers that send/receive 
+data and receive/send back the same data. It is used for testing between the
+SOCKS client API and the SOCKS server API.
+
+`test-echo-server-performance`: Maven module for the API for performance 
+testing of servers that receive data and send back the same data. It is used 
+for performance testing of the SOCKS server API.
+
+`test-help`: Maven module for the API for help with testing
+
+`test-netty-example-socksproxy`: Maven module for the modified version of the 
+Netty example SOCKS proxy. It is used for testing.
 
 `.gitignore`: List of directories and files for Git to ignore such as
 Eclipse and IntelliJ IDEA project directories and files
@@ -130,8 +134,15 @@ distribution skipping the execution of all tests.
 The built binary distribution can be found as a directory and in multiple 
 archive formats in `jargyle-distribution/target/`.
 
-`mvn clean test -Pcoverage`: Performs a clean build, executes all tests except 
-integration tests, and produces the aggregated test coverage reports. 
+`mvn clean test --projects=\!test-echo-server-performance -Pcoverage`: 
+Performs a clean build, executes all tests except the ones from the project 
+`test-echo-server-performance`, and produces the aggregated test coverage 
+reports.
+
+The option `--projects=\!test-echo-server-performance` can be removed if you 
+want the performance tests to be executed. If the performance tests are 
+executed, the results can be found in
+`test-echo-server-performance/target/performance-results/`.
 
 The aggregated test coverage reports can be found in 
 `jargyle-report-aggregate/target/`. 
@@ -147,30 +158,5 @@ specified local port numbers need to be open:
     testing.
 -   `8000`: This port number is used for a Kerberos Key Distribution Center
     (KDC) set up for testing.
-
-`mvn clean verify --projects=\!jargyle-performance-test,\!jargyle-distribution -Pcoverage`: 
-Performs a clean build, executes all tests including integration tests except 
-the ones from the project `jargyle-performance-test`, skips building the 
-binary distribution, and produces the aggregated test coverage reports. 
-
-The argument `\!jargyle-performance-test,` for the option `--projects` can be 
-removed if you want the performance tests to be executed. If the performance 
-tests are executed, the results can be found in
-`jargyle-performance-test/target/performance-results/`. 
-
-The aggregated test coverage reports can be found in
-`jargyle-report-aggregate/target/`. 
-
-The option `-Pcoverage` can be removed if you do not want the aggregated test 
-coverage reports produced.
-
-When executing the tests, the tests use only the loopback address and the
-local port numbers assigned by the local system. However, the following
-specified local port numbers need to be open:
-
--   `1080`: This default port number is used for SOCKS servers set up for
-    testing, integration testing, and performance testing.
--   `8000`: This port number is used for a Kerberos Key Distribution Center
-    (KDC) set up for testing.
 -   `9000`: This port number is used for a Kerberos Key Distribution Center
-    (KDC) set up for integration testing.
+    (KDC) set up for testing. 

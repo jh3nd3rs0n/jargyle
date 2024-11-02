@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
-import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
 import org.junit.Assert;
 import org.junit.Test;
 

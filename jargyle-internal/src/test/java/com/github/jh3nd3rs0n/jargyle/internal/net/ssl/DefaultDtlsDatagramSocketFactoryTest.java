@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
-import com.github.jh3nd3rs0n.jargyle.test.help.security.TestKeyStoreResourceConstants;
+import com.github.jh3nd3rs0n.test.help.security.TestKeyStoreResourceConstants;
 import org.junit.Assert;
 import org.junit.Test;
 

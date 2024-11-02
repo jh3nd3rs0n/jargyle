@@ -269,16 +269,17 @@
 		</plugins>
 	</reporting>
 	<modules>
-		<module>jargyle-test-help</module>
+		<module>test-help</module>
 		<module>jargyle-internal</module>
 		<module>jargyle-common</module>
 		<module>jargyle-protocolbase</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
-		<module>jargyle-integration-test</module>
-		<module>jargyle-performance-test</module>
+		<module>test-netty-example-socksproxy</module>
+		<module>test-echo</module>
+		<module>test-echo-server-performance</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-report-aggregate</module>
 		<module>jargyle-distribution</module>
-    </modules>
+	</modules>
 </project>

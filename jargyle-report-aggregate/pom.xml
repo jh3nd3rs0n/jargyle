@@ -33,11 +33,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-integration-test</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-internal</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
@@ -49,6 +44,11 @@
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-server</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>test-echo</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

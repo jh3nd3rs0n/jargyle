@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
+import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
 import org.junit.Assert;
 import org.junit.Test;
 

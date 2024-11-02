@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.TestGssEnvironment;
-import com.github.jh3nd3rs0n.jargyle.test.help.string.TestStringConstants;
+import com.github.jh3nd3rs0n.test.help.string.TestStringConstants;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 import org.junit.*;

@@ -29,12 +29,14 @@ import java.util.Arrays;
  * the bytes of the original data followed by the bytes of the original data.
  * </p>
  * <p>
- * Original data of a length greater 255 bytes is encoded as measured data
- * starting with one to many chunks with each chunk with a chunk length byte
- * of a value of 255 followed by the next 254 bytes of the original data. The
- * measured data ends with the last chunk with a chunk length byte of the
- * value of the length of the remaining bytes of the original data followed by
- * the remaining bytes of the original data.
+ * Original data of a length greater than 254 bytes is encoded as measured
+ * data of many chunks whose number is the length of the bytes of the original
+ * data divided by 254 and rounded up to the next whole number if there is a
+ * remainder. Each chunk, with the exception of the last chunk, has a chunk
+ * length byte of a value of 255 followed by the next 254 bytes of the
+ * original data. The last chunk has a chunk length byte of the value of the
+ * length of the remaining bytes of the original data followed by the
+ * remaining bytes of the original data.
  * </p>
  */
 final class MeasuredIoHelper {

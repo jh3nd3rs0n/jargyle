@@ -72,7 +72,7 @@ receive/send back the same data. They are used for testing the SOCKS client
 API and the SOCKS server API.
 
 `test-echo-server-performance/`: Maven module for performance testing of 
-servers that receive data and send back the same data. It involves performance 
+servers that receive data and send back the same data. It includes performance 
 testing of the SOCKS server API.
 
 `test-help/`: Maven module for the API for help with testing

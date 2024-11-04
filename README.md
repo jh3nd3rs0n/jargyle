@@ -39,42 +39,45 @@ The contributing guidelines can be found [here](CONTRIBUTING.md).
 
 The following is a simple overview of the directory.
 
-`.github`: Contains GitHub workflow files that perform tests and analysis
+`.github/`: Contains GitHub workflow files that perform tests and analysis
 when a push has been made to the GitHub repository
 
-`docs`: Contains the website/documentation
+`argmatey/`: Maven module for the extensible command line interface. It is 
+used for the Jargyle command line interface.
 
-`jargyle-cli`: Maven module for the Jargyle command line interface API
+`docs/`: Contains the website/documentation
 
-`jargyle-client`: Maven module for the SOCKS client API
+`jargyle-cli/`: Maven module for the Jargyle command line interface
 
-`jargyle-common`: Maven module for the public API used by all modules
+`jargyle-client/`: Maven module for the SOCKS client API
 
-`jargyle-distribution`: Maven module for creating the binary distribution
+`jargyle-common/`: Maven module for the public API used by all modules
 
-`jargyle-internal`: Maven module for the internal API used by all modules
+`jargyle-distribution/`: Maven module for creating the binary distribution
 
-`jargyle-protocolbase`: Maven module for the foundational API for the SOCKS 
+`jargyle-internal/`: Maven module for the internal API used by all modules
+
+`jargyle-protocolbase/`: Maven module for the foundational API for the SOCKS 
 client API and the SOCKS server API
 
-`jargyle-report-aggregate`: Maven module for generating the aggregated
+`jargyle-report-aggregate/`: Maven module for generating the aggregated
 test coverage reports
 
-`jargyle-server`: Maven module for the SOCKS server API
+`jargyle-server/`: Maven module for the SOCKS server API
 
-`src/site`: Contains files used to generate `docs/`
+`src/site/`: Contains files used to generate `docs/`
 
-`test-echo`: Maven module for the API of clients and servers that send/receive 
-data and receive/send back the same data. It is used for testing between the
-SOCKS client API and the SOCKS server API.
+`test-echo/`: Maven module for clients and servers that send/receive data and 
+receive/send back the same data. They are used for testing the SOCKS client 
+API and the SOCKS server API.
 
-`test-echo-server-performance`: Maven module for the API for performance 
-testing of servers that receive data and send back the same data. It is used 
-for performance testing of the SOCKS server API.
+`test-echo-server-performance/`: Maven module for performance testing of 
+servers that receive data and send back the same data. It involves performance 
+testing of the SOCKS server API.
 
-`test-help`: Maven module for the API for help with testing
+`test-help/`: Maven module for the API for help with testing
 
-`test-netty-example-socksproxy`: Maven module for the modified version of the 
+`test-netty-example-socksproxy/`: Maven module for the modified version of the 
 Netty example SOCKS proxy. It is used for testing.
 
 `.gitignore`: List of directories and files for Git to ignore such as

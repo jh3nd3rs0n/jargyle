@@ -3,7 +3,6 @@ package com.github.jh3nd3rs0n.test.echo;
 import com.github.jh3nd3rs0n.jargyle.internal.io.InputStreamHelper;
 
 import java.io.*;
-import java.util.Arrays;
 
 /**
  * Helper class for reading and writing measured I/O for testing. Measured
@@ -81,8 +80,8 @@ final class MeasuredIoHelper {
                             bytesToRead,
                             (bytesRead == -1) ? 0 : bytesRead));
                 }
-                bytesOut.write(Arrays.copyOf(bytes, bytesRead));
             }
+            bytesOut.write(bytes);
             if (b < MAX_BYTES_TO_READ + 1) {
                 break;
             }

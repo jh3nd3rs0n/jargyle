@@ -18,6 +18,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
+			<artifactId>argmatey</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-cli</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>

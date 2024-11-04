@@ -4,7 +4,10 @@ import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.test.echo.EchoDatagramClient;
 import com.github.jh3nd3rs0n.test.echo.EchoDatagramServerHelper;
 import com.github.jh3nd3rs0n.test.echo.EchoClient;
-import com.github.jh3nd3rs0n.jargyle.client.*;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
@@ -16,7 +19,6 @@ import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.test.help.net.Server;
-import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.test.help.string.StringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -27,7 +29,7 @@ import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.nio.file.Path;
 
-public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
+public class EchoServersBehindSocksServerUsingSocks5UserpassMethodTest {
 
     private static final long DELAY_BETWEEN_THREADS_STARTING = 500;
     private static final int THREAD_COUNT = 100;
@@ -42,22 +44,10 @@ public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
                 className + ".txt", "Class " + className);
     }
 
-    private static SocksClient newSocks5ClientUsingSslAndSocks5UserpassMethod(
+    private static SocksClient newSocks5ClientUsingSocks5UserpassMethod(
             final String socksServerHostAddress,
             final int socksServerPort) {
         Properties properties = Properties.of(
-                DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
-                        Boolean.TRUE),
-                DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM.newProperty(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
-                DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
-                SslPropertySpecConstants.SSL_ENABLED.newProperty(
-                        Boolean.TRUE),
-                SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM.newProperty(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
-                SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                         Methods.of(Method.USERNAME_PASSWORD)),
                 Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME.newProperty(
@@ -70,23 +60,13 @@ public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
                 .newSocksClient(properties);
     }
 
-    private static SocksServer newSocksServerUsingSslAndSocks5UserpassMethod() {
+    private static SocksServer newSocksServerUsingSocks5UserpassMethod() {
         return new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(Port.valueOf(0)),
                 GeneralSettingSpecConstants.BACKLOG.newSetting(
                         NonNegativeInteger.valueOf(Server.BACKLOG)),
-                DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
-                DtlsSettingSpecConstants.DTLS_KEY_STORE_INPUT_STREAM.newSetting(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
-                DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsedValue(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
-                SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
-                SslSettingSpecConstants.SSL_KEY_STORE_INPUT_STREAM.newSetting(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
-                SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsedValue(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
                         Methods.of(Method.USERNAME_PASSWORD)),
                 Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
@@ -97,12 +77,11 @@ public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
     }
 
     @Test
-    public void testEchoDatagramServerThroughSocksServerUsingSslAndSocks5UserpassMethod() throws IOException {
+    public void testEchoDatagramServerBehindSocksServerUsingSocks5UserpassMethod() throws IOException {
         LoadTestRunnerResults results = new EchoDatagramServerLoadTestRunner(
                 new EchoDatagramServerInterfaceImpl(
                         EchoDatagramServerHelper.newEchoDatagramServer(0)),
-                new SocksServerInterfaceImpl(
-                        newSocksServerUsingSslAndSocks5UserpassMethod()),
+                new SocksServerInterfaceImpl(newSocksServerUsingSocks5UserpassMethod()),
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
                 new EchoDatagramServerTestRunnerFactoryImpl(),
@@ -118,12 +97,11 @@ public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
     }
 
     @Test
-    public void testEchoServerThroughSocksServerUsingSslAndSocks5UserpassMethod() throws IOException {
+    public void testEchoServerBehindSocksServerUsingSocks5UserpassMethod() throws IOException {
         LoadTestRunnerResults results = new EchoServerLoadTestRunner(
                 new EchoServerInterfaceImpl(
                         EchoServerHelper.newEchoServer(0)),
-                new SocksServerInterfaceImpl(
-                        newSocksServerUsingSslAndSocks5UserpassMethod()),
+                new SocksServerInterfaceImpl(newSocksServerUsingSocks5UserpassMethod()),
                 THREAD_COUNT,
                 DELAY_BETWEEN_THREADS_STARTING,
                 new EchoServerTestRunnerFactoryImpl(),
@@ -172,7 +150,7 @@ public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
         @Override
         public void run() {
             EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                    newSocks5ClientUsingSslAndSocks5UserpassMethod(
+                    newSocks5ClientUsingSocks5UserpassMethod(
                             this.socksServerHostAddress,
                             this.socksServerPort)
                             .newSocksNetObjectFactory());
@@ -222,7 +200,7 @@ public class EchoServersThroughSocksServerUsingSslAndSocks5UserpassMethodTest {
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    newSocks5ClientUsingSslAndSocks5UserpassMethod(
+                    newSocks5ClientUsingSocks5UserpassMethod(
                             this.socksServerHostAddress,
                             this.socksServerPort)
                             .newSocksNetObjectFactory());

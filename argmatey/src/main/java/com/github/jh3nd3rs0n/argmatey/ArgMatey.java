@@ -53,7 +53,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * Provides classes for a command line interface.
+ * Provides the extensible command line interface and classes for the
+ * extensible command line interface.
  */
 public final class ArgMatey {
 

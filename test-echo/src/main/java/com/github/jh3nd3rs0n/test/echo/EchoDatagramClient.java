@@ -51,10 +51,9 @@ public final class EchoDatagramClient {
 			final String string,
 			final InetAddress echoTestDatagramServerInetAddress,
 			final int echoTestDatagramServerPort) throws IOException {
-		DatagramSocket datagramSocket = null;
 		String returningString;
-		try {
-			datagramSocket = this.netObjectFactory.newDatagramSocket(null);
+		try (DatagramSocket datagramSocket =
+					 this.netObjectFactory.newDatagramSocket(null)) {
 			this.socketSettings.applyTo(datagramSocket);
 			datagramSocket.bind(null);
 			datagramSocket.connect(
@@ -77,10 +76,6 @@ public final class EchoDatagramClient {
 							packet.getOffset(),
 							packet.getLength()),
 					StandardCharsets.UTF_8);
-		} finally {
-			if (datagramSocket != null) {
-				datagramSocket.close();
-			}
 		}
 		return returningString;
 	}

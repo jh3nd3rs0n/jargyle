@@ -64,9 +64,7 @@ public final class EchoServerHelper {
             returningString = echoClient.echo(
                     string, echoServer.getInetAddress(), echoServer.getPort());
         } finally {
-            if (!echoServer.getState().equals(Server.State.STOPPED)) {
-                echoServer.stop();
-            }
+            echoServer.stop();
         }
         return returningString;
     }

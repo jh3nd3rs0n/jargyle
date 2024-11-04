@@ -49,10 +49,8 @@ public final class EchoClient {
 			final String string, 
 			final InetAddress echoServerInetAddress,
 			final int echoServerPort) throws IOException {
-		Socket socket = null;
-		String returningString = null;
-		try {
-			socket = this.netObjectFactory.newSocket();
+		String returningString;
+		try (Socket socket = this.netObjectFactory.newSocket()) {
 			this.socketSettings.applyTo(socket);
 			socket.connect(new InetSocketAddress(
 					echoServerInetAddress, echoServerPort));
@@ -63,10 +61,6 @@ public final class EchoClient {
 					out);
 			byte[] bytes = MeasuredIoHelper.readFrom(in);
             returningString = new String(bytes, StandardCharsets.UTF_8);
-		} finally {
-			if (socket != null) {
-				socket.close();
-			}
 		}
 		return returningString;		
 	}

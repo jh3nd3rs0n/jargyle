@@ -18,12 +18,8 @@ public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 	private final Socks5Client socks5Client;
 
 	Socks5NetObjectFactory(final Socks5Client client) {
+		super(client);
 		this.socks5Client = client;
-	}
-	
-	@Override
-	public SocksClient getSocksClient() {
-		return this.socks5Client;
 	}
 
 	@Override

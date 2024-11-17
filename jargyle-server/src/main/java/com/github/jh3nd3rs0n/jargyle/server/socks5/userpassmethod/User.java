@@ -21,6 +21,10 @@ public final class User {
 	
 	public static User newInstance(
 			final String name, final HashedPassword hashedPassword) {
+		Objects.requireNonNull(name, "name must not be null");
+		Objects.requireNonNull(
+				hashedPassword, "hashed password must not be null");
+		validateName(name);
 		return new User(name, hashedPassword);
 	}
 

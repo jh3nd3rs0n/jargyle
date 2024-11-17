@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.UserInfo;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.EnumValueTypeDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
@@ -193,9 +194,10 @@ final class SettingsHelpPrinter {
 	public void printSettingsHelp(final PrintWriter pw) {
 		Map<String, Class<?>> valueTypeMap = new TreeMap<String, Class<?>>();
 		this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
-		this.putFromValueType(valueTypeMap, RuleCondition.class);
 		this.putFromValueType(valueTypeMap, RuleAction.class);
+		this.putFromValueType(valueTypeMap, RuleCondition.class);
 		this.putFromValueType(valueTypeMap, Scheme.class);
+		this.putFromValueType(valueTypeMap, UserInfo.class);
 		pw.println("SETTINGS:");
 		pw.println();
 		this.printFromRootNameValuePairValueType(Setting.class, pw);

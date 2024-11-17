@@ -41,9 +41,8 @@ public class ClientApp {
          * Set the URI of the SOCKS server for the SOCKS client to 
          * connect.
          */
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "8080");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:8080");
         /*
          * Enable SSL/TLS for TCP traffic between the SOCKS client 
          * and the SOCKS server.
@@ -71,8 +70,8 @@ public class ClientApp {
          * local system.
          */
         System.setProperty(
-                "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server", 
-                "true");
+            "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server", 
+            "true");
         
         /*
          * Create networking objects whose traffic would be routed 

@@ -39,8 +39,8 @@ The contributing guidelines can be found [here](CONTRIBUTING.md).
 
 The following is a simple overview of the directory.
 
-`.github/`: Contains GitHub workflow files that perform tests and analysis
-when a push has been made to the GitHub repository
+`.github/workflows/`: Contains GitHub workflow files that perform analyses and 
+tests when a push has been made to the GitHub repository
 
 `argmatey/`: Maven module for the extensible command line interface. It is 
 used for the Jargyle command line interface.
@@ -68,8 +68,9 @@ test coverage reports
 `src/site/`: Contains files used to generate `docs/`
 
 `test-echo/`: Maven module for clients and servers that send/receive data and 
-receive/send back the same data. They are used for testing the SOCKS client 
-API and the SOCKS server API.
+receive/send back the same data. The clients and one of the servers use the 
+SOCKS client API. When testing the clients and one of the servers, the SOCKS 
+client API and the SOCKS server API are also tested.
 
 `test-echo-server-performance/`: Maven module for performance testing of 
 servers that receive data and send back the same data. It includes performance 
@@ -138,14 +139,24 @@ distribution skipping the execution of all tests.
 The built binary distribution can be found as a directory and in multiple 
 archive formats in `jargyle-distribution/target/`.
 
-`mvn clean test --projects=\!test-echo-server-performance -Pcoverage`: 
-Performs a clean build, executes all tests except the ones from the project 
-`test-echo-server-performance`, and produces the aggregated test coverage 
-reports.
+`mvn clean test -Pcoverage`:
+Performs a clean build, executes all tests except the integration tests, and 
+produces the aggregated test coverage reports.
 
-The option `--projects=\!test-echo-server-performance` can be removed if you 
-want the performance tests to be executed. If the performance tests are 
-executed, the results can be found in
+The aggregated test coverage reports can be found in
+`jargyle-report-aggregate/target/`.
+
+The option `-Pcoverage` can be removed if you do not want the aggregated test
+coverage reports produced.
+
+`mvn clean verify --projects=\!test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
+Performs a clean build, executes all tests except the ones from the project 
+`test-echo-server-performance`, skips building the binary distribution, and 
+produces the aggregated test coverage reports.
+
+The argument `\!test-echo-server-performance,` from the option `--projects` 
+can be removed if you want the performance tests to be executed. If the 
+performance tests are executed, the results can be found in
 `test-echo-server-performance/target/performance-results/`.
 
 The aggregated test coverage reports can be found in 
@@ -154,9 +165,9 @@ The aggregated test coverage reports can be found in
 The option `-Pcoverage` can be removed if you do not want the aggregated test 
 coverage reports produced.
 
-When executing the tests, the tests use only the loopback address and the 
-local port numbers assigned by the local system. However, the following 
-specified local port numbers need to be open:
+When executing the integration tests, the integration tests use only the 
+loopback address and the local port numbers assigned by the local system. 
+However, the following specified local port numbers need to be open:
 
 -   `1080`: This default port number is used for SOCKS servers set up for 
     testing.

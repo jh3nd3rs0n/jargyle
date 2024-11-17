@@ -48,9 +48,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty("socksClient.ssl.enabled", "true");
         System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
         System.setProperty("socksClient.ssl.trustStorePassword", "password");
@@ -84,9 +83,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty("socksClient.ssl.enabled", "true");
         System.setProperty("socksClient.ssl.keyStoreFile", "client.jks");
         System.setProperty("socksClient.ssl.keyStorePassword", "drowssap");
@@ -133,9 +131,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty("socksClient.dtls.enabled", "true");
         System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
         System.setProperty("socksClient.dtls.trustStorePassword", "password");
@@ -175,9 +172,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty(
             "socksClient.socks5.methods", 
             "NO_AUTHENTICATION_REQUIRED,GSSAPI");
@@ -218,9 +214,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty(
             "socksClient.socks5.methods", 
             "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD");
@@ -237,8 +232,8 @@ To access the SOCKS server using username password authentication, you
 will need to have the property `socksClient.socks5.methods` to have 
 `USERNAME_PASSWORD` included. You will also need to have the properties 
 `socksClient.socks5.userpassmethod.username` and 
-`socksClient.socks5.userpassmethod.password` respectively specify the 
-username and password for the SOCKS5 server.
+`socksClient.socks5.userpassmethod.password` to specify the username and 
+password for the SOCKS5 server.
 
 API example:
 
@@ -257,9 +252,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty(
             "socksClient.socks5.methods", "USERNAME_PASSWORD");
         System.setProperty(
@@ -273,6 +267,57 @@ public class ClientApp {
     }
 }
 ```
+
+Instead of using the properties `socksClient.socks5.userpassmethod.username` 
+and `socksClient.socks5.userpassmethod.password` to specify the username and 
+password for the SOCKS5 server, you can supply the username and password for 
+the SOCKS5 server as a username and password pair in the user information 
+component of the SOCKS server URI.
+
+The username and password pair must be in the following format:
+
+```text
+USERNAME:PASSWORD
+```
+
+`USERNAME` is the username and `PASSWORD` is the password.
+
+If the username or the password contains a colon character (`:`), then each
+colon character must be replaced with the URL encoding character `%3A`.
+
+If the username or the password contains a percent sign character (`%`) not
+used for URL encoding, then each percent sign character not used for URL
+encoding must be replaced with the URL encoding character `%25`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", 
+            "socks5://Jasmine:mission%3Aimpossible@jargyle.net:1234");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        // ...
+    }
+}
+```
+
+There is no need to have the property `socksClient.socks5.methods` to have 
+`USERNAME_PASSWORD` included since it will be automatically included during 
+runtime.
 
 ### Accessing the SOCKS Server Using GSS-API Authentication
 
@@ -307,9 +352,8 @@ public class ClientApp {
         System.setProperty(
             "java.security.auth.login.config", "login.conf");
         System.setProperty("java.security.krb5.conf", "krb5.conf");
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty("socksClient.socks5.methods", "GSSAPI");
         System.setProperty(
             "socksClient.socks5.gssapimethod.serviceName",
@@ -402,9 +446,8 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         Socket socket = netObjectFactory.newSocket("google.com", 443);
         // ...
@@ -437,12 +480,11 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksServerUri.scheme", "socks5");
-        System.setProperty("socksServerUri.host", "jargyle.net");
-        System.setProperty("socksServerUri.port", "1234");
         System.setProperty(
-                "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
-                "true");
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        System.setProperty(
+            "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+            "true");
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         HostResolver hostResolver = netObjectFactory.newHostResolver();
         InetAddress inetAddress = hostResolver.resolve("google.com");

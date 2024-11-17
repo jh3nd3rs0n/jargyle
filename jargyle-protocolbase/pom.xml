@@ -42,9 +42,12 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>**/Gss*Test</exclude>
+						<exclude>**/Gss*IT</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

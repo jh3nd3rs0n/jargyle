@@ -4,6 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.HostPrope
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PortRangesPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocketSettingsPropertySpec;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocksServerUriPropertySpec;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
@@ -104,6 +105,21 @@ public final class GeneralPropertySpecConstants {
             PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
                     "socksClient.clientSocketSettings",
                     SocketSettings.of()));
+
+    /**
+     * {@code PropertySpec} constant for {@code socksClient.socksServerUri}:
+     * the {@code SocksServerUri} for the URI of the SOCKS server.
+     */
+    @NameValuePairValueSpecDoc(
+            description = "The URI of the SOCKS server",
+            name = "socksClient.socksServerUri",
+            syntax = "socksClient.socksServerUri=SOCKS_SERVER_URI",
+            valueType = SocksServerUri.class
+    )
+    public static final PropertySpec<SocksServerUri> SOCKS_SERVER_URI =
+            PROPERTY_SPECS.addThenGet(new SocksServerUriPropertySpec(
+                    "socksClient.socksServerUri",
+                    null));
 
     /**
      * Prevents the construction of unnecessary instances.

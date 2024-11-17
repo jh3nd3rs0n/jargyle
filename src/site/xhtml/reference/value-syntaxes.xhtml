@@ -102,6 +102,11 @@
 <ul>
 </ul>
 </li>
+<li>
+<a href="#user-info">User Info</a>
+<ul>
+</ul>
+</li>
 </ul>
 <h2 id="address-range">Address Range</h2>
 <p><b>Syntax:</b></p>
@@ -178,9 +183,11 @@
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">socks5
 </code></pre>
+<p><b>Description:</b></p>
+<p>Specifies what SOCKS protocol is to be used to access the SOCKS server</p>
 <p><b>Values:</b></p>
 <ul>
-<li><code>socks5</code>: SOCKS5 protocol version 5</li>
+<li><code>socks5</code>: SOCKS protocol version 5</li>
 </ul>
 <h2 id="selection-strategy">Selection Strategy</h2>
 <p><b>Syntax:</b></p>
@@ -359,12 +366,20 @@
 <p><b>Value:</b> java.lang.String</p>
 <h2 id="socks-server-uri">SOCKS Server URI</h2>
 <p><b>Syntax:</b></p>
-<pre><code class="language-text">SCHEME://HOST[:PORT]
+<pre><code class="language-text">SCHEME://[USER_INFO@]HOST[:PORT]
 </code></pre>
+<p><b>Description:</b></p>
+<p>The URI of the SOCKS server</p>
 <h2 id="unsigned-byte">Unsigned Byte</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">0-255
 </code></pre>
 <p><b>Description:</b></p>
 <p>An integer between 0 and 255 (inclusive)</p>
+<h2 id="user-info">User Info</h2>
+<p><b>Syntax:</b></p>
+<pre><code class="language-text">(See https://www.ietf.org/rfc/rfc2396.txt 3.2.2. Server-based Naming Authority)
+</code></pre>
+<p><b>Description:</b></p>
+<p>Specifies the user information to be used to access the SOCKS server</p>
 </body></html>

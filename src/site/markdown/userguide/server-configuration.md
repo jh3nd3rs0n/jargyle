@@ -754,7 +754,7 @@ Server configuration file example:
 ```
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used 
-when accessing the other SOCKS server (`socks5`), the address or name of the 
+to access the other SOCKS server (`socks5`), the address or name of the
 machine of where the other SOCKS server resides (`127.0.0.1`), and the port 
 number of the other SOCKS server (`23456`). In the aforementioned examples, the 
 SOCKS protocol version 5 is used. At this time, the only supported scheme for 
@@ -1213,8 +1213,8 @@ To chain to the other SOCKS server using username password authentication, you
 will need to have the setting `chaining.socks5.methods` to have 
 `USERNAME_PASSWORD` included. You will also need to have the settings 
 `chaining.socks5.userpassmethod.username` and 
-`chaining.socks5.userpassmethod.password` respectively specify the 
-username and password for the other SOCKS5 server.
+`chaining.socks5.userpassmethod.password` to specify the username and password 
+for the other SOCKS5 server.
 
 API example:
 
@@ -1300,6 +1300,82 @@ jargyle start-server \
     --setting=chaining.socks5.userpassmethod.username=Aladdin \
     --enter-chaining-socks5-userpassmethod-pass
 ```
+
+Instead of using the settings `chaining.socks5.userpassmethod.username` and 
+`chaining.socks5.userpassmethod.password` to specify the username and password 
+for the other SOCKS5 server, you can supply the username and password for the 
+other SOCKS5 server as a username and password pair in the user information 
+component of the SOCKS server URI.
+
+The username and password pair must be in the following format:
+
+```text
+USERNAME:PASSWORD
+```
+
+`USERNAME` is the username and `PASSWORD` is the password.
+
+If the username or the password contains a colon character (`:`), then each
+colon character must be replaced with the URL encoding character `%3A`.
+
+If the username or the password contains a percent sign character (`%`) not
+used for URL encoding, then each percent sign character not used for URL
+encoding must be replaced with the URL encoding character `%25`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://Jasmine:mission%3Aimpossible@127.0.0.1:23456")
+        ))).start();
+    }
+}
+```
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://Jasmine:mission%3Aimpossible@127.0.0.1:23456
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://Jasmine:mission%3Aimpossible@127.0.0.1:23456</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+There is no need to have the setting `chaining.socks5.methods` to have
+`USERNAME_PASSWORD` included since it will be automatically included during 
+runtime.
+
+**Warning**: This alternative leaves the password exposed in plaintext. It is 
+recommended to use the approaches mentioned earlier since they hide the 
+password either by encrypting it in the server configuration file created by 
+`new-server-config-file` or by obtaining the password from the interactive 
+prompt from the command line option 
+`--enter-chaining-socks5-userpassmethod-pass`. 
 
 #### Chaining to the Other SOCKS Server Using GSS-API Authentication
 

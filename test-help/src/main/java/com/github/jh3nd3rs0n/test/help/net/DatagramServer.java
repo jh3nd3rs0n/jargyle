@@ -723,7 +723,7 @@ public final class DatagramServer {
          *                                    {@code ExecutorFactory} used for
          *                                    creating an {@code Executor} to
          *                                    execute {@code Worker}s
-         * @param queues                      the provided {@code Packets}
+         * @param pckts                       the provided {@code Packets}
          * @param factory                     the provided
          *                                    {@code WorkerFactory} used for
          *                                    creating {@code Worker}s
@@ -731,11 +731,11 @@ public final class DatagramServer {
         public ReceivingPacketRelay(
                 final DatagramSocket serverSock,
                 final ExecutorFactory multiThreadsExecutorFactory,
-                final Packets queues,
+                final Packets pckts,
                 final WorkerFactory factory) {
             this.logger = LoggerFactory.getLogger(ReceivingPacketRelay.class);
             this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
-            this.packets = queues;
+            this.packets = pckts;
             this.serverSocket = serverSock;
             this.workerFactory = factory;
         }
@@ -806,12 +806,12 @@ public final class DatagramServer {
          * {@code DatagramSocket} and the provided {@code Packets}.
          *
          * @param serverSock the provided server {@code DatagramSocket}
-         * @param queues     the provided {@code Packets}
+         * @param pckts      the provided {@code Packets}
          */
         public SendingPacketRelay(
-                final DatagramSocket serverSock, final Packets queues) {
+                final DatagramSocket serverSock, final Packets pckts) {
             this.logger = LoggerFactory.getLogger(SendingPacketRelay.class);
-            this.packets = queues;
+            this.packets = pckts;
             this.serverSocket = serverSock;
         }
 

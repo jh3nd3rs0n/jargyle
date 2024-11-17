@@ -1,6 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
 import com.github.jh3nd3rs0n.jargyle.client.Property;
+import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.UserInfo;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.*;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationSchema;
 import com.github.jh3nd3rs0n.jargyle.server.RuleCondition;
@@ -93,10 +95,12 @@ final class ReferenceDocsGenerator {
         Map<String, Class<?>> valueTypeMap = new TreeMap<>(
                 String::compareToIgnoreCase);
         this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
+        this.putFromRootNameValuePairValueType(valueTypeMap, RuleAction.class);
         this.putFromRootNameValuePairValueType(
                 valueTypeMap, RuleCondition.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, RuleAction.class);
         this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
+        this.putFromValueType(valueTypeMap, Scheme.class);
+        this.putFromValueType(valueTypeMap, UserInfo.class);
         System.out.printf("Creating '%s'...", VALUE_SYNTAXES_FILENAME);
         try (PrintWriter valueSyntaxesWriter = new PrintWriter(
                 VALUE_SYNTAXES_FILENAME, "UTF-8")) {

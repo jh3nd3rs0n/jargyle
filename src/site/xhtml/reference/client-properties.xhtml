@@ -1,17 +1,13 @@
 <!DOCTYPE html><html><head><title></title></head><body>
 <h1 id="client-properties">Client Properties</h1>
 <table>
-<tr><th colspan="3">SOCKS Server URI Properties</th></tr>
-<tr><th>Name</th><th>Value</th><th>Description</th></tr>
-<tr><td><code>socksServerUri.port</code></td><td><a href="value-syntaxes.html#port">Port</a></td><td>The port of the SOCKS server URI</td></tr>
-<tr><td><code>socksServerUri.host</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The host name or address of the SOCKS server URI</td></tr>
-<tr><td><code>socksServerUri.scheme</code></td><td><a href="value-syntaxes.html#scheme">Scheme</a></td><td>The scheme of the SOCKS server URI</td></tr>
 <tr><th colspan="3">General Properties</th></tr>
 <tr><th>Name</th><th>Value</th><th>Description</th></tr>
 <tr><td><code>socksClient.clientBindHost</code></td><td><a href="value-syntaxes.html#host">Host</a></td><td>The binding host name or address for the client socket that is used to connect to the SOCKS server (default is 0.0.0.0)</td></tr>
 <tr><td><code>socksClient.clientBindPortRanges</code></td><td><a href="value-syntaxes.html#port-ranges">Port Ranges</a></td><td>The comma separated list of binding port ranges for the client socket that is used to connect to the SOCKS server (default is 0)</td></tr>
 <tr><td><code>socksClient.clientConnectTimeout</code></td><td><a href="value-syntaxes.html#positive-integer">Positive Integer</a></td><td>The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (default is 60000)</td></tr>
 <tr><td><code>socksClient.clientSocketSettings</code></td><td><a href="value-syntaxes.html#socket-settings">Socket Settings</a></td><td>The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server</td></tr>
+<tr><td><code>socksClient.socksServerUri</code></td><td><a href="value-syntaxes.html#socks-server-uri">SOCKS Server URI</a></td><td>The URI of the SOCKS server</td></tr>
 <tr><th colspan="3">DTLS Properties</th></tr>
 <tr><th>Name</th><th>Value</th><th>Description</th></tr>
 <tr><td><code>socksClient.dtls.enabled</code></td><td>java.lang.Boolean.toString()</td><td>The boolean value to indicate if DTLS connections to the SOCKS server are enabled (default is false)</td></tr>

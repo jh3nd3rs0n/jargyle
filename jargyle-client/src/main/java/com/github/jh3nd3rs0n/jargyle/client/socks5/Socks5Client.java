@@ -1,9 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.client.SocksNetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.*;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.ClientDatagramSocketBuilder;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.ClientSocketBuilder;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
@@ -12,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Socks5Client extends SocksClient {
 
@@ -48,10 +47,33 @@ public final class Socks5Client extends SocksClient {
 		return this.clientSocketBuilder;
 	}
 
-	Method negotiateMethod(
-			final Socket connectedClientSocket) throws IOException {
+	private Methods getMethods() {
 		Methods methods = this.getProperties().getValue(
 				Socks5PropertySpecConstants.SOCKS5_METHODS);
+		UserInfo userInfo = this.getSocksServerUri().getUserInfo();
+		if (userInfo == null) {
+			return methods;
+		}
+		UsernamePassword usernamePassword =
+				UsernamePassword.tryNewInstanceFrom(userInfo.toString());
+		if (usernamePassword == null) {
+			return methods;
+		}
+		if (methods.contains(Method.USERNAME_PASSWORD)) {
+			return methods;
+		}
+		if (methods.equals(Methods.getDefault())) {
+			return Methods.of(Method.USERNAME_PASSWORD);
+		}
+		List<Method> meths = new ArrayList<>();
+		meths.add(Method.USERNAME_PASSWORD);
+		meths.addAll(methods.toList());
+		return Methods.of(meths);
+	}
+
+	Method negotiateMethod(
+			final Socket connectedClientSocket) throws IOException {
+		Methods methods = this.getMethods();
 		ClientMethodSelectionMessage cmsm = 
 				ClientMethodSelectionMessage.newInstance(methods);
 		InputStream inputStream = connectedClientSocket.getInputStream();

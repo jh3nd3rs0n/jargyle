@@ -26,9 +26,8 @@ public abstract class NetObjectFactory {
     }
 
     /**
-     * Returns a {@code NetObjectFactory}. If the system properties defined by
-     * {@link SocksServerUriPropertySpecConstants#SCHEME} and
-     * {@link SocksServerUriPropertySpecConstants#HOST} are set, a new
+     * Returns a {@code NetObjectFactory}. If the system property
+     * {@code socksClient.socksServerUri} is set and the value is valid, a new
      * {@code SocksNetObjectFactory} is returned. Otherwise, the default
      * instance of {@code NetObjectFactory} from {@link #getDefault()} is
      * returned.

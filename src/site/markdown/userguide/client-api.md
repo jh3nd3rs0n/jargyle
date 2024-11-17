@@ -31,19 +31,12 @@ We will be discussing approaches numbers 2 and 3.
 
 ## Creating the NetObjectFactory from System Properties
 
-At minimum, the following system properties are needed for the 
-`NetObjectFactory` object to create networking objects whose traffic would be 
-routed through the SOCKS server:
+At minimum, the following system property is needed for the `NetObjectFactory` 
+object to create networking objects whose traffic would be routed through the 
+SOCKS server:
 
--   `socksServerUri.scheme`: Specifies what SOCKS protocol is used against 
-the SOCKS server. At this time, the only supported scheme is `socks5`
--   `socksServerUri.host`: Specifies the host name or address of the SOCKS 
-server.
--   `socksServerUri.port`: Specifies the port number of the SOCKS server. 
-This system property is optional. The default is 1080.
-
-A complete listing of the properties can be found 
-[here](../reference/client-properties.md).
+-   `socksClient.socksServerUri`: The URI of the SOCKS server for the SOCKS 
+client to connect. 
 
 Client API example:
 
@@ -62,10 +55,9 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        
-        System.setProperty("socksServerUri.scheme", "socks5");
-        
-        System.setProperty("socksServerUri.host", "jargyle.net");
+
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
 
@@ -97,14 +89,86 @@ public class ClientApp {
 }
 ```
 
-Although in the above example, the system properties are set within the code, 
+Please note that the scheme in the URI specifies the SOCKS protocol to be used
+to access the SOCKS server (`socks5`), the address or name of the machine of
+where the SOCKS server resides (`jargyle.net`), and the port number of the 
+SOCKS server (`1234`). In the above example, the SOCKS protocol version 5 is 
+used. At this time, the only supported scheme for the URI format is `socks5`.
+
+Other system properties can also be used to configure the SOCKS client.
+
+Client API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        
+        System.setProperty("socksClient.socks5.methods", "USERNAME_PASSWORD");
+        System.setProperty("socksClient.socks5.userpassmethod.username", "Aladdin");
+        System.setProperty("socksClient.socks5.userpassmethod.password", "opensesame");
+        
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+
+        /*
+         * Example of creating a HostResolver and a Socket
+         */
+        /*        
+        HostResolver hostResolver = netObjectFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("google.com");        
+        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        */
+
+        /*
+         * Example of creating a ServerSocket
+         */
+        /*
+        ServerSocket serverSocket = netObjectFactory.newServerSocket(443);
+        */
+
+        /*
+         * Example of creating a DatagramSocket
+         */        
+        /*
+        DatagramSocket datagramSocket = netObjectFactory.newDatagramSocket(4444);
+        */
+
+        // ...
+    }
+}
+```
+
+Although in the above examples, the system properties are set within the code, 
 the system properties can instead be set outside the program through the `-D` 
 option in the `java` utility. This gives the advantage of enabling traffic 
 through a SOCKS server or not.
 
+Partial command line example:
+
 ```text
-java -DsocksServerUri.scheme=socks5 -DsocksServerUri.host=jargyle.net ...
+java -DsocksClient.socksServerUri=socks5://jargyle.net:1234 \
+     -DsocksClient.socks5.methods=USERNAME_PASSWORD \
+     -DsocksClient.socks5.userpassmethod.username=Aladdin \
+     -DsocksClient.socks5.userpassmethod.password=opensesame \
+     ...
 ```
+
+A complete listing of the properties can be found
+[here](../reference/client-properties.md).
 
 ## Creating the NetObjectFactory from the SocksClient Object
 

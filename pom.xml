@@ -164,16 +164,6 @@
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.22.1</version>
-					<configuration>
-						<systemPropertyVariables>
-							<!--
-							<com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
-							-->
-							<!-- -->
-							<jdk.virtualThreadScheduler.parallelism>20</jdk.virtualThreadScheduler.parallelism>
-							<!-- -->
-						</systemPropertyVariables>
-					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -194,6 +184,16 @@
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
 					<version>3.1.2</version>
+					<configuration>
+						<systemPropertyVariables>
+							<!--
+							<com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
+							-->
+							<!-- -->
+							<jdk.virtualThreadScheduler.parallelism>20</jdk.virtualThreadScheduler.parallelism>
+							<!-- -->
+						</systemPropertyVariables>
+					</configuration>
 					<executions>
 						<execution>
 							<id>integration-test</id>

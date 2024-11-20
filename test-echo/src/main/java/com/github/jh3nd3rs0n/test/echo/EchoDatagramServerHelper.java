@@ -21,7 +21,7 @@ public final class EchoDatagramServerHelper {
                 new DatagramServer.DefaultServerDatagramSocketFactory(),
                 port,
                 inetAddress,
-                new VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory(),
+                new VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory(),
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new EchoWorkerFactory());
     }

@@ -66,7 +66,7 @@
                         <com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
                         -->
                         <!-- -->
-                        <jdk.virtualThreadScheduler.parallelism>20</jdk.virtualThreadScheduler.parallelism>
+                        <jdk.virtualThreadScheduler.parallelism>30</jdk.virtualThreadScheduler.parallelism>
                         <!-- -->
                         <performance.reports.directory>${project.build.directory}${file.separator}performance-reports${file.separator}</performance.reports.directory>
                     </systemPropertyVariables>

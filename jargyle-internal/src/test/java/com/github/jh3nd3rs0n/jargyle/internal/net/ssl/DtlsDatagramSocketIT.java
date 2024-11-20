@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory;
+import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory;
 import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.test.help.string.StringConstants;
@@ -66,7 +66,7 @@ public class DtlsDatagramSocketIT {
         return new DatagramServer(
                 serverDtlsDatagramSocketFactory,
                 0,
-                new VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory(),
+                new VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory(),
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new EchoWorkerFactory());
     }

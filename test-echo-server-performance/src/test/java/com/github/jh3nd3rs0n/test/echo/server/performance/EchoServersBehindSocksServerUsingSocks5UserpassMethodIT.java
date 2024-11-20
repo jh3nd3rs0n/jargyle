@@ -31,7 +31,7 @@ import java.nio.file.Path;
 
 public class EchoServersBehindSocksServerUsingSocks5UserpassMethodIT {
 
-    private static final long DELAY_BETWEEN_THREADS_STARTING = 500;
+    private static final long DELAY_BETWEEN_THREADS_STARTING = 400;
     private static final int THREAD_COUNT = 100;
     private static final long TIMEOUT = 60000 * 5;
 

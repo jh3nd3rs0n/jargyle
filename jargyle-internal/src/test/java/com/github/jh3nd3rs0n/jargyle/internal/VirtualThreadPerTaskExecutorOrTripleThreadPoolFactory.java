@@ -5,16 +5,16 @@ import com.github.jh3nd3rs0n.test.help.net.ExecutorFactory;
 
 import java.util.concurrent.ExecutorService;
 
-public final class VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory
+public final class VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory
         extends ExecutorFactory {
 
-    public VirtualThreadPerTaskExecutorOrDoubleThreadPoolFactory() {
+    public VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory() {
     }
 
     @Override
     public ExecutorService newExecutor() {
         return ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
-                ExecutorsHelper.newFixedThreadPoolBuilder(2));
+                ExecutorsHelper.newFixedThreadPoolBuilder(3));
     }
 
 }

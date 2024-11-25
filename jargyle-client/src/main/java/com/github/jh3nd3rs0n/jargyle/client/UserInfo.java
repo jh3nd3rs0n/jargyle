@@ -9,7 +9,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.SingleValueTypeDoc;
         description = "Specifies the user information to be used to access "
                 + "the SOCKS server",
         name = "User Info",
-        syntax = "([a-zA-Z0-9\\-_.!~*'();:&=+$,]|%[0-9a-fA-F][0-9a-fA-F])*",
+        syntax = "(See https://www.ietf.org/rfc/rfc2396.txt 3.2.2. Server-based Naming Authority)",
         syntaxName = "USER_INFO"
 )
 public final class UserInfo {

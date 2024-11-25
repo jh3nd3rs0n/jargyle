@@ -338,7 +338,8 @@ final class ReferenceDocsGenerator {
         if (!description.isEmpty()) {
             pw.println(this.getTextAsParagraph(this.getBoldText(
                     "Description:")));
-            pw.println(this.getTextAsParagraph(description));
+            pw.println(this.getTextAsParagraph(
+                    this.replaceReservedHtmlCharacters(description)));
         }
         List<EnumValueDoc> enumValueDocList = Arrays.stream(cls.getDeclaredFields())
                 .map((field) -> field.getAnnotation(EnumValueDoc.class))
@@ -353,7 +354,9 @@ final class ReferenceDocsGenerator {
                 pw.print(this.getCodeText(enumValueDoc.value()));
                 String desc = enumValueDoc.description();
                 if (!desc.isEmpty()) {
-                    pw.printf(": %s", desc);
+                    pw.printf(
+                            ": %s",
+                            this.replaceReservedHtmlCharacters(desc));
                 }
                 pw.println(LIST_ITEM_END_TAG);
             }
@@ -375,7 +378,8 @@ final class ReferenceDocsGenerator {
         if (!description.isEmpty()) {
             pw.println(this.getTextAsParagraph(this.getBoldText(
                     "Description:")));
-            pw.println(this.getTextAsParagraph(description));
+            pw.println(this.getTextAsParagraph(
+                    this.replaceReservedHtmlCharacters(description)));
         }
         for (Class<?> c : nameValuePairValueTypeDoc.nameValuePairValueSpecs()) {
             NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc =
@@ -387,7 +391,8 @@ final class ReferenceDocsGenerator {
                 if (!desc.isEmpty()) {
                     pw.println(this.getTextAsParagraph(this.getBoldText(
                             "Description:")));
-                    pw.println(this.getTextAsParagraph(desc));
+                    pw.println(this.getTextAsParagraph(
+                            this.replaceReservedHtmlCharacters(desc)));
                 }
                 for (Field field : c.getDeclaredFields()) {
                     NameValuePairValueSpecDoc nameValuePairValueSpecDoc =
@@ -404,7 +409,8 @@ final class ReferenceDocsGenerator {
                         if (!d.isEmpty()) {
                             pw.println(this.getTextAsParagraph(this.getBoldText(
                                     "Description:")));
-                            pw.println(this.getTextAsParagraph(d));
+                            pw.println(this.getTextAsParagraph(
+                                    this.replaceReservedHtmlCharacters(d)));
                         }
                         pw.println(this.getTextAsParagraph(String.format(
                                 "%s %s",
@@ -432,7 +438,8 @@ final class ReferenceDocsGenerator {
         if (!description.isEmpty()) {
             pw.println(this.getTextAsParagraph(this.getBoldText(
                     "Description:")));
-            pw.println(this.getTextAsParagraph(description));
+            pw.println(this.getTextAsParagraph(
+                    this.replaceReservedHtmlCharacters(description)));
         }
         for (Class<?> c : singleValueTypeDoc.singleValueSpecs()) {
             SingleValueSpecsDoc singleValueSpecsDoc = c.getAnnotation(
@@ -443,7 +450,8 @@ final class ReferenceDocsGenerator {
                 if (!desc.isEmpty()) {
                     pw.println(this.getTextAsParagraph(this.getBoldText(
                             "Description:")));
-                    pw.println(this.getTextAsParagraph(desc));
+                    pw.println(this.getTextAsParagraph(this.getTextAsParagraph(
+                            desc)));
                 }
                 for (Field field : c.getDeclaredFields()) {
                     SingleValueSpecDoc singleValueSpecDoc =
@@ -460,7 +468,8 @@ final class ReferenceDocsGenerator {
                         if (!d.isEmpty()) {
                             pw.println(this.getTextAsParagraph(this.getBoldText(
                                     "Description:")));
-                            pw.println(this.getTextAsParagraph(d));
+                            pw.println(this.getTextAsParagraph(
+                                    this.replaceReservedHtmlCharacters(d)));
                         }
                     }
                 }
@@ -482,7 +491,8 @@ final class ReferenceDocsGenerator {
         if (!description.isEmpty()) {
             pw.println(this.getTextAsParagraph(this.getBoldText(
                     "Description:")));
-            pw.println(this.getTextAsParagraph(description));
+            pw.println(this.getTextAsParagraph(
+                    this.replaceReservedHtmlCharacters(description)));
         }
         pw.println(this.getTextAsParagraph(String.format(
                 "%s %s",
@@ -678,7 +688,8 @@ final class ReferenceDocsGenerator {
                                     this.getLinkToValueInfo(
                                             nameValuePairValueSpecDoc.valueType()
                                     ),
-                                    nameValuePairValueSpecDoc.description());
+                                    this.replaceReservedHtmlCharacters(
+                                            nameValuePairValueSpecDoc.description()));
                         }
                     }
                 }
@@ -784,9 +795,6 @@ final class ReferenceDocsGenerator {
         }
         if (c == '"') {
             return "&quot;";
-        }
-        if (c == '\'') {
-            return "&apos;";
         }
         return Character.toString(c);
     }

@@ -4,13 +4,13 @@ import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPasswordValue;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
-import java.security.AlgorithmParameters;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -28,9 +28,26 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
     private static final String CIPHER_ALGORITHM = "AES/CFB/PKCS5Padding";
 
     /**
+     * The iteration count.
+     */
+    private static final int ITERATION_COUNT = 65536;
+
+    /**
      * The length of the encoded key.
      */
     private static final int KEY_LENGTH = 256;
+
+    /**
+     * The initial length of the salt.
+     */
+    private static final int SALT_LENGTH = 8;
+
+    /**
+     * The secret key factory algorithm to be used to create the secret key
+     * used for encryption/decryption.
+     */
+    private static final String SECRET_KEY_FACTORY_ALGORITHM =
+            "PBKDF2WithHmacSHA256";
 
     /**
      * The algorithm for the specification of the encoded key.
@@ -38,9 +55,9 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
     private static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
 
     /**
-     * The encoded key.
+     * The {@code SecureRandom} to be used to generate a new salt.
      */
-    private final byte[] encodedKey;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     /**
      * The encrypted password.
@@ -51,6 +68,11 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
      * The initialization vector.
      */
     private final byte[] initializationVector;
+
+    /**
+     * The salt.
+     */
+    private final byte[] salt;
 
     /**
      * The {@code String} representation of this
@@ -65,15 +87,8 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
      * @param password the provided password
      */
     public AesCfbPkcs5PaddingEncryptedPasswordValue(final char[] password) {
-        KeyGenerator keyGenerator;
-        try {
-            keyGenerator = KeyGenerator.getInstance(
-                    SECRET_KEY_SPEC_ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
-            throw new AssertionError(e);
-        }
-        keyGenerator.init(KEY_LENGTH);
-        SecretKey secretKey = keyGenerator.generateKey();
+        byte[] slt = newSalt();
+        SecretKey secretKey = newSecretKey(slt);
         Cipher cipher;
         try {
             cipher = Cipher.getInstance(CIPHER_ALGORITHM);
@@ -106,15 +121,15 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             throw new AssertionError(e);
         }
-        this.encodedKey = secretKey.getEncoded();
         this.encrypted = enc;
         this.initializationVector = ivParameterSpec.getIV();
+        this.salt = slt;
         Base64.Encoder encoder = Base64.getEncoder();
         this.string = String.format(
                 "%s,%s,%s",
-                encoder.encodeToString(this.encodedKey),
                 encoder.encodeToString(this.encrypted),
-                encoder.encodeToString(this.initializationVector));
+                encoder.encodeToString(this.initializationVector),
+                encoder.encodeToString(this.salt));
     }
 
     /**
@@ -127,25 +142,19 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
     public AesCfbPkcs5PaddingEncryptedPasswordValue(final String s) {
         String message = String.format(
                 "encrypted password value must be in the following format: "
-                        + "ENCODED_KEY_BASE_64_STRING,"
                         + "ENCRYPTED_BASE_64_STRING,"
-                        + "INITIALIZATION_VECTOR_BASE_64_STRING "
+                        + "INITIALIZATION_VECTOR_BASE_64_STRING,"
+                        + "SALT_BASE_64_STRING "
                         + "actual encrypted password value is %s",
                 s);
         String[] sElements = s.split(",", -1);
         if (sElements.length != 3) {
             throw new IllegalArgumentException(message);
         }
-        String encodedKeyBase64String = sElements[0];
-        String encryptedBase64String = sElements[1];
-        String initializationVectorBase64String = sElements[2];
+        String encryptedBase64String = sElements[0];
+        String initializationVectorBase64String = sElements[1];
+        String saltBase64String = sElements[2];
         Base64.Decoder decoder = Base64.getDecoder();
-        byte[] key;
-        try {
-            key = decoder.decode(encodedKeyBase64String);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(message, e);
-        }
         byte[] enc;
         try {
             enc = decoder.decode(encryptedBase64String);
@@ -159,10 +168,16 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(message, e);
         }
-        checkArguments(key, enc, initVector);
-        this.encodedKey = key;
+        byte[] slt;
+        try {
+            slt = decoder.decode(saltBase64String);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(message, e);
+        }
+        checkArguments(enc, initVector, slt);
         this.encrypted = enc;
         this.initializationVector = initVector;
+        this.salt = slt;
         this.string = s;
     }
 
@@ -171,30 +186,30 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
      * {@code IllegalArgumentException} is thrown if one of the arguments is
      * invalid.
      *
-     * @param encodedKey           the encoded key
      * @param encrypted            the encrypted password
      * @param initializationVector the initialization vector
+     * @param salt                 the salt
      */
     private static void checkArguments(
-            final byte[] encodedKey,
             final byte[] encrypted,
-            final byte[] initializationVector) {
-        decrypt(encodedKey, encrypted, initializationVector);
+            final byte[] initializationVector,
+            final byte[] salt) {
+        decrypt(encrypted, initializationVector, salt);
     }
 
     /**
      * Returns the decrypted secret. An {@code IllegalArgumentException} is
      * thrown if one of the arguments is invalid.
      *
-     * @param encodedKey           the encoded key
      * @param encrypted            the encrypted password
      * @param initializationVector the initialization vector
+     * @param salt                 the salt
      * @return the decrypted secret
      */
     private static byte[] decrypt(
-            final byte[] encodedKey,
             final byte[] encrypted,
-            final byte[] initializationVector) {
+            final byte[] initializationVector,
+            final byte[] salt) {
         Cipher cipher;
         try {
             cipher = Cipher.getInstance(CIPHER_ALGORITHM);
@@ -204,8 +219,7 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
         try {
             cipher.init(
                     Cipher.DECRYPT_MODE,
-                    new SecretKeySpec(
-                            encodedKey, SECRET_KEY_SPEC_ALGORITHM),
+                    newSecretKey(salt),
                     new IvParameterSpec(initializationVector));
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
             throw new IllegalArgumentException(e);
@@ -217,6 +231,46 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
             throw new IllegalArgumentException(e);
         }
         return decrypted;
+    }
+
+    /**
+     * Returns a new salt.
+     *
+     * @return a new salt
+     */
+    private static byte[] newSalt() {
+        byte[] salt = new byte[SALT_LENGTH];
+        SECURE_RANDOM.nextBytes(salt);
+        return salt;
+    }
+
+    /**
+     * Returns a new {@code SecretKey} using the provided salt.
+     *
+     * @param salt the provided salt
+     * @return a new {@code SecretKey} using the provided salt
+     */
+    private static SecretKey newSecretKey(final byte[] salt) {
+        SecretKeyFactory factory;
+        try {
+            factory = SecretKeyFactory.getInstance(
+                    SECRET_KEY_FACTORY_ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError(e);
+        }
+        KeySpec keySpec = new PBEKeySpec(
+                EncryptionPasswordHelper.getEncryptionPassword(),
+                salt,
+                ITERATION_COUNT,
+                KEY_LENGTH);
+        SecretKey secretKey;
+        try {
+            secretKey = factory.generateSecret(keySpec);
+        } catch (InvalidKeySpecException e) {
+            throw new AssertionError(e);
+        }
+        return new SecretKeySpec(
+                secretKey.getEncoded(), SECRET_KEY_SPEC_ALGORITHM);
     }
 
     @Override
@@ -238,9 +292,9 @@ public final class AesCfbPkcs5PaddingEncryptedPasswordValue
     @Override
     public char[] getPassword() {
         byte[] decrypted = decrypt(
-                this.encodedKey,
                 this.encrypted,
-                this.initializationVector);
+                this.initializationVector,
+                this.salt);
         List<Character> characters = new ArrayList<>();
         try (Reader reader = new InputStreamReader(new ByteArrayInputStream(
                 decrypted))) {

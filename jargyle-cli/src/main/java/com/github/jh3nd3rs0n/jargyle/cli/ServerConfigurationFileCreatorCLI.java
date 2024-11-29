@@ -38,9 +38,9 @@ public final class ServerConfigurationFileCreatorCLI extends ServerConfiguration
 		}
 		try {
 			this.newConfigurationFile(this.newConfigurationFile);
-		} catch (UncheckedIOException e) {
-			System.err.printf("%s: %s%n", this.getProgramName(), e);
-			e.printStackTrace(System.err);
+		} catch (Throwable t) {
+			System.err.printf("%s: %s%n", this.getProgramName(), t);
+			t.printStackTrace(System.err);
 			throw new TerminationRequestedException(-1);
 		}
 		throw new TerminationRequestedException(0);

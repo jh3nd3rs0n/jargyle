@@ -9,9 +9,9 @@ public class EncryptedPasswordTest {
 	public void testEqualsObject01() {
 		EncryptedPassword e = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Assert.assertEquals(e, e);
 	}
 
@@ -19,9 +19,9 @@ public class EncryptedPasswordTest {
 	public void testEqualsObject02() {
 		EncryptedPassword e = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Assert.assertNotEquals(e, null);
 	}
 
@@ -29,9 +29,9 @@ public class EncryptedPasswordTest {
 	public void testEqualsObject03() {
 		Object obj1 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Object obj2 = new Object();
 		Assert.assertNotEquals(obj1, obj2);
 	}
@@ -40,14 +40,14 @@ public class EncryptedPasswordTest {
 	public void testEqualsObject04() {
 		EncryptedPassword e1 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		EncryptedPassword e2 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"wdiWY14abZlnDY0wimI6MnyusPM1AETPnG4I8dW1Epc=," +
-						"ILEQgndNi4JUJBVuKWyu4w==," +
-						"V6TzjtAZ7SGk/QNQHCip/Q==");
+				"gxhAQ/Wppz5qq2KqpJLdI+0XoHED8KctcmCVvxeiL0vof9Qg4z3E81HJ6qBEt8/x," +
+						"TQmU6HevTlDEDr38Z/dByQ==," +
+						"PAFnak2eyRg=");
 		Assert.assertNotEquals(e1, e2);
 	}
 
@@ -55,9 +55,9 @@ public class EncryptedPasswordTest {
 	public void testEqualsObject05() {
 		EncryptedPassword e1 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		EncryptedPassword e2 = new EncryptedPassword(
 				new TestEncryptedPasswordSpec("TestEncryptedPassword"),
 				new TestEncryptedPasswordValue(
@@ -69,14 +69,14 @@ public class EncryptedPasswordTest {
 	public void testEqualsObject06() {
 		EncryptedPassword e1 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		EncryptedPassword e2 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Assert.assertEquals(e1, e2);
 	}
 
@@ -108,9 +108,9 @@ public class EncryptedPasswordTest {
 	public void testGetPassword04() {
 		EncryptedPassword e = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Assert.assertArrayEquals("Hello, World".toCharArray(), e.getPassword());
 	}
 
@@ -118,24 +118,24 @@ public class EncryptedPasswordTest {
 	public void testGetPassword05() {
 		EncryptedPassword e = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"wdiWY14abZlnDY0wimI6MnyusPM1AETPnG4I8dW1Epc=," +
-						"ILEQgndNi4JUJBVuKWyu4w==," +
-						"V6TzjtAZ7SGk/QNQHCip/Q==");
-		Assert.assertArrayEquals("Hello, World".toCharArray(), e.getPassword());
+				"gxhAQ/Wppz5qq2KqpJLdI+0XoHED8KctcmCVvxeiL0vof9Qg4z3E81HJ6qBEt8/x," +
+						"TQmU6HevTlDEDr38Z/dByQ==," +
+						"PAFnak2eyRg=");
+		Assert.assertArrayEquals("The quick brown fox jumped over the lazy dog".toCharArray(), e.getPassword());
 	}
 
 	@Test
 	public void testHashCode01() {
 		EncryptedPassword e1 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		EncryptedPassword e2 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Assert.assertEquals(e1.hashCode(), e2.hashCode());
 	}
 
@@ -143,14 +143,14 @@ public class EncryptedPasswordTest {
 	public void testHashCode02() {
 		EncryptedPassword e1 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		EncryptedPassword e2 = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"wdiWY14abZlnDY0wimI6MnyusPM1AETPnG4I8dW1Epc=," +
-						"ILEQgndNi4JUJBVuKWyu4w==," +
-						"V6TzjtAZ7SGk/QNQHCip/Q==");
+				"gxhAQ/Wppz5qq2KqpJLdI+0XoHED8KctcmCVvxeiL0vof9Qg4z3E81HJ6qBEt8/x," +
+						"TQmU6HevTlDEDr38Z/dByQ==," +
+						"PAFnak2eyRg=");
 		Assert.assertNotEquals(e1.hashCode(), e2.hashCode());
 	}
 
@@ -164,9 +164,9 @@ public class EncryptedPasswordTest {
 	public void testNewInstanceFromString() {
 		Assert.assertNotNull(EncryptedPassword.newInstanceFrom(
 				"AesCfbPkcs5PaddingEncryptedPassword:" +
-						"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA=="));
+						"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ="));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -189,9 +189,9 @@ public class EncryptedPasswordTest {
 	public void testNewInstanceStringString() {
 		Assert.assertNotNull(EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA=="));
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ="));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -210,14 +210,14 @@ public class EncryptedPasswordTest {
 	public void testToString01() {
 		EncryptedPassword e = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==");
+				"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=");
 		Assert.assertEquals(
 				"AesCfbPkcs5PaddingEncryptedPassword:" +
-						"7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-						"D/Gq+9TP1pLYbNhOwBpdJA==," +
-						"ceVrk9XvghhylTYoJME5rA==",
+						"Yl8Da3RdK6x3aWr3P/Ss8A==," +
+						"dGNdMNGk2T2/UsPtquFnzg==," +
+						"iiaIaNs3tkQ=",
 				e.toString());
 	}
 
@@ -225,14 +225,14 @@ public class EncryptedPasswordTest {
 	public void testToString02() {
 		EncryptedPassword e = EncryptedPassword.newInstance(
 				"AesCfbPkcs5PaddingEncryptedPassword",
-				"wdiWY14abZlnDY0wimI6MnyusPM1AETPnG4I8dW1Epc=," +
-						"ILEQgndNi4JUJBVuKWyu4w==," +
-						"V6TzjtAZ7SGk/QNQHCip/Q==");
+				"gxhAQ/Wppz5qq2KqpJLdI+0XoHED8KctcmCVvxeiL0vof9Qg4z3E81HJ6qBEt8/x," +
+						"TQmU6HevTlDEDr38Z/dByQ==," +
+						"PAFnak2eyRg=");
 		Assert.assertEquals(
 				"AesCfbPkcs5PaddingEncryptedPassword:" +
-						"wdiWY14abZlnDY0wimI6MnyusPM1AETPnG4I8dW1Epc=," +
-						"ILEQgndNi4JUJBVuKWyu4w==," +
-						"V6TzjtAZ7SGk/QNQHCip/Q==",
+						"gxhAQ/Wppz5qq2KqpJLdI+0XoHED8KctcmCVvxeiL0vof9Qg4z3E81HJ6qBEt8/x," +
+						"TQmU6HevTlDEDr38Z/dByQ==," +
+						"PAFnak2eyRg=",
 				e.toString());
 	}
 

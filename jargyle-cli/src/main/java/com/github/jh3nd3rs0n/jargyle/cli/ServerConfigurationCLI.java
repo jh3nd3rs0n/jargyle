@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import com.github.jh3nd3rs0n.argmatey.ArgMatey;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
@@ -14,6 +15,7 @@ import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageParams;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionUsageProvider;
 import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
+import com.github.jh3nd3rs0n.jargyle.common.security.SystemPropertyNameConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.ChainingSslSettingSpecConstants;
@@ -51,11 +53,14 @@ public abstract class ServerConfigurationCLI extends CLI {
 	private static final int ENTER_CHAINING_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 3;
 	private static final int ENTER_CHAINING_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 4;
 	private static final int ENTER_DTLS_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 5;
-	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 6;
-	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
-	private static final int HELP_OPTION_GROUP_ORDINAL = 8;
-	private static final int SETTING_OPTION_GROUP_ORDINAL = 9;
-	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 10;
+	private static final int ENTER_PARTIAL_ENCRYPTION_PASS_OPTION_GROUP_ORDINAL = 6;
+	private static final int ENTER_SSL_KEY_STORE_PASS_OPTION_GROUP_ORDINAL = 7;
+	private static final int ENTER_SSL_TRUST_STORE_PASS_OPTION_GROUP_ORDINAL = 8;
+	private static final int HELP_OPTION_GROUP_ORDINAL = 9;
+	private static final int PARTIAL_ENCRYPTION_PASS_OPTION_GROUP_ORDINAL = 10;
+	private static final int PARTIAL_ENCRYPTION_PASS_FILE_OPTION_GROUP_ORDINAL = 11;
+	private static final int SETTING_OPTION_GROUP_ORDINAL = 12;
+	private static final int SETTINGS_HELP_OPTION_GROUP_ORDINAL = 13;
 	
 	private Configuration configuration;
 	private final String programBeginningUsage;
@@ -256,6 +261,22 @@ public abstract class ServerConfigurationCLI extends CLI {
 	}
 
 	@Option(
+			doc = "Enter through an interactive prompt the partial password "
+					+ "to be used for encryption/decryption",
+			name = "enter-partial-encryption-pass",
+			type = OptionType.GNU_LONG
+	)
+	@Ordinal(ENTER_PARTIAL_ENCRYPTION_PASS_OPTION_GROUP_ORDINAL)
+	protected void enterPartialEncryptionPassword() {
+		String prompt = "Please enter the partial password to be used for "
+				+ "encryption/decryption: ";
+		char[] password = this.readPassword(prompt);
+		System.setProperty(
+				SystemPropertyNameConstants.PARTIAL_ENCRYPTION_PASSWORD_SYSTEM_PROPERTY_NAME,
+				new String(password));
+	}
+
+	@Option(
 			doc = "Enter through an interactive prompt the password for the "
 					+ "key store for the SSL/TLS connections to the SOCKS "
 					+ "server",
@@ -358,9 +379,39 @@ public abstract class ServerConfigurationCLI extends CLI {
 	}
 	
 	private EncryptedPassword readEncryptedPassword(final String prompt) {
+		return EncryptedPassword.newInstance(this.readPassword(prompt));
+	}
+
+	private char[] readPassword(final String prompt) {
 		ConsoleWrapper consoleWrapper = new ConsoleWrapper(System.console());
-		return EncryptedPassword.newInstance(consoleWrapper.readPassword(
-				prompt));
+		return consoleWrapper.readPassword(prompt);
+	}
+
+	@Option(
+			doc = "The partial password to be used for encryption/decryption",
+			name = "partial-encryption-pass",
+			optionArgSpec = @OptionArgSpec(name = "PASSWORD"),
+			type = OptionType.GNU_LONG
+	)
+	@Ordinal(PARTIAL_ENCRYPTION_PASS_OPTION_GROUP_ORDINAL)
+	protected void setPartialEncryptionPassword(final String password) {
+		System.setProperty(
+				SystemPropertyNameConstants.PARTIAL_ENCRYPTION_PASSWORD_SYSTEM_PROPERTY_NAME,
+				password);
+	}
+
+	@Option(
+			doc = "The file of the partial password to be used for "
+					+ "encryption/decryption",
+			name = "partial-encryption-pass-file",
+			optionArgSpec = @OptionArgSpec(name = "FILE"),
+			type = OptionType.GNU_LONG
+	)
+	@Ordinal(PARTIAL_ENCRYPTION_PASS_FILE_OPTION_GROUP_ORDINAL)
+	protected void setPartialEncryptionPasswordFile(final String file) {
+		System.setProperty(
+				SystemPropertyNameConstants.PARTIAL_ENCRYPTION_PASSWORD_FILE_SYSTEM_PROPERTY_NAME,
+				file);
 	}
 
 }

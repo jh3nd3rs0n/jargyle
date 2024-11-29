@@ -83,9 +83,9 @@ public final class ServerStarterCLI extends ServerConfigurationCLI {
 			try {
 				configurationRepository = 
 						ConfigurationRepository.newFileSourceInstance(f);
-			} catch (UncheckedIOException e) {
-				System.err.printf("%s: %s%n", this.getProgramName(), e);
-				e.printStackTrace(System.err);
+			} catch (Throwable t) {
+				System.err.printf("%s: %s%n", this.getProgramName(), t);
+				t.printStackTrace(System.err);
 				throw new TerminationRequestedException(-1);
 			}
 			configuration = Configuration.newUpdatedInstance(

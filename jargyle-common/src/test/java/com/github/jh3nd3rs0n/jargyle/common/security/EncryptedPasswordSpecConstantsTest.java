@@ -16,9 +16,9 @@ public class EncryptedPasswordSpecConstantsTest {
     public void testAesCfbPkcs5PaddingEncryptedPasswordNewEncryptedPasswordString() {
         Assert.assertNotNull(
                 EncryptedPasswordSpecConstants.AES_CFB_PKCS5PADDING_ENCRYPTED_PASSWORD.newEncryptedPassword(
-                        "7MSMLoYMuv3IrBsdu5YVi+iFMqVTVcGxl1CLp4aGfg4=," +
-                                "D/Gq+9TP1pLYbNhOwBpdJA==," +
-                                "ceVrk9XvghhylTYoJME5rA=="));
+                        "Yl8Da3RdK6x3aWr3P/Ss8A==," +
+                                "dGNdMNGk2T2/UsPtquFnzg==," +
+                                "iiaIaNs3tkQ="));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -17,6 +17,7 @@ The following are topics for using the command line interface.
     -   [The Doc Setting and the Doc XML Element](#the-doc-setting-and-the-doc-xml-element)
 -   [Starting the Server](#starting-the-server)
     -   [Starting the Server With a Monitored Server Configuration File](#starting-the-server-with-a-monitored-server-configuration-file)
+-   [Configuring Encryption and Decryption of XML Elements in a Server Configuration File](#configuring-encryption-and-decryption-of-xml-elements-in-a-server-configuration-file)
 
 ## Environment Variables
 
@@ -541,3 +542,144 @@ if changed will have no effect during the running of the server:
 
 A restart of the server would be required if you want any of the changed 
 aforementioned settings to be applied to the running server.
+
+<a id="configuring-encryption-and-decryption-of-xml-elements-in-a-server-configuration-file"></a>
+## Configuring Encryption and Decryption of XML Elements in a Server Configuration File
+
+Sensitive information in XML elements in a server configuration file produced 
+by the command `new-server-config-file` is encrypted. Such information 
+includes passwords. 
+
+Command line example:
+
+```bash
+jargyle new-server-config-file \
+    --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
+    --setting=chaining.socks5.methods=USERNAME_PASSWORD \
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    local_configuration.xml
+```
+
+`local_configuration.xml`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://jargyle.net:8080</value>
+        </setting>
+        <setting>
+            <name>chaining.socks5.methods</name>
+            <socks5.methods>
+                <socks5.method>USERNAME_PASSWORD</socks5.method>
+            </socks5.methods>
+        </setting>
+        <setting>
+            <name>chaining.socks5.userpassmethod.username</name>
+            <value>Aladdin</value>
+        </setting>
+        <setting>
+            <name>chaining.socks5.userpassmethod.password</name>
+            <encryptedPassword>
+                <typeName>AesCfbPkcs5PaddingEncryptedPassword</typeName>
+                <encryptedPasswordValue>gO14zGu9U8usCtkEwgs6sQ==,4KGFoYUP9YVA0f/UbFCDAQ==,eWgdqYYZNT8=</encryptedPasswordValue>
+            </encryptedPassword>
+        </setting>
+    </settings>
+</configuration>
+```
+
+Encrypted sensitive information in XML elements in a server configuration file 
+is also decrypted at runtime when the server configuration file is used as 
+input for the commands `new-server-config-file` and `start-server`.
+
+The following system properties are used for encryption and decryption:
+
+-   `com.github.jh3nd3rs0n.jargyle.common.security.partialEncryptionPasswordFile`: 
+the file of the partial password to be used for encryption/decryption
+-   `com.github.jh3nd3rs0n.jargyle.common.security.partialEncryptionPassword`: 
+the partial password to be used for encryption/decryption
+
+Together these system properties are used to create a password to be used for 
+encryption and decryption. Both of them, one of them, or none of them can be 
+set. By default, none of them are set. You can set either of them or both of 
+them in the environment variable `JARGYLE_OPTS`.
+
+Command line example:
+
+```bash
+export JARGYLE_OPTS=-Dcom.github.jh3nd3rs0n.jargyle.common.security.partialEncryptionPassword=donkeyhorsefruitcakepunch
+jargyle new-server-config-file \
+    --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
+    --setting=chaining.socks5.methods=USERNAME_PASSWORD \
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    local_configuration.xml
+jargyle start-server local_configuration.xml
+```
+
+Alternatively, you can use the following command line options in both 
+`new-server-config-file` and `start-server`:
+
+-   `--enter-partial-encryption-pass`: Enter through an interactive prompt the 
+partial password to be used for encryption/decryption. This command line 
+option assigns the partial password to the system property 
+`com.github.jh3nd3rs0n.jargyle.common.security.partialEncryptionPassword`.
+-   `--partial-encryption-pass=PASSWORD`: The partial password to be used for 
+encryption/decryption. This command line option assigns the partial password 
+to the system property 
+`com.github.jh3nd3rs0n.jargyle.common.security.partialEncryptionPassword`.
+-   `--partial-encryption-pass-file=FILE`: The file of the partial password to 
+be used for encryption/decryption. This command line option assigns the file 
+to the system property 
+`com.github.jh3nd3rs0n.jargyle.common.security.partialEncryptionPasswordFile`. 
+
+Command line example:
+
+```bash
+jargyle new-server-config-file \
+    --partial-encryption-pass=donkeyhorsefruitcakepunch \
+    --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
+    --setting=chaining.socks5.methods=USERNAME_PASSWORD \
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    local_configuration.xml
+jargyle start-server \
+    --partial-encryption-pass=donkeyhorsefruitcakepunch \
+    local_configuration.xml
+```
+
+The command line option `--enter-partial-encryption-pass` can be used if you 
+do not want to have the partial password appear in any script or in any part 
+of the command line history for security reasons.
+
+Command line example:
+
+```bash
+jargyle new-server-config-file \
+    --enter-partial-encryption-pass \
+    --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
+    --setting=chaining.socks5.methods=USERNAME_PASSWORD \
+    --setting=chaining.socks5.userpassmethod.username=Aladdin \
+    --enter-chaining-socks5-userpassmethod-pass \
+    local_configuration.xml
+Please enter the partial password to be used for encryption/decryption: 
+Please enter the password to be used to access the other SOCKS server: 
+jargyle start-server \
+    --enter-partial-encryption-pass \
+    local_configuration.xml
+Please enter the partial password to be used for encryption/decryption: 
+```
+
+**Note**: If the same set of system properties and/or command line options are 
+used in the making of server configuration files produced by 
+`new-server-config-file`, then that same set of system properties and/or 
+command line options must be present in `new-server-config-file` and 
+`start-server` when any of those server configuration files are used as input. 
+Also, input server configuration files can not be mixed if there are some that 
+are produced by `new-server-config-file` with a different set of system 
+properties and/or command line options. They must all be produced with the 
+same set of system properties and/or command line options.

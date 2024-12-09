@@ -29,7 +29,7 @@ public final class ConnectClientSocketBuilder {
             final NetObjectFactory netObjFactory,
             final SslSocketFactory sslSockFactory) {
         this.clientSocket = clientSock;
-        this.localAddress = HostIpv4Address.getAllZerosInetAddress();
+        this.localAddress = HostIpv4Address.getAllZerosInet4Address();
         this.localPortRanges = PortRanges.getDefault();
         this.mustBindBeforeConnect = false;
         this.netObjectFactory = netObjFactory;

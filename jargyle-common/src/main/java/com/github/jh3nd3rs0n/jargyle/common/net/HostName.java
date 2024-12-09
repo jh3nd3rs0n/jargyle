@@ -9,11 +9,11 @@ import java.net.UnknownHostException;
 public final class HostName extends Host {
 
     /**
-     * The regular expression for a host name.
+     * The regular expression for a host name defined by RFC 2396.
      */
     private static final String HOST_NAME_REGEX =
-            "\\A([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9])"
-                    + "(\\.([a-z0-9]|[a-z0-9][a-z0-9-_]*[a-z0-9]))*\\z";
+            "\\A(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*"
+                    + "([a-z]|[a-z][a-z0-9\\-]*[a-z0-9])\\.?\\z";
 
     /**
      * Constructs a {@code HostName} of the provided host name.
@@ -35,7 +35,7 @@ public final class HostName extends Host {
     public static HostName newHostName(final String string) {
         if (!string.matches(HOST_NAME_REGEX)) {
             throw new IllegalArgumentException(String.format(
-                    "invalid host name: %s",
+                    "invalid host name: '%s'",
                     string));
         }
         return new HostName(string);

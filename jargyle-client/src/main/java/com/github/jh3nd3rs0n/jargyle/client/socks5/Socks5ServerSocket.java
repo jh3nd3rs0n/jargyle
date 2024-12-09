@@ -64,7 +64,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		
 		@Override
 		public synchronized void close() throws IOException {
-			this.localInetAddress = HostIpv4Address.getAllZerosInetAddress();
+			this.localInetAddress = HostIpv4Address.getAllZerosInet4Address();
 			this.localPort = -1;
 			this.localSocketAddress = null;
 			this.remoteInetAddress = null;
@@ -447,7 +447,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			InetAddress bAddr = bindAddr;
 			if (bAddr == null) {
-				bAddr = HostIpv4Address.getAllZerosInetAddress();
+				bAddr = HostIpv4Address.getAllZerosInet4Address();
 			}
 			String address = bAddr.getHostAddress();
 			Request req = Request.newInstance(

@@ -175,7 +175,7 @@ public class AddressTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewInstanceFromStringStringForIllegalArgumentException04() {
-        Address.newInstanceFrom("google.");
+        Address.newInstanceFrom("2google.");
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -70,6 +70,61 @@ public class HostNameTest {
         Assert.assertNotNull(HostName.newHostName("jh3nd3rs0n.github.io"));
     }
 
+    @Test
+    public void testNewHostNameString04() {
+        Assert.assertNotNull(HostName.newHostName("a"));
+    }
+
+    @Test
+    public void testNewHostNameString05() {
+        Assert.assertNotNull(HostName.newHostName("a.a"));
+    }
+
+    @Test
+    public void testNewHostNameString06() {
+        Assert.assertNotNull(HostName.newHostName("a.a.a"));
+    }
+
+    @Test
+    public void testNewHostNameString07() {
+        Assert.assertNotNull(HostName.newHostName("a.a.a."));
+    }
+
+    @Test
+    public void testNewHostNameString08() {
+        Assert.assertNotNull(HostName.newHostName("0.a"));
+    }
+
+    @Test
+    public void testNewHostNameString09() {
+        Assert.assertNotNull(HostName.newHostName("0.0.a"));
+    }
+
+    @Test
+    public void testNewHostNameString10() {
+        Assert.assertNotNull(HostName.newHostName("0.0.a."));
+    }
+
+    @Test
+    public void testNewHostNameString11() {
+        Assert.assertNotNull(HostName.newHostName("a-a.a-a"));
+    }
+
+    @Test
+    public void testNewHostNameString12() {
+        Assert.assertNotNull(HostName.newHostName("0-0.a-0"));
+    }
+
+    @Test
+    public void testNewHostNameString13() {
+        Assert.assertNotNull(HostName.newHostName("127.0.0.1.a"));
+    }
+
+    @Test
+    public void testNewHostNameString14() {
+        Assert.assertNotNull(HostName.newHostName("127-0-0-1.a"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostNameStringForIllegalArgumentException01() {
         HostName.newHostName("LOCALHOST");
@@ -80,11 +135,41 @@ public class HostNameTest {
         HostName.newHostName("@#$%^&");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameStringForIllegalArgumentException03() {
+        HostName.newHostName("0");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameStringForIllegalArgumentException04() {
+        HostName.newHostName("0.0");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameStringForIllegalArgumentException05() {
+        HostName.newHostName("0.0.0");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameStringForIllegalArgumentException06() {
+        HostName.newHostName("-");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameStringForIllegalArgumentException07() {
+        HostName.newHostName("0.-");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostNameStringForIllegalArgumentException08() {
+        HostName.newHostName("0-0.-0-");
+    }
+
     @Test
     public void testToInetAddress() throws UnknownHostException {
         InetAddress inetAddress1 = HostName.newHostName(
                 "localhost").toInetAddress();
-        InetAddress inetAddress2 = InetAddress.getByName("127.0.0.1");
+        InetAddress inetAddress2 = InetAddress.getByName("localhost");
         Assert.assertEquals(inetAddress1, inetAddress2);
     }
 

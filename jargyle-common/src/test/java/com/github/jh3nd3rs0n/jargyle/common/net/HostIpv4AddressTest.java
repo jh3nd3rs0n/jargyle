@@ -66,10 +66,10 @@ public class HostIpv4AddressTest {
     }
 
     @Test
-    public void testGetAllZerosInetAddress() throws UnknownHostException {
+    public void testGetAllZerosInet4Address() throws UnknownHostException {
         InetAddress inetAddress = InetAddress.getByName("0.0.0.0");
         Assert.assertEquals(
-                inetAddress, HostIpv4Address.getAllZerosInetAddress());
+                inetAddress, HostIpv4Address.getAllZerosInet4Address());
     }
 
     @Test
@@ -141,6 +141,21 @@ public class HostIpv4AddressTest {
         Assert.assertNotNull(HostIpv4Address.newHostIpv4Address("127.0.0.1"));
     }
 
+    @Test
+    public void testNewHostIpv4AddressString02() {
+        Assert.assertNotNull(HostIpv4Address.newHostIpv4Address("127.0.0"));
+    }
+
+    @Test
+    public void testNewHostIpv4AddressString03() {
+        Assert.assertNotNull(HostIpv4Address.newHostIpv4Address("127.0"));
+    }
+
+    @Test
+    public void testNewHostIpv4AddressString04() {
+        Assert.assertNotNull(HostIpv4Address.newHostIpv4Address("127"));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostIpv4AddressStringForIllegalArgumentException01() {
         HostIpv4Address.newHostIpv4Address("localhost");
@@ -149,6 +164,128 @@ public class HostIpv4AddressTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNewHostIpv4AddressStringForIllegalArgumentException02() {
         HostIpv4Address.newHostIpv4Address("::1");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException03() {
+        HostIpv4Address.newHostIpv4Address("127.127.127.127.127");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException04() {
+        HostIpv4Address.newHostIpv4Address("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException05() {
+        HostIpv4Address.newHostIpv4Address(" ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException06() {
+        HostIpv4Address.newHostIpv4Address(".");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException07() {
+        HostIpv4Address.newHostIpv4Address(".255.255.255");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException08() {
+        HostIpv4Address.newHostIpv4Address("255.255.255.");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException09() {
+        HostIpv4Address.newHostIpv4Address("255.255.255.256");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException10() {
+        HostIpv4Address.newHostIpv4Address("255.255.65536");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException11() {
+        HostIpv4Address.newHostIpv4Address("255.16777216");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv4AddressStringForIllegalArgumentException12() {
+        HostIpv4Address.newHostIpv4Address("4294967296");
+    }
+
+    @Test
+    public void testToInetAddress01() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "255.255.255.255");
+        InetAddress inetAddress = InetAddress.getByName("255.255.255.255");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress02() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "255.255.65535");
+        InetAddress inetAddress = InetAddress.getByName("255.255.65535");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress03() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "255.16777215");
+        InetAddress inetAddress = InetAddress.getByName("255.16777215");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress04() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "4294967295");
+        InetAddress inetAddress = InetAddress.getByName("4294967295");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress05() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "127.0.0.1");
+        InetAddress inetAddress = InetAddress.getByName("127.0.0.1");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress06() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "127.0.0");
+        InetAddress inetAddress = InetAddress.getByName("127.0.0");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress07() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "127.0");
+        InetAddress inetAddress = InetAddress.getByName("127.0");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress08() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "127");
+        InetAddress inetAddress = InetAddress.getByName("127");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
+    }
+
+    @Test
+    public void testToInetAddress09() throws UnknownHostException {
+        HostIpv4Address hostIpv4Address = HostIpv4Address.newHostIpv4Address(
+                "255.255.0.6");
+        InetAddress inetAddress = InetAddress.getByName("255.255.0.6");
+        Assert.assertEquals(inetAddress, hostIpv4Address.toInetAddress());
     }
 
 }

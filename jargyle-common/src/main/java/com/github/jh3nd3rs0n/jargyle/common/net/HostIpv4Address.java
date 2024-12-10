@@ -150,27 +150,28 @@ public final class HostIpv4Address extends HostAddress {
     static byte[] newAddressFrom(final String string) {
         if (string.isEmpty()) {
             throw new IllegalArgumentException(
-                    "IPv6 address must not be empty");
+                    "IPv4 address must not be empty");
         }
         if (string.matches(BLANK_STRING_REGEX)) {
             throw new IllegalArgumentException(
-                    "IPv6 address must not be blank");
+                    "IPv4 address must not be blank");
         }
         String[] parts = string.split("\\.", -1);
-        if (parts.length > MAX_PART_COUNT) {
+        int partCount = parts.length;
+        if (partCount > MAX_PART_COUNT) {
             throw new IllegalArgumentException(String.format(
                     "number of parts must be no more than %s. "
                             + "actual number of parts is %s",
                     MAX_PART_COUNT,
-                    parts.length));
+                    partCount));
         }
-        if (parts.length == 1) {
+        if (partCount == 1) {
             return newAddressFrom1Part(parts);
         }
-        if (parts.length == 2) {
+        if (partCount == 2) {
             return newAddressFrom2Parts(parts);
         }
-        if (parts.length == 3) {
+        if (partCount == 3) {
             return newAddressFrom3Parts(parts);
         }
         return newAddressFrom4Parts(parts);

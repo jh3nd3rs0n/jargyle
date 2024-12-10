@@ -151,77 +151,33 @@ public final class HostIpv6Address extends HostAddress {
             throw new IllegalArgumentException(
                     "IPv6 address must not be blank");
         }
-        String[] pieces = string.split(":", -1);
-        if (pieces.length > MAX_PIECE_COUNT) {
+        String[] pieces = newPiecesFrom(string);
+        int pieceCount = pieces.length;
+        if (pieceCount > MAX_PIECE_COUNT) {
             throw new IllegalArgumentException(String.format(
                     "number of pieces delimited by ':' must no more than %s. "
                             + "actual number of pieces is %s",
                     MAX_PIECE_COUNT,
-                    pieces.length));
+                    pieceCount));
         }
         byte[] address = new byte[ADDRESS_LENGTH];
         Arrays.fill(address, (byte) 0x00);
         int offset = 0;
-        boolean compressedPresent = false;
+        boolean compressionPresent = false;
         boolean ipv4AddressPresent = false;
-        for (int i = 0; i < pieces.length; i++) {
-            String piece = pieces[i];
-            if (piece.isEmpty()) {
-                if (i == 0 && !pieces[i + 1].isEmpty()) {
-                    throw new IllegalArgumentException(
-                            "first piece cannot be empty if the second piece "
-                                    + "is not empty");
-                }
-                if (i == pieces.length - 1 && !pieces[i - 1].isEmpty()) {
-                    throw new IllegalArgumentException(
-                            "last piece cannot be empty if the second to last "
-                                    + "piece is not empty");
-                }
-                if (i > 0 && i < pieces.length - 1) {
-                    if (compressedPresent) {
-                        throw new IllegalArgumentException(
-                                "use of '::' can only appear once");
-                    }
-                    offset = MAX_PIECE_COUNT - pieces.length;
-                    compressedPresent = true;
-                }
+        for (int pieceIndex = 0; pieceIndex < pieceCount; pieceIndex++) {
+            String piece = pieces[pieceIndex];
+            if (piece == null) {
+                compressionPresent = true;
+                offset = MAX_PIECE_COUNT - pieceCount;
                 continue;
             }
             if (piece.matches(HEX_VALUE_16_BIT_PIECE_REGEX)) {
-                int hexValue16BitPiece = Integer.parseInt(piece, 16);
-                ByteBuffer byteBuffer = ByteBuffer.allocate(Short.BYTES);
-                byteBuffer.putShort((short) hexValue16BitPiece);
-                byte[] array = byteBuffer.array();
-                System.arraycopy(
-                        array,
-                        0,
-                        address,
-                        (i + offset) * Short.BYTES,
-                        array.length);
+                putHexValue16BitPiece(piece, pieceIndex, offset, address);
                 continue;
             }
             if (piece.matches(IP_V4_ADDRESS_PIECE_REGEX)) {
-                if (i < pieces.length - 1
-                        || pieces.length == MAX_PIECE_COUNT) {
-                    throw new IllegalArgumentException(
-                            "piece cannot be an IPv4 address if the piece is "
-                                    + "not the last and at most the seventh");
-                }
-                byte[] ipv4Address;
-                try {
-                    ipv4Address = HostIpv4Address.newAddressFrom(piece);
-                } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException(String.format(
-                            "invalid IPv4 address: %s",
-                            piece),
-                            e);
-                }
-                System.arraycopy(
-                        ipv4Address,
-                        0,
-                        address,
-                        IP_V4_ADDRESS_START_INDEX,
-                        ipv4Address.length);
+                putIpv4AddressPiece(piece, pieceIndex, pieceCount, address);
                 ipv4AddressPresent = true;
                 continue;
             }
@@ -229,27 +185,7 @@ public final class HostIpv6Address extends HostAddress {
                     "invalid piece: '%s'",
                     piece));
         }
-        if (!compressedPresent) {
-            if (!ipv4AddressPresent) {
-                if (pieces.length < MAX_PIECE_COUNT) {
-                    throw new IllegalArgumentException(String.format(
-                            "number of pieces with no use of '::' present and "
-                                    + "with no IPv4 address present must be "
-                                    + "%s. actual number of pieces is %s",
-                            MAX_PIECE_COUNT,
-                            pieces.length));
-                }
-            } else {
-                if (pieces.length < MAX_PIECE_COUNT - 1) {
-                    throw new IllegalArgumentException(String.format(
-                            "number of pieces with no use of '::' present and "
-                                    + "with the IPv4 address present must be "
-                                    + "%s. actual number of pieces is %s",
-                            MAX_PIECE_COUNT - 1,
-                            pieces.length));
-                }
-            }
-        }
+        validatePieceCount(pieceCount, compressionPresent, ipv4AddressPresent);
         return address;
     }
 
@@ -312,6 +248,159 @@ public final class HostIpv6Address extends HostAddress {
             }
         } catch (IllegalArgumentException | UnknownHostException e) {
             throw new IllegalArgumentException(message, e);
+        }
+    }
+
+    /**
+     * Returns a new {@code String} array of pieces from the provided IPv6
+     * address. The use of {@code ::} in the provided IPv6 address would
+     * correspond to a {@code null} value in the new {@code String} array. An
+     * {@code IllegalArgumentException} is thrown if the use of {@code ::}
+     * appears more than once.
+     *
+     * @param string the provided IPv6 address
+     * @return a new {@code String} array of pieces from the provided IPv6
+     * address
+     */
+    private static String[] newPiecesFrom(final String string) {
+        String[] uncompressed = string.split("::", -1);
+        if (uncompressed.length > 2) {
+            throw new IllegalArgumentException(
+                    "use of '::' can only appear once");
+        }
+        if (uncompressed.length == 2) {
+            String leftUncompressed = uncompressed[0];
+            String rightUncompressed = uncompressed[1];
+            String[] leftPieces = (leftUncompressed.isEmpty()) ?
+                    new String[]{} : leftUncompressed.split(":", -1);
+            String[] rightPieces = (rightUncompressed.isEmpty()) ?
+                    new String[]{} : rightUncompressed.split(":", -1);
+            String[] pieces = new String[
+                    leftPieces.length + rightPieces.length + 1];
+            System.arraycopy(
+                    leftPieces,
+                    0,
+                    pieces,
+                    0,
+                    leftPieces.length);
+            pieces[leftPieces.length] = null;
+            System.arraycopy(
+                    rightPieces,
+                    0,
+                    pieces,
+                    leftPieces.length + 1,
+                    rightPieces.length);
+            return pieces;
+        }
+        return uncompressed[0].split(":", -1);
+    }
+
+    /**
+     * Puts the provided hexadecimal value of a 16-bit piece as a
+     * {@code String} from an array at the provided index into the provided
+     * raw IPv6 address in network byte order.
+     *
+     * @param piece      the provided hexadecimal value of a 16-bit piece
+     * @param pieceIndex the provided index of the provided hexadecimal value
+     *                   from an array
+     * @param offset     the logical offset from the provided index for
+     *                   putting the provided hexadecimal value into the
+     *                   provided raw IPv6 address
+     * @param address    the provided raw IPv6 address in network byte order
+     */
+    private static void putHexValue16BitPiece(
+            final String piece,
+            final int pieceIndex,
+            final int offset,
+            final byte[] address) {
+        int hexValue16BitPiece = Integer.parseInt(piece, 16);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(Short.BYTES);
+        byteBuffer.putShort((short) hexValue16BitPiece);
+        byte[] array = byteBuffer.array();
+        System.arraycopy(
+                array,
+                0,
+                address,
+                (pieceIndex + offset) * Short.BYTES,
+                array.length);
+    }
+
+    /**
+     * Puts the provided IPv4 address piece from an array at the provided
+     * index into the provided raw IPv6 address in network byte order. An
+     * {@code IllegalArgumentException} is thrown if the provided index of the
+     * provided IPv4 address piece from the array is not the last and at most
+     * the seventh piece.
+     *
+     * @param piece      the provided IPv4 address piece
+     * @param pieceIndex the provided index of the provided IPv4 address piece
+     *                   from an array
+     * @param pieceCount the provided number of pieces from the array
+     * @param address    the provided raw IPv6 address in network byte order
+     */
+    private static void putIpv4AddressPiece(
+            final String piece,
+            final int pieceIndex,
+            final int pieceCount,
+            final byte[] address) {
+        if (pieceIndex < pieceCount - 1
+                || pieceCount == MAX_PIECE_COUNT) {
+            throw new IllegalArgumentException(
+                    "piece cannot be an IPv4 address if the piece is "
+                            + "not the last and at most the seventh");
+        }
+        byte[] ipv4Address;
+        try {
+            ipv4Address = HostIpv4Address.newAddressFrom(piece);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(String.format(
+                    "invalid IPv4 address: %s",
+                    piece),
+                    e);
+        }
+        System.arraycopy(
+                ipv4Address,
+                0,
+                address,
+                IP_V4_ADDRESS_START_INDEX,
+                ipv4Address.length);
+    }
+
+    /**
+     * Validates the provided number of pieces based the provided
+     * {@code boolean} value to indicate if the use of {@code ::} was present
+     * and the provided {@code boolean} value to indicate if the IPv4 address
+     * was present. An {@code IllegalArgumentException} is thrown if provided
+     * number of pieces is invalid.
+     *
+     * @param pieceCount         the provided number of pieces
+     * @param compressionPresent the provided {@code boolean} value to
+     *                           indicate if the use of {@code ::} was present
+     * @param ipv4AddressPresent the provided {@code boolean} value to
+     *                           indicate if the IPv4 address was present
+     */
+    private static void validatePieceCount(
+            final int pieceCount,
+            final boolean compressionPresent,
+            final boolean ipv4AddressPresent) {
+        if (compressionPresent) {
+            return;
+        }
+        if (!ipv4AddressPresent && pieceCount < MAX_PIECE_COUNT) {
+            throw new IllegalArgumentException(String.format(
+                    "number of pieces with no use of '::' present and "
+                            + "with no IPv4 address present must be "
+                            + "%s. actual number of pieces is %s",
+                    MAX_PIECE_COUNT,
+                    pieceCount));
+        }
+        if (pieceCount < MAX_PIECE_COUNT - 1) {
+            throw new IllegalArgumentException(String.format(
+                    "number of pieces with no use of '::' present and "
+                            + "with the IPv4 address present must be "
+                            + "%s. actual number of pieces is %s",
+                    MAX_PIECE_COUNT - 1,
+                    pieceCount));
         }
     }
 

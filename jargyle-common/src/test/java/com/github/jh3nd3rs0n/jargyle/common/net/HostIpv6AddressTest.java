@@ -223,6 +223,11 @@ public class HostIpv6AddressTest {
         HostIpv6Address.newHostIpv6Address("0000: :0000");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testNewHostIpv6AddressStringForIllegalArgumentException23() {
+        HostIpv6Address.newHostIpv6Address(":");
+    }
+
     @Test
     public void testToInetAddress01() throws UnknownHostException {
         InetAddress inetAddress1 = HostIpv6Address.newHostIpv6Address(

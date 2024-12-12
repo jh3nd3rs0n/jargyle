@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase;
 
-import com.github.jh3nd3rs0n.test.help.gss.kerberos.KerberosEnvironment;
-import com.github.jh3nd3rs0n.test.help.gss.kerberos.KerberosEnvironmentException;
-import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.gss.kerberos.KerberosEnvironment;
+import com.github.jh3nd3rs0n.jargyle.test.help.gss.kerberos.KerberosEnvironmentException;
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 
 import java.io.IOException;
 import java.net.InetAddress;

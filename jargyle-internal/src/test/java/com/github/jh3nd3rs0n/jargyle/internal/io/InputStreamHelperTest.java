@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.internal.io;
 
-import com.github.jh3nd3rs0n.test.help.string.StringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import org.junit.Assert;
 import org.junit.Test;
 

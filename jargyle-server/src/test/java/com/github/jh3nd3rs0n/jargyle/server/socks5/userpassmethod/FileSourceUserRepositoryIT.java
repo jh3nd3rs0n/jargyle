@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
 
-import com.github.jh3nd3rs0n.test.help.io.IoHelper;
-import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import com.github.jh3nd3rs0n.jargyle.server.TestResourceConstants;
 import org.junit.After;
 import org.junit.Before;

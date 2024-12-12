@@ -2,13 +2,12 @@ package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.CLI;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 import com.github.jh3nd3rs0n.jargyle.server.SocksServer;

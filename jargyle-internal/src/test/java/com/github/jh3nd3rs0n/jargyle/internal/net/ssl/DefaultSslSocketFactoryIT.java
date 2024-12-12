@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
-import com.github.jh3nd3rs0n.test.help.net.Server;
-import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
-import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
+import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

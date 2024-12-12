@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
-import com.github.jh3nd3rs0n.argmatey.ArgMatey;
 import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.UserInfo;

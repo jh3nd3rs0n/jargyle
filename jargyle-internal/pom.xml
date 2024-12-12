@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>test-help</artifactId>
+			<artifactId>jargyle-test-help</artifactId>
 			<version>${project.parent.version}</version>
 			<scope>test</scope>
 		</dependency>

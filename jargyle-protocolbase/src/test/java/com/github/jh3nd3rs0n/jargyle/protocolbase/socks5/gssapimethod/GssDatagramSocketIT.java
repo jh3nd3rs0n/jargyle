@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
-import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
-import com.github.jh3nd3rs0n.test.help.string.StringConstants;
-import com.github.jh3nd3rs0n.test.help.thread.ThreadHelper;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.MessageProp;
 import org.junit.*;

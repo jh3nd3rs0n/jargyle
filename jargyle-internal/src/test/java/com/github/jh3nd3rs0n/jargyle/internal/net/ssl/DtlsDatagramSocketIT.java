@@ -2,9 +2,9 @@ package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory;
-import com.github.jh3nd3rs0n.test.help.net.DatagramServer;
-import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
-import com.github.jh3nd3rs0n.test.help.string.StringConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import org.junit.*;
 import org.junit.rules.Timeout;
 

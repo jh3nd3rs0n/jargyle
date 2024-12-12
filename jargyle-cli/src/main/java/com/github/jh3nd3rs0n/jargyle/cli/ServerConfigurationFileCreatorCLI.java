@@ -1,10 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
 import java.io.File;
-import java.io.UncheckedIOException;
 
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.CLI;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationRepository;
 
 public final class ServerConfigurationFileCreatorCLI extends ServerConfigurationCLI {

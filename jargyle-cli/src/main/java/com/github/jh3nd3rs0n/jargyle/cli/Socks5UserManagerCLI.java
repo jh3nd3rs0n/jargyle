@@ -8,12 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.jh3nd3rs0n.argmatey.ArgMatey;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.Annotations.Option;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.Annotations.Ordinal;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.CLI;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.OptionType;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.ExternalSourceUserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.User;

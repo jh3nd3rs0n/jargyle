@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.internal.security;
 
-import com.github.jh3nd3rs0n.test.help.security.KeyStoreResourceConstants;
+import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
 import org.junit.Assert;
 import org.junit.Test;
 

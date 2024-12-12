@@ -6,12 +6,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.jh3nd3rs0n.argmatey.ArgMatey;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Option;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.Annotations.Ordinal;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.CLI;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.OptionType;
-import com.github.jh3nd3rs0n.argmatey.ArgMatey.TerminationRequestedException;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.Annotations.Option;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.Annotations.Ordinal;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.CLI;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.OptionType;
+import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.TerminationRequestedException;
 
 public final class JargyleCLI extends CLI {
 

@@ -39,7 +39,7 @@
 		<junit.version>4.13.2</junit.version>
 		<slf4j.version>2.0.12</slf4j.version>
 		<maven.javadoc.skippedModules>
-			test-help,test-netty-example-socksproxy,test-echo,test-echo-server-performance,argmatey,jargyle-cli
+			jargyle-test-help,jargyle-test-netty-example-socksproxy,jargyle-test-echo,jargyle-test-echo-server-performance,jargyle-argmatey,jargyle-cli
 		</maven.javadoc.skippedModules>
 		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 		<jacoco.skip>true</jacoco.skip>
@@ -269,16 +269,16 @@
 		</plugins>
 	</reporting>
 	<modules>
-		<module>test-help</module>
+		<module>jargyle-test-help</module>
 		<module>jargyle-internal</module>
 		<module>jargyle-common</module>
 		<module>jargyle-protocolbase</module>
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
-		<module>test-netty-example-socksproxy</module>
-		<module>test-echo</module>
-		<module>test-echo-server-performance</module>
-		<module>argmatey</module>
+		<module>jargyle-test-netty-example-socksproxy</module>
+		<module>jargyle-test-echo</module>
+		<module>jargyle-test-echo-server-performance</module>
+		<module>jargyle-argmatey</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-report-aggregate</module>
 		<module>jargyle-distribution</module>

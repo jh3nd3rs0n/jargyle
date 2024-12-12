@@ -42,10 +42,10 @@ The following is a simple overview of the directory.
 `.github/workflows/`: Contains GitHub workflow files that perform analyses and 
 tests when a push has been made to the GitHub repository
 
-`argmatey/`: Maven module for the extensible command line interface. It is 
-used for the Jargyle command line interface.
-
 `docs/`: Contains the website/documentation
+
+`jargyle-argmatey/`: Maven module for the extensible command line interface. 
+It is used for the Jargyle command line interface.
 
 `jargyle-cli/`: Maven module for the Jargyle command line interface
 
@@ -65,21 +65,21 @@ test coverage reports
 
 `jargyle-server/`: Maven module for the SOCKS server API
 
+`jargyle-test-echo/`: Maven module for clients and servers that send/receive 
+data and receive/send back the same data. The clients and one of the servers 
+use the SOCKS client API. When testing the clients and one of the servers, the 
+SOCKS client API and the SOCKS server API are also tested.
+
+`jargyle-test-echo-server-performance/`: Maven module for performance testing 
+of servers that receive data and send back the same data. It includes 
+performance testing of the SOCKS server API.
+
+`jargyle-test-help/`: Maven module for the API for help with testing
+
+`jargyle-test-netty-example-socksproxy/`: Maven module for the modified 
+version of the Netty example SOCKS proxy. It is used for testing.
+
 `src/site/`: Contains files used to generate `docs/`
-
-`test-echo/`: Maven module for clients and servers that send/receive data and 
-receive/send back the same data. The clients and one of the servers use the 
-SOCKS client API. When testing the clients and one of the servers, the SOCKS 
-client API and the SOCKS server API are also tested.
-
-`test-echo-server-performance/`: Maven module for performance testing of 
-servers that receive data and send back the same data. It includes performance 
-testing of the SOCKS server API.
-
-`test-help/`: Maven module for the API for help with testing
-
-`test-netty-example-socksproxy/`: Maven module for the modified version of the 
-Netty example SOCKS proxy. It is used for testing.
 
 `.gitignore`: List of directories and files for Git to ignore such as
 Eclipse and IntelliJ IDEA project directories and files
@@ -119,11 +119,10 @@ The produced website/documentation can be found in `docs/`.
 Included in the website/documentation is the reference documentation. The 
 reference documentation was generated from special annotations within in the 
 source code. Should any of these special annotations in the source code be 
-added, changed, moved, or removed, you will need to run the following commands 
-before running the above command:
+added, changed, moved, or removed, you will need to run the following commands:
 
 ```bash
-# This command is necessary if the binary distribution is not built
+# Perform a build of the binary distribution
 mvn clean package -DskipTests=true
 # Change to the directory of XHTML reference documentation
 cd src/site/xhtml/reference/
@@ -131,6 +130,8 @@ cd src/site/xhtml/reference/
 ../../../../jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs
 # Change back to the top directory of Jargyle
 cd ../../../../
+# Produce the website/documentation with the updated reference documentation
+mvn clean compile site:site site:stage site:deploy
 ```
 
 `mvn clean package -DskipTests=true`: Performs a clean build of the binary 

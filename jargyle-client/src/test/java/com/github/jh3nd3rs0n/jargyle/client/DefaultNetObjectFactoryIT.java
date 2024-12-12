@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-import com.github.jh3nd3rs0n.test.help.net.Server;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import org.junit.Assert;
 import org.junit.Test;
 

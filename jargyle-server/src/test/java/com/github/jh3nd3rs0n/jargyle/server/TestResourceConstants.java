@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import com.github.jh3nd3rs0n.test.help.resource.Resource;
+import com.github.jh3nd3rs0n.jargyle.test.help.resource.Resource;
 
 public final class TestResourceConstants {
 	

@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>argmatey</artifactId>
+			<artifactId>jargyle-argmatey</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -53,7 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>test-echo</artifactId>
+			<artifactId>jargyle-test-echo</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

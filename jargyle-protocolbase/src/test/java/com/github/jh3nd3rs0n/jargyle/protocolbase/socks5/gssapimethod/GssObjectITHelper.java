@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
-import com.github.jh3nd3rs0n.test.help.net.Server;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import org.ietf.jgss.*;
 
 import java.io.IOException;

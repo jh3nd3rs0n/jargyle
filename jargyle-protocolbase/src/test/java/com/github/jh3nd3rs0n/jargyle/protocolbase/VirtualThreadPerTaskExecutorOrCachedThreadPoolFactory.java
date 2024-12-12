@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase;
 
 import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
-import com.github.jh3nd3rs0n.test.help.net.ExecutorFactory;
+import com.github.jh3nd3rs0n.jargyle.test.help.net.ExecutorFactory;
 
 import java.util.concurrent.ExecutorService;
 

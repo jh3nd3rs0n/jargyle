@@ -12,6 +12,8 @@ the reference documentation and the Javadocs are incomplete. Breaking changes
 may occur, but any existing documentation will be updated to reflect the
 changes.
 
+## Page Contents
+
 -   [Client API Example](#client-api-example)
 -   [Server API Example](#server-api-example)
 -   [Command Line Example](#command-line-example)

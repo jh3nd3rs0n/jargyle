@@ -150,15 +150,15 @@ The aggregated test coverage reports can be found in
 The option `-Pcoverage` can be removed if you do not want the aggregated test
 coverage reports produced.
 
-`mvn clean verify --projects=\!test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
+`mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
 Performs a clean build, executes all tests except the ones from the project 
-`test-echo-server-performance`, skips building the binary distribution, and 
-produces the aggregated test coverage reports.
+`jargyle-test-echo-server-performance`, skips building the binary 
+distribution, and produces the aggregated test coverage reports.
 
-The argument `\!test-echo-server-performance,` from the option `--projects` 
-can be removed if you want the performance tests to be executed. If the 
-performance tests are executed, the results can be found in
-`test-echo-server-performance/target/performance-results/`.
+The argument `\!jargyle-test-echo-server-performance,` from the option 
+`--projects` can be removed if you want the performance tests to be executed. 
+If the performance tests are executed, the results can be found in
+`jargyle-test-echo-server-performance/target/performance-results/`.
 
 The aggregated test coverage reports can be found in 
 `jargyle-report-aggregate/target/`. 

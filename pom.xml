@@ -190,7 +190,8 @@
 							<com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
 							-->
 							<!-- -->
-							<jdk.virtualThreadScheduler.parallelism>30</jdk.virtualThreadScheduler.parallelism>
+							<jdk.virtualThreadScheduler.parallelism>2000</jdk.virtualThreadScheduler.parallelism>
+							<jdk.virtualThreadScheduler.maxPoolSize>3000</jdk.virtualThreadScheduler.maxPoolSize>
 							<!-- -->
 						</systemPropertyVariables>
 					</configuration>

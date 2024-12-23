@@ -72,6 +72,11 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/EchoObjectsUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod*IT</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

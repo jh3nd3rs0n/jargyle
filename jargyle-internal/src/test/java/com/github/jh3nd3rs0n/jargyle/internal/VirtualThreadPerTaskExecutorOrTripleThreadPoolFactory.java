@@ -13,7 +13,7 @@ public final class VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory
 
     @Override
     public ExecutorService newExecutor() {
-        return ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+        return ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                 ExecutorsHelper.newFixedThreadPoolBuilder(3));
     }
 

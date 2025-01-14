@@ -4,6 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstant
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -22,7 +23,7 @@ public class SslSocketFactoryTest {
                 SslContextHelper.getSslContext(
                         "TLSv1.2",
                         KeyManagerHelper.getKeyManagers(
-                                KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                                new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                                 KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                                 null),
                         null)));
@@ -34,11 +35,11 @@ public class SslSocketFactoryTest {
                 SslContextHelper.getSslContext(
                         "TLSv1.2",
                         KeyManagerHelper.getKeyManagers(
-                                KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                                new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                                 KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                                 null),
                         TrustManagerHelper.getTrustManagers(
-                                KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_3.getInputStream(),
+                                new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_3.getContentAsBytes()),
                                 KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_3.getContentAsString().toCharArray(),
                                 null))));
     }
@@ -50,7 +51,7 @@ public class SslSocketFactoryTest {
                         "TLSv1.2",
                         null,
                         TrustManagerHelper.getTrustManagers(
-                                KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_3.getInputStream(),
+                                new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_3.getContentAsBytes()),
                                 KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_3.getContentAsString().toCharArray(),
                                 null))));
     }

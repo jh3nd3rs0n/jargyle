@@ -13,6 +13,7 @@
 	<description>Foundational API for the SOCKS client API and the SOCKS server API</description>
 	<properties>
 		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
+		<loggingConfigFile>${project.basedir}${file.separator}..${file.separator}logging.properties</loggingConfigFile>
 	</properties>
 	<dependencies>
 		<dependency>

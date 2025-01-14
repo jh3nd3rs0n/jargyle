@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.server.performance;
 
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoDatagramClient;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoDatagramServerHelper;
@@ -48,14 +49,14 @@ public class EchoServersBehindSocksServerUsingSslAndSocks5UserpassMethodIT {
         Properties properties = Properties.of(
                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
                         Boolean.TRUE),
-                DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM.newProperty(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                DtlsPropertySpecConstants.DTLS_TRUST_STORE_BYTES.newProperty(
+                        Bytes.of(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes())),
                 DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
                         KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 SslPropertySpecConstants.SSL_ENABLED.newProperty(
                         Boolean.TRUE),
-                SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM.newProperty(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                SslPropertySpecConstants.SSL_TRUST_STORE_BYTES.newProperty(
+                        Bytes.of(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes())),
                 SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.newPropertyWithParsedValue(
                         KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
@@ -78,13 +79,13 @@ public class EchoServersBehindSocksServerUsingSslAndSocks5UserpassMethodIT {
                 GeneralSettingSpecConstants.BACKLOG.newSetting(
                         NonNegativeInteger.valueOf(Server.BACKLOG)),
                 DtlsSettingSpecConstants.DTLS_ENABLED.newSetting(Boolean.TRUE),
-                DtlsSettingSpecConstants.DTLS_KEY_STORE_INPUT_STREAM.newSetting(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                DtlsSettingSpecConstants.DTLS_KEY_STORE_BYTES.newSetting(
+                        Bytes.of(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes())),
                 DtlsSettingSpecConstants.DTLS_KEY_STORE_PASSWORD.newSettingWithParsedValue(
                         KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 SslSettingSpecConstants.SSL_ENABLED.newSetting(Boolean.TRUE),
-                SslSettingSpecConstants.SSL_KEY_STORE_INPUT_STREAM.newSetting(
-                        KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream()),
+                SslSettingSpecConstants.SSL_KEY_STORE_BYTES.newSetting(
+                        Bytes.of(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes())),
                 SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsedValue(
                         KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
                 Socks5SettingSpecConstants.SOCKS5_METHODS.newSetting(
@@ -92,6 +93,8 @@ public class EchoServersBehindSocksServerUsingSslAndSocks5UserpassMethodIT {
                 Socks5SettingSpecConstants.SOCKS5_USERPASSMETHOD_USER_REPOSITORY.newSetting(
                         UserRepositorySpecConstants.STRING_SOURCE_USER_REPOSITORY.newUserRepository(
                                 "Aladdin:opensesame")),
+                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                        PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
     }

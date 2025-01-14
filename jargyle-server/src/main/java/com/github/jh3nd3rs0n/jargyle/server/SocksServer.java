@@ -1,21 +1,14 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.GeneralValueDerivationHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Listener;
+
 import java.io.IOException;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.SocketException;
+import java.net.*;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.Listener;
 
 public final class SocksServer {
 	
@@ -53,44 +46,13 @@ public final class SocksServer {
 	}
 	
 	private Host getBindHost() {
-		Settings settings = this.configuration.getSettings();
-		Host host = settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = settings.getLastValue(
-				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = settings.getLastValue(
-				GeneralSettingSpecConstants.BIND_HOST);
-		return host;
+		return GeneralValueDerivationHelper.getSocksServerBindHostFrom(
+				this.configuration.getSettings());
 	}
 	
 	private PortRanges getBindPortRanges() {
-		Settings settings = this.configuration.getSettings();
-		Port port = settings.getLastValue(GeneralSettingSpecConstants.PORT);
-		if (port != null) {
-			return PortRanges.of(PortRange.of(port));
-		}
-		PortRanges portRanges = settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKS_SERVER_BIND_PORT_RANGES);
-		if (portRanges.toList().size() > 0) {
-			return portRanges;
-		}
-		portRanges = settings.getLastValue(
-				GeneralSettingSpecConstants.INTERNAL_FACING_BIND_TCP_PORT_RANGES);
-		if (portRanges.toList().size() > 0) {
-			return portRanges;
-		}
-		portRanges = settings.getLastValue(
-				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
-		if (portRanges.equals(PortRanges.getDefault())) {
-			return PortRanges.of(PortRange.of(DEFAULT_PORT));
-		}
-		return portRanges;
+		return GeneralValueDerivationHelper.getSocksServerBindPortRangesFrom(
+				this.configuration.getSettings());
 	}
 	
 	public Configuration getConfiguration() {
@@ -106,20 +68,8 @@ public final class SocksServer {
 	}
 	
 	private SocketSettings getSocketSettings() {
-		Settings settings = this.configuration.getSettings();
-		SocketSettings socketSettings =	settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKS_SERVER_SOCKET_SETTINGS);
-		if (socketSettings.toMap().size() > 0) {
-			return socketSettings;
-		}
-		socketSettings = settings.getLastValue(
-				GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS);
-		if (socketSettings.toMap().size() > 0) {
-			return socketSettings;
-		}
-		socketSettings = settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKET_SETTINGS);
-		return socketSettings;
+		return GeneralValueDerivationHelper.getSocksServerSocketSettingsFrom(
+				this.configuration.getSettings());
 	}
 	
 	public State getState() {

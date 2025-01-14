@@ -6,7 +6,9 @@ import java.net.DatagramSocket;
 import java.util.Objects;
 
 /**
- * Default implementation of {@code DtlsDatagramSocketFactory}.
+ * Default implementation of {@code DtlsDatagramSocketFactory}. This
+ * implementation returns a new {@code DatagramSocket} layered over the
+ * existing {@code DatagramSocket}.
  */
 final class DefaultDtlsDatagramSocketFactory extends DtlsDatagramSocketFactory {
 
@@ -26,7 +28,7 @@ final class DefaultDtlsDatagramSocketFactory extends DtlsDatagramSocketFactory {
     }
 
     @Override
-    public DatagramSocket newDatagramSocket(
+    public DatagramSocket getDatagramSocket(
             final DatagramSocket datagramSocket) throws IOException {
         return new DtlsDatagramSocket(datagramSocket, this.dtlsContext);
     }

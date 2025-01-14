@@ -4,7 +4,9 @@ import java.net.SocketException;
 
 /**
  * Thrown when an error occurs in creating or accessing a Socket that has an
- * underlying {@code SocksClient}.
+ * underlying {@code SocksClient}. This {@code SocketException} is used to
+ * help determine from a chain of {@code SocksClient}s which
+ * {@code SocksClient} is the associated error coming from.
  */
 public final class SocksClientSocketException extends SocketException {
 

@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ public class SocksClientTest {
                     PortRanges.of(PortRange.of(Port.valueOf(0), Port.valueOf(65535))),
                     properties.getValue(GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES));
             Assert.assertEquals(
-                    PositiveInteger.valueOf(60000),
+                    NonNegativeInteger.valueOf(60000),
                     properties.getValue(GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT));
         } finally {
             System.clearProperty("socksClient.socksServerUri");
@@ -45,6 +45,64 @@ public class SocksClientTest {
             System.clearProperty("socksClient.clientBindPortRanges");
             System.clearProperty("socksClient.clientConnectTimeout");
         }
+    }
+    
+    @Test
+    public void testToSocksClientIOExceptionThrowable01() {
+        SocksClient socksClient = Scheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(Properties.of());
+        Throwable t = new Exception();
+        SocksClientIOException e = new SocksClientIOException(socksClient, t);
+        Assert.assertEquals(e, socksClient.toSocksClientIOException(e));
+    }
+
+    @Test
+    public void testToSocksClientIOExceptionThrowable02() {
+        SocksClient socksClient1 = Scheme.SOCKS5
+                .newSocksServerUri("127.0.0.1", 1080)
+                .newSocksClient(Properties.of());
+        SocksClient socksClient2 = Scheme.SOCKS5
+                .newSocksServerUri("127.0.0.1", 2080)
+                .newSocksClient(Properties.of());
+        Throwable t = new Exception();
+        SocksClientSocketException e1 = new SocksClientSocketException(
+                socksClient1, t);
+        SocksClientIOException e2 = socksClient2.toSocksClientIOException(e1);
+        Assert.assertEquals(socksClient1, e2.getSocksClient());
+        Assert.assertEquals(t, e2.getCause());
+    }
+
+    @Test
+    public void testToSocksClientIOExceptionThrowable03() {
+        SocksClient socksClient = Scheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(Properties.of());
+        Throwable t = new Exception();
+        SocksClientIOException e = socksClient.toSocksClientIOException(t);
+        Assert.assertEquals(socksClient, e.getSocksClient());
+        Assert.assertEquals(t, e.getCause());
+    }
+
+    @Test
+    public void testToSocksClientSocketExceptionThrowable01() {
+        SocksClient socksClient = Scheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(Properties.of());
+        Throwable t = new Exception();
+        SocksClientSocketException e = new SocksClientSocketException(socksClient, t);
+        Assert.assertEquals(e, socksClient.toSocksClientSocketException(e));
+    }
+
+    @Test
+    public void testToSocksClientSocketExceptionThrowable02() {
+        SocksClient socksClient = Scheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(Properties.of());
+        Throwable t = new Exception();
+        SocksClientSocketException e = socksClient.toSocksClientSocketException(t);
+        Assert.assertEquals(socksClient, e.getSocksClient());
+        Assert.assertEquals(t, e.getCause());
     }
 
 }

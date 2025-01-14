@@ -18,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
 public class DefaultSslSocketFactoryIT {
 
     private static Server server;
-    private static int testServerPort;
+    private static int serverPort;
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
@@ -28,7 +28,7 @@ public class DefaultSslSocketFactoryIT {
                 new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         server.start();
-        testServerPort = server.getPort();
+        serverPort = server.getPort();
     }
 
     @AfterClass
@@ -41,110 +41,110 @@ public class DefaultSslSocketFactoryIT {
     }
 
     @Test
-    public void testNewSocketSocketInputStreamBooleanWithSocketNullFalse01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        try (Socket socket = new Socket((String) null, testServerPort)) {
+    public void testGetSocketSocketInputStreamBooleanWithSocketNullFalse01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        try (Socket socket = new Socket((String) null, serverPort)) {
             DefaultSslSocketFactory defaultSslSocketFactory = new DefaultSslSocketFactory(SslContextHelper.getSslContext(
                     "TLSv1.2",
                     KeyManagerHelper.getKeyManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                             null),
                     TrustManagerHelper.getTrustManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_2.getContentAsString().toCharArray(),
                             null)));
-            Assert.assertNotNull(defaultSslSocketFactory.newSocket(
+            Assert.assertNotNull(defaultSslSocketFactory.getSocket(
                     socket, null, false));
         }
     }
 
     @Test
-    public void testNewSocketSocketInputStreamBooleanWithSocketInputStreamFalse01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        try (Socket socket = new Socket((String) null, testServerPort)) {
+    public void testGetSocketSocketInputStreamBooleanWithSocketInputStreamFalse01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        try (Socket socket = new Socket((String) null, serverPort)) {
             DefaultSslSocketFactory defaultSslSocketFactory = new DefaultSslSocketFactory(SslContextHelper.getSslContext(
                     "TLSv1.2",
                     KeyManagerHelper.getKeyManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                             null),
                     TrustManagerHelper.getTrustManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_2.getContentAsString().toCharArray(),
                             null)));
-            Assert.assertNotNull(defaultSslSocketFactory.newSocket(
+            Assert.assertNotNull(defaultSslSocketFactory.getSocket(
                     socket, new ByteArrayInputStream(new byte[] { }), false));
         }
     }
 
     @Test
-    public void testNewSocketSocketInputStreamBooleanWithSocketInputStreamTrue01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        try (Socket socket = new Socket((String) null, testServerPort)) {
+    public void testGetSocketSocketInputStreamBooleanWithSocketInputStreamTrue01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        try (Socket socket = new Socket((String) null, serverPort)) {
             DefaultSslSocketFactory defaultSslSocketFactory = new DefaultSslSocketFactory(SslContextHelper.getSslContext(
                     "TLSv1.2",
                     KeyManagerHelper.getKeyManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                             null),
                     TrustManagerHelper.getTrustManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_2.getContentAsString().toCharArray(),
                             null)));
-            Assert.assertNotNull(defaultSslSocketFactory.newSocket(
+            Assert.assertNotNull(defaultSslSocketFactory.getSocket(
                     socket, new ByteArrayInputStream(new byte[] { }), true));
         }
     }
 
     @Test
-    public void testNewSocketSocketInputStreamBooleanWithSocketNullTrue01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        try (Socket socket = new Socket((String) null, testServerPort)) {
+    public void testGetSocketSocketInputStreamBooleanWithSocketNullTrue01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        try (Socket socket = new Socket((String) null, serverPort)) {
             DefaultSslSocketFactory defaultSslSocketFactory = new DefaultSslSocketFactory(SslContextHelper.getSslContext(
                     "TLSv1.2",
                     KeyManagerHelper.getKeyManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                             null),
                     TrustManagerHelper.getTrustManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_2.getContentAsString().toCharArray(),
                             null)));
-            Assert.assertNotNull(defaultSslSocketFactory.newSocket(
+            Assert.assertNotNull(defaultSslSocketFactory.getSocket(
                     socket, null, true));
         }
     }
 
     @Test
-    public void testNewSocketSocketStringIntBooleanWithSocketStringIntFalse01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        try (Socket socket = new Socket((String) null, testServerPort)) {
+    public void testGetSocketSocketStringIntBooleanWithSocketStringIntFalse01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        try (Socket socket = new Socket((String) null, serverPort)) {
             DefaultSslSocketFactory defaultSslSocketFactory = new DefaultSslSocketFactory(SslContextHelper.getSslContext(
                     "TLSv1.2",
                     KeyManagerHelper.getKeyManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                             null),
                     TrustManagerHelper.getTrustManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_2.getContentAsString().toCharArray(),
                             null)));
-            Assert.assertNotNull(defaultSslSocketFactory.newSocket(
-                    socket, "localhost", testServerPort, false));
+            Assert.assertNotNull(defaultSslSocketFactory.getSocket(
+                    socket, "localhost", serverPort, false));
         }
     }
 
     @Test
-    public void testNewSocketSocketStringIntBooleanWithSocketStringIntTrue01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        try (Socket socket = new Socket((String) null, testServerPort)) {
+    public void testGetSocketSocketStringIntBooleanWithSocketStringIntTrue01() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        try (Socket socket = new Socket((String) null, serverPort)) {
             DefaultSslSocketFactory defaultSslSocketFactory = new DefaultSslSocketFactory(SslContextHelper.getSslContext(
                     "TLSv1.2",
                     KeyManagerHelper.getKeyManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString().toCharArray(),
                             null),
                     TrustManagerHelper.getTrustManagers(
-                            KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getInputStream(),
+                            new ByteArrayInputStream(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_2.getContentAsBytes()),
                             KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_2.getContentAsString().toCharArray(),
                             null)));
-            Assert.assertNotNull(defaultSslSocketFactory.newSocket(
-                    socket, "localhost", testServerPort, true));
+            Assert.assertNotNull(defaultSslSocketFactory.getSocket(
+                    socket, "localhost", serverPort, true));
         }
     }
 

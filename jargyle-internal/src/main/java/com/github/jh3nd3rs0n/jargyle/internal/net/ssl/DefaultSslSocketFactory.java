@@ -8,7 +8,8 @@ import java.net.Socket;
 import java.util.Objects;
 
 /**
- * Default implementation of {@code SslSocketFactory}.
+ * Default implementation of {@code SslSocketFactory}. This implementation
+ * returns a new {@code Socket} layered over the existing {@code Socket}.
  */
 final class DefaultSslSocketFactory extends SslSocketFactory {
 
@@ -28,7 +29,7 @@ final class DefaultSslSocketFactory extends SslSocketFactory {
     }
 
     @Override
-    public Socket newSocket(
+    public Socket getSocket(
             final Socket socket,
             final InputStream consumed,
             final boolean autoClose) throws IOException {
@@ -37,7 +38,7 @@ final class DefaultSslSocketFactory extends SslSocketFactory {
     }
 
     @Override
-    public Socket newSocket(
+    public Socket getSocket(
             final Socket socket,
             final String host,
             final int port,

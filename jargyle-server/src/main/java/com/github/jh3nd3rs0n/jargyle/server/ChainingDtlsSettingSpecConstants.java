@@ -1,17 +1,17 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -70,7 +70,12 @@ public final class ChainingDtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"chaining.dtls.protocol", 
 					DtlsPropertySpecConstants.DTLS_PROTOCOL.getDefaultProperty().getValue()));
-	
+
+	public static final SettingSpec<Bytes> CHAINING_DTLS_TRUST_STORE_BYTES =
+			SETTING_SPECS.addThenGet(new BytesSettingSpec(
+					"chaining.dtls.trustStoreBytes",
+					DtlsPropertySpecConstants.DTLS_TRUST_STORE_BYTES.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The trust store file for the DTLS connections to "
 					+ "the other SOCKS server",
@@ -82,11 +87,6 @@ public final class ChainingDtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"chaining.dtls.trustStoreFile", 
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_FILE.getDefaultProperty().getValue()));
-
-	public static final SettingSpec<InputStream> CHAINING_DTLS_TRUST_STORE_INPUT_STREAM =
-			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
-					"chaining.dtls.trustStoreInputStream",
-					DtlsPropertySpecConstants.DTLS_TRUST_STORE_INPUT_STREAM.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The password for the trust store for the DTLS "
@@ -101,8 +101,8 @@ public final class ChainingDtlsSettingSpecConstants {
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The type of trust store file for the DTLS "
-					+ "connections to the other SOCKS server (default is PKCS12)",
+			description = "The type of trust store for the DTLS connections "
+					+ "to the other SOCKS server (default is PKCS12)",
 			name = "chaining.dtls.trustStoreType",
 			syntax = "chaining.dtls.trustStoreType=TYPE",
 			valueType = String.class

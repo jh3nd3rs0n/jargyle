@@ -539,5 +539,4 @@ public class ClientApp {
 The known limitations of routing traffic through a specified chain of SOCKS 
 servers include the following:
 
--   Only TCP traffic can be routed through the chain. The client will attempt to 
-route any UDP traffic through the last SOCKS server of the chain.
+-   Only TCP traffic can be routed through the chain.

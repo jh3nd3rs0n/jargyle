@@ -38,7 +38,7 @@ public final class EchoServerLoadTestRunner {
         LoadTestRunnerResults loadTestRunnerResults = new LoadTestRunnerResults(
                 this.threadCount, this.delayBetweenThreadsStarting);
         ExecutorService executor =
-                ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+                ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                         ExecutorsHelper.newCachedThreadPoolBuilder());
         try {
             String socksServerHostAddress = null;

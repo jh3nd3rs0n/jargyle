@@ -1,16 +1,16 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -56,7 +56,12 @@ public final class DtlsSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"dtls.enabledProtocols", 
 					null));
-	
+
+	public static final SettingSpec<Bytes> DTLS_KEY_STORE_BYTES =
+			SETTING_SPECS.addThenGet(new BytesSettingSpec(
+					"dtls.keyStoreBytes",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the DTLS connections to the "
 					+ "SOCKS server",
@@ -67,11 +72,6 @@ public final class DtlsSettingSpecConstants {
 	public static final SettingSpec<File> DTLS_KEY_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"dtls.keyStoreFile", 
-					null));
-
-	public static final SettingSpec<InputStream> DTLS_KEY_STORE_INPUT_STREAM =
-			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
-					"dtls.keyStoreInputStream",
 					null));
 
 	@NameValuePairValueSpecDoc(
@@ -87,8 +87,8 @@ public final class DtlsSettingSpecConstants {
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The type of key store file for the DTLS connections "
-					+ "to the SOCKS server (default is PKCS12)",
+			description = "The type of key store for the DTLS connections to "
+					+ "the SOCKS server (default is PKCS12)",
 			name = "dtls.keyStoreType",
 			syntax = "dtls.keyStoreType=TYPE",
 			valueType = String.class

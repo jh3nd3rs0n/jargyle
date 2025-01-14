@@ -537,7 +537,9 @@ if changed will have no effect during the running of the server:
 -   `backlog`
 -   `port`
 -   `socksServerBindHost`
+-   `socksServerBindHostAddressTypes`
 -   `socksServerBindPortRanges`
+-   `socksServerNetInterface`
 -   `socksServerSocketSettings`
 
 A restart of the server would be required if you want any of the changed 

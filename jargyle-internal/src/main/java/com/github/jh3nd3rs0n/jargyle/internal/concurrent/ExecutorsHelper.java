@@ -138,28 +138,27 @@ public final class ExecutorsHelper {
 
     /**
      * Returns a new virtual-thread-per-task-executor or a new
-     * {@code ExecutorService} provided by the provided default
+     * {@code ExecutorService} provided by the provided
      * {@code ExecutorBuilder}. If the runtime supports virtual threads or if
      * the system property with the name of
      * {@link #USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME} is not set to
      * {@code false}, a new virtual-thread-per-task-executor is returned.
      * Otherwise, a new {@code ExecutorService} is returned by the provided
-     * default {@code ExecutorBuilder}.
+     * {@code ExecutorBuilder}.
      *
-     * @param defaultExecutorBuilder the provided default
-     *                               {@code ExecutorBuilder}
+     * @param executorBuilder the provided {@code ExecutorBuilder}
      * @return a new virtual-thread-per-task-executor or a new
-     * {@code ExecutorService} provided by the provided default
+     * {@code ExecutorService} provided by the provided
      * {@code ExecutorBuilder}
      */
-    public static ExecutorService newVirtualThreadPerTaskExecutorOrDefault(
-            final ExecutorBuilder defaultExecutorBuilder) {
+    public static ExecutorService newVirtualThreadPerTaskExecutorOrElse(
+            final ExecutorBuilder executorBuilder) {
         if ("false".equals(System.getProperty(
                 USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME))) {
-            return defaultExecutorBuilder.build();
+            return executorBuilder.build();
         }
         if (!canUseVirtualThreads()) {
-            return defaultExecutorBuilder.build();
+            return executorBuilder.build();
         }
         ExecutorService executorService;
         try {
@@ -173,7 +172,7 @@ public final class ExecutorsHelper {
                             Executors.class.getName(),
                             EXECUTORS_NEW_VIRTUAL_THREAD_PER_TASK_EXECUTOR_METHOD_NAME),
                     e);
-            return defaultExecutorBuilder.build();
+            return executorBuilder.build();
         }
         if (USING_VIRTUAL_THREADS.compareAndSet(
                 false, true)) {

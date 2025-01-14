@@ -1830,8 +1830,7 @@ Server configuration file example:
 The known limitations of chaining to a specified chain of other SOCKS servers 
 include the following:
 
--   Only TCP traffic can be routed through the chain. The server will attempt to 
-route any UDP traffic through the last SOCKS server of the chain.
+-   Only TCP traffic can be routed through the chain.
 
 ## Chaining to Specified Chains of Other SOCKS Servers
 
@@ -3473,7 +3472,10 @@ Server configuration file example:
 
 To configure the sockets, you will need any of the following rule actions:
 
--   `bindHost`: Specifies the binding host name or address for all sockets 
+-   `bindHost`: Specifies the binding host name or address for all sockets
+-   `bindHostAddressType`: Specifies an acceptable binding host address type
+for all sockets (This rule action can be specified multiple times with each 
+rule action specifying another host address type)
 -   `bindTcpPortRange`: Specifies a binding port range for all TCP sockets 
 (This rule action can be specified multiple times with each rule action 
 specifying another port range)
@@ -3485,6 +3487,10 @@ specifying another port range)
 specifying another socket setting)
 -   `externalFacingBindHost`: Specifies the binding host name or address 
 for all external-facing sockets 
+-   `externalFacingBindHostAddressType`: Specifies an acceptable binding 
+host address type for all external-facing sockets (This rule action can be 
+specified multiple times with each rule action specifying another host address 
+type)
 -   `externalFacingBindTcpPortRange`: Specifies a binding 
 port range for all external-facing TCP 
 sockets (This rule action can be specified multiple times with each rule action 
@@ -3493,18 +3499,28 @@ specifying another port range)
 port range for all external-facing UDP 
 sockets (This rule action can be specified multiple times with each rule action 
 specifying another port range)
+-   `externalFacingNetInterface`: Specifies the network interface that 
+provides a binding host address for all external-facing sockets 
 -   `externalFacingSocketSetting`: Specifies a socket setting for all 
 external-facing sockets (This rule action can be specified multiple times with 
 each rule action specifying another socket setting)
 -   `internalFacingBindHost`: Specifies the binding host name or address for 
 all internal-facing sockets
+-   `internalFacingBindHostAddressType`: Specifies an acceptable binding host 
+address type for all internal-facing sockets (This rule action can be 
+specified multiple times with each rule action specifying another host address 
+type)
 -   `internalFacingBindUdpPortRange`: Specifies a binding 
 port range for all internal-facing UDP 
 sockets (This rule action can be specified multiple times with each rule action 
 specifying another port range)
+-   `internalFacingNetInterface`: Specifies the network interface that 
+provides a binding host address for all internal-facing sockets 
 -   `internalFacingSocketSetting`: Specifies a socket setting for all 
 internal-facing sockets (This rule action can be specified multiple times with 
 each rule action specifying another socket setting)
+-   `netInterface`: Specifies the network interface that provides a binding 
+host address for all sockets 
 -   `socketSetting`: Specifies a socket setting for all sockets (This rule 
 action can be specified multiple times with each rule action specifying another 
 socket setting)
@@ -3513,10 +3529,16 @@ the inbound socket (This rule action can be specified multiple times with each
 rule action specifying another socket setting)
 -   `socks5.onBindRequest.listenBindHost`: Specifies the binding host name or 
 address for the listen socket if the provided host address is all zeros
+-   `socks5.onBindRequest.listenBindHostAddressType`: Specifies an acceptable 
+binding host address type for the listen socket (This rule action can be 
+specified multiple times with each rule action specifying another host address 
+type) 
 -   `socks5.onBindRequest.listenBindPortRange`: Specifies a binding 
 port range for the listen socket if the provided port is zero (This rule 
 action can be specified multiple times with each rule action specifying another 
 port range)
+-   `socks5.onBindRequest.listenNetInterface`: Specifies the network interface 
+that provides a binding host address for the listen socket
 -   `socks5.onBindRequest.listenSocketSetting`: Specifies a socket setting for 
 the listen socket (This rule action can be specified multiple times with each 
 rule action specifying another socket setting)
@@ -3526,59 +3548,80 @@ connecting (involves applying the specified socket settings, resolving the
 target host name, and setting the specified timeout on waiting to connect)
 -   `socks5.onConnectRequest.targetFacingBindHost`: Specifies the binding host 
 name or address for the target-facing socket
+-   `socks5.onConnectRequest.targetFacingBindHostAddressType`: Specifies an 
+acceptable binding host address type for the target-facing socket (This rule 
+action can be specified multiple times with each rule action specifying 
+another host address type)
 -   `socks5.onConnectRequest.targetFacingBindPortRange`: Specifies a binding 
 port range for the target-facing socket (This rule action can be specified 
 multiple times with each rule action specifying another port range)
 -   `socks5.onConnectRequest.targetFacingConnectTimeout`: Specifies the timeout 
 in milliseconds on waiting for the target-facing socket to connect (Value must 
 be an integer between 1 (inclusive) and 2147483647 (inclusive))
+-   `socks5.onConnectRequest.targetFacingNetInterface`: Specifies the network
+interface that provides a binding host address for the target-facing socket
 -   `socks5.onConnectRequest.targetFacingSocketSetting`: Specifies a socket 
 setting for the target-facing socket (This rule action can be specified multiple 
 times with each rule action specifying another socket setting)
--   `socks5.onRequest.bindHost`: Specifies the binding host name or address
-for all sockets
--   `socks5.onRequest.bindTcpPortRange`: Specifies a binding
-port range for all TCP sockets (This rule action can be specified multiple
-times with each rule action specifying another port range)
--   `socks5.onRequest.bindUdpPortRange`: Specifies a binding
-port range for all UDP sockets (This rule action can be specified multiple
-times with each rule action specifying another port range)
 -   `socks5.onRequest.externalFacingBindHost`: Specifies the binding host
 name or address for all external-facing sockets
+-   `socks5.onRequest.externalFacingBindHostAddressType`: Specifies an 
+acceptable binding host address type for all external-facing sockets (This 
+rule action can be specified multiple times with each rule action specifying 
+another host address type) 
 -   `socks5.onRequest.externalFacingBindTcpPortRange`: Specifies a
 binding port range for all external-facing TCP sockets (This rule action can be
 specified multiple times with each rule action specifying another port range)
 -   `socks5.onRequest.externalFacingBindUdpPortRange`: Specifies a
 binding port range for all external-facing UDP sockets (This rule action can be
 specified multiple times with each rule action specifying another port range)
+-   `socks5.onRequest.externalFacingNetInterface`: Specifies the network 
+interface that provides a binding host address for all external-facing sockets
 -   `socks5.onRequest.externalFacingSocketSetting`: Specifies a socket
 setting for all external-facing sockets (This rule action can be specified
 multiple times with each rule action specifying another socket setting)
 -   `socks5.onRequest.internalFacingBindHost`: Specifies the binding
 host name or address for all internal-facing sockets
+-   `socks5.onRequest.internalFacingBindHostAddressType`: Specifies an 
+acceptable binding host address type for all internal-facing sockets (This 
+rule action can be specified multiple times with each rule action specifying 
+another host address type)
 -   `socks5.onRequest.internalFacingBindUdpPortRange`: Specifies a
 binding port range for all internal-facing UDP sockets (This rule action can be
 specified multiple times with each rule action specifying another port range)
+-   `socks5.onRequest.internalFacingNetInterface`: Specifies the network
+interface that provides a binding host address for all internal-facing sockets
 -   `socks5.onRequest.internalFacingSocketSetting`: Specifies a socket
 setting for all internal-facing sockets (This rule action can be specified
 multiple times with each rule action specifying another socket setting)
--   `socks5.onRequest.socketSetting`: Specifies a socket setting for all
-sockets (This rule action can be specified multiple times with each rule action
-specifying another socket setting)
 -   `socks5.onUdpAssociateRequest.clientFacingBindHost`: Specifies the binding 
 host name or address for the client-facing UDP socket
+-   `socks5.onUdpAssociateRequest.clientFacingBindHostAddressType`: Specifies 
+an acceptable binding host address type for the client-facing UDP socket (This 
+rule action can be specified multiple times with each rule action specifying 
+another host address type)
 -   `socks5.onUdpAssociateRequest.clientFacingBindPortRange`: Specifies a 
 binding port range for the client-facing UDP socket (This rule action can be 
 specified multiple times with each rule action specifying another port range)
+-   `socks5.onUdpAssociateRequest.clientFacingNetInterface`: Specifies a 
+network interface that provides a binding host address for the client-facing 
+UDP socket
 -   `socks5.onUdpAssociateRequest.clientFacingSocketSetting`: Specifies a 
 socket setting for the client-facing UDP socket (This rule action can be 
 specified multiple times with each rule action specifying another socket 
 setting)
 -   `socks5.onUdpAssociateRequest.peerFacingBindHost`: Specifies the binding 
 host name or address for the peer-facing UDP socket
+-   `socks5.onUdpAssociateRequest.peerFacingBindHostAdddressType`: Specifies 
+an acceptable binding host address type for the peer-facing UDP socket (This 
+rule action can be specified multiple times with each rule action specifying 
+another host address type)
 -   `socks5.onUdpAssociateRequest.peerFacingBindPortRange`: Specifies a 
 binding port range for the peer-facing UDP socket (This rule action can be 
 specified multiple times with each rule action specifying another port range)
+-   `socks5.onUdpAssociateRequest.peerFacingNetInterface`: Specifies the 
+network interface that provides a binding host address for the peer-facing UDP 
+socket
 -   `socks5.onUdpAssociateRequest.peerFacingSocketSetting`: Specifies a socket 
 setting for the peer-facing UDP socket (This rule action can be specified 
 multiple times with each rule action specifying another socket setting)

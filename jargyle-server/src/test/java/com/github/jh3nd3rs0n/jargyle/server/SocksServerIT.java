@@ -18,8 +18,7 @@ public class SocksServerIT {
 			socksServer.start();
 			configuration.addSetting(GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST.newSetting(
 					Host.newInstance("127.0.0.1")));
-			Host expectedHost = 
-					GeneralSettingSpecConstants.BIND_HOST.getDefaultSetting().getValue();
+			Host expectedHost = Host.newInstance("0.0.0.0");
 			Host actualHost = socksServer.getHost();
 			Assert.assertEquals(expectedHost, actualHost);
 		} finally {

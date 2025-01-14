@@ -3,7 +3,10 @@ package com.github.jh3nd3rs0n.jargyle.client;
 import java.io.IOException;
 
 /**
- * Thrown when an I/O error occurs from the {@code SocksClient}.
+ * Thrown when an I/O error occurs associated with the {@code SocksClient}.
+ * This {@code IOException} is used to help determine from a chain of
+ * {@code SocksClient}s which {@code SocksClient} is the associated I/O error
+ * coming from.
  */
 public class SocksClientIOException extends IOException {
 

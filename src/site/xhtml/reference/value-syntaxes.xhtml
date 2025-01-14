@@ -14,7 +14,14 @@
 <ul>
 </ul>
 </li>
+<li><a href="#host-address-type">Host Address Type</a></li>
+<li><a href="#host-address-types">Host Address Types</a></li>
 <li><a href="#log-action">Log Action</a></li>
+<li>
+<a href="#network-interface">Network Interface</a>
+<ul>
+</ul>
+</li>
 <li>
 <a href="#non-negative-integer">Non-negative Integer</a>
 <ul>
@@ -134,6 +141,24 @@
 </code></pre>
 <p><b>Description:</b></p>
 <p>A name or address of a node of a network</p>
+<h2 id="host-address-type">Host Address Type</h2>
+<p><b>Syntax:</b></p>
+<pre><code class="language-text">IPv4|IPv6
+</code></pre>
+<p><b>Description:</b></p>
+<p>Type of host address</p>
+<p><b>Values:</b></p>
+<ul>
+<li><code>IPv4</code></li>
+<li><code>IPv6</code></li>
+</ul>
+<h2 id="host-address-types">Host Address Types</h2>
+<p><b>Syntax:</b></p>
+<pre><code class="language-text">[HOST_ADDRESS_TYPE1[,HOST_ADDRESS_TYPE2[...]]]
+</code></pre>
+<p><b>Description:</b></p>
+<p>A comma separated list of host address types</p>
+<p><b>Element value:</b> <a href="value-syntaxes.html#host-address-type">Host Address Type</a></p>
 <h2 id="log-action">Log Action</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">LOG_AS_WARNING|LOG_AS_INFO
@@ -143,6 +168,12 @@
 <li><code>LOG_AS_WARNING</code>: Log message as a warning message</li>
 <li><code>LOG_AS_INFO</code>: Log message as an informational message</li>
 </ul>
+<h2 id="network-interface">Network Interface</h2>
+<p><b>Syntax:</b></p>
+<pre><code class="language-text">NETWORK_INTERFACE_NAME
+</code></pre>
+<p><b>Description:</b></p>
+<p>A name of an interface between the local system and a network (for example, &quot;le0&quot;)</p>
 <h2 id="non-negative-integer">Non-negative Integer</h2>
 <p><b>Syntax:</b></p>
 <pre><code class="language-text">0-2147483647

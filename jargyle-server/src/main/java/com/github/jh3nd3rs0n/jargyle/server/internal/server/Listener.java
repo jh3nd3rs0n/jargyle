@@ -31,7 +31,7 @@ public final class Listener implements Runnable {
 	
 	public void run() {
 		ExecutorService executor =
-				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
 						ExecutorsHelper.newCachedThreadPoolBuilder());
 		try {
 			while (true) {

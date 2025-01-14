@@ -13,6 +13,7 @@
 	<description>Public API used by all modules</description>
 	<properties>
 		<docsDirectory>${project.basedir}${file.separator}..${file.separator}docs</docsDirectory>
+		<loggingConfigFile>${project.basedir}${file.separator}..${file.separator}logging.properties</loggingConfigFile>
 	</properties>
 	<dependencies>
 		<dependency>

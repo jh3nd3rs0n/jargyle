@@ -138,6 +138,9 @@ OPTIONS:
     bindHost=HOST
         The default binding host name or address for all sockets (default is 0.0.0.0)
 
+    bindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of default acceptable binding host address types for all sockets (default is IPv4,IPv6)
+
     bindTcpPortRanges=PORT_RANGES
         The comma separated list of default binding port ranges for all TCP sockets (default is 0)
 
@@ -153,11 +156,17 @@ OPTIONS:
     externalFacingBindHost=HOST
         The default binding host name or address for all external-facing sockets
 
+    externalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of default acceptable binding host address types for all external-facing sockets
+
     externalFacingBindTcpPortRanges=PORT_RANGES
         The comma separated list of default binding port ranges for all external-facing TCP sockets
 
     externalFacingBindUdpPortRanges=PORT_RANGES
         The comma separated list of default binding port ranges for all external-facing UDP sockets
+
+    externalFacingNetInterface=NETWORK_INTERFACE
+        The default network interface that provides a binding host address for all external-facing sockets
 
     externalFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of default socket settings for all external-facing sockets
@@ -165,11 +174,17 @@ OPTIONS:
     internalFacingBindHost=HOST
         The default binding host name or address for all internal-facing sockets
 
+    internalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of default acceptable binding host address types for all internal-facing sockets
+
     internalFacingBindTcpPortRanges=PORT_RANGES
         The comma separated list of default binding port ranges for all internal-facing TCP sockets
 
     internalFacingBindUdpPortRanges=PORT_RANGES
         The comma separated list of default binding port ranges for all internal-facing UDP sockets
+
+    internalFacingNetInterface=NETWORK_INTERFACE
+        The default network interface that provides a binding host address for all internal-facing sockets
 
     internalFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of default socket settings for all internal-facing sockets
@@ -177,8 +192,11 @@ OPTIONS:
     lastRouteId=ROUTE_ID
         The ID for the last and unassigned route (default is lastRoute)
 
+    netInterface=NETWORK_INTERFACE
+        The default network interface that provides a binding host address for all sockets
+
     port=PORT
-        The port for the SOCKS server
+        The port for the SOCKS server (default is 1080)
 
     routeSelectionLogAction=LOG_ACTION
         The logging action to take if a route is selected
@@ -195,8 +213,14 @@ OPTIONS:
     socksServerBindHost=HOST
         The binding host name or address for the SOCKS server socket
 
+    socksServerBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for the SOCKS server socket
+
     socksServerBindPortRangesPORT_RANGES
         The comma separated list of binding port ranges for the SOCKS server socket
+
+    socksServerNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for the SOCKS server socket
 
     socksServerSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the SOCKS server socket
@@ -204,13 +228,19 @@ OPTIONS:
   CHAINING GENERAL SETTINGS:
 
     chaining.clientBindHost=HOST
-        The binding host name or address for the client socket that is used to connect to the other SOCKS server (default is 0.0.0.0)
+        The binding host name or address for the client socket that is used to connect to the other SOCKS server
+
+    chaining.clientBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for the client socket that is used to connect to the other SOCKS server (default is IPv4,IPv6)
 
     chaining.clientBindPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for the client socket that is used to connect to the other SOCKS server (default is 0)
 
-    chaining.clientConnectTimeout=POSITIVE_INTEGER
-        The timeout in milliseconds on waiting for the client socket to connect to the other SOCKS server (default is 60000)
+    chaining.clientConnectTimeout=NON_NEGATIVE_INTEGER
+        The timeout in milliseconds on waiting for the client socket to connect to the other SOCKS server (a timeout of 0 is interpreted as an infinite timeout) (default is 60000)
+
+    chaining.clientNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for the client socket that is used to connect to the other SOCKS server
 
     chaining.clientSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the client socket that is used to connect to the other SOCKS server
@@ -242,7 +272,7 @@ OPTIONS:
         The password for the trust store for the DTLS connections to the other SOCKS server
 
     chaining.dtls.trustStoreType=TYPE
-        The type of trust store file for the DTLS connections to the other SOCKS server (default is PKCS12)
+        The type of trust store for the DTLS connections to the other SOCKS server (default is PKCS12)
 
     chaining.dtls.wrappedReceiveBufferSize=POSITIVE_INTEGER
         The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the other SOCKS server
@@ -300,7 +330,7 @@ OPTIONS:
         The password for the key store for the SSL/TLS connections to the other SOCKS server
 
     chaining.ssl.keyStoreType=TYPE
-        The type of key store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
+        The type of key store for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
 
     chaining.ssl.protocol=PROTOCOL
         The protocol version for the SSL/TLS connections to the other SOCKS server (default is TLSv1.2)
@@ -312,7 +342,7 @@ OPTIONS:
         The password for the trust store for the SSL/TLS connections to the other SOCKS server
 
     chaining.ssl.trustStoreType=TYPE
-        The type of trust store file for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
+        The type of trust store for the SSL/TLS connections to the other SOCKS server (default is PKCS12)
 
   DTLS SETTINGS:
 
@@ -332,7 +362,7 @@ OPTIONS:
         The password for the key store for the DTLS connections to the SOCKS server
 
     dtls.keyStoreType=TYPE
-        The type of key store file for the DTLS connections to the SOCKS server (default is PKCS12)
+        The type of key store for the DTLS connections to the SOCKS server (default is PKCS12)
 
     dtls.protocol=PROTOCOL
         The protocol version for the DTLS connections to the SOCKS server (default is DTLSv1.2)
@@ -363,8 +393,14 @@ OPTIONS:
     socks5.onBindRequest.listenBindHost=HOST
         The binding host name or address for the listen socket if the provided host address is all zeros
 
+    socks5.onBindRequest.listenBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for the listen socket if the provided host address is all zeros
+
     socks5.onBindRequest.listenBindPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for the listen socket if the provided port is zero
+
+    socks5.onBindRequest.listenNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for the listen socket if the provided host address is all zeros
 
     socks5.onBindRequest.listenSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the listen socket
@@ -399,26 +435,26 @@ OPTIONS:
     socks5.onConnectRequest.targetFacingBindHost=HOST
         The binding host name or address for the target-facing socket
 
+    socks5.onConnectRequest.targetFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for the target-facing socket
+
     socks5.onConnectRequest.targetFacingBindPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for the target-facing socket
 
     socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER
         The timeout in milliseconds on waiting for the target-facing socket to connect (default is 60000)
 
+    socks5.onConnectRequest.targetFacingNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for the target-facing socket
+
     socks5.onConnectRequest.targetFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the target-facing socket
 
-    socks5.onRequest.bindHost=HOST
-        The binding host name or address for all sockets
-
-    socks5.onRequest.bindTcpPortRanges=PORT_RANGES
-        The comma separated list of binding port ranges for all TCP sockets
-
-    socks5.onRequest.bindUdpPortRanges=PORT_RANGES
-        The comma separated list of binding port ranges for all UDP sockets
-
     socks5.onRequest.externalFacingBindHost=HOST
         The binding host name or address for all external-facing sockets
+
+    socks5.onRequest.externalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for all external-facing sockets
 
     socks5.onRequest.externalFacingBindTcpPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for all external-facing TCP sockets
@@ -426,14 +462,23 @@ OPTIONS:
     socks5.onRequest.externalFacingBindUdpPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for all external-facing UDP sockets
 
+    socks5.onRequest.externalFacingNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for all external-facing sockets
+
     socks5.onRequest.externalFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for all external-facing sockets
 
     socks5.onRequest.internalFacingBindHost=HOST
         The binding host name or address for all internal-facing sockets
 
+    socks5.onRequest.internalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for all internal-facing sockets
+
     socks5.onRequest.internalFacingBindUdpPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for all internal-facing UDP sockets
+
+    socks5.onRequest.internalFacingNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for all internal-facing sockets
 
     socks5.onRequest.internalFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for all internal-facing sockets
@@ -450,14 +495,17 @@ OPTIONS:
     socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
         The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
-    socks5.onRequest.socketSettings=SOCKET_SETTINGS
-        The comma separated list of socket settings for all sockets
-
     socks5.onUdpAssociateRequest.clientFacingBindHost=HOST
         The binding host name or address for the client-facing UDP socket
 
+    socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for the client-facing UDP socket
+
     socks5.onUdpAssociateRequest.clientFacingBindPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for the client-facing UDP socket
+
+    socks5.onUdpAssociateRequest.clientFacingNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for the client-facing UDP socket
 
     socks5.onUdpAssociateRequest.clientFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the client-facing UDP socket
@@ -465,8 +513,14 @@ OPTIONS:
     socks5.onUdpAssociateRequest.peerFacingBindHost=HOST
         The binding host name or address for the peer-facing UDP socket
 
+    socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes=HOST_ADDRESS_TYPES
+        The comma separated list of acceptable binding host address types for the peer-facing UDP socket
+
     socks5.onUdpAssociateRequest.peerFacingBindPortRanges=PORT_RANGES
         The comma separated list of binding port ranges for the peer-facing UDP socket
+
+    socks5.onUdpAssociateRequest.peerFacingNetInterface=NETWORK_INTERFACE
+        The network interface that provides a binding host address for the peer-facing UDP socket
 
     socks5.onUdpAssociateRequest.peerFacingSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the peer-facing UDP socket
@@ -504,7 +558,7 @@ OPTIONS:
         The password for the key store for the SSL/TLS connections to the SOCKS server
 
     ssl.keyStoreType=TYPE
-        The type of key store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)
+        The type of key store for the SSL/TLS connections to the SOCKS server (default is PKCS12)
 
     ssl.needClientAuth=true|false
         The boolean value to indicate that client authentication is required for SSL/TLS connections to the SOCKS server (default is false)
@@ -519,7 +573,7 @@ OPTIONS:
         The password for the trust store for the SSL/TLS connections to the SOCKS server
 
     ssl.trustStoreType=TYPE
-        The type of trust store file for the SSL/TLS connections to the SOCKS server (default is PKCS12)
+        The type of trust store for the SSL/TLS connections to the SOCKS server (default is PKCS12)
 
     ssl.wantClientAuth=true|false
         The boolean value to indicate that client authentication is requested for SSL/TLS connections to the SOCKS server (default is false)
@@ -538,6 +592,14 @@ SETTING VALUE SYNTAXES:
 
   HOST: HOST_NAME|HOST_ADDRESS
 
+  HOST_ADDRESS_TYPE: IPv4|IPv6
+
+    IPv4
+
+    IPv6
+
+  HOST_ADDRESS_TYPES: [HOST_ADDRESS_TYPE1[,HOST_ADDRESS_TYPE2[...]]]
+
   LOG_ACTION: LOG_AS_WARNING|LOG_AS_INFO
 
     LOG_AS_WARNING
@@ -545,6 +607,8 @@ SETTING VALUE SYNTAXES:
 
     LOG_AS_INFO
         Log message as an informational message
+
+  NETWORK_INTERFACE: NETWORK_INTERFACE_NAME
 
   NON_NEGATIVE_INTEGER: 0-2147483647
 
@@ -565,6 +629,9 @@ SETTING VALUE SYNTAXES:
         bindHost=HOST
             Specifies the binding host name or address for all sockets
 
+        bindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for all sockets (can be specified multiple times with each rule action specifying another host address type)
+
         bindTcpPortRange=PORT_RANGE
             Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule action specifying another port range)
 
@@ -577,11 +644,17 @@ SETTING VALUE SYNTAXES:
         externalFacingBindHost=HOST
             Specifies the binding host name or address for all external-facing sockets
 
+        externalFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for all external-facing sockets (can be specified multiple times with each rule action specifying another host address type)
+
         externalFacingBindTcpPortRange=PORT_RANGE
             Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)
 
         externalFacingBindUdpPortRange=PORT_RANGE
             Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        externalFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for all external-facing sockets
 
         externalFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
@@ -601,11 +674,20 @@ SETTING VALUE SYNTAXES:
         internalFacingBindHost=HOST
             Specifies the binding host name or address for all internal-facing sockets
 
+        internalFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for all internal-facing sockets (can be specified multiple times with each rule action specifying another host address type)
+
         internalFacingBindUdpPortRange=PORT_RANGE
             Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
 
+        internalFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for all internal-facing sockets
+
         internalFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
+
+        netInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for all sockets
 
         routeSelectionLogAction=LOG_ACTION
             Specifies the logging action to take if a route ID is selected
@@ -627,8 +709,14 @@ SETTING VALUE SYNTAXES:
         socks5.onBindRequest.listenBindHost=HOST
             Specifies the binding host name or address for the listen socket if the provided host address is all zeros
 
+        socks5.onBindRequest.listenBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for the listen socket if the provided host address is all zeros (can be specified multiple times with each rule specifying another host address type)
+
         socks5.onBindRequest.listenBindPortRange=PORT_RANGE
             Specifies a binding port range for the listen socket if the provided port is zero (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onBindRequest.listenNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for the listen socket if the provided host address is all zeros
 
         socks5.onBindRequest.listenSocketSetting=SOCKET_SETTING
             Specifies a socket setting for the listen socket (can be specified multiple times with each rule action specifying another socket setting)
@@ -663,26 +751,26 @@ SETTING VALUE SYNTAXES:
         socks5.onConnectRequest.targetFacingBindHost=HOST
             Specifies the binding host name or address for the target-facing socket
 
+        socks5.onConnectRequest.targetFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for the target-facing socket (can be specified multiple times with each rule action specifying another host address type)
+
         socks5.onConnectRequest.targetFacingBindPortRange=PORT_RANGE
             Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule action specifying another port range)
 
         socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER
             Specifies the timeout in milliseconds on waiting for the target-facing socket to connect
 
+        socks5.onConnectRequest.targetFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for the target-facing socket
+
         socks5.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule action specifying another socket setting)
 
-        socks5.onRequest.bindHost=HOST
-            Specifies the binding host name or address for all sockets
-
-        socks5.onRequest.bindTcpPortRange=PORT_RANGE
-            Specifies a binding port range for all TCP sockets (can be specified multiple times with each rule action specifying another port range)
-
-        socks5.onRequest.bindUdpPortRange=PORT_RANGE
-            Specifies a binding port range for all UDP sockets (can be specified multiple times with each rule action specifying another port range)
-
         socks5.onRequest.externalFacingBindHost=HOST
             Specifies the binding host name or address for all external-facing sockets
+
+        socks5.onRequest.externalFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for all external-facing sockets (can be specified multiple times with each rule action specifying another host address type)
 
         socks5.onRequest.externalFacingBindTcpPortRange=PORT_RANGE
             Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)
@@ -690,14 +778,23 @@ SETTING VALUE SYNTAXES:
         socks5.onRequest.externalFacingBindUdpPortRange=PORT_RANGE
             Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
 
+        socks5.onRequest.externalFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for all external-facing sockets
+
         socks5.onRequest.externalFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
 
         socks5.onRequest.internalFacingBindHost=HOST
             Specifies the binding host name or address for all internal-facing sockets
 
+        socks5.onRequest.internalFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for all internal-facing sockets (can be specified multiple times with each rule action specifying another host address type)
+
         socks5.onRequest.internalFacingBindUdpPortRange=PORT_RANGE
             Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onRequest.internalFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for all internal-facing sockets
 
         socks5.onRequest.internalFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
@@ -714,14 +811,17 @@ SETTING VALUE SYNTAXES:
         socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER
             Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
 
-        socks5.onRequest.socketSetting=SOCKET_SETTING
-            Specifies a socket setting for all sockets (can be specified multiple times with each rule action specifying another socket setting)
-
         socks5.onUdpAssociateRequest.clientFacingBindHost=HOST
             Specifies the binding host name or address for the client-facing UDP socket
 
+        socks5.onUdpAssociateRequest.clientFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for the client-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)
+
         socks5.onUdpAssociateRequest.clientFacingBindPortRange=PORT_RANGE
             Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onUdpAssociateRequest.clientFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for the client-facing UDP socket
 
         socks5.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)
@@ -729,8 +829,14 @@ SETTING VALUE SYNTAXES:
         socks5.onUdpAssociateRequest.peerFacingBindHost=HOST
             Specifies the binding host name or address for the peer-facing UDP socket
 
+        socks5.onUdpAssociateRequest.peerFacingBindHostAddressType=HOST_ADDRESS_TYPE
+            Specifies an acceptable binding host address type for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)
+
         socks5.onUdpAssociateRequest.peerFacingBindPortRange=PORT_RANGE
             Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
+
+        socks5.onUdpAssociateRequest.peerFacingNetInterface=NETWORK_INTERFACE
+            Specifies the network interface that provides a binding host address for the peer-facing UDP socket
 
         socks5.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING
             Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)

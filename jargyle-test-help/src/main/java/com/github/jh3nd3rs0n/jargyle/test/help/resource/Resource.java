@@ -1,11 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.test.help.resource;
 
-import com.github.jh3nd3rs0n.jargyle.test.help.io.IoHelper;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -39,32 +34,48 @@ public final class Resource {
     }
 
     /**
-     * Returns the content from the Java resource as a {@code String}.
+     * Returns the content from the Java resource as a {@code byte} array.
      *
-     * @return the content from the Java resource as a {@code String}
+     * @return the content from the Java resource as a {@code byte} array
      */
-    public String getContentAsString() {
+    public byte[] getContentAsBytes() {
         ClassLoader classLoader = this.cls.getClassLoader();
-        InputStream in = classLoader.getResourceAsStream(this.name);
-        try {
+        try (InputStream in = classLoader.getResourceAsStream(this.name)) {
             assert in != null;
-            try (Reader reader =
-                         new InputStreamReader(in, StandardCharsets.UTF_8)) {
-                return IoHelper.readStringFrom(reader);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            int b;
+            while ((b = in.read()) != -1) {
+                out.write(b);
             }
+            out.flush();
+            return out.toByteArray();
         } catch (IOException e) {
             throw new AssertionError(e);
         }
     }
 
     /**
-     * Returns the Java resource as an {@code InputStream}.
+     * Returns the content from the Java resource as a {@code String}.
      *
-     * @return the Java resource as an {@code InputStream}
+     * @return the content from the Java resource as a {@code String}
      */
-    public InputStream getInputStream() {
+    public String getContentAsString() {
         ClassLoader classLoader = this.cls.getClassLoader();
-        return classLoader.getResourceAsStream(this.name);
+        try (InputStream in = classLoader.getResourceAsStream(this.name)) {
+            assert in != null;
+            StringWriter writer = new StringWriter();
+            try (Reader reader = new InputStreamReader(
+                    in, StandardCharsets.UTF_8)) {
+                int ch;
+                while ((ch = reader.read()) != -1) {
+                    writer.write(ch);
+                }
+                writer.flush();
+            }
+            return writer.toString();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
     }
 
 }

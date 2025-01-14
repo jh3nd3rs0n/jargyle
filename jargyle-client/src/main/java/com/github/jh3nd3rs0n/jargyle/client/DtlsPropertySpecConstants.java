@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.*;
-import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
@@ -9,7 +9,6 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecD
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +100,16 @@ public final class DtlsPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
+     * {@code socksClient.dtls.trustStoreBytes}: the {@code Bytes} for the
+     * trust store for the DTLS connections to the SOCKS server.
+     */
+    public static final PropertySpec<Bytes> DTLS_TRUST_STORE_BYTES =
+            PROPERTY_SPECS.addThenGet(new BytesPropertySpec(
+                    "socksClient.dtls.trustStoreBytes",
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
      * {@code socksClient.dtls.trustStoreFile}: the {@code File} for the trust
 	 * store file for the DTLS connections to the SOCKS server.
      */
@@ -114,16 +123,6 @@ public final class DtlsPropertySpecConstants {
     public static final PropertySpec<File> DTLS_TRUST_STORE_FILE =
             PROPERTY_SPECS.addThenGet(new FilePropertySpec(
                     "socksClient.dtls.trustStoreFile",
-                    null));
-
-    /**
-     * {@code PropertySpec} constant for
-     * {@code socksClient.dtls.trustStoreInputStream}: the {@code InputStream}
-     * of the trust store for the DTLS connections to the SOCKS server.
-     */
-    public static final PropertySpec<InputStream> DTLS_TRUST_STORE_INPUT_STREAM =
-            PROPERTY_SPECS.addThenGet(new InputStreamPropertySpec(
-                    "socksClient.dtls.trustStoreInputStream",
                     null));
 
     /**
@@ -146,13 +145,12 @@ public final class DtlsPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.dtls.trustStoreType}: the type of trust store file
-     * for the DTLS connections to the SOCKS server (default is
-     * {@code PKCS12}).
+     * {@code socksClient.dtls.trustStoreType}: the type of trust store for
+     * the DTLS connections to the SOCKS server (default is {@code PKCS12}).
      */
     @NameValuePairValueSpecDoc(
-            description = "The type of trust store file for the DTLS "
-                    + "connections to the SOCKS server (default is PKCS12)",
+            description = "The type of trust store for the DTLS connections "
+                    + "to the SOCKS server (default is PKCS12)",
             name = "socksClient.dtls.trustStoreType",
             syntax = "socksClient.dtls.trustStoreType=TYPE",
             valueType = String.class

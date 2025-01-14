@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind;
 
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddressTypes;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
@@ -24,6 +25,9 @@ class SettingXml {
 		}
 		if (val instanceof EncryptedPassword) {
 			return new EncryptedPasswordXml((EncryptedPassword) val);
+		}
+		if (val instanceof HostAddressTypes) {
+			return new HostAddressTypesXml((HostAddressTypes) val);
 		}
 		if (val instanceof Methods) {
 			return new Socks5MethodsXml((Methods) val);
@@ -57,6 +61,10 @@ class SettingXml {
 				name = "encryptedPassword",
 				required = true,
 				type = EncryptedPasswordXml.class),
+		@XmlElement(
+				name = "hostAddressTypes",
+				required = true,
+				type = HostAddressTypesXml.class),
 		@XmlElement(
 				name = "portRanges",
 				required = true,

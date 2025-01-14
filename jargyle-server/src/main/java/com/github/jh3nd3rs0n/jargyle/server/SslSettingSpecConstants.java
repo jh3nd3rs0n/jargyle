@@ -1,15 +1,15 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -55,7 +55,12 @@ public final class SslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"ssl.enabledProtocols", 
 					null));
-	
+
+	public static final SettingSpec<Bytes> SSL_KEY_STORE_BYTES =
+			SETTING_SPECS.addThenGet(new BytesSettingSpec(
+					"ssl.keyStoreBytes",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the SSL/TLS connections to "
 					+ "the SOCKS server",
@@ -66,11 +71,6 @@ public final class SslSettingSpecConstants {
 	public static final SettingSpec<File> SSL_KEY_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"ssl.keyStoreFile", 
-					null));
-
-	public static final SettingSpec<InputStream> SSL_KEY_STORE_INPUT_STREAM =
-			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
-					"ssl.keyStoreInputStream",
 					null));
 
 	@NameValuePairValueSpecDoc(
@@ -86,8 +86,8 @@ public final class SslSettingSpecConstants {
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The type of key store file for the SSL/TLS "
-					+ "connections to the SOCKS server (default is PKCS12)",
+			description = "The type of key store for the SSL/TLS connections "
+					+ "to the SOCKS server (default is PKCS12)",
 			name = "ssl.keyStoreType",
 			syntax = "ssl.keyStoreType=TYPE",
 			valueType = String.class
@@ -121,7 +121,12 @@ public final class SslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"ssl.protocol", 
 					"TLSv1.2"));
-	
+
+	public static final SettingSpec<Bytes> SSL_TRUST_STORE_BYTES =
+			SETTING_SPECS.addThenGet(new BytesSettingSpec(
+					"ssl.trustStoreBytes",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The trust store file for the SSL/TLS connections to "
 					+ "the SOCKS server",
@@ -132,11 +137,6 @@ public final class SslSettingSpecConstants {
 	public static final SettingSpec<File> SSL_TRUST_STORE_FILE = 
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"ssl.trustStoreFile", 
-					null));
-
-	public static final SettingSpec<InputStream> SSL_TRUST_STORE_INPUT_STREAM =
-			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
-					"ssl.trustStoreInputStream",
 					null));
 
 	@NameValuePairValueSpecDoc(
@@ -152,7 +152,7 @@ public final class SslSettingSpecConstants {
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The type of trust store file for the SSL/TLS "
+			description = "The type of trust store for the SSL/TLS "
 					+ "connections to the SOCKS server (default is PKCS12)",
 			name = "ssl.trustStoreType",
 			syntax = "ssl.trustStoreType=TYPE",

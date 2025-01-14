@@ -1,45 +1,26 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.*;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleActionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleArgSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleConditionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleActionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedSocket;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.Socks5ValueDerivationHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.*;
+import java.util.Iterator;
 
 final class BindRequestWorker extends TcpBasedRequestWorker {
 	
@@ -182,306 +163,51 @@ final class BindRequestWorker extends TcpBasedRequestWorker {
 	}
 
 	private SocketSettings getInboundSocketSettings() {
-		Rule applicableRule = this.getApplicableRule();
-		List<SocketSetting<Object>> socketSettings = 
-				applicableRule.getRuleActionValues(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = applicableRule.getRuleActionValues(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = applicableRule.getRuleActionValues(
-				GeneralRuleActionSpecConstants.SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		Settings settings = this.getSettings();
-		SocketSettings socketSttngs = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKET_SETTINGS);
-		return socketSttngs;
+		return Socks5ValueDerivationHelper.getSocks5OnBindRequestInboundSocketSettingsFrom(
+				this.getApplicableRule(), this.getSettings());
 	}
 
 	private Host getListenBindHost() {
-		Rule applicableRule = this.getApplicableRule();
-		Host host = applicableRule.getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = applicableRule.getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = applicableRule.getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = applicableRule.getLastRuleActionValue(
-				GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = applicableRule.getLastRuleActionValue(
-				GeneralRuleActionSpecConstants.BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		Settings settings = this.getSettings();
-		host = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = settings.getLastValue(
-				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
-		if (host != null) {
-			return host;
-		}
-		host = settings.getLastValue(
-				GeneralSettingSpecConstants.BIND_HOST);
-		return host;
+		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(
+				this.getApplicableRule(), this.getSettings());
 	}
 	
 	private PortRanges getListenBindPortRanges() {
-		Rule applicableRule = this.getApplicableRule();
-		List<PortRange> portRanges = applicableRule.getRuleActionValues(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGE);
-		if (portRanges.size() > 0) {
-			return PortRanges.of(portRanges);
-		}
-		portRanges = applicableRule.getRuleActionValues(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
-		if (portRanges.size() > 0) {
-			return PortRanges.of(portRanges);
-		}
-		portRanges = applicableRule.getRuleActionValues(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_BIND_TCP_PORT_RANGE);
-		if (portRanges.size() > 0) {
-			return PortRanges.of(portRanges);
-		}
-		portRanges = applicableRule.getRuleActionValues(
-				GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE);
-		if (portRanges.size() > 0) {
-			return PortRanges.of(portRanges);
-		}
-		portRanges = applicableRule.getRuleActionValues(
-				GeneralRuleActionSpecConstants.BIND_TCP_PORT_RANGE);
-		if (portRanges.size() > 0) {
-			return PortRanges.of(portRanges);
-		}
-		Settings settings = this.getSettings();
-		PortRanges prtRanges = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGES);
-		if (prtRanges.toList().size() > 0) {
-			return prtRanges;
-		}
-		prtRanges = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
-		if (prtRanges.toList().size() > 0) {
-			return prtRanges;
-		}
-		prtRanges = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_BIND_TCP_PORT_RANGES);
-		if (prtRanges.toList().size() > 0) {
-			return prtRanges;
-		}
-		prtRanges = settings.getLastValue(
-				GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
-		if (prtRanges.toList().size() > 0) {
-			return prtRanges;
-		}
-		prtRanges = settings.getLastValue(
-				GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
-		return prtRanges;
+		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindPortRangesFrom(
+				this.getApplicableRule(), this.getSettings());
 	}
 	
 	private SocketSettings getListenSocketSettings() {
-		Rule applicableRule = this.getApplicableRule();
-		List<SocketSetting<Object>> socketSettings = 
-				applicableRule.getRuleActionValues(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = applicableRule.getRuleActionValues(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = applicableRule.getRuleActionValues(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = applicableRule.getRuleActionValues(
-				GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = applicableRule.getRuleActionValues(
-				GeneralRuleActionSpecConstants.SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		Settings settings = this.getSettings();
-		SocketSettings socketSttngs = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKET_SETTINGS);
-		return socketSttngs;
+		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenSocketSettingsFrom(
+				this.getApplicableRule(), this.getSettings());
 	}
 	
 	private int getRelayBufferSize() {
-		Rule applicableRule = this.getApplicableRule();
-		PositiveInteger relayBufferSize = 
-				applicableRule.getLastRuleActionValue(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_BUFFER_SIZE);
-		if (relayBufferSize != null) {
-			return relayBufferSize.intValue();
-		}
-		relayBufferSize = applicableRule.getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE);
-		if (relayBufferSize != null) {
-			return relayBufferSize.intValue();
-		}
-		Settings settings = this.getSettings();
-		relayBufferSize = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_BUFFER_SIZE);
-		if (relayBufferSize != null) {
-			return relayBufferSize.intValue();
-		}
-		relayBufferSize = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE);
-		return relayBufferSize.intValue();
+		return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayBufferSizeFrom(
+				this.getApplicableRule(), this.getSettings()).intValue();
 	}
 	
 	private int getRelayIdleTimeout() {
-		Rule applicableRule = this.getApplicableRule();
-		PositiveInteger relayIdleTimeout =
-				applicableRule.getLastRuleActionValue(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_IDLE_TIMEOUT);
-		if (relayIdleTimeout != null) {
-			return relayIdleTimeout.intValue();
-		}
-		relayIdleTimeout = applicableRule.getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT);
-		if (relayIdleTimeout != null) {
-			return relayIdleTimeout.intValue();
-		}
-		Settings settings = this.getSettings();
-		relayIdleTimeout = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_IDLE_TIMEOUT);
-		if (relayIdleTimeout != null) {
-			return relayIdleTimeout.intValue();
-		}
-		relayIdleTimeout = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT);
-		return relayIdleTimeout.intValue();
+		return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayIdleTimeoutFrom(
+				this.getApplicableRule(), this.getSettings()).intValue();
 	}
 	
 	private Integer getRelayInboundBandwidthLimit() {
-		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayInboundBandwidthLimit =
-				applicableRule.getLastRuleActionValue(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
+				Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayInboundBandwidthLimitFrom(
+						this.getApplicableRule(), this.getSettings());
 		if (relayInboundBandwidthLimit != null) {
-			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
-		}
-		relayInboundBandwidthLimit = applicableRule.getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
-		if (relayInboundBandwidthLimit != null) {
-			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
-		}
-		Settings settings = this.getSettings();
-		relayInboundBandwidthLimit = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
-		if (relayInboundBandwidthLimit != null) {
-			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
-		}
-		relayInboundBandwidthLimit = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
-		if (relayInboundBandwidthLimit != null) {
-			return Integer.valueOf(relayInboundBandwidthLimit.intValue());
+			return relayInboundBandwidthLimit.intValue();
 		}
 		return null;
 	}
 	
 	private Integer getRelayOutboundBandwidthLimit() {
-		Rule applicableRule = this.getApplicableRule();
 		PositiveInteger relayOutboundBandwidthLimit =
-				applicableRule.getLastRuleActionValue(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+				Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(
+						this.getApplicableRule(), this.getSettings());
 		if (relayOutboundBandwidthLimit != null) {
-			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
-		}
-		relayOutboundBandwidthLimit = 
-				applicableRule.getLastRuleActionValue(
-						Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
-		if (relayOutboundBandwidthLimit != null) {
-			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
-		}
-		Settings settings = this.getSettings();
-		relayOutboundBandwidthLimit = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
-		if (relayOutboundBandwidthLimit != null) {
-			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
-		}
-		relayOutboundBandwidthLimit = settings.getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
-		if (relayOutboundBandwidthLimit != null) {
-			return Integer.valueOf(relayOutboundBandwidthLimit.intValue());
+			return relayOutboundBandwidthLimit.intValue();
 		}
 		return null;
 	}

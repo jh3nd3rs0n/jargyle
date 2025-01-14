@@ -3,9 +3,7 @@ package com.github.jh3nd3rs0n.jargyle.server;
 import java.util.List;
 import java.util.Map;
 
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
@@ -28,7 +26,18 @@ public final class GeneralRuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<Host> BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
 			"bindHost"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for all sockets (can be specified multiple times with "
+					+ "each rule action specifying another host address type)",
+			name = "bindHostAddressType",
+			syntax = "bindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"bindHostAddressType"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all TCP sockets "
 					+ "(can be specified multiple times with each rule action "
@@ -71,7 +80,19 @@ public final class GeneralRuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<Host> EXTERNAL_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
 			"externalFacingBindHost"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for all external-facing sockets (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "externalFacingBindHostAddressType",
+			syntax = "externalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"externalFacingBindHostAddressType"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "external-facing TCP sockets (can be specified multiple "
@@ -95,7 +116,17 @@ public final class GeneralRuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<PortRange> EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"externalFacingBindUdpPortRange"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for all external-facing sockets",
+			name = "externalFacingNetInterface",
+			syntax = "externalFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> EXTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"externalFacingNetInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all external-facing "
 					+ "sockets (can be specified multiple times with each rule "
@@ -158,6 +189,18 @@ public final class GeneralRuleActionSpecConstants {
 			"internalFacingBindHost"));
 
 	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for all internal-facing sockets (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "internalFacingBindHostAddressType",
+			syntax = "internalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"internalFacingBindHostAddressType"));
+
+	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "internal-facing UDP sockets (can be specified multiple "
 					+ "times with each rule action specifying another port "
@@ -168,7 +211,17 @@ public final class GeneralRuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<PortRange> INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"internalFacingBindUdpPortRange"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for all internal-facing sockets",
+			name = "internalFacingNetInterface",
+			syntax = "internalFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> INTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"internalFacingNetInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all internal-facing "
 					+ "sockets (can be specified multiple times with each rule "
@@ -179,7 +232,17 @@ public final class GeneralRuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<SocketSetting<Object>> INTERNAL_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
 			"internalFacingSocketSetting"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for all sockets",
+			name = "netInterface",
+			syntax = "netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"netInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the logging action to take if a route ID "
 					+ "is selected",

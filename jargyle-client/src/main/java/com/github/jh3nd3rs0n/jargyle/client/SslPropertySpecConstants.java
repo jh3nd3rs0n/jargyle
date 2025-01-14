@@ -1,13 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.*;
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +82,16 @@ public final class SslPropertySpecConstants {
                     null));
 
     /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.ssl.keyStoreBytes}: the {@code Bytes} for the key
+     * store for the SSL/TLS connections to the SOCKS server.
+     */
+    public static final PropertySpec<Bytes> SSL_KEY_STORE_BYTES =
+            PROPERTY_SPECS.addThenGet(new BytesPropertySpec(
+                    "socksClient.ssl.keyStoreBytes",
+                    null));
+
+    /**
      * {@code PropertySpec} constant for {@code socksClient.ssl.keyStoreFile}:
      * the {@code File} for the key store file for the SSL/TLS connections to
      * the SOCKS server.
@@ -96,16 +106,6 @@ public final class SslPropertySpecConstants {
     public static final PropertySpec<File> SSL_KEY_STORE_FILE =
             PROPERTY_SPECS.addThenGet(new FilePropertySpec(
                     "socksClient.ssl.keyStoreFile",
-                    null));
-
-    /**
-     * {@code PropertySpec} constant for
-     * {@code socksClient.ssl.keyStoreInputStream}: the {@code InputStream}
-     * of the key store for the SSL/TLS connections to the SOCKS server.
-     */
-    public static final PropertySpec<InputStream> SSL_KEY_STORE_INPUT_STREAM =
-            PROPERTY_SPECS.addThenGet(new InputStreamPropertySpec(
-                    "socksClient.ssl.keyStoreInputStream",
                     null));
 
     /**
@@ -128,12 +128,12 @@ public final class SslPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for {@code socksClient.ssl.keyStoreType}:
-     * the type of key store file for the SSL/TLS connections to the SOCKS
-     * server (default is {@code PKCS12}).
+     * the type of key store for the SSL/TLS connections to the SOCKS server
+     * (default is {@code PKCS12}).
      */
     @NameValuePairValueSpecDoc(
-            description = "The type of key store file for the SSL/TLS "
-                    + "connections to the SOCKS server (default is PKCS12)",
+            description = "The type of key store for the SSL/TLS connections "
+                    + "to the SOCKS server (default is PKCS12)",
             name = "socksClient.ssl.keyStoreType",
             syntax = "socksClient.ssl.keyStoreType=TYPE",
             valueType = String.class
@@ -162,6 +162,16 @@ public final class SslPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
+     * {@code socksClient.ssl.trustStoreBytes}: the {@code Bytes} for the
+     * trust store for the SSL/TLS connections to the SOCKS server.
+     */
+    public static final PropertySpec<Bytes> SSL_TRUST_STORE_BYTES =
+            PROPERTY_SPECS.addThenGet(new BytesPropertySpec(
+                    "socksClient.ssl.trustStoreBytes",
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
      * {@code socksClient.ssl.trustStoreFile}: the {@code File} for the trust
      * store file for the SSL/TLS connections to the SOCKS server.
      */
@@ -175,16 +185,6 @@ public final class SslPropertySpecConstants {
     public static final PropertySpec<File> SSL_TRUST_STORE_FILE =
             PROPERTY_SPECS.addThenGet(new FilePropertySpec(
                     "socksClient.ssl.trustStoreFile",
-                    null));
-
-    /**
-     * {@code PropertySpec} constant for
-     * {@code socksClient.ssl.trustStoreInputStream}: the {@code InputStream}
-     * for the trust store for the SSL/TLS connections to the SOCKS server.
-     */
-    public static final PropertySpec<InputStream> SSL_TRUST_STORE_INPUT_STREAM =
-            PROPERTY_SPECS.addThenGet(new InputStreamPropertySpec(
-                    "socksClient.ssl.trustStoreInputStream",
                     null));
 
     /**
@@ -207,12 +207,11 @@ public final class SslPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.ssl.trustStoreType}: the type of trust store file
-     * for the SSL/TLS connections to the SOCKS server (default is
-     * {@code PKCS12}).
+     * {@code socksClient.ssl.trustStoreType}: the type of trust store for
+     * the SSL/TLS connections to the SOCKS server (default is {@code PKCS12}).
      */
     @NameValuePairValueSpecDoc(
-            description = "The type of trust store file for the SSL/TLS "
+            description = "The type of trust store for the SSL/TLS "
                     + "connections to the SOCKS server (default is PKCS12)",
             name = "socksClient.ssl.trustStoreType",
             syntax = "socksClient.ssl.trustStoreType=TYPE",

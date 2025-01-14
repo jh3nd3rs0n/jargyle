@@ -275,7 +275,7 @@ public final class Relay {
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor =
-				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
 						ExecutorsHelper.newFixedThreadPoolBuilder(2));
 		this.executor.execute(new InboundDataWorker(this));
 		this.executor.execute(new OutboundDataWorker(this));

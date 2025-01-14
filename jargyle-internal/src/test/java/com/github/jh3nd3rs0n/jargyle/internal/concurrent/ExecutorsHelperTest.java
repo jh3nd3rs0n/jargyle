@@ -32,12 +32,12 @@ public class ExecutorsHelperTest {
     }
 
     @Test
-    public void testNewVirtualThreadPerTaskExecutorOrDefaultExecutorBuilder01() {
+    public void testNewVirtualThreadPerTaskExecutorOrElseExecutorBuilder01() {
         ExecutorService executorService1 = Executors.newCachedThreadPool();
         ExecutorService executorService2 = null;
         System.setProperty(ExecutorsHelper.USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME, "false");
         try {
-            executorService2 = ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+            executorService2 = ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                     ExecutorsHelper.newCachedThreadPoolBuilder());
             Assert.assertEquals(
                     executorService1.getClass(),
@@ -52,12 +52,12 @@ public class ExecutorsHelperTest {
     }
 
     @Test
-    public void testNewVirtualThreadPerTaskExecutorOrDefaultExecutorBuilder02() {
+    public void testNewVirtualThreadPerTaskExecutorOrElseExecutorBuilder02() {
         ExecutorService executorService1 = Executors.newFixedThreadPool(2);
         ExecutorService executorService2 = null;
         System.setProperty(ExecutorsHelper.USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME, "false");
         try {
-            executorService2 = ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+            executorService2 = ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                     ExecutorsHelper.newFixedThreadPoolBuilder(2));
             Assert.assertEquals(
                     executorService1.getClass(),
@@ -72,13 +72,13 @@ public class ExecutorsHelperTest {
     }
 
     @Test
-    public void testNewVirtualThreadPerTaskExecutorOrDefaultExecutorBuilder03() {
+    public void testNewVirtualThreadPerTaskExecutorOrElseExecutorBuilder03() {
         ExecutorService executorService1 = Executors.newCachedThreadPool();
         ExecutorService executorService2 = null;
         System.setProperty(ExecutorsHelper.USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME, "true");
         try {
             executorService2 =
-                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                             ExecutorsHelper.newCachedThreadPoolBuilder());
             if (Runtime.version().version().get(0) >= 21) {
                 Assert.assertNotEquals(
@@ -99,13 +99,13 @@ public class ExecutorsHelperTest {
     }
 
     @Test
-    public void testNewVirtualThreadPerTaskExecutorOrDefaultExecutorBuilder04() {
+    public void testNewVirtualThreadPerTaskExecutorOrElseExecutorBuilder04() {
         ExecutorService executorService1 = Executors.newFixedThreadPool(2);
         ExecutorService executorService2 = null;
         System.setProperty(ExecutorsHelper.USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME, "true");
         try {
             executorService2 =
-                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                             ExecutorsHelper.newFixedThreadPoolBuilder(2));
             if (Runtime.version().version().get(0) >= 21) {
                 Assert.assertNotEquals(

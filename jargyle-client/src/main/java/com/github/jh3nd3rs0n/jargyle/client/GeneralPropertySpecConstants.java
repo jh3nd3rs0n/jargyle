@@ -1,15 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.client;
 
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.HostPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PortRangesPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.PositiveIntegerPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocketSettingsPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.SocksServerUriPropertySpec;
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl.*;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 
@@ -48,7 +41,27 @@ public final class GeneralPropertySpecConstants {
     public static final PropertySpec<Host> CLIENT_BIND_HOST =
             PROPERTY_SPECS.addThenGet(new HostPropertySpec(
                     "socksClient.clientBindHost",
-                    HostIpv4Address.getAllZerosInstance()));
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.clientBindHostAddressTypes}: the
+     * {@code HostAddressTypes} for the acceptable binding host address types
+     * for the client socket that is used to connect to the SOCKS server
+     * (default is {@code IPv4,IPv6}).
+     */
+    @NameValuePairValueSpecDoc(
+            description = "The comma separated list of acceptable binding "
+                    + "host address types for the client socket that is used "
+                    + "to connect to the SOCKS server (default is IPv4,IPv6)",
+            name = "socksClient.clientBindHostAddressTypes",
+            syntax = "socksClient.clientBindHostAddressTypes=HOST_ADDRESS_TYPES",
+            valueType = HostAddressTypes.class
+    )
+    public static final PropertySpec<HostAddressTypes> CLIENT_BIND_HOST_ADDRESS_TYPES =
+            PROPERTY_SPECS.addThenGet(new HostAddressTypesPropertySpec(
+                    "socksClient.clientBindHostAddressTypes",
+                    HostAddressTypes.getDefault()));
 
     /**
      * {@code PropertySpec} constant for
@@ -71,22 +84,43 @@ public final class GeneralPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.clientConnectTimeout}: the {@code PositiveInteger}
+     * {@code socksClient.clientConnectTimeout}: the {@code NonNegativeInteger}
      * for the timeout in milliseconds on waiting for the client socket to
-     * connect to the SOCKS server (default is {@code 60000}).
+     * connect to the SOCKS server (a timeout of {@code 0} is interpreted as
+     * an infinite timeout) (default is {@code 60000}).
      */
     @NameValuePairValueSpecDoc(
             description = "The timeout in milliseconds on waiting for the "
-                    + "client socket to connect to the SOCKS server "
+                    + "client socket to connect to the SOCKS server (a "
+                    + "timeout of 0 is interpreted as an infinite timeout) "
                     + "(default is 60000)",
             name = "socksClient.clientConnectTimeout",
-            syntax = "socksClient.clientConnectTimeout=POSITIVE_INTEGER",
-            valueType = PositiveInteger.class
+            syntax = "socksClient.clientConnectTimeout=NON_NEGATIVE_INTEGER",
+            valueType = NonNegativeInteger.class
     )
-    public static final PropertySpec<PositiveInteger> CLIENT_CONNECT_TIMEOUT =
-            PROPERTY_SPECS.addThenGet(new PositiveIntegerPropertySpec(
+    public static final PropertySpec<NonNegativeInteger> CLIENT_CONNECT_TIMEOUT =
+            PROPERTY_SPECS.addThenGet(new NonNegativeIntegerPropertySpec(
                     "socksClient.clientConnectTimeout",
-                    PositiveInteger.valueOf(60000))); // 1 minute
+                    NonNegativeInteger.valueOf(60000))); // 1 minute
+
+    /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.clientNetInterface}: the {@code NetInterface} for
+     * the network interface that provides a binding host address for the
+     * client socket that is used to connect to the SOCKS server.
+     */
+    @NameValuePairValueSpecDoc(
+            description = "The network interface that provides a binding "
+                    + "host address for the client socket that is used to "
+                    + "connect to the SOCKS server",
+            name = "socksClient.clientNetInterface",
+            syntax = "socksClient.clientNetInterface=NETWORK_INTERFACE",
+            valueType = NetInterface.class
+    )
+    public static final PropertySpec<NetInterface> CLIENT_NET_INTERFACE =
+            PROPERTY_SPECS.addThenGet(new NetInterfacePropertySpec(
+                    "socksClient.clientNetInterface",
+                    null));
 
     /**
      * {@code PropertySpec} constant for

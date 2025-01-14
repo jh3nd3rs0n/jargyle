@@ -13,7 +13,7 @@ public final class VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory
 
     @Override
     public ExecutorService newExecutor() {
-        return ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+        return ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                 ExecutorsHelper.newCachedThreadPoolBuilder());
     }
 

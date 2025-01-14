@@ -5,18 +5,11 @@ import java.util.Map;
 
 import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.HostSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PortRangesSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.PositiveIntegerSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocketSettingsSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.SocksServerUriSettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.StringSettingSpec;
+import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -29,7 +22,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the client "
 					+ "socket that is used to connect to the other SOCKS "
-					+ "server (default is 0.0.0.0)",
+					+ "server",
 			name = "chaining.clientBindHost",
 			syntax = "chaining.clientBindHost=HOST",
 			valueType = Host.class
@@ -38,6 +31,20 @@ public final class ChainingGeneralSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"chaining.clientBindHost", 
 					GeneralPropertySpecConstants.CLIENT_BIND_HOST.getDefaultProperty().getValue()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for the client socket that is used "
+					+ "to connect to the other SOCKS server "
+					+ "(default is IPv4,IPv6)",
+			name = "chaining.clientBindHostAddressTypes",
+			syntax = "chaining.clientBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> CHAINING_CLIENT_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"chaining.clientBindHostAddressTypes",
+					GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
@@ -55,16 +62,30 @@ public final class ChainingGeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on waiting for the "
 					+ "client socket to connect to the other SOCKS server "
+					+ "(a timeout of 0 is interpreted as an infinite timeout) "
 					+ "(default is 60000)",
 			name = "chaining.clientConnectTimeout",
-			syntax = "chaining.clientConnectTimeout=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
+			syntax = "chaining.clientConnectTimeout=NON_NEGATIVE_INTEGER",
+			valueType = NonNegativeInteger.class
 	)
-	public static final SettingSpec<PositiveInteger> CHAINING_CLIENT_CONNECT_TIMEOUT = 
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
+	public static final SettingSpec<NonNegativeInteger> CHAINING_CLIENT_CONNECT_TIMEOUT =
+			SETTING_SPECS.addThenGet(new NonNegativeIntegerSettingSpec(
 					"chaining.clientConnectTimeout", 
 					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT.getDefaultProperty().getValue()));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding "
+					+ "host address for the client socket that is used to "
+					+ "connect to the other SOCKS server",
+			name = "chaining.clientNetInterface",
+			syntax = "chaining.clientNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> CHAINING_CLIENT_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"chaining.clientNetInterface",
+					GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "client socket that is used to connect to the other "

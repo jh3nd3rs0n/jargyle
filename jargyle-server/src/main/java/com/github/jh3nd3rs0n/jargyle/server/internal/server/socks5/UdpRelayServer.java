@@ -775,7 +775,7 @@ final class UdpRelayServer {
 		}
 		this.idleStartTime.set(System.currentTimeMillis());
 		this.executor =
-				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrDefault(
+				ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
 						ExecutorsHelper.newFixedThreadPoolBuilder(2));
 		this.executor.execute(new InboundPacketsWorker(this));
 		this.executor.execute(new OutboundPacketsWorker(this));

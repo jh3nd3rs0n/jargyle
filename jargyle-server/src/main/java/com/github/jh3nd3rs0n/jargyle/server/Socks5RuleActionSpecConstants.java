@@ -1,17 +1,14 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.util.List;
-import java.util.Map;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.server.internal.ruleactionspec.impl.*;
+
+import java.util.List;
+import java.util.Map;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -41,7 +38,19 @@ public final class Socks5RuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<Host> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
 			"socks5.onBindRequest.listenBindHost"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for the listen socket if the provided host address is "
+					+ "all zeros (can be specified multiple times with each "
+					+ "rule specifying another host address type)",
+			name = "socks5.onBindRequest.listenBindHostAddressType",
+			syntax = "socks5.onBindRequest.listenBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"socks5.onBindRequest.listenBindHostAddressType"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the listen socket "
 					+ "if the provided port is zero (can be specified multiple "
@@ -53,7 +62,18 @@ public final class Socks5RuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<PortRange> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"socks5.onBindRequest.listenBindPortRange"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for the listen socket if the "
+					+ "provided host address is all zeros",
+			name = "socks5.onBindRequest.listenNetInterface",
+			syntax = "socks5.onBindRequest.listenNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> SOCKS5_ON_BIND_REQUEST_LISTEN_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"socks5.onBindRequest.listenNetInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the listen socket "
 					+ "(can be specified multiple times with each rule action "
@@ -167,7 +187,19 @@ public final class Socks5RuleActionSpecConstants {
 	)	
 	public static final RuleActionSpec<Host> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
 			"socks5.onConnectRequest.targetFacingBindHost"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for the target-facing socket (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "socks5.onConnectRequest.targetFacingBindHostAddressType",
+			syntax = "socks5.onConnectRequest.targetFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"socks5.onConnectRequest.targetFacingBindHostAddressType"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the target-facing "
 					+ "socket (can be specified multiple times with each rule "
@@ -188,7 +220,17 @@ public final class Socks5RuleActionSpecConstants {
 	)	
 	public static final RuleActionSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT = RULE_ACTION_SPECS.addThenGet(new PositiveIntegerRuleActionSpec(
 			"socks5.onConnectRequest.targetFacingConnectTimeout"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for the target-facing socket",
+			name = "socks5.onConnectRequest.targetFacingNetInterface",
+			syntax = "socks5.onConnectRequest.targetFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"socks5.onConnectRequest.targetFacingNetInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the target-facing "
 					+ "socket (can be specified multiple times with each rule "
@@ -202,38 +244,6 @@ public final class Socks5RuleActionSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for all "
-					+ "sockets",
-			name = "socks5.onRequest.bindHost",
-			syntax = "socks5.onRequest.bindHost=HOST",
-			valueType = Host.class
-	)
-	public static final RuleActionSpec<Host> SOCKS5_ON_REQUEST_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-			"socks5.onRequest.bindHost"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all TCP sockets "
-					+ "(can be specified multiple times with each rule action "
-					+ "specifying another port range)",
-			name = "socks5.onRequest.bindTcpPortRange",
-			syntax = "socks5.onRequest.bindTcpPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)
-	public static final RuleActionSpec<PortRange> SOCKS5_ON_REQUEST_BIND_TCP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-			"socks5.onRequest.bindTcpPortRange"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all UDP sockets "
-					+ "(can be specified multiple times with each rule action "
-					+ "specifying another port range)",
-			name = "socks5.onRequest.bindUdpPortRange",
-			syntax = "socks5.onRequest.bindUdpPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)
-	public static final RuleActionSpec<PortRange> SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-			"socks5.onRequest.bindUdpPortRange"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the binding host name or address for all "
 					+ "external-facing sockets",
 			name = "socks5.onRequest.externalFacingBindHost",
 			syntax = "socks5.onRequest.externalFacingBindHost=HOST",
@@ -241,6 +251,18 @@ public final class Socks5RuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<Host> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
 			"socks5.onRequest.externalFacingBindHost"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for all external-facing sockets (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "socks5.onRequest.externalFacingBindHostAddressType",
+			syntax = "socks5.onRequest.externalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"socks5.onRequest.externalFacingBindHostAddressType"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
@@ -267,6 +289,16 @@ public final class Socks5RuleActionSpecConstants {
 			"socks5.onRequest.externalFacingBindUdpPortRange"));
 
 	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for all external-facing sockets",
+			name = "socks5.onRequest.externalFacingNetInterface",
+			syntax = "socks5.onRequest.externalFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> SOCKS5_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"socks5.onRequest.externalFacingNetInterface"));
+
+	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all external-facing "
 					+ "sockets (can be specified multiple times with each rule "
 					+ "action specifying another socket setting)",
@@ -288,6 +320,18 @@ public final class Socks5RuleActionSpecConstants {
 			"socks5.onRequest.internalFacingBindHost"));
 
 	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for all internal-facing sockets (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "socks5.onRequest.internalFacingBindHostAddressType",
+			syntax = "socks5.onRequest.internalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"socks5.onRequest.internalFacingBindHostAddressType"));
+
+	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
 					+ "internal-facing UDP sockets (can be specified multiple "
 					+ "times with each rule action specifying another port "
@@ -298,6 +342,16 @@ public final class Socks5RuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<PortRange> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"socks5.onRequest.internalFacingBindUdpPortRange"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for all internal-facing sockets",
+			name = "socks5.onRequest.internalFacingNetInterface",
+			syntax = "socks5.onRequest.internalFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> SOCKS5_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"socks5.onRequest.internalFacingNetInterface"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for all internal-facing "
@@ -351,17 +405,6 @@ public final class Socks5RuleActionSpecConstants {
 			"socks5.onRequest.relayOutboundBandwidthLimit"));
 
 	@NameValuePairValueSpecDoc(
-			description = "Specifies a socket setting for all sockets (can be "
-					+ "specified multiple times with each rule action "
-					+ "specifying another socket setting)",
-			name = "socks5.onRequest.socketSetting",
-			syntax = "socks5.onRequest.socketSetting=SOCKET_SETTING",
-			valueType = SocketSetting.class
-	)
-	public static final RuleActionSpec<SocketSetting<Object>> SOCKS5_ON_REQUEST_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-			"socks5.onRequest.socketSetting"));
-
-	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for the "
 					+ "client-facing UDP socket",
 			name = "socks5.onUdpAssociateRequest.clientFacingBindHost",
@@ -370,7 +413,19 @@ public final class Socks5RuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
 			"socks5.onUdpAssociateRequest.clientFacingBindHost"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for the client-facing UDP socket (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "socks5.onUdpAssociateRequest.clientFacingBindHostAddressType",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"socks5.onUdpAssociateRequest.clientFacingBindHostAddressType"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the client-facing "
 					+ "UDP socket (can be specified multiple times with each "
@@ -381,7 +436,17 @@ public final class Socks5RuleActionSpecConstants {
 	)	
 	public static final RuleActionSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"socks5.onUdpAssociateRequest.clientFacingBindPortRange"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for the client-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.clientFacingNetInterface",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"socks5.onUdpAssociateRequest.clientFacingNetInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the client-facing UDP "
 					+ "socket (can be specified multiple times with each rule "
@@ -404,6 +469,18 @@ public final class Socks5RuleActionSpecConstants {
 			"socks5.onUdpAssociateRequest.peerFacingBindHost"));
 
 	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for the peer-facing UDP socket (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "socks5.onUdpAssociateRequest.peerFacingBindHostAddressType",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"socks5.onUdpAssociateRequest.peerFacingBindHostAddressType"));
+
+	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for the peer-facing "
 					+ "UDP socket (can be specified multiple times with each "
 					+ "rule action specifying another port range)",
@@ -413,7 +490,17 @@ public final class Socks5RuleActionSpecConstants {
 	)	
 	public static final RuleActionSpec<PortRange> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"socks5.onUdpAssociateRequest.peerFacingBindPortRange"));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for the peer-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.peerFacingNetInterface",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"socks5.onUdpAssociateRequest.peerFacingNetInterface"));
+
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a socket setting for the peer-facing UDP "
 					+ "socket (can be specified multiple times with each rule "

@@ -1,8 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.client.*;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.ClientDatagramSocketBuilder;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.ClientSocketBuilder;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 
 import java.io.IOException;
@@ -14,9 +12,6 @@ import java.util.List;
 
 public final class Socks5Client extends SocksClient {
 
-	private final ClientDatagramSocketBuilder clientDatagramSocketBuilder;
-	private final ClientSocketBuilder clientSocketBuilder;
-
 	Socks5Client(final Socks5ServerUri serverUri, final Properties props) {
 		this(serverUri, props, null);
 	}
@@ -26,9 +21,11 @@ public final class Socks5Client extends SocksClient {
 			final Properties props,
 			final SocksClient chainedClient) {
 		super(serverUri, props, chainedClient);
-		this.clientDatagramSocketBuilder = new ClientDatagramSocketBuilder(
-				props);
-		this.clientSocketBuilder = new ClientSocketBuilder(this);
+	}
+
+	@Override
+	public SocksNetObjectFactory newSocksNetObjectFactory() {
+		return new Socks5NetObjectFactory(this);
 	}
 
 	MethodEncapsulation doMethodSubNegotiation(
@@ -36,15 +33,8 @@ public final class Socks5Client extends SocksClient {
 			final Socket connectedClientSocket) throws IOException {
 		MethodSubNegotiator methodSubNegotiator =
 				MethodSubNegotiator.getInstance(method);
-		return methodSubNegotiator.subNegotiate(connectedClientSocket, this);
-	}
-
-	ClientDatagramSocketBuilder getClientDatagramSocketBuilder() {
-		return this.clientDatagramSocketBuilder;
-	}
-
-	ClientSocketBuilder getClientSocketBuilder() {
-		return this.clientSocketBuilder;
+		return methodSubNegotiator.subNegotiate(
+				connectedClientSocket, this);
 	}
 
 	private Methods getMethods() {
@@ -74,7 +64,7 @@ public final class Socks5Client extends SocksClient {
 	Method negotiateMethod(
 			final Socket connectedClientSocket) throws IOException {
 		Methods methods = this.getMethods();
-		ClientMethodSelectionMessage cmsm = 
+		ClientMethodSelectionMessage cmsm =
 				ClientMethodSelectionMessage.newInstance(methods);
 		InputStream inputStream = connectedClientSocket.getInputStream();
 		OutputStream outputStream = connectedClientSocket.getOutputStream();
@@ -85,28 +75,23 @@ public final class Socks5Client extends SocksClient {
 		return smsm.getMethod();
 	}
 
-	@Override
-	public SocksNetObjectFactory newSocksNetObjectFactory() {
-		return new Socks5NetObjectFactory(this);
-	}
-	
 	Reply receiveReply(
 			final Socket connectedClientSocket) throws IOException {
 		InputStream inputStream = connectedClientSocket.getInputStream();
 		Reply rep = Reply.newInstanceFrom(inputStream);
 		ReplyCode replyCode = rep.getReplyCode();
 		if (!replyCode.equals(ReplyCode.SUCCEEDED)) {
-			throw new FailureReplyException(this, rep);			
+			throw new FailureReplyException(this, rep);
 		}
-		return rep;		
+		return rep;
 	}
 
 	void sendRequest(
-			final Request req, 
+			final Request req,
 			final Socket connectedClientSocket) throws IOException {
 		OutputStream outputStream = connectedClientSocket.getOutputStream();
 		outputStream.write(req.toByteArray());
 		outputStream.flush();
 	}
-	
+
 }

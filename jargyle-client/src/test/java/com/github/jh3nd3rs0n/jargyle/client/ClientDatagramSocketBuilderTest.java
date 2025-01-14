@@ -1,0 +1,65 @@
+package com.github.jh3nd3rs0n.jargyle.client;
+
+import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocket;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.*;
+
+public class ClientDatagramSocketBuilderTest {
+
+    @Test
+    public void getConnectedClientDatagramSocketDatagramSocketInetAddressInt01() throws IOException {
+        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+                "localhost");
+        Properties properties = Properties.of();
+        ClientDatagramSocketBuilder clientDatagramSocketBuilder =
+                socksServerUri.newSocksClient(properties)
+                        .newClientDatagramSocketBuilder();
+        InetAddress inetAddress = InetAddress.getLoopbackAddress();
+        int port = 2080;
+        SocketAddress socketAddress = new InetSocketAddress(inetAddress, port);
+        try (DatagramSocket datagramSocket1 = new DatagramSocket(null);
+             DatagramSocket datagramSocket2 =
+                     clientDatagramSocketBuilder.getConnectedClientDatagramSocket(
+                             datagramSocket1,
+                             inetAddress,
+                             port)) {
+            Assert.assertEquals(
+                    socketAddress,
+                    datagramSocket2.getRemoteSocketAddress());
+            Assert.assertEquals(
+                    datagramSocket1,
+                    datagramSocket2);
+        }
+    }
+
+    @Test
+    public void getConnectedClientDatagramSocketDatagramSocketInetAddressInt02() throws IOException {
+        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+                "localhost");
+        Properties properties = Properties.of(
+                DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(true));
+        ClientDatagramSocketBuilder clientDatagramSocketBuilder =
+                socksServerUri.newSocksClient(properties)
+                        .newClientDatagramSocketBuilder();
+        InetAddress inetAddress = InetAddress.getLoopbackAddress();
+        int port = 3080;
+        SocketAddress socketAddress = new InetSocketAddress(inetAddress, port);
+        try (DatagramSocket datagramSocket1 = new DatagramSocket(null);
+             DatagramSocket datagramSocket2 =
+                     clientDatagramSocketBuilder.getConnectedClientDatagramSocket(
+                             datagramSocket1,
+                             inetAddress,
+                             port)) {
+            Assert.assertEquals(
+                    socketAddress,
+                    datagramSocket2.getRemoteSocketAddress());
+            Assert.assertEquals(
+                    DtlsDatagramSocket.class,
+                    datagramSocket2.getClass());
+        }
+    }
+
+}

@@ -26,10 +26,8 @@ final class ConfiguredWorkerPropertiesProvider {
 					this.configuration);
 			if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
 				this.configuredWorkerProperties = new ConfiguredWorkerProperties(
-						DtlsDatagramSocketFactoryImpl.isDtlsEnabled(config) ?
-								new DtlsDatagramSocketFactoryImpl(config) : null,
-						SslSocketFactoryImpl.isSslEnabled(config) ?
-								new SslSocketFactoryImpl(config) : null,
+						new DtlsDatagramSocketFactoryImpl(config),
+						new SslSocketFactoryImpl(config),
 						config,
 						Routes.newInstanceFrom(config),
 						Rules.newInstanceFrom(config));

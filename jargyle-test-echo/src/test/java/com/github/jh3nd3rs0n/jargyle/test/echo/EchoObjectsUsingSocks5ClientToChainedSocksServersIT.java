@@ -49,6 +49,8 @@ public class EchoObjectsUsingSocks5ClientToChainedSocksServersIT {
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
+                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                        PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
         socksServer3.start();
@@ -63,6 +65,8 @@ public class EchoObjectsUsingSocks5ClientToChainedSocksServersIT {
                         Scheme.SOCKS5.newSocksServerUri(
                                 InetAddress.getLoopbackAddress().getHostAddress(),
                                 chainedSocksServerPort3)),
+                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                        PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
         socksServer2.start();
@@ -77,6 +81,8 @@ public class EchoObjectsUsingSocks5ClientToChainedSocksServersIT {
                         Scheme.SOCKS5.newSocksServerUri(
                                 InetAddress.getLoopbackAddress().getHostAddress(),
                                 chainedSocksServerPort2)),
+                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                        PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
         socksServer1.start();

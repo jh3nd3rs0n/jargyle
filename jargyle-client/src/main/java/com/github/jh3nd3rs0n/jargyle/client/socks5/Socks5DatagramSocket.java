@@ -1,13 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientIOException;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientIOExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientSocketExceptionThrowingHelper;
-import com.github.jh3nd3rs0n.jargyle.common.net.*;
-import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
+import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.UnsignedByte;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl.DomainName;
@@ -39,7 +37,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		public Socks5DatagramSocketImpl(
 				final Socks5Client client) throws SocketException {
 			DatagramSocket datagramSock = new DatagramSocket((SocketAddress) null);
-			Socket sock = new Socket();
+			Socket sock = client.newClientSocketBuilder().newClientSocket();
 			this.associated = false;
 			this.connected = false;
 			this.datagramSocket = datagramSock;
@@ -47,7 +45,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.remotePort = -1;
 			this.remoteSocketAddress = null;
 			this.socket = sock;
-			this.socks5Client = client;
+			this.socks5Client = client;			
 			this.udpRelayServerInetAddress = null;
 			this.udpRelayServerPort = -1;
 		}
@@ -62,8 +60,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			} catch (SocksClientIOException e) {
 				throw new UncheckedIOException(e);
 			} catch (IOException e) {
-				throw new UncheckedIOException(new SocksClientIOException(
-						this.socks5Client, e));
+				throw new UncheckedIOException(
+						this.socks5Client.toSocksClientIOException(e));
 			}
 		}
 		
@@ -98,26 +96,6 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			this.remoteSocketAddress = null;
 		}
 
-		private Host getClientBindHost() {
-			return this.socks5Client.getProperties().getValue(
-					GeneralPropertySpecConstants.CLIENT_BIND_HOST);
-		}
-
-		private PortRanges getClientBindPortRanges() {
-			return this.socks5Client.getProperties().getValue(
-					GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
-		}
-
-		private PositiveInteger getClientConnectTimeout() {
-			return this.socks5Client.getProperties().getValue(
-					GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
-		}
-
-		private SocketSettings getClientSocketSettings() {
-			return this.socks5Client.getProperties().getValue(
-					GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
-		}
-
 		public void receive(final DatagramPacket p) throws IOException {
 			if (this.datagramSocket.isClosed()) {
 				throw new SocketException("socket is closed");
@@ -131,7 +109,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			 */
 			this.waitForCompleteAssociation();
 			this.datagramSocket.receive(p);
-			UdpRequest udpRequest = null;
+			UdpRequest udpRequest;
 			try {
 				udpRequest = UdpRequest.newInstanceFrom(
 						Arrays.copyOfRange(
@@ -185,14 +163,11 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
-			Socket sock = this.socks5Client.getClientSocketBuilder()
+			Socket sock = this.socks5Client.newClientSocketBuilder()
 					.proceedToConfigure(this.socket)
-					.setSocketSettings(this.getClientSocketSettings())
 					.configure()
 					.proceedToConnect()
-					.setLocalAddress(this.getClientBindHost().toInetAddress())
-					.setLocalPortRanges(this.getClientBindPortRanges())
-					.setTimeout(this.getClientConnectTimeout().intValue())
+					.setToBind(true)
 					.getConnectedClientSocket();
 			Method method = this.socks5Client.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
@@ -201,7 +176,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket datagramSock = this.datagramSocket;
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int port = datagramSock.getLocalPort();
-			Properties properties = this.socks5Client.getProperties();
+			Properties properties = 
+					this.socks5Client.getProperties();
 			if (properties.getValue(
 					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE).booleanValue()) {
 				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
@@ -225,12 +201,14 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 								serverBoundAddress));
 			}
 			if (HostAddress.isAllZerosHostAddress(serverBoundAddress)) {
-				serverBoundAddress = 
-						this.socks5Client.getSocksServerUri().getHost().toString();
+				serverBoundAddress = this.socks5Client
+						.getSocksServerUri()
+						.getHost()
+						.toString();
 			}
 			InetAddress serverBoundInetAddress = InetAddress.getByName(
 					serverBoundAddress);
-			datagramSock = this.socks5Client.getClientDatagramSocketBuilder()
+			datagramSock = this.socks5Client.newClientDatagramSocketBuilder()
 					.getConnectedClientDatagramSocket(
 							datagramSock,
 							serverBoundInetAddress,
@@ -271,14 +249,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	
 	Socks5DatagramSocket(final Socks5Client client) throws SocketException {
 		super((SocketAddress) null);
-		Socks5DatagramSocketImpl impl = null;
+		Socks5DatagramSocketImpl impl;
 		try {
 			impl =	new Socks5DatagramSocketImpl(client);
 			impl.datagramSocket.bind(new InetSocketAddress(
 					(InetAddress) null, 0));
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, client);
+			throw client.toSocksClientSocketException(e);
 		}
 		this.socks5Client = client;
 		this.socks5DatagramSocketImpl =	impl;
@@ -287,14 +264,13 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	Socks5DatagramSocket(
 			final Socks5Client client, final int port) throws SocketException {
 		super((SocketAddress) null);
-		Socks5DatagramSocketImpl impl = null;
+		Socks5DatagramSocketImpl impl;
 		try {
 			impl = new Socks5DatagramSocketImpl(client);
 			impl.datagramSocket.bind(new InetSocketAddress(
 					(InetAddress) null, port));
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, client);
+			throw client.toSocksClientSocketException(e);
 		}
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = impl;
@@ -305,13 +281,12 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			final int port, 
 			final InetAddress laddr) throws SocketException {
 		super((SocketAddress) null);
-		Socks5DatagramSocketImpl impl = null;
+		Socks5DatagramSocketImpl impl;
 		try {
 			impl = new Socks5DatagramSocketImpl(client);
 			impl.datagramSocket.bind(new InetSocketAddress(laddr, port));
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, client);
+			throw client.toSocksClientSocketException(e);
 		}
 		this.socks5Client = client;
 		this.socks5DatagramSocketImpl = impl;		
@@ -321,15 +296,14 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			final Socks5Client client, 
 			final SocketAddress bindaddr) throws SocketException {
 		super((SocketAddress) null);
-		Socks5DatagramSocketImpl impl = null;
+		Socks5DatagramSocketImpl impl;
 		try {
 			impl = new Socks5DatagramSocketImpl(client);
 			if (bindaddr != null) {
 				impl.datagramSocket.bind(bindaddr);
 			}
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, client);
+			throw client.toSocksClientSocketException(e);
 		}
 		this.socks5Client = client;		
 		this.socks5DatagramSocketImpl = impl;
@@ -340,8 +314,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.bind(addr);			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}
 	}
 	
@@ -360,8 +333,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.connect(addr);			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -375,11 +347,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getBroadcast();			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}
-		return false;
-	}
+    }
 
 	@Override
 	public DatagramChannel getChannel() {
@@ -411,11 +381,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getOption(name);
 		} catch (IOException e) {
-			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
-					e, this.socks5Client);
-		}		
-		return null;
-	}
+			throw this.socks5Client.toSocksClientIOException(e);
+		}
+    }
 
 	@Override
 	public int getPort() {
@@ -427,11 +395,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getReceiveBufferSize();
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
-		}		
-		return 0;
-	}
+			throw this.socks5Client.toSocksClientSocketException(e);
+		}
+    }
 
 	@Override
 	public SocketAddress getRemoteSocketAddress() {
@@ -443,22 +409,18 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getReuseAddress();
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
-		}		
-		return false;
-	}
+			throw this.socks5Client.toSocksClientSocketException(e);
+		}
+    }
 
 	@Override
 	public synchronized int getSendBufferSize() throws SocketException {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getSendBufferSize();
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
-		}		
-		return 0;
-	}
+			throw this.socks5Client.toSocksClientSocketException(e);
+		}
+    }
 	
 	public Socks5Client getSocks5Client() {
 		return this.socks5Client;
@@ -469,22 +431,18 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getSoTimeout();
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
-		}		
-		return 0;
-	}
+			throw this.socks5Client.toSocksClientSocketException(e);
+		}
+    }
 
 	@Override
 	public synchronized int getTrafficClass() throws SocketException {
 		try {
 			return this.socks5DatagramSocketImpl.datagramSocket.getTrafficClass();
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
-		}		
-		return 0;
-	}
+			throw this.socks5Client.toSocksClientSocketException(e);
+		}
+    }
 
 	@Override
 	public boolean isBound() {
@@ -506,8 +464,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.receive(p);
 		} catch (IOException e) {
-			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientIOException(e);
 		}
 	}
 
@@ -516,8 +473,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.send(p);
 		} catch (IOException e) {
-			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientIOException(e);
 		}
 	}
 
@@ -526,8 +482,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.setBroadcast(on);
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -538,19 +493,16 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			return this.socks5DatagramSocketImpl.datagramSocket.setOption(
 					name, value);
 		} catch (IOException e) {
-			SocksClientIOExceptionThrowingHelper.throwAsSocksClientIOException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientIOException(e);
 		}
-		return null;
-	}
+    }
 
 	@Override
 	public synchronized void setReceiveBufferSize(int size) throws SocketException {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.setReceiveBufferSize(size);
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -559,8 +511,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.setReuseAddress(on);			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -569,8 +520,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.setSendBufferSize(size);			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -579,8 +529,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.setSoTimeout(timeout);			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -589,8 +538,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		try {
 			this.socks5DatagramSocketImpl.datagramSocket.setTrafficClass(tc);			
 		} catch (SocketException e) {
-			SocksClientSocketExceptionThrowingHelper.throwAsSocksClientSocketException(
-					e, this.socks5Client);
+			throw this.socks5Client.toSocksClientSocketException(e);
 		}		
 	}
 

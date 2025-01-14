@@ -72,6 +72,8 @@ public class EchoObjectsUsingSocks5ClientToSocksServerIT {
 						Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
 				GeneralSettingSpecConstants.PORT.newSetting(
 						Port.valueOf(0)),
+				Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+						PositiveInteger.valueOf(500)),
 				Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
 						PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));
 		socksServer.start();

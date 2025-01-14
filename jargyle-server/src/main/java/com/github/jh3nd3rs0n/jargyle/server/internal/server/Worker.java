@@ -1,24 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSetting;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
@@ -26,18 +7,21 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.SocksException;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Version;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.FirewallAction;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleArgSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralRuleActionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.LogAction;
-import com.github.jh3nd3rs0n.jargyle.server.NonNegativeIntegerLimit;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
-import com.github.jh3nd3rs0n.jargyle.server.SelectionStrategy;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5.Socks5Worker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Worker implements Runnable {
 	
@@ -278,28 +262,8 @@ public class Worker implements Runnable {
 	}
 	
 	private SocketSettings getClientSocketSettings() {
-		List<SocketSetting<Object>> socketSettings = 
-				this.applicableRule.getRuleActionValues(
-						GeneralRuleActionSpecConstants.CLIENT_SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		socketSettings = this.applicableRule.getRuleActionValues(
-				GeneralRuleActionSpecConstants.SOCKET_SETTING);
-		if (socketSettings.size() > 0) {
-			return SocketSettings.of(
-					socketSettings.stream().collect(Collectors.toList()));
-		}
-		Settings settings = this.configuration.getSettings();
-		SocketSettings socketSttngs = settings.getLastValue(
-				GeneralSettingSpecConstants.CLIENT_SOCKET_SETTINGS);
-		if (socketSttngs.toMap().size() > 0) {
-			return socketSttngs;
-		}
-		socketSttngs = settings.getLastValue(
-				GeneralSettingSpecConstants.SOCKET_SETTINGS);
-		return socketSttngs;
+		return GeneralValueDerivationHelper.getClientSocketSettingsFrom(
+				this.applicableRule, this.configuration.getSettings());
 	}
 	
 	protected final Configuration getConfiguration() {
@@ -548,19 +512,16 @@ public class Worker implements Runnable {
 	}
 	
 	private Socket wrapClientSocket(final Socket clientSock) {
-		if (this.clientSslSocketFactory != null) {
-			try {
-				return this.clientSslSocketFactory.newSocket(
-						clientSock, null, true);
-			} catch (IOException e) {
-				this.logger.warn(
-						ObjectLogMessageHelper.objectLogMessage(
-								this, "Error in wrapping the client socket"), 
-						e);
-				return null;
-			}
+		try {
+			return this.clientSslSocketFactory.getSocket(
+					clientSock, null, true);
+		} catch (IOException e) {
+			this.logger.warn(
+					ObjectLogMessageHelper.objectLogMessage(
+							this, "Error in wrapping the client socket"),
+					e);
+			return null;
 		}
-		return clientSock;
 	}
 	
 }

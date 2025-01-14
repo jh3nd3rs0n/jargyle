@@ -1,16 +1,16 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -57,7 +57,12 @@ public final class ChainingSslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new CommaSeparatedValuesSettingSpec(
 					"chaining.ssl.enabledProtocols", 
 					SslPropertySpecConstants.SSL_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
-	
+
+	public static final SettingSpec<Bytes> CHAINING_SSL_KEY_STORE_BYTES =
+			SETTING_SPECS.addThenGet(new BytesSettingSpec(
+					"chaining.ssl.keyStoreBytes",
+					SslPropertySpecConstants.SSL_KEY_STORE_BYTES.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The key store file for the SSL/TLS connections to the "
 					+ "other SOCKS server",
@@ -69,11 +74,6 @@ public final class ChainingSslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"chaining.ssl.keyStoreFile", 
 					SslPropertySpecConstants.SSL_KEY_STORE_FILE.getDefaultProperty().getValue()));
-
-	public static final SettingSpec<InputStream> CHAINING_SSL_KEY_STORE_INPUT_STREAM =
-			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
-					"chaining.ssl.keyStoreInputStream",
-					SslPropertySpecConstants.SSL_KEY_STORE_INPUT_STREAM.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The password for the key store for the SSL/TLS "
@@ -88,9 +88,8 @@ public final class ChainingSslSettingSpecConstants {
 					SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The type of key store file for the SSL/TLS "
-					+ "connections to the other SOCKS server (default is "
-					+ "PKCS12)",
+			description = "The type of key store for the SSL/TLS connections "
+					+ "to the other SOCKS server (default is PKCS12)",
 			name = "chaining.ssl.keyStoreType",
 			syntax = "chaining.ssl.keyStoreType=TYPE",
 			valueType = String.class
@@ -111,7 +110,12 @@ public final class ChainingSslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"chaining.ssl.protocol", 
 					SslPropertySpecConstants.SSL_PROTOCOL.getDefaultProperty().getValue()));
-	
+
+	public static final SettingSpec<Bytes> CHAINING_SSL_TRUST_STORE_BYTES =
+			SETTING_SPECS.addThenGet(new BytesSettingSpec(
+					"chaining.ssl.trustStoreBytes",
+					SslPropertySpecConstants.SSL_TRUST_STORE_BYTES.getDefaultProperty().getValue()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The trust store file for the SSL/TLS connections to "
 					+ "the other SOCKS server",
@@ -123,11 +127,6 @@ public final class ChainingSslSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new FileSettingSpec(
 					"chaining.ssl.trustStoreFile", 
 					SslPropertySpecConstants.SSL_TRUST_STORE_FILE.getDefaultProperty().getValue()));
-
-	public static final SettingSpec<InputStream> CHAINING_SSL_TRUST_STORE_INPUT_STREAM =
-			SETTING_SPECS.addThenGet(new InputStreamSettingSpec(
-					"chaining.ssl.trustStoreInputStream",
-					SslPropertySpecConstants.SSL_TRUST_STORE_INPUT_STREAM.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The password for the trust store for the SSL/TLS "
@@ -142,7 +141,7 @@ public final class ChainingSslSettingSpecConstants {
 					SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The type of trust store file for the SSL/TLS "
+			description = "The type of trust store for the SSL/TLS "
 					+ "connections to the other SOCKS server (default is "
 					+ "PKCS12)",
 			name = "chaining.ssl.trustStoreType",

@@ -1,11 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server;
 
-import java.util.List;
-import java.util.Map;
-
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
-import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
@@ -13,6 +8,9 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
+
+import java.util.List;
+import java.util.Map;
 
 @NameValuePairValueSpecsDoc(
 		description = "",
@@ -116,7 +114,20 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onBindRequest.listenBindHost",
 					null));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding " +
+					"host address types for the listen socket if the "
+					+ "provided host address is all zeros",
+			name = "socks5.onBindRequest.listenBindHostAddressTypes",
+			syntax = "socks5.onBindRequest.listenBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onBindRequest.listenBindHostAddressTypes",
+					HostAddressTypes.of()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the listen socket if the provided port is zero",
@@ -128,7 +139,20 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onBindRequest.listenBindPortRanges",
 					PortRanges.of()));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding "
+					+ "host address for the listen socket if the provided "
+					+ "host address is all zeros",
+			name = "socks5.onBindRequest.listenNetInterface",
+			syntax = "socks5.onBindRequest.listenNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_BIND_REQUEST_LISTEN_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onBindRequest.listenNetInterface",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "listen socket",
@@ -259,7 +283,19 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onConnectRequest.targetFacingBindHost", 
 					null));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for the target-facing socket",
+			name = "socks5.onConnectRequest.targetFacingBindHostAddressTypes",
+			syntax = "socks5.onConnectRequest.targetFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onConnectRequest.targetFacingBindHostAddressTypes",
+					HostAddressTypes.of()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the target-facing socket",
@@ -283,7 +319,19 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnectRequest.targetFacingConnectTimeout", 
 					PositiveInteger.valueOf(60000)));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding "
+					+ "host address for the target-facing socket",
+			name = "socks5.onConnectRequest.targetFacingNetInterface",
+			syntax = "socks5.onConnectRequest.targetFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onConnectRequest.targetFacingNetInterface",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "target-facing socket",
@@ -297,41 +345,6 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for all sockets",
-			name = "socks5.onRequest.bindHost",
-			syntax = "socks5.onRequest.bindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> SOCKS5_ON_REQUEST_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onRequest.bindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "all TCP sockets",
-			name = "socks5.onRequest.bindTcpPortRanges",
-			syntax = "socks5.onRequest.bindTcpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_REQUEST_BIND_TCP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onRequest.bindTcpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "all UDP sockets",
-			name = "socks5.onRequest.bindUdpPortRanges",
-			syntax = "socks5.onRequest.bindUdpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_REQUEST_BIND_UDP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onRequest.bindUdpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for all "
 					+ "external-facing sockets",
 			name = "socks5.onRequest.externalFacingBindHost",
@@ -342,6 +355,18 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onRequest.externalFacingBindHost",
 					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for all external-facing sockets",
+			name = "socks5.onRequest.externalFacingBindHostAddressTypes",
+			syntax = "socks5.onRequest.externalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onRequest.externalFacingBindHostAddressTypes",
+					HostAddressTypes.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
@@ -368,6 +393,18 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.of()));
 
 	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding host "
+					+ "address for all external-facing sockets",
+			name = "socks5.onRequest.externalFacingNetInterface",
+			syntax = "socks5.onRequest.externalFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onRequest.externalFacingNetInterface",
+					null));
+
+	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for all "
 					+ "external-facing sockets",
 			name = "socks5.onRequest.externalFacingSocketSettings",
@@ -392,6 +429,18 @@ public final class Socks5SettingSpecConstants {
 					null));
 
 	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for all internal-facing sockets",
+			name = "socks5.onRequest.internalFacingBindHostAddressTypes",
+			syntax = "socks5.onRequest.internalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onRequest.internalFacingBindHostAddressTypes",
+					HostAddressTypes.of()));
+
+	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "all internal-facing UDP sockets",
 			name = "socks5.onRequest.internalFacingBindUdpPortRanges",
@@ -402,6 +451,18 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onRequest.internalFacingBindUdpPortRanges",
 					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding host "
+					+ "address for all internal-facing sockets",
+			name = "socks5.onRequest.internalFacingNetInterface",
+			syntax = "socks5.onRequest.internalFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onRequest.internalFacingNetInterface",
+					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for all "
@@ -464,18 +525,6 @@ public final class Socks5SettingSpecConstants {
 					null));
 
 	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for all "
-					+ "sockets",
-			name = "socks5.onRequest.socketSettings",
-			syntax = "socks5.onRequest.socketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_REQUEST_SOCKET_SETTINGS =
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onRequest.socketSettings",
-					SocketSettings.of()));
-
-	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the "
 					+ "client-facing UDP socket",
 			name = "socks5.onUdpAssociateRequest.clientFacingBindHost",
@@ -486,7 +535,19 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onUdpAssociateRequest.clientFacingBindHost", 
 					null));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for the client-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes",
+					HostAddressTypes.of()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the client-facing UDP socket",
@@ -498,7 +559,19 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onUdpAssociateRequest.clientFacingBindPortRanges",
 					PortRanges.of()));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding host "
+					+ "address for the client-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.clientFacingNetInterface",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onUdpAssociateRequest.clientFacingNetInterface",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "client-facing UDP socket",
@@ -522,7 +595,19 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
 					"socks5.onUdpAssociateRequest.peerFacingBindHost", 
 					null));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for the peer-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes",
+					HostAddressTypes.of()));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the peer-facing UDP socket",
@@ -534,7 +619,19 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"socks5.onUdpAssociateRequest.peerFacingBindPortRanges",
 					PortRanges.of()));
-	
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding host "
+					+ "address for the peer-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.peerFacingNetInterface",
+			syntax = "socks5.onUdpAssociateRequest.peerFacingNetInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onUdpAssociateRequest.peerFacingNetInterface",
+					null));
+
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "peer-facing UDP socket",

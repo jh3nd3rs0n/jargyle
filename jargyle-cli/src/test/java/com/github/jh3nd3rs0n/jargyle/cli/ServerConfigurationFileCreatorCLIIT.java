@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -69,11 +70,13 @@ public class ServerConfigurationFileCreatorCLIIT {
 
 	@Test
 	public void testMainForCombiningConfigurationFiles() throws IOException {
-		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getInputStream()) {
+		try (InputStream in = new ByteArrayInputStream(
+				TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getContentAsBytes())) {
 			IoHelper.copyInputStreamToFile(
 					in, this.supplementedGeneralConfigurationFile.toFile());
 		}
-		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getInputStream()) {
+		try (InputStream in = new ByteArrayInputStream(
+				TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getContentAsBytes())) {
 			IoHelper.copyInputStreamToFile(
 					in, this.socks5ConfigurationFile.toFile());
 		}
@@ -125,11 +128,13 @@ public class ServerConfigurationFileCreatorCLIIT {
 
 	@Test
 	public void testMainForCreatingADocumentedConfigurationFile() throws IOException {
-		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getInputStream()) {
+		try (InputStream in = new ByteArrayInputStream(
+				TestResourceConstants.JARGYLE_CLI_SUPPLEMENTED_GENERAL_CONFIGURATION_FILE.getContentAsBytes())) {
 			IoHelper.copyInputStreamToFile(
 					in, this.supplementedGeneralConfigurationFile.toFile());
 		}
-		try (InputStream in = TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getInputStream()) {
+		try (InputStream in = new ByteArrayInputStream(
+				TestResourceConstants.JARGYLE_CLI_SOCKS5_CONFIGURATION_FILE.getContentAsBytes())) {
 			IoHelper.copyInputStreamToFile(
 					in, this.socks5ConfigurationFile.toFile());
 		}
@@ -183,7 +188,8 @@ public class ServerConfigurationFileCreatorCLIIT {
 	
 	@Test
 	public void testMainForSupplementingAConfigurationFile() throws IOException {
-		try (InputStream in = TestResourceConstants.JARGYLE_CLI_GENERAL_CONFIGURATION_FILE.getInputStream()) {
+		try (InputStream in = new ByteArrayInputStream(
+				TestResourceConstants.JARGYLE_CLI_GENERAL_CONFIGURATION_FILE.getContentAsBytes())) {
 			IoHelper.copyInputStreamToFile(
 					in, this.generalConfigurationFile.toFile());
 		}

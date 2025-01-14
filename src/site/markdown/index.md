@@ -1,8 +1,8 @@
 # About Jargyle 
 
 Jargyle is a Java SOCKS5 API and server that can use SSL/TLS for TCP traffic,
-can use DTLS for UDP traffic, and can perform SOCKS5 server chaining. It is
-inspired by [JSocks](https://jsocks.sourceforge.net/),
+can use DTLS for UDP traffic, and can route traffic through multiple SOCKS5
+servers. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).

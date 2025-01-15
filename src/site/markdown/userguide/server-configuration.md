@@ -668,9 +668,7 @@ com.sun.security.jgss.accept {
 
 In `login.conf`, `rcmd/jargyle.net` is a service principal that is created by 
 a Kerberos administrator specifically for a SOCKS5 server with the service name 
-`rcmd` residing at the address `jargyle.net`. (In a production environment, the 
-address `jargyle.net` should be replaced by the name of the machine of where the 
-SOCKS5 server resides.) 
+`rcmd` residing at `jargyle.net`.
 
 Also in `login.conf`, `rcmd.keytab` is a keytab file also created by a 
 Kerberos administrator that contains the aforementioned service principal and 
@@ -696,12 +694,8 @@ Kerberos Key Distribution Center (KDC) for authentication.
     }
 ```
 
-In `krb5.conf`, a KDC is defined as running at the address `jargyle.net` on 
-port `12345` with its realm as `JARGYLE.NET`. (In a production environment, 
-the address `jargyle.net` should be replaced by the actual address or name of 
-the machine of where the KDC resides. Also, in a production environment, the 
-realm `JARGYLE.NET` should be replaced by an actual realm provided by a 
-Kerberos administrator.)  
+In `krb5.conf`, a KDC is defined as running at `jargyle.net` on port `12345` 
+with its realm as `JARGYLE.NET`.  
 
 ## Chaining to Another SOCKS Server
 
@@ -1506,19 +1500,12 @@ Kerberos Key Distribution Center (KDC) for authentication.
     }
 ```
 
-In `krb5.conf`, a KDC is defined as running at the address `alpha-alpha.net` 
-on port `12345` with its realm as `ALPHA-ALPHA.NET`. (In a production 
-environment, the address `alpha-alpha.net` should be replaced by the actual 
-address or name of the machine of where the KDC resides. Also, in a production 
-environment, the realm `ALPHA-ALPHA.NET` should be replaced by an actual realm 
-provided by a Kerberos administrator.)
+In `krb5.conf`, a KDC is defined as running at `alpha-alpha.net` on port 
+`12345` with its realm as `ALPHA-ALPHA.NET`.
 
 The setting `chaining.socks5.gssapimethod.serviceName` with the value 
 `rcmd/alpha-alpha.net` is the GSS-API service name (or the Kerberos service 
-principal) for the other SOCKS server residing at the address 
-`alpha-alpha.net`. (In a production environment, the address `alpha-alpha.net` 
-should be replaced by the name of the machine of where the other SOCKS server 
-resides.)
+principal) for the other SOCKS server residing at `alpha-alpha.net`.
 
 ### Resolving Host Names From the Other SOCKS5 Server
 

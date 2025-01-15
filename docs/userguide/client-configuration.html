@@ -456,25 +456,19 @@ Kerberos Key Distribution Center (KDC) for authentication.</p>
     kdc_realm = JARGYLE.NET
     default_realm = JARGYLE.NET
     udp_preference_limit = 4096
-    kdc_tcp_port = 4444
-    kdc_udp_port = 4444
+    kdc_tcp_port = 12345
+    kdc_udp_port = 12345
 
 [realms]
     JARGYLE.NET = {
-        kdc = jargyle.net:4444
+        kdc = jargyle.net:12345
     }
 </code></pre></div>
-<p>In <code>krb5.conf</code>, a KDC is defined as running at the address <code>jargyle.net</code> on
-port <code>4444</code> with its realm as <code>JARGYLE.NET</code>. (In a production environment,
-the address <code>jargyle.net</code> should be replaced by the actual address or name of
-the machine of where the KDC resides. Also, in a production environment, the
-realm <code>JARGYLE.NET</code> should be replaced by an actual realm provided by a
-Kerberos administrator.)</p>
+<p>In <code>krb5.conf</code>, a KDC is defined as running at <code>jargyle.net</code> on port <code>12345</code>
+with its realm as <code>JARGYLE.NET</code>.</p>
 <p>The property <code>socksClient.socks5.gssapimethod.serviceName</code> with the value
 <code>rcmd/jargyle.net</code> is the GSS-API service name (or the Kerberos service
-principal) for the SOCKS server residing at the address <code>jargyle.net</code>. (In
-a production environment, the address <code>jargyle.net</code> should be replaced by the
-name of the machine of where the SOCKS server resides.)</p></section></section><section>
+principal) for the SOCKS server residing at <code>jargyle.net</code>.</p></section></section><section>
 <h2>Resolving Host Names From the SOCKS5 Server</h2>
 <p>By default, host name resolution from the SOCKS5 server occurs only when a
 <code>Socket</code> is created with a host name and port number.</p>

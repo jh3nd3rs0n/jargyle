@@ -709,9 +709,7 @@ mechanism.</p>
 </code></pre></div>
 <p>In <code>login.conf</code>, <code>rcmd/jargyle.net</code> is a service principal that is created by
 a Kerberos administrator specifically for a SOCKS5 server with the service name
-<code>rcmd</code> residing at the address <code>jargyle.net</code>. (In a production environment, the
-address <code>jargyle.net</code> should be replaced by the name of the machine of where the
-SOCKS5 server resides.)</p>
+<code>rcmd</code> residing at <code>jargyle.net</code>.</p>
 <p>Also in <code>login.conf</code>, <code>rcmd.keytab</code> is a keytab file also created by a
 Kerberos administrator that contains the aforementioned service principal and
 its respective encrypted key.</p>
@@ -733,12 +731,8 @@ Kerberos Key Distribution Center (KDC) for authentication.</p>
         kdc = jargyle.net:12345
     }
 </code></pre></div>
-<p>In <code>krb5.conf</code>, a KDC is defined as running at the address <code>jargyle.net</code> on
-port <code>12345</code> with its realm as <code>JARGYLE.NET</code>. (In a production environment,
-the address <code>jargyle.net</code> should be replaced by the actual address or name of
-the machine of where the KDC resides. Also, in a production environment, the
-realm <code>JARGYLE.NET</code> should be replaced by an actual realm provided by a
-Kerberos administrator.)</p></section></section><section>
+<p>In <code>krb5.conf</code>, a KDC is defined as running at <code>jargyle.net</code> on port <code>12345</code>
+with its realm as <code>JARGYLE.NET</code>.</p></section></section><section>
 <h2>Chaining to Another SOCKS Server</h2>
 <p>You can have the server chained to another SOCKS server, meaning that its
 traffic can be routed through another SOCKS server. To have the server chained
@@ -1476,18 +1470,11 @@ Kerberos Key Distribution Center (KDC) for authentication.</p>
         kdc = alpha-alpha.net:12345
     }
 </code></pre></div>
-<p>In <code>krb5.conf</code>, a KDC is defined as running at the address <code>alpha-alpha.net</code>
-on port <code>12345</code> with its realm as <code>ALPHA-ALPHA.NET</code>. (In a production
-environment, the address <code>alpha-alpha.net</code> should be replaced by the actual
-address or name of the machine of where the KDC resides. Also, in a production
-environment, the realm <code>ALPHA-ALPHA.NET</code> should be replaced by an actual realm
-provided by a Kerberos administrator.)</p>
+<p>In <code>krb5.conf</code>, a KDC is defined as running at <code>alpha-alpha.net</code> on port
+<code>12345</code> with its realm as <code>ALPHA-ALPHA.NET</code>.</p>
 <p>The setting <code>chaining.socks5.gssapimethod.serviceName</code> with the value
 <code>rcmd/alpha-alpha.net</code> is the GSS-API service name (or the Kerberos service
-principal) for the other SOCKS server residing at the address
-<code>alpha-alpha.net</code>. (In a production environment, the address <code>alpha-alpha.net</code>
-should be replaced by the name of the machine of where the other SOCKS server
-resides.)</p></section></section><section>
+principal) for the other SOCKS server residing at <code>alpha-alpha.net</code>.</p></section></section><section>
 <h3>Resolving Host Names From the Other SOCKS5 Server</h3>
 <p>Before discussing host name resolution from the other SOCKS5 server, a brief
 explanation of the server's internals:</p>

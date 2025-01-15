@@ -521,13 +521,13 @@ import java.net.Socket;
 public class ClientApp {
     public static void main(String[] args) throws IOException {
         SocksClient socksClient1 = Scheme.SOCKS5
-            .newSocksServerUri("betabeta.net", 3456)
+            .newSocksServerUri("alpha-alpha.net", 11111)
             .newSocksClient(Properties.of());
         SocksClient socksClient2 = Scheme.SOCKS5
-            .newSocksServerUri("alphaalpha.net", 2345)
+            .newSocksServerUri("beta-alpha.net", 22221)
             .newSocksClient(Properties.of(), socksClient1);
         SocksClient socksClient3 = Scheme.SOCKS5
-            .newSocksServerUri("jargyle.net", 1234)
+            .newSocksServerUri("gamma-alpha.net", 33331)
             .newSocksClient(Properties.of(), socksClient2);
         NetObjectFactory netObjectFactory = 
             socksClient3.newSocksNetObjectFactory();

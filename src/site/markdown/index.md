@@ -1,8 +1,9 @@
 # About Jargyle 
 
-Jargyle is a Java SOCKS5 API and server that can use SSL/TLS for TCP traffic,
-can use DTLS for UDP traffic, and can route traffic through multiple SOCKS5
-servers. It is inspired by [JSocks](https://jsocks.sourceforge.net/),
+Jargyle is a Java SOCKS5 API and server with TCP traffic that can be layered 
+with SSL/TLS, UDP traffic that can be layered with DTLS, and both forms of 
+traffic that can be routed through multiple SOCKS5 servers. It is inspired by 
+[JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
@@ -14,12 +15,66 @@ changes.
 
 ## Page Contents
 
--   [Client API Example](#client-api-example)
--   [Server API Example](#server-api-example)
--   [Command Line Example](#command-line-example)
 -   [Features](#features)
+-   [Uses](#uses)
+-   [Examples](#examples)
+    -   [SOCKS Client API Example](#socks-client-api-example)
+    -   [SOCKS Server API Example](#socks-server-api-example)
+    -   [Command Line Example](#command-line-example)
 
-## Client API Example
+## Features
+
+Jargyle consists of a SOCKS client API, a SOCKS server API, and a SOCKS server.
+All three use blocking I/O.
+
+The SOCKS client API has the following features:
+
+-   SSL/TLS-layered TCP traffic between itself and SOCKS5 servers
+-   DTLS-layered UDP traffic between itself and SOCKS5 servers
+-   Resolve host names from SOCKS5 servers that handle the
+    [SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
+-   Route traffic through a specified chain of SOCKS5 servers
+
+The SOCKS server API and the SOCKS server have the following features:
+
+-   SSL/TLS-layered TCP traffic between itself and clients
+-   DTLS-layered UDP traffic between itself and clients
+-   Route traffic through (or, in other words, chain to) specified chains of 
+    SOCKS5 servers
+-   SSL/TLS-layered TCP traffic between itself and SOCKS5 servers
+-   DTLS-layered UDP traffic between itself and SOCKS5 servers
+-   Resolve host names for clients from the local system or from SOCKS5
+    servers that handle the
+    [SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
+
+The SOCKS server API and the SOCKS server also have a rule system that allows 
+you to manage traffic in the following ways:
+
+-   Allow or deny traffic
+-   Allow a limited number of simultaneous instances of traffic
+-   Route traffic through a selection of specified chains of SOCKS5 servers
+-   Redirect the desired destination
+-   Configure sockets
+-   Configure relay settings
+-   Limit relay bandwidth
+
+## Uses
+
+-   Both the SOCKS client API and the SOCKS server API can be used for testing.
+-   The SOCKS client API can be used for enabling SOCKS and additional
+    features for clients.
+-   A chain of at least two instances of a SOCKS server can be used to provide
+    secure traffic: one instance for clients with authentication that can be
+    required and the other instance(s) for the one instance with TCP traffic 
+    that can be layered with SSL/TLS, UDP traffic that can be layered with 
+    DTLS, and authentication that can be required.
+
+## Examples
+
+The following are brief examples: one of the SOCKS client API, one of the 
+SOCKS server API, and one of the command line interface for the SOCKS server. 
+
+### SOCKS Client API Example
 
 ```java
 package com.example;
@@ -46,14 +101,14 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socksServerUri", "socks5://jargyle.net:8080");
         /*
-         * Enable SSL/TLS for TCP traffic between the SOCKS client 
+         * Enable SSL/TLS-layered TCP traffic between the SOCKS client 
          * and the SOCKS server.
          */
         System.setProperty("socksClient.ssl.enabled", "true");
         System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
         System.setProperty("socksClient.ssl.trustStorePassword", "password");
         /*
-         * Enable DTLS for UDP traffic between the SOCKS client and 
+         * Enable DTLS-layered UDP traffic between the SOCKS client and 
          * the SOCKS server.
          */
         System.setProperty("socksClient.dtls.enabled", "true");
@@ -112,7 +167,7 @@ public class ClientApp {
 }
 ```
 
-## Server API Example
+### SOCKS Server API Example
 
 ```java
 package com.example;
@@ -130,7 +185,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "port", "8080"),
             /*
-             * Enable SSL/TLS for TCP traffic between the SOCKS 
+             * Enable SSL/TLS-layered TCP traffic between the SOCKS 
              * server and the clients.
              */
             Setting.newInstanceWithParsedValue(
@@ -140,7 +195,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "ssl.keyStorePassword", "drowssap"),
             /*
-             * Enable DTLS for UDP traffic between the SOCKS server 
+             * Enable DTLS-layered UDP traffic between the SOCKS server 
              * and the clients.
              */
             Setting.newInstanceWithParsedValue(
@@ -163,7 +218,7 @@ public class ServerApp {
 }
 ```
 
-## Command Line Example
+### Command Line Example
 
 ```bash
 jargyle start-server \
@@ -177,35 +232,3 @@ jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
     --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
 ```
-
-## Features
-
-The client API has the following features:
-
--   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
--   Use DTLS for UDP traffic between itself and SOCKS5 servers
--   Resolve host names from SOCKS5 servers that handle the
-[SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
--   Route traffic through a specified chain of SOCKS5 servers 
-
-The server API and the server have the following features:
-
--   Use SSL/TLS for TCP traffic between itself and clients
--   Use DTLS for UDP traffic between itself and clients
--   Chain to specified chains of SOCKS servers
--   Use SSL/TLS for TCP traffic between itself and SOCKS5 servers
--   Use DTLS for UDP traffic between itself and SOCKS5 servers
--   Resolve host names for clients from the local system or from SOCKS5 
-servers that handle the 
-[SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
-
-The server API and the server also have a rule system that allows you to manage 
-traffic in the following ways:
-
--   Allow or deny traffic
--   Allow a limited number of simultaneous instances of traffic
--   Route traffic through a selection of specified chains of SOCKS servers
--   Redirect the desired destination
--   Configure sockets
--   Configure relay settings
--   Limit relay bandwidth

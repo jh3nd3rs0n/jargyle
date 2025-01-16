@@ -5,15 +5,15 @@ the command line.
 
 ## Page Contents
 
--   [Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients](#enabling-ssltls-for-tcp-traffic-between-the-server-and-its-clients)
--   [Enabling DTLS for UDP Traffic Between the Server and Its Clients](#enabling-dtls-for-udp-traffic-between-the-server-and-its-clients)
+-   [Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients](#enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients)
+-   [Enabling DTLS-layered UDP Traffic Between the Server and Its Clients](#enabling-dtls-layered-udp-traffic-between-the-server-and-its-clients)
 -   [Using SOCKS5 Authentication](#using-socks5-authentication)
     -   [Using No Authentication](#using-no-authentication)
     -   [Using Username Password Authentication](#using-username-password-authentication)
     -   [Using GSS-API Authentication](#using-gss-api-authentication)
 -   [Chaining to Another SOCKS Server](#chaining-to-another-socks-server)
-    -   [Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server](#enabling-ssltls-for-tcp-traffic-between-the-server-and-the-other-socks-server)
-    -   [Enabling DTLS for UDP Traffic Between the Server and the Other SOCKS Server](#enabling-dtls-for-udp-traffic-between-the-server-and-the-other-socks-server)
+    -   [Enabling SSL/TLS-layered TCP Traffic Between the Server and the Other SOCKS Server](#enabling-ssltls-layered-tcp-traffic-between-the-server-and-the-other-socks-server)
+    -   [Enabling DTLS-layered UDP Traffic Between the Server and the Other SOCKS Server](#enabling-dtls-layered-udp-traffic-between-the-server-and-the-other-socks-server)
     -   [Chaining to the Other SOCKS Server Using SOCKS5 Authentication](#chaining-to-the-other-socks-server-using-socks5-authentication)
         -   [Chaining to the Other SOCKS Server Using No Authentication](#chaining-to-the-other-socks-server-using-no-authentication)
         -   [Chaining to the Other SOCKS Server Using Username Password Authentication](#chaining-to-the-other-socks-server-using-username-password-authentication)
@@ -32,17 +32,17 @@ the command line.
     -   [Configuring Relay Settings](#configuring-relay-settings)
     -   [Limiting Relay Bandwidth](#limiting-relay-bandwidth)
 
-<a id="enabling-ssltls-for-tcp-traffic-between-the-server-and-its-clients"></a>
-## Enabling SSL/TLS for TCP Traffic Between the Server and Its Clients
+<a id="enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients"></a>
+## Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients
 
-You can enable SSL/TLS for TCP traffic between the server and its clients. By 
-default, SSL/TLS for TCP traffic between the server and its clients is disabled. 
-To enable SSL/TLS for TCP traffic between the server and its clients, you will 
-need to have the setting `ssl.enabled` set to `true`. In addition, you will 
-need to have the setting `ssl.keyStoreFile` to specify the server's key store 
-file (this file would need to be created by Java's keytool utility). Also, you 
-will need to have the setting `ssl.keyStorePassword` to specify the password 
-for the server's key store file.
+You can enable SSL/TLS-layered TCP traffic between the server and its clients. 
+By default, SSL/TLS-layered TCP traffic between the server and its clients is 
+disabled. To enable SSL/TLS-layered TCP traffic between the server and its 
+clients, you will need to have the setting `ssl.enabled` set to `true`. In 
+addition, you will need to have the setting `ssl.keyStoreFile` to specify the 
+server's key store file (this file would need to be created by Java's keytool 
+utility). Also, you will need to have the setting `ssl.keyStorePassword` to 
+specify the password for the server's key store file.
 
 API example:
 
@@ -221,16 +221,17 @@ jargyle start-server \
     --enter-ssl-trust-store-pass
 ```
 
-## Enabling DTLS for UDP Traffic Between the Server and Its Clients
+<a id="enabling-dtls-layered-udp-traffic-between-the-server-and-its-clients"></a>
+## Enabling DTLS-layered UDP Traffic Between the Server and Its Clients
 
-You can enable DTLS for UDP traffic between the server and its clients. By 
-default, DTLS for UDP traffic between the server and its clients is disabled. To 
-enable DTLS for UDP traffic between the server and its clients, you will need to 
-have the setting `dtls.enabled` set to `true`. In addition, you will need to 
-have the setting `dtls.keyStoreFile` to specify the server's key store file 
-(this file would need to be created by Java's keytool utility). Also, you will 
-need to have the setting `dtls.keyStorePassword` to specify the password for 
-the server's key store file.
+You can enable DTLS-layered UDP traffic between the server and its clients. By 
+default, DTLS-layered UDP traffic between the server and its clients is 
+disabled. To enable DTLS-layered UDP traffic between the server and its 
+clients, you will need to have the setting `dtls.enabled` set to `true`. In 
+addition, you will need to have the setting `dtls.keyStoreFile` to specify the 
+server's key store file (this file would need to be created by Java's keytool 
+utility). Also, you will need to have the setting `dtls.keyStorePassword` to 
+specify the password for the server's key store file.
 
 API example:
 
@@ -754,23 +755,23 @@ port number of the other SOCKS server (`11111`). In the aforementioned
 examples, the SOCKS protocol version 5 is used. At this time, the only 
 supported scheme for the URI format is `socks5`
 
-<a id="enabling-ssltls-for-tcp-traffic-between-the-server-and-the-other-socks-server"></a>
-### Enabling SSL/TLS for TCP Traffic Between the Server and the Other SOCKS Server
+<a id="enabling-ssltls-layered-tcp-traffic-between-the-server-and-the-other-socks-server"></a>
+### Enabling SSL/TLS-layered TCP Traffic Between the Server and the Other SOCKS Server
 
-You can enable SSL/TLS for TCP traffic between the server and the other SOCKS 
-server under the following condition: 
+You can enable SSL/TLS-layered TCP traffic between the server and the other 
+SOCKS server under the following condition: 
 
 -   The other SOCKS server accepts SSL/TLS connections.
 
-By default, SSL/TLS for TCP traffic between the server and the other SOCKS server 
-is disabled. To enable SSL/TLS for TCP traffic between the server and the other 
-SOCKS server, you will need to have the setting `chaining.ssl.enabled` set 
-to `true`. In addition, you will need to have the setting 
-`chaining.ssl.trustStoreFile` to specify the other SOCKS server's key store 
-file used as a trust store (this file would need to be created by Java's keytool 
-utility). Also, you will need to have the setting 
-`chaining.ssl.trustStorePassword` to specify the password for the other 
-SOCKS server's trust store file.
+By default, SSL/TLS-layered TCP traffic between the server and the other SOCKS 
+server is disabled. To enable SSL/TLS-layered TCP traffic between the server 
+and the other SOCKS server, you will need to have the setting 
+`chaining.ssl.enabled` set to `true`. In addition, you will need to have the 
+setting `chaining.ssl.trustStoreFile` to specify the other SOCKS server's key 
+store file used as a trust store (this file would need to be created by Java's 
+keytool utility). Also, you will need to have the setting 
+`chaining.ssl.trustStorePassword` to specify the password for the other SOCKS 
+server's trust store file.
 
 API example:
 
@@ -958,23 +959,23 @@ jargyle start-server \
     --enter-chaining-ssl-trust-store-pass
 ```
 
-<a id="enabling-dtls-for-udp-traffic-between-the-server-and-the-other-socks-server"></a>
-### Enabling DTLS for UDP Traffic Between the Server and the Other SOCKS Server
+<a id="enabling-dtls-layered-udp-traffic-between-the-server-and-the-other-socks-server"></a>
+### Enabling DTLS-layered UDP Traffic Between the Server and the Other SOCKS Server
 
-You can enable DTLS for UDP traffic between the server and the other SOCKS 
+You can enable DTLS-layered UDP traffic between the server and the other SOCKS 
 server under the following condition: 
 
 -   The other SOCKS server accepts DTLS connections.
 
-By default, DTLS for UDP traffic between the server and the other SOCKS server is 
-disabled. To enable DTLS for UDP traffic between the server and the other SOCKS 
-server, you will need to have the setting `chaining.dtls.enabled` set to 
-`true`. In addition, you will need to have the setting 
-`chaining.dtls.trustStoreFile` to specify the other SOCKS server's key 
+By default, DTLS-layered UDP traffic between the server and the other SOCKS 
+server is disabled. To enable DTLS-layered UDP traffic between the server and 
+the other SOCKS server, you will need to have the setting 
+`chaining.dtls.enabled` set to `true`. In addition, you will need to have the 
+setting `chaining.dtls.trustStoreFile` to specify the other SOCKS server's key 
 store file used as a trust store (this file would need to be created by Java's 
 keytool utility). Also, you will need to have the setting 
-`chaining.dtls.trustStorePassword` to specify the password for the other 
-SOCKS server's trust store file.
+`chaining.dtls.trustStorePassword` to specify the password for the other SOCKS 
+server's trust store file.
 
 API example:
 

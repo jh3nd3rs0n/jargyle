@@ -63,11 +63,12 @@ you to manage traffic in the following ways:
 -   Both the SOCKS client API and the SOCKS server API can be used for testing.
 -   The SOCKS client API can be used for enabling SOCKS and additional
     features for clients.
--   A chain of at least two instances of a SOCKS server can be used to provide
-    secure traffic: one instance for clients with authentication that can be
-    required and the other instance(s) for the one instance with TCP traffic 
-    that can be layered with SSL/TLS, UDP traffic that can be layered with 
-    DTLS, and authentication that can be required.
+-   A chain of at least two SOCKS server instances can be used to provide 
+    secure traffic: a local SOCKS server instance and one or more remote SOCKS 
+    server instances. Local clients can access the local SOCKS server instance 
+    while the local SOCKS server instance routes SSL/TLS-layered TCP traffic 
+    and DTLS-layered UDP traffic through one or more remote SOCKS server 
+    instances.
 
 ## Examples
 

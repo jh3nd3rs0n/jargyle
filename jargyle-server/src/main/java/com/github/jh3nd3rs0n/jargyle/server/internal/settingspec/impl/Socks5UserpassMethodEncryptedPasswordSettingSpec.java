@@ -21,8 +21,9 @@ public final class Socks5UserpassMethodEncryptedPasswordSettingSpec
 			final String n, final EncryptedPassword defaultVal) {
 		super(
 				n, 
-				EncryptedPassword.class, 
-				getValidatedEncryptedPassword(defaultVal));
+				EncryptedPassword.class,
+				(defaultVal == null) ?
+						null : getValidatedEncryptedPassword(defaultVal));
 	}
 
 	@Override

@@ -90,7 +90,7 @@ public class NetInterfaceTest {
     }
 
     @Test
-    public void getHostAddressesHostAddressTypes01() {
+    public void testGetHostAddressesHostAddressTypes01() {
         NetInterface netInterface = NetInterface.newInstanceFrom(
                 this.networkInterfaceName1);
         Assert.assertTrue(
@@ -98,7 +98,7 @@ public class NetInterfaceTest {
     }
 
     @Test
-    public void getHostAddressesHostAddressTypes02() {
+    public void testGetHostAddressesHostAddressTypes02() {
         NetInterface netInterface = NetInterface.newInstanceFrom(
                 this.networkInterfaceName1);
         Assert.assertFalse(

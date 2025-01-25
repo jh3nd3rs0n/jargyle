@@ -64,9 +64,8 @@ you to manage traffic in the following ways:
     features for clients.
 -   A chain of at least two SOCKS server instances can be used to provide 
     secure traffic: a local SOCKS server instance and one or more remote SOCKS 
-    server instances. Local clients can access the local SOCKS server instance 
-    while the routed TCP and UDP traffic between the local SOCKS server 
-    instance and the remote SOCKS server instances are layered with SSL/TLS 
+    server instances with the TCP and UDP traffic between the local SOCKS 
+    server instance and the remote SOCKS server instances layered with SSL/TLS 
     and DTLS respectively.
 
 ## Examples

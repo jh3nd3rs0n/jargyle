@@ -12,7 +12,11 @@ public final class Socks5UserpassMethodUsernameSettingSpec extends SettingSpec<S
 
 	public Socks5UserpassMethodUsernameSettingSpec(
 			final String n, final String defaultVal) {
-		super(n, String.class, getValidatedUsername(defaultVal));
+		super(
+				n,
+				String.class,
+				(defaultVal == null) ?
+						null : getValidatedUsername(defaultVal));
 	}
 
 	@Override

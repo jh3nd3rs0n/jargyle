@@ -267,16 +267,16 @@ public final class Socks5ServerSocket extends ServerSocket {
 		private SocketAddress localSocketAddress;
 		private Socket socket;
 		private final SocketSettings socketSettings;
-		private final Socks5Client socks5Client;
+		private final Socks5ClientAgent socks5ClientAgent;
 		private boolean socks5Bound;
 		
 		public Socks5ServerSocketImpl(
-				final Socks5Client client) {
+				final Socks5ClientAgent clientAgent) {
 			Socket sock = 
-					client.newClientSocketBuilder().newClientSocket();
+					clientAgent.newClientSocketBuilder().newClientSocket();
 			this.bound = false;
 			this.closed = false;
-			this.socks5Client = client;
+			this.socks5ClientAgent = clientAgent;
 			this.localInetAddress = null;
 			this.localPort = -1;
 			this.localSocketAddress = null;
@@ -297,14 +297,14 @@ public final class Socks5ServerSocket extends ServerSocket {
 			}
 			Socket acceptedSocks5Socket = null;
 			try {
-				Reply rep = this.socks5Client.receiveReply(
+				Reply rep = this.socks5ClientAgent.receiveReply(
 						this.socket);
 				String serverBoundAddress = 
 						rep.getServerBoundAddress().toString();
 				int serverBoundPort = rep.getServerBoundPort().intValue();
 				if (rep.getServerBoundAddress() instanceof DomainName) {
 					throw new Socks5ClientIOException(
-							this.socks5Client, 
+							this.socks5ClientAgent.getSocks5Client(),
 							String.format(
 									"server bound address is not an IP "
 									+ "address. actual server bound address "
@@ -313,14 +313,14 @@ public final class Socks5ServerSocket extends ServerSocket {
 				}
 				acceptedSocks5Socket = new AcceptedSocks5Socket(
 						new Socks5Socket(
-								this.socks5Client, 
+								this.socks5ClientAgent.getSocks5Client(),
 								this.socket),
 						InetAddress.getByName(serverBoundAddress),
 						serverBoundPort,
 						this.localInetAddress,
 						this.localPort);
 				Socket newSocket = 
-						this.socks5Client.newClientSocketBuilder()
+						this.socks5ClientAgent.newClientSocketBuilder()
 								.newClientSocket();
 				this.socketSettings.applyTo(newSocket);
 				this.socket = newSocket;
@@ -408,14 +408,14 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			Socket sock = this.socks5Client.newClientSocketBuilder()
+			Socket sock = this.socks5ClientAgent.newClientSocketBuilder()
 					.proceedToConfigure(this.socket)
 					.proceedToConnect()
 					.setToBind(true)
 					.getConnectedClientSocket();
-			Method method = this.socks5Client.negotiateMethod(sock);
+			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
-					this.socks5Client.doMethodSubNegotiation(method, sock);
+					this.socks5ClientAgent.doMethodSubNegotiation(method, sock);
 			Socket sck = methodEncapsulation.getSocket();
 			int prt = port;
 			if (prt == -1) {
@@ -430,14 +430,14 @@ public final class Socks5ServerSocket extends ServerSocket {
 					Command.BIND, 
 					Address.newInstanceFrom(address),
 					Port.valueOf(prt));
-			this.socks5Client.sendRequest(req, sck);
-			Reply rep = this.socks5Client.receiveReply(sck);
+			this.socks5ClientAgent.sendRequest(req, sck);
+			Reply rep = this.socks5ClientAgent.receiveReply(sck);
 			String serverBoundAddress = 
 					rep.getServerBoundAddress().toString();
 			int serverBoundPort = rep.getServerBoundPort().intValue();
 			if (rep.getServerBoundAddress() instanceof DomainName) {
 				throw new Socks5ClientIOException(
-						this.socks5Client, 
+						this.socks5ClientAgent.getSocks5Client(),
 						String.format(
 								"server bound address is not an IP address. "
 								+ "actual server bound address is %s", 
@@ -455,23 +455,25 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	}
 	
-	private final Socks5Client socks5Client;
+	private final Socks5ClientAgent socks5ClientAgent;
 	private final Socks5ServerSocketImpl socks5ServerSocketImpl;
 	
 	Socks5ServerSocket(final Socks5Client client) throws IOException {
-		this.socks5Client = client;
-		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(client);
+		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
+		this.socks5ClientAgent = clientAgent;
+		this.socks5ServerSocketImpl = new Socks5ServerSocketImpl(clientAgent);
 	}
 
 	Socks5ServerSocket(
 			final Socks5Client client, final int port) throws IOException {
-		Socks5ServerSocketImpl impl = new Socks5ServerSocketImpl(client);
+		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
+		Socks5ServerSocketImpl impl = new Socks5ServerSocketImpl(clientAgent);
 		try {
 			impl.socks5Bind(port, null);
 		} catch (IOException e) {
-			throw client.toSocksClientIOException(e);
+			throw clientAgent.toSocksClientIOException(e);
 		}
-		this.socks5Client = client;
+		this.socks5ClientAgent = clientAgent;
 		this.socks5ServerSocketImpl = impl;
 	}
 
@@ -479,13 +481,14 @@ public final class Socks5ServerSocket extends ServerSocket {
 			final Socks5Client client, 
 			final int port, 
 			final InetAddress bindAddr) throws IOException {
-		Socks5ServerSocketImpl impl = new Socks5ServerSocketImpl(client);
+		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
+		Socks5ServerSocketImpl impl = new Socks5ServerSocketImpl(clientAgent);
 		try {
 			impl.socks5Bind(port, bindAddr);
 		} catch (IOException e) {
-			throw client.toSocksClientIOException(e);			
+			throw clientAgent.toSocksClientIOException(e);
 		}
-		this.socks5Client = client;
+		this.socks5ClientAgent = clientAgent;
 		this.socks5ServerSocketImpl = impl;
 	}
 	
@@ -494,7 +497,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			return this.socks5ServerSocketImpl.accept();
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);			
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
     }
 
@@ -503,7 +506,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			this.socks5ServerSocketImpl.bind(endpoint);
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
 	}
 
@@ -512,7 +515,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			this.socks5ServerSocketImpl.bind(endpoint, backlog);
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
 	}
 
@@ -521,7 +524,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			this.socks5ServerSocketImpl.close();
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
 	}
 
@@ -550,7 +553,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			return ServerSocketOptionHelper.getSocketOption(name, this);			
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
     }
 
@@ -559,7 +562,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			return this.socks5ServerSocketImpl.getReceiveBufferSize();			
 		} catch (SocketException e) {
-			throw this.socks5Client.toSocksClientSocketException(e);
+			throw this.socks5ClientAgent.toSocksClientSocketException(e);
 		}
     }
 
@@ -568,12 +571,12 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			return this.socks5ServerSocketImpl.getReuseAddress();			
 		} catch (SocketException e) {
-			throw this.socks5Client.toSocksClientSocketException(e);
+			throw this.socks5ClientAgent.toSocksClientSocketException(e);
 		}
     }
 	
 	public Socks5Client getSocks5Client() {
-		return this.socks5Client;
+		return this.socks5ClientAgent.getSocks5Client();
 	}
 
 	@Override
@@ -581,7 +584,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			return this.socks5ServerSocketImpl.getSoTimeout();			
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
     }
 
@@ -601,7 +604,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			return ServerSocketOptionHelper.setSocketOption(name, value, this);			
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
     }
 
@@ -618,7 +621,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			this.socks5ServerSocketImpl.setReceiveBufferSize(size);			
 		} catch (SocketException e) {
-			throw this.socks5Client.toSocksClientSocketException(e);
+			throw this.socks5ClientAgent.toSocksClientSocketException(e);
 		}
 	}
 
@@ -627,7 +630,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			this.socks5ServerSocketImpl.setReuseAddress(on);			
 		} catch (SocketException e) {
-			throw this.socks5Client.toSocksClientSocketException(e);
+			throw this.socks5ClientAgent.toSocksClientSocketException(e);
 		}		
 	}
 
@@ -636,7 +639,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		try {
 			this.socks5ServerSocketImpl.setSoTimeout(timeout);			
 		} catch (SocketException e) {
-			throw this.socks5Client.toSocksClientSocketException(e);
+			throw this.socks5ClientAgent.toSocksClientSocketException(e);
 		}
 	}
 
@@ -649,8 +652,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getSimpleName())
-			.append(" [socks5Client=")
-			.append(this.socks5Client)
+			.append(" [getSocks5Client()=")
+			.append(this.getSocks5Client())
 			.append(", getLocalSocketAddress()=")
 			.append(this.getLocalSocketAddress())
 			.append("]");

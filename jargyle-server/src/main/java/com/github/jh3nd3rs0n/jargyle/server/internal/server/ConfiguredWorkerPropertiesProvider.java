@@ -25,12 +25,14 @@ final class ConfiguredWorkerPropertiesProvider {
 			Configuration config = Configuration.newUnmodifiableInstance(
 					this.configuration);
 			if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
-				this.configuredWorkerProperties = new ConfiguredWorkerProperties(
-						new DtlsDatagramSocketFactoryImpl(config),
-						new SslSocketFactoryImpl(config),
-						config,
-						Routes.newInstanceFrom(config),
-						Rules.newInstanceFrom(config));
+				this.configuredWorkerProperties =
+						new ConfiguredWorkerProperties(
+								ConfiguredDtlsDatagramSocketFactory.newInstance(
+										config),
+								ConfiguredSslSocketFactory.newInstance(config),
+								config,
+								Routes.newInstanceFrom(config),
+								Rules.newInstanceFrom(config));
 				this.lastConfiguration = config;
 			}
 		} finally {

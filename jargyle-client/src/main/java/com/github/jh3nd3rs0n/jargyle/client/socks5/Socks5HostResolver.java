@@ -15,14 +15,14 @@ import java.net.UnknownHostException;
 
 public final class Socks5HostResolver extends HostResolver {
 
-	private final Socks5Client socks5Client;
+	private final Socks5ClientAgent socks5ClientAgent;
 	
 	Socks5HostResolver(final Socks5Client client) {
-		this.socks5Client = client;
+		this.socks5ClientAgent = new Socks5ClientAgent(client);
 	}
 
 	public Socks5Client getSocks5Client() {
-		return this.socks5Client;
+		return this.socks5ClientAgent.getSocks5Client();
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public final class Socks5HostResolver extends HostResolver {
 		if (!(Host.newInstance(host) instanceof HostName)) {
 			return InetAddress.getByName(host);
 		}
-		if (!this.socks5Client.getProperties().getValue(
+		if (!this.socks5ClientAgent.getProperties().getValue(
 				Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER)) {
 			return InetAddress.getByName(host);
 		}
@@ -41,7 +41,7 @@ public final class Socks5HostResolver extends HostResolver {
 		try {
 			inetAddress = this.socks5Resolve(host);
 		} catch (IOException e) {
-			throw this.socks5Client.toSocksClientIOException(e);
+			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
 		return inetAddress;
 	}
@@ -52,24 +52,24 @@ public final class Socks5HostResolver extends HostResolver {
 		Socket sck = null;
 		Reply rep;
 		try {
-			socket = this.socks5Client.newClientSocketBuilder().newClientSocket();
-			sock = this.socks5Client.newClientSocketBuilder()
+			socket = this.socks5ClientAgent.newClientSocketBuilder().newClientSocket();
+			sock = this.socks5ClientAgent.newClientSocketBuilder()
 					.proceedToConfigure(socket)
 					.configure()
 					.proceedToConnect()
 					.setToBind(true)
 					.getConnectedClientSocket();
-			Method method = this.socks5Client.negotiateMethod(sock);
+			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation =
-					this.socks5Client.doMethodSubNegotiation(method, sock);
+					this.socks5ClientAgent.doMethodSubNegotiation(method, sock);
 			sck = methodEncapsulation.getSocket();
 			Request req = Request.newInstance(
 					Command.RESOLVE,
 					Address.newInstanceFrom(host),
 					Port.valueOf(0));
-			this.socks5Client.sendRequest(req, sck);
+			this.socks5ClientAgent.sendRequest(req, sck);
 			try {
-				rep = this.socks5Client.receiveReply(sck);
+				rep = this.socks5ClientAgent.receiveReply(sck);
 			} catch (FailureReplyException e) {
 				ReplyCode replyCode = e.getFailureReply().getReplyCode();
 				if (replyCode.equals(ReplyCode.HOST_UNREACHABLE)) {
@@ -93,7 +93,7 @@ public final class Socks5HostResolver extends HostResolver {
 				rep.getServerBoundAddress().toString();
 		if (rep.getServerBoundAddress() instanceof DomainName) {
 			throw new Socks5ClientIOException(
-					this.socks5Client,
+					this.socks5ClientAgent.getSocks5Client(),
 					String.format(
 							"server bound address is not an IP address. "
 									+ "actual server bound address is %s",

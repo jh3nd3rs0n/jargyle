@@ -247,9 +247,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	private final Socks5ClientAgent socks5ClientAgent;
 	private final Socks5DatagramSocketImpl socks5DatagramSocketImpl;
 	
-	Socks5DatagramSocket(final Socks5Client client) throws SocketException {
+	Socks5DatagramSocket(
+			final Socks5ClientAgent clientAgent) throws SocketException {
 		super((SocketAddress) null);
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5DatagramSocketImpl impl;
 		try {
 			impl =	new Socks5DatagramSocketImpl(clientAgent);
@@ -263,9 +263,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	Socks5DatagramSocket(
-			final Socks5Client client, final int port) throws SocketException {
+			final Socks5ClientAgent clientAgent,
+			final int port) throws SocketException {
 		super((SocketAddress) null);
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5DatagramSocketImpl impl;
 		try {
 			impl = new Socks5DatagramSocketImpl(clientAgent);
@@ -279,11 +279,10 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	Socks5DatagramSocket(
-			final Socks5Client client, 
+			final Socks5ClientAgent clientAgent,
 			final int port, 
 			final InetAddress laddr) throws SocketException {
 		super((SocketAddress) null);
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5DatagramSocketImpl impl;
 		try {
 			impl = new Socks5DatagramSocketImpl(clientAgent);
@@ -296,10 +295,9 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 	}
 
 	Socks5DatagramSocket(
-			final Socks5Client client, 
+			final Socks5ClientAgent clientAgent,
 			final SocketAddress bindaddr) throws SocketException {
 		super((SocketAddress) null);
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5DatagramSocketImpl impl;
 		try {
 			impl = new Socks5DatagramSocketImpl(clientAgent);

@@ -259,8 +259,7 @@ public final class Socks5Socket extends Socket {
 	private final Socks5ClientAgent socks5ClientAgent;
 	private final Socks5SocketImpl socks5SocketImpl;
 	
-	Socks5Socket(final Socks5Client client) {
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
+	Socks5Socket(final Socks5ClientAgent clientAgent) {
 		this.socks5ClientAgent = clientAgent;
 		this.socks5SocketImpl = new Socks5SocketImpl(
 				clientAgent,
@@ -268,10 +267,9 @@ public final class Socks5Socket extends Socket {
 	}
 	
 	Socks5Socket(
-			final Socks5Client client, 
+			final Socks5ClientAgent clientAgent,
 			final InetAddress address, 
 			final int port) throws IOException {
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5SocketImpl impl = new Socks5SocketImpl(
 				clientAgent,
 				clientAgent.newClientSocketBuilder().newClientSocket());
@@ -285,12 +283,11 @@ public final class Socks5Socket extends Socket {
 	}
 	
 	Socks5Socket(
-			final Socks5Client client, 
+			final Socks5ClientAgent clientAgent,
 			final InetAddress address, 
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5SocketImpl impl = new Socks5SocketImpl(
 				clientAgent,
 				clientAgent.newClientSocketBuilder().newClientSocket());
@@ -304,17 +301,15 @@ public final class Socks5Socket extends Socket {
 		this.socks5SocketImpl = impl;
 	}
 
-	Socks5Socket(final Socks5Client client, final Socket sock) {
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
+	Socks5Socket(final Socks5ClientAgent clientAgent, final Socket sock) {
 		this.socks5ClientAgent = clientAgent;
 		this.socks5SocketImpl = new Socks5SocketImpl(clientAgent, sock);
 	}
 
 	Socks5Socket(
-			final Socks5Client client, 
+			final Socks5ClientAgent clientAgent,
 			final String host, 
 			final int port) throws UnknownHostException, IOException {
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5SocketImpl impl;
 		try {
 			Socket connectedClientSocket = 
@@ -330,12 +325,11 @@ public final class Socks5Socket extends Socket {
 	}
 
 	Socks5Socket(
-			final Socks5Client client, 
+			final Socks5ClientAgent clientAgent,
 			final String host, 
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		Socks5ClientAgent clientAgent = new Socks5ClientAgent(client);
 		Socks5SocketImpl impl;
 		try {
 			Socket connectedClientSocket = clientAgent

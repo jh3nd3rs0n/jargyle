@@ -17,8 +17,8 @@ public final class Socks5HostResolver extends HostResolver {
 
 	private final Socks5ClientAgent socks5ClientAgent;
 	
-	Socks5HostResolver(final Socks5Client client) {
-		this.socks5ClientAgent = new Socks5ClientAgent(client);
+	Socks5HostResolver(final Socks5ClientAgent clientAgent) {
+		this.socks5ClientAgent = clientAgent;
 	}
 
 	public Socks5Client getSocks5Client() {

@@ -19,7 +19,7 @@ public final class JargyleCLI extends CLI {
 
 		@HelpText(
 				doc = "Generate reference documents",
-				usage = "generate-reference-docs"
+				usage = "generate-reference-docs [OPTION]"
 		)
 		GENERATE_REFERENCE_DOCS("generate-reference-docs") {
 
@@ -28,12 +28,13 @@ public final class JargyleCLI extends CLI {
 					final String progName, 
 					final String progBeginningUsage, 
 					final String[] args, 
-					final boolean posixCorrect) {
-				try {
-					new ReferenceDocsGenerator().generateReferenceDocs();
-				} catch (IOException e) {
-					throw new AssertionError(e);
-				}
+					final boolean posixCorrect) throws TerminationRequestedException {
+				CLI cli = new ReferenceDocsGeneratorCLI(
+						progName,
+						progBeginningUsage,
+						args,
+						posixCorrect);
+				cli.handleArgs();
 			}
 			
 		},

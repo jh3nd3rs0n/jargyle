@@ -54,7 +54,12 @@ jargyle generate-reference-docs
 ```
 
 This command will generate reference documentation as XHTML files in the 
-present working directory.
+present working directory. To specify the destination directory for the output 
+files, you can use the command line option and argument `-d DIRECTORY` where 
+`DIRECTORY` is the specified destination directory for the output files. The 
+command line option and argument are described in the 
+[help information](../reference/cli-help-info.md#help-information-for-generate-reference-docs)
+for the command `generate-reference-docs`.
 
 ## Managing SOCKS5 Users
 

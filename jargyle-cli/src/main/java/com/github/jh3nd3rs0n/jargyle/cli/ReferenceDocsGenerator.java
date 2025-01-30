@@ -11,6 +11,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,43 +52,74 @@ final class ReferenceDocsGenerator {
     public ReferenceDocsGenerator() {
     }
 
-    public void generateReferenceDocs() throws IOException {
-        System.out.printf("Creating '%s'...", CLIENT_PROPERTIES_FILENAME);
+    public void generateReferenceDocs(final File destinationDirectory) throws IOException {
+        if (destinationDirectory != null) {
+            if (!destinationDirectory.exists()) {
+                throw new IllegalArgumentException(String.format(
+                        "`%s' not found",
+                        destinationDirectory));
+            }
+            if (!destinationDirectory.isDirectory()) {
+                throw new IllegalArgumentException(String.format(
+                        "`%s' not a directory",
+                        destinationDirectory));
+            }
+        }
+        Path baseDir = (destinationDirectory == null) ?
+                new File("").toPath() : destinationDirectory.toPath();
+        String clientPropertiesFilenamePathString = baseDir.resolve(
+                CLIENT_PROPERTIES_FILENAME).toString();
+        System.out.printf(
+                "Creating '%s'...", clientPropertiesFilenamePathString);
         try (PrintWriter clientPropertiesWriter = new PrintWriter(
-                CLIENT_PROPERTIES_FILENAME, "UTF-8")) {
+                clientPropertiesFilenamePathString, "UTF-8")) {
             this.printClientProperties(clientPropertiesWriter);
         }
         System.out.println("Done.");
-        System.out.printf("Creating '%s'...", CLI_HELP_INFO_FILENAME);
+        String cliHelpInfoFilenamePathString = baseDir.resolve(
+                CLI_HELP_INFO_FILENAME).toString();
+        System.out.printf("Creating '%s'...", cliHelpInfoFilenamePathString);
         try (PrintWriter cliHelpInfoWriter = new PrintWriter(
-                CLI_HELP_INFO_FILENAME, "UTF-8")) {
+                cliHelpInfoFilenamePathString, "UTF-8")) {
             this.printCliHelpInfo(cliHelpInfoWriter);
         }
         System.out.println("Done.");
-        System.out.printf("Creating '%s'...", RULE_ACTIONS_FILENAME);
+        String ruleActionsFilenamePathString = baseDir.resolve(
+                RULE_ACTIONS_FILENAME).toString();
+        System.out.printf("Creating '%s'...", ruleActionsFilenamePathString);
         try (PrintWriter ruleActionsWriter = new PrintWriter(
-                RULE_ACTIONS_FILENAME, "UTF-8")) {
+                ruleActionsFilenamePathString, "UTF-8")) {
             this.printRuleActions(ruleActionsWriter);
         }
         System.out.println("Done.");
-        System.out.printf("Creating '%s'...", RULE_CONDITIONS_FILENAME);
+        String ruleConditionsFilenamePathString = baseDir.resolve(
+                RULE_CONDITIONS_FILENAME).toString();
+        System.out.printf(
+                "Creating '%s'...", ruleConditionsFilenamePathString);
         try (PrintWriter ruleConditionsWriter = new PrintWriter(
-                RULE_CONDITIONS_FILENAME, "UTF-8")) {
+                ruleConditionsFilenamePathString, "UTF-8")) {
             this.printRuleConditions(ruleConditionsWriter);
         }
         System.out.println("Done.");
+        String serverConfigurationFileSchemaFilenamePathString =
+                baseDir.resolve(
+                        SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME).toString();
         System.out.printf(
-                "Creating '%s'...", SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME);
+                "Creating '%s'...",
+                serverConfigurationFileSchemaFilenamePathString);
         try (PrintStream serverConfigurationFileSchemaStream = new PrintStream(
-                SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME, "UTF-8")) {
+                serverConfigurationFileSchemaFilenamePathString, "UTF-8")) {
             this.printServerConfigurationFileSchema(
                     serverConfigurationFileSchemaStream);
         }
         System.out.println("Done.");
+        String serverConfigurationSettingsFilenamePathString = baseDir.resolve(
+                SERVER_CONFIGURATION_SETTINGS_FILENAME).toString();
         System.out.printf(
-                "Creating '%s'...", SERVER_CONFIGURATION_SETTINGS_FILENAME);
+                "Creating '%s'...",
+                serverConfigurationSettingsFilenamePathString);
         try (PrintWriter serverConfigurationSettingsWriter = new PrintWriter(
-                SERVER_CONFIGURATION_SETTINGS_FILENAME, "UTF-8")) {
+                serverConfigurationSettingsFilenamePathString, "UTF-8")) {
             this.printServerConfigurationSettings(
                     serverConfigurationSettingsWriter);
         }
@@ -101,9 +133,11 @@ final class ReferenceDocsGenerator {
         this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
         this.putFromValueType(valueTypeMap, Scheme.class);
         this.putFromValueType(valueTypeMap, UserInfo.class);
-        System.out.printf("Creating '%s'...", VALUE_SYNTAXES_FILENAME);
+        String valueSyntaxesFilenamePathString = baseDir.resolve(
+                VALUE_SYNTAXES_FILENAME).toString();
+        System.out.printf("Creating '%s'...", valueSyntaxesFilenamePathString);
         try (PrintWriter valueSyntaxesWriter = new PrintWriter(
-                VALUE_SYNTAXES_FILENAME, "UTF-8")) {
+                valueSyntaxesFilenamePathString, "UTF-8")) {
             this.printValueSyntaxes(valueTypeMap, valueSyntaxesWriter);
         }
         System.out.println("Done.");
@@ -233,6 +267,8 @@ final class ReferenceDocsGenerator {
         pw.println(this.getLinkToHeader("Help Information"));
         pw.println(UNORDERED_LIST_START_TAG);
         pw.println(this.getTextAsListItem(this.getLinkToHeader(
+                "Help Information for generate-reference-docs")));
+        pw.println(this.getTextAsListItem(this.getLinkToHeader(
                 "Help Information for manage-socks5-users")));
         pw.println(this.getTextAsListItem(this.getLinkToHeader(
                 "Help Information for new-server-config-file")));
@@ -250,6 +286,22 @@ final class ReferenceDocsGenerator {
             new JargyleCLI(
                     "jargyle",
                     "jargyle",
+                    new String[]{"--help"},
+                    false).printProgramHelp(printWriter);
+            printWriter.flush();
+            pw.print(this.replaceReservedHtmlCharacters(
+                    stringWriter.toString()));
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        pw.println(PREFORMATTED_TEXT_END_TAGS);
+        pw.println(this.getHeader3("Help Information for generate-reference-docs"));
+        pw.print(PREFORMATTED_TEXT_START_TAGS);
+        try (StringWriter stringWriter = new StringWriter();
+             PrintWriter printWriter = new PrintWriter(stringWriter)) {
+            new ReferenceDocsGeneratorCLI(
+                    "generate-reference-docs",
+                    "jargyle generate-reference-docs",
                     new String[]{"--help"},
                     false).printProgramHelp(printWriter);
             printWriter.flush();

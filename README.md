@@ -125,14 +125,10 @@ added, changed, moved, or removed, you will need to run the following commands:
 ```bash
 # Perform a build of the binary distribution
 mvn clean package -DskipTests=true
-# Change to the directory of XHTML reference documentation
-cd src/site/xhtml/reference/
-# Run Jargyle to generate XHTML reference documents in the present directory 
-../../../../jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs
-# Change back to the top directory of Jargyle
-cd ../../../../
+# Run Jargyle to generate XHTML reference documents to the directory of XHTML reference documentation 
+jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs -d src/site/xhtml/reference/
 # Produce the website/documentation with the updated reference documentation
-mvn clean compile site:site site:stage site:deploy
+mvn compile site:site site:stage site:deploy
 ```
 
 `mvn clean package -DskipTests=true`: Performs a clean build of the binary 

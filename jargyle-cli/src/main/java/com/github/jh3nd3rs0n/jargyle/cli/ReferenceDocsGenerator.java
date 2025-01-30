@@ -67,80 +67,13 @@ final class ReferenceDocsGenerator {
         }
         Path baseDir = (destinationDirectory == null) ?
                 new File("").toPath() : destinationDirectory.toPath();
-        String clientPropertiesFilenamePathString = baseDir.resolve(
-                CLIENT_PROPERTIES_FILENAME).toString();
-        System.out.printf(
-                "Creating '%s'...", clientPropertiesFilenamePathString);
-        try (PrintWriter clientPropertiesWriter = new PrintWriter(
-                clientPropertiesFilenamePathString, "UTF-8")) {
-            this.printClientProperties(clientPropertiesWriter);
-        }
-        System.out.println("Done.");
-        String cliHelpInfoFilenamePathString = baseDir.resolve(
-                CLI_HELP_INFO_FILENAME).toString();
-        System.out.printf("Creating '%s'...", cliHelpInfoFilenamePathString);
-        try (PrintWriter cliHelpInfoWriter = new PrintWriter(
-                cliHelpInfoFilenamePathString, "UTF-8")) {
-            this.printCliHelpInfo(cliHelpInfoWriter);
-        }
-        System.out.println("Done.");
-        String ruleActionsFilenamePathString = baseDir.resolve(
-                RULE_ACTIONS_FILENAME).toString();
-        System.out.printf("Creating '%s'...", ruleActionsFilenamePathString);
-        try (PrintWriter ruleActionsWriter = new PrintWriter(
-                ruleActionsFilenamePathString, "UTF-8")) {
-            this.printRuleActions(ruleActionsWriter);
-        }
-        System.out.println("Done.");
-        String ruleConditionsFilenamePathString = baseDir.resolve(
-                RULE_CONDITIONS_FILENAME).toString();
-        System.out.printf(
-                "Creating '%s'...", ruleConditionsFilenamePathString);
-        try (PrintWriter ruleConditionsWriter = new PrintWriter(
-                ruleConditionsFilenamePathString, "UTF-8")) {
-            this.printRuleConditions(ruleConditionsWriter);
-        }
-        System.out.println("Done.");
-        String serverConfigurationFileSchemaFilenamePathString =
-                baseDir.resolve(
-                        SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME).toString();
-        System.out.printf(
-                "Creating '%s'...",
-                serverConfigurationFileSchemaFilenamePathString);
-        try (PrintStream serverConfigurationFileSchemaStream = new PrintStream(
-                serverConfigurationFileSchemaFilenamePathString, "UTF-8")) {
-            this.printServerConfigurationFileSchema(
-                    serverConfigurationFileSchemaStream);
-        }
-        System.out.println("Done.");
-        String serverConfigurationSettingsFilenamePathString = baseDir.resolve(
-                SERVER_CONFIGURATION_SETTINGS_FILENAME).toString();
-        System.out.printf(
-                "Creating '%s'...",
-                serverConfigurationSettingsFilenamePathString);
-        try (PrintWriter serverConfigurationSettingsWriter = new PrintWriter(
-                serverConfigurationSettingsFilenamePathString, "UTF-8")) {
-            this.printServerConfigurationSettings(
-                    serverConfigurationSettingsWriter);
-        }
-        System.out.println("Done.");
-        Map<String, Class<?>> valueTypeMap = new TreeMap<>(
-                String::compareToIgnoreCase);
-        this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, RuleAction.class);
-        this.putFromRootNameValuePairValueType(
-                valueTypeMap, RuleCondition.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
-        this.putFromValueType(valueTypeMap, Scheme.class);
-        this.putFromValueType(valueTypeMap, UserInfo.class);
-        String valueSyntaxesFilenamePathString = baseDir.resolve(
-                VALUE_SYNTAXES_FILENAME).toString();
-        System.out.printf("Creating '%s'...", valueSyntaxesFilenamePathString);
-        try (PrintWriter valueSyntaxesWriter = new PrintWriter(
-                valueSyntaxesFilenamePathString, "UTF-8")) {
-            this.printValueSyntaxes(valueTypeMap, valueSyntaxesWriter);
-        }
-        System.out.println("Done.");
+        this.writeClientProperties(baseDir);
+        this.writeCliHelpInfo(baseDir);
+        this.writeRuleActions(baseDir);
+        this.writeRuleConditions(baseDir);
+        this.writeServerConfigurationFileSchema(baseDir);
+        this.writeServerConfigurationSettings(baseDir);
+        this.writeValueSyntaxes(baseDir);
     }
 
     private String getBoldText(final String text) {
@@ -249,129 +182,6 @@ final class ReferenceDocsGenerator {
                 PARAGRAPH_START_TAG,
                 text,
                 PARAGRAPH_END_TAG);
-    }
-
-    private void printClientProperties(final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Client Properties"));
-        this.printTableFromRootNameValuePairValueType(Property.class, pw);
-        pw.println(DOCUMENT_END_TAGS);
-    }
-
-    private void printCliHelpInfo(final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Command Line Interface Help Information"));
-        pw.println(this.getHeader2("Page Contents"));
-        pw.println(UNORDERED_LIST_START_TAG);
-        pw.println(LIST_ITEM_START_TAG);
-        pw.println(this.getLinkToHeader("Help Information"));
-        pw.println(UNORDERED_LIST_START_TAG);
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                "Help Information for generate-reference-docs")));
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                "Help Information for manage-socks5-users")));
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                "Help Information for new-server-config-file")));
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                "Help Information for start-server")));
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                "Settings Help Information")));
-        pw.println(UNORDERED_LIST_END_TAG);
-        pw.println(LIST_ITEM_END_TAG);
-        pw.println(UNORDERED_LIST_END_TAG);
-        pw.println(this.getHeader2("Help Information"));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
-            new JargyleCLI(
-                    "jargyle",
-                    "jargyle",
-                    new String[]{"--help"},
-                    false).printProgramHelp(printWriter);
-            printWriter.flush();
-            pw.print(this.replaceReservedHtmlCharacters(
-                    stringWriter.toString()));
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println(this.getHeader3("Help Information for generate-reference-docs"));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
-            new ReferenceDocsGeneratorCLI(
-                    "generate-reference-docs",
-                    "jargyle generate-reference-docs",
-                    new String[]{"--help"},
-                    false).printProgramHelp(printWriter);
-            printWriter.flush();
-            pw.print(this.replaceReservedHtmlCharacters(
-                    stringWriter.toString()));
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println(this.getHeader3("Help Information for manage-socks5-users"));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
-            new Socks5UserManagerCLI(
-                    "manage-socks5-users",
-                    "jargyle manage-socks5-users",
-                    new String[]{"--help"},
-                    false).printProgramHelp(printWriter);
-            printWriter.flush();
-            pw.print(this.replaceReservedHtmlCharacters(
-                    stringWriter.toString()));
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println(this.getHeader3("Help Information for new-server-config-file"));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
-            new ServerConfigurationFileCreatorCLI(
-                    "new-server-config-file",
-                    "jargyle new-server-config-file",
-                    new String[]{"--help"},
-                    false).printProgramHelp(printWriter);
-            printWriter.flush();
-            pw.print(this.replaceReservedHtmlCharacters(
-                    stringWriter.toString()));
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println(this.getHeader3("Help Information for start-server"));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
-            new ServerStarterCLI(
-                    "start-server",
-                    "jargyle start-server",
-                    new String[]{"--help"},
-                    false).printProgramHelp(printWriter);
-            printWriter.flush();
-            pw.print(this.replaceReservedHtmlCharacters(
-                    stringWriter.toString()));
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println(this.getHeader3("Settings Help Information"));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        try (StringWriter stringWriter = new StringWriter();
-             PrintWriter printWriter = new PrintWriter(stringWriter)) {
-            new SettingsHelpPrinter().printSettingsHelp(printWriter);
-            printWriter.flush();
-            pw.print(this.replaceReservedHtmlCharacters(
-                    stringWriter.toString()));
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        pw.println(DOCUMENT_END_TAGS);
     }
 
     private void printContentFrom(
@@ -575,46 +385,6 @@ final class ReferenceDocsGenerator {
         }
     }
 
-    private void printRuleActions(final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Rule Actions"));
-        this.printTableFromRootNameValuePairValueType(
-                RuleAction.class, pw);
-        pw.println(DOCUMENT_END_TAGS);
-    }
-
-    private void printRuleConditions(final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Rule Conditions"));
-        this.printTableFromRootNameValuePairValueType(
-                RuleCondition.class, pw);
-        pw.println(DOCUMENT_END_TAGS);
-    }
-
-    private void printServerConfigurationFileSchema(
-            final PrintStream ps) throws IOException {
-        ps.println(DOCUMENT_START_TAGS);
-        ps.println(this.getHeader1("Server Configuration File Schema"));
-        ps.print("<pre><code class=\"language-xml\">");
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ConfigurationSchema.newGeneratedInstance().toOutput(out);
-        Reader reader = new InputStreamReader(new ByteArrayInputStream(
-                out.toByteArray()));
-        int ch;
-        while ((ch = reader.read()) != -1) {
-            ps.print(this.replaceReservedHtmlCharacter((char) ch));
-        }
-        ps.println("</code></pre>");
-        ps.println(DOCUMENT_END_TAGS);
-    }
-
-    private void printServerConfigurationSettings(final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Server Configuration Settings"));
-        this.printTableFromRootNameValuePairValueType(Setting.class, pw);
-        pw.println(DOCUMENT_END_TAGS);
-    }
-
     private void printListItemOfLinkToContentFrom(
             final EnumValueTypeDoc enumValueTypeDoc,
             final PrintWriter pw) {
@@ -749,22 +519,6 @@ final class ReferenceDocsGenerator {
         }
     }
 
-    private void printValueSyntaxes(
-            final Map<String, Class<?>> valueTypeMap, final PrintWriter pw) {
-        pw.println(DOCUMENT_START_TAGS);
-        pw.println(this.getHeader1("Value Syntaxes"));
-        pw.println(this.getHeader2("Page Contents"));
-        pw.println(UNORDERED_LIST_START_TAG);
-        for (Class<?> cls : valueTypeMap.values()) {
-            this.printListItemOfLinkToContentFromValueType(cls, pw);
-        }
-        pw.println(UNORDERED_LIST_END_TAG);
-        for (Class<?> cls : valueTypeMap.values()) {
-            this.printContentFromValueType(cls, pw);
-        }
-        pw.println(DOCUMENT_END_TAGS);
-    }
-
     private void putFromRootNameValuePairValueType(
             final Map<String, Class<?>> valueTypeMap, final Class<?> cls) {
         NameValuePairValueTypeDoc nameValuePairValueTypeDoc = cls.getAnnotation(
@@ -856,6 +610,240 @@ final class ReferenceDocsGenerator {
             stringBuilder.append(replaceReservedHtmlCharacter(c));
         }
         return stringBuilder.toString();
+    }
+
+    private void writeClientProperties(final Path baseDir) throws IOException {
+        String pathString = baseDir.resolve(
+                CLIENT_PROPERTIES_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            pw.println(DOCUMENT_START_TAGS);
+            pw.println(this.getHeader1("Client Properties"));
+            this.printTableFromRootNameValuePairValueType(Property.class, pw);
+            pw.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
+    }
+
+    private void writeCliHelpInfo(final Path baseDir) throws IOException {
+        String pathString = baseDir.resolve(
+                CLI_HELP_INFO_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            pw.println(DOCUMENT_START_TAGS);
+            pw.println(this.getHeader1(
+                    "Command Line Interface Help Information"));
+            pw.println(this.getHeader2("Page Contents"));
+            pw.println(UNORDERED_LIST_START_TAG);
+            pw.println(LIST_ITEM_START_TAG);
+            pw.println(this.getLinkToHeader("Help Information"));
+            pw.println(UNORDERED_LIST_START_TAG);
+            pw.println(this.getTextAsListItem(this.getLinkToHeader(
+                    "Help Information for generate-reference-docs")));
+            pw.println(this.getTextAsListItem(this.getLinkToHeader(
+                    "Help Information for manage-socks5-users")));
+            pw.println(this.getTextAsListItem(this.getLinkToHeader(
+                    "Help Information for new-server-config-file")));
+            pw.println(this.getTextAsListItem(this.getLinkToHeader(
+                    "Help Information for start-server")));
+            pw.println(this.getTextAsListItem(this.getLinkToHeader(
+                    "Settings Help Information")));
+            pw.println(UNORDERED_LIST_END_TAG);
+            pw.println(LIST_ITEM_END_TAG);
+            pw.println(UNORDERED_LIST_END_TAG);
+            pw.println(this.getHeader2("Help Information"));
+            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                new JargyleCLI(
+                        "jargyle",
+                        "jargyle",
+                        new String[]{"--help"},
+                        false).printProgramHelp(printWriter);
+                printWriter.flush();
+                pw.print(this.replaceReservedHtmlCharacters(
+                        stringWriter.toString()));
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            pw.println(PREFORMATTED_TEXT_END_TAGS);
+            pw.println(this.getHeader3(
+                    "Help Information for generate-reference-docs"));
+            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                new ReferenceDocsGeneratorCLI(
+                        "generate-reference-docs",
+                        "jargyle generate-reference-docs",
+                        new String[]{"--help"},
+                        false).printProgramHelp(printWriter);
+                printWriter.flush();
+                pw.print(this.replaceReservedHtmlCharacters(
+                        stringWriter.toString()));
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            pw.println(PREFORMATTED_TEXT_END_TAGS);
+            pw.println(this.getHeader3(
+                    "Help Information for manage-socks5-users"));
+            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                new Socks5UserManagerCLI(
+                        "manage-socks5-users",
+                        "jargyle manage-socks5-users",
+                        new String[]{"--help"},
+                        false).printProgramHelp(printWriter);
+                printWriter.flush();
+                pw.print(this.replaceReservedHtmlCharacters(
+                        stringWriter.toString()));
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            pw.println(PREFORMATTED_TEXT_END_TAGS);
+            pw.println(this.getHeader3(
+                    "Help Information for new-server-config-file"));
+            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                new ServerConfigurationFileCreatorCLI(
+                        "new-server-config-file",
+                        "jargyle new-server-config-file",
+                        new String[]{"--help"},
+                        false).printProgramHelp(printWriter);
+                printWriter.flush();
+                pw.print(this.replaceReservedHtmlCharacters(
+                        stringWriter.toString()));
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            pw.println(PREFORMATTED_TEXT_END_TAGS);
+            pw.println(this.getHeader3("Help Information for start-server"));
+            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                new ServerStarterCLI(
+                        "start-server",
+                        "jargyle start-server",
+                        new String[]{"--help"},
+                        false).printProgramHelp(printWriter);
+                printWriter.flush();
+                pw.print(this.replaceReservedHtmlCharacters(
+                        stringWriter.toString()));
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            pw.println(PREFORMATTED_TEXT_END_TAGS);
+            pw.println(this.getHeader3("Settings Help Information"));
+            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
+                new SettingsHelpPrinter().printSettingsHelp(printWriter);
+                printWriter.flush();
+                pw.print(this.replaceReservedHtmlCharacters(
+                        stringWriter.toString()));
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            pw.println(PREFORMATTED_TEXT_END_TAGS);
+            pw.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
+    }
+
+    private void writeRuleActions(final Path baseDir) throws IOException {
+        String pathString = baseDir.resolve(
+                RULE_ACTIONS_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            pw.println(DOCUMENT_START_TAGS);
+            pw.println(this.getHeader1("Rule Actions"));
+            this.printTableFromRootNameValuePairValueType(
+                    RuleAction.class, pw);
+            pw.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
+    }
+
+    private void writeRuleConditions(final Path baseDir) throws IOException {
+        String pathString = baseDir.resolve(
+                RULE_CONDITIONS_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            pw.println(DOCUMENT_START_TAGS);
+            pw.println(this.getHeader1("Rule Conditions"));
+            this.printTableFromRootNameValuePairValueType(
+                    RuleCondition.class, pw);
+            pw.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
+    }
+
+    private void writeServerConfigurationFileSchema(
+            final Path baseDir) throws IOException {
+        String pathString = baseDir.resolve(
+                SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintStream ps = new PrintStream(pathString, "UTF-8")) {
+            ps.println(DOCUMENT_START_TAGS);
+            ps.println(this.getHeader1("Server Configuration File Schema"));
+            ps.print("<pre><code class=\"language-xml\">");
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ConfigurationSchema.newGeneratedInstance().toOutput(out);
+            Reader reader = new InputStreamReader(new ByteArrayInputStream(
+                    out.toByteArray()));
+            int ch;
+            while ((ch = reader.read()) != -1) {
+                ps.print(this.replaceReservedHtmlCharacter((char) ch));
+            }
+            ps.println("</code></pre>");
+            ps.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
+    }
+
+    private void writeServerConfigurationSettings(
+            final Path baseDir) throws IOException {
+        String pathString = baseDir.resolve(
+                SERVER_CONFIGURATION_SETTINGS_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            pw.println(DOCUMENT_START_TAGS);
+            pw.println(this.getHeader1("Server Configuration Settings"));
+            this.printTableFromRootNameValuePairValueType(Setting.class, pw);
+            pw.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
+    }
+
+    private void writeValueSyntaxes(final Path baseDir) throws IOException {
+        Map<String, Class<?>> valueTypeMap = new TreeMap<>(
+                String::compareToIgnoreCase);
+        this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
+        this.putFromRootNameValuePairValueType(valueTypeMap, RuleAction.class);
+        this.putFromRootNameValuePairValueType(
+                valueTypeMap, RuleCondition.class);
+        this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
+        this.putFromValueType(valueTypeMap, Scheme.class);
+        this.putFromValueType(valueTypeMap, UserInfo.class);
+        String pathString = baseDir.resolve(
+                VALUE_SYNTAXES_FILENAME).toString();
+        System.out.printf("Creating '%s'...", pathString);
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            pw.println(DOCUMENT_START_TAGS);
+            pw.println(this.getHeader1("Value Syntaxes"));
+            pw.println(this.getHeader2("Page Contents"));
+            pw.println(UNORDERED_LIST_START_TAG);
+            for (Class<?> cls : valueTypeMap.values()) {
+                this.printListItemOfLinkToContentFromValueType(cls, pw);
+            }
+            pw.println(UNORDERED_LIST_END_TAG);
+            for (Class<?> cls : valueTypeMap.values()) {
+                this.printContentFromValueType(cls, pw);
+            }
+            pw.println(DOCUMENT_END_TAGS);
+        }
+        System.out.println("Done.");
     }
 
 }

@@ -52,7 +52,8 @@ final class ReferenceDocsGenerator {
     public ReferenceDocsGenerator() {
     }
 
-    public void generateReferenceDocs(final File destinationDirectory) throws IOException {
+    public void generateReferenceDocs(
+            final File destinationDirectory) throws IOException {
         if (destinationDirectory != null) {
             if (!destinationDirectory.exists()) {
                 throw new IllegalArgumentException(String.format(
@@ -65,15 +66,15 @@ final class ReferenceDocsGenerator {
                         destinationDirectory));
             }
         }
-        Path baseDir = (destinationDirectory == null) ?
+        Path destinationDir = (destinationDirectory == null) ?
                 new File("").toPath() : destinationDirectory.toPath();
-        this.writeClientProperties(baseDir);
-        this.writeCliHelpInfo(baseDir);
-        this.writeRuleActions(baseDir);
-        this.writeRuleConditions(baseDir);
-        this.writeServerConfigurationFileSchema(baseDir);
-        this.writeServerConfigurationSettings(baseDir);
-        this.writeValueSyntaxes(baseDir);
+        this.writeClientProperties(destinationDir);
+        this.writeCliHelpInfo(destinationDir);
+        this.writeRuleActions(destinationDir);
+        this.writeRuleConditions(destinationDir);
+        this.writeServerConfigurationFileSchema(destinationDir);
+        this.writeServerConfigurationSettings(destinationDir);
+        this.writeValueSyntaxes(destinationDir);
     }
 
     private String getBoldText(final String text) {
@@ -612,8 +613,9 @@ final class ReferenceDocsGenerator {
         return stringBuilder.toString();
     }
 
-    private void writeClientProperties(final Path baseDir) throws IOException {
-        String pathString = baseDir.resolve(
+    private void writeClientProperties(
+            final Path destinationDir) throws IOException {
+        String pathString = destinationDir.resolve(
                 CLIENT_PROPERTIES_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
@@ -625,8 +627,9 @@ final class ReferenceDocsGenerator {
         System.out.println("Done.");
     }
 
-    private void writeCliHelpInfo(final Path baseDir) throws IOException {
-        String pathString = baseDir.resolve(
+    private void writeCliHelpInfo(
+            final Path destinationDir) throws IOException {
+        String pathString = destinationDir.resolve(
                 CLI_HELP_INFO_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
@@ -663,8 +666,6 @@ final class ReferenceDocsGenerator {
                 printWriter.flush();
                 pw.print(this.replaceReservedHtmlCharacters(
                         stringWriter.toString()));
-            } catch (IOException e) {
-                throw new AssertionError(e);
             }
             pw.println(PREFORMATTED_TEXT_END_TAGS);
             pw.println(this.getHeader3(
@@ -680,8 +681,6 @@ final class ReferenceDocsGenerator {
                 printWriter.flush();
                 pw.print(this.replaceReservedHtmlCharacters(
                         stringWriter.toString()));
-            } catch (IOException e) {
-                throw new AssertionError(e);
             }
             pw.println(PREFORMATTED_TEXT_END_TAGS);
             pw.println(this.getHeader3(
@@ -697,8 +696,6 @@ final class ReferenceDocsGenerator {
                 printWriter.flush();
                 pw.print(this.replaceReservedHtmlCharacters(
                         stringWriter.toString()));
-            } catch (IOException e) {
-                throw new AssertionError(e);
             }
             pw.println(PREFORMATTED_TEXT_END_TAGS);
             pw.println(this.getHeader3(
@@ -714,8 +711,6 @@ final class ReferenceDocsGenerator {
                 printWriter.flush();
                 pw.print(this.replaceReservedHtmlCharacters(
                         stringWriter.toString()));
-            } catch (IOException e) {
-                throw new AssertionError(e);
             }
             pw.println(PREFORMATTED_TEXT_END_TAGS);
             pw.println(this.getHeader3("Help Information for start-server"));
@@ -730,8 +725,6 @@ final class ReferenceDocsGenerator {
                 printWriter.flush();
                 pw.print(this.replaceReservedHtmlCharacters(
                         stringWriter.toString()));
-            } catch (IOException e) {
-                throw new AssertionError(e);
             }
             pw.println(PREFORMATTED_TEXT_END_TAGS);
             pw.println(this.getHeader3("Settings Help Information"));
@@ -742,8 +735,6 @@ final class ReferenceDocsGenerator {
                 printWriter.flush();
                 pw.print(this.replaceReservedHtmlCharacters(
                         stringWriter.toString()));
-            } catch (IOException e) {
-                throw new AssertionError(e);
             }
             pw.println(PREFORMATTED_TEXT_END_TAGS);
             pw.println(DOCUMENT_END_TAGS);
@@ -751,8 +742,9 @@ final class ReferenceDocsGenerator {
         System.out.println("Done.");
     }
 
-    private void writeRuleActions(final Path baseDir) throws IOException {
-        String pathString = baseDir.resolve(
+    private void writeRuleActions(
+            final Path destinationDir) throws IOException {
+        String pathString = destinationDir.resolve(
                 RULE_ACTIONS_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
@@ -765,8 +757,9 @@ final class ReferenceDocsGenerator {
         System.out.println("Done.");
     }
 
-    private void writeRuleConditions(final Path baseDir) throws IOException {
-        String pathString = baseDir.resolve(
+    private void writeRuleConditions(
+            final Path destinationDir) throws IOException {
+        String pathString = destinationDir.resolve(
                 RULE_CONDITIONS_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
@@ -780,8 +773,8 @@ final class ReferenceDocsGenerator {
     }
 
     private void writeServerConfigurationFileSchema(
-            final Path baseDir) throws IOException {
-        String pathString = baseDir.resolve(
+            final Path destinationDir) throws IOException {
+        String pathString = destinationDir.resolve(
                 SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintStream ps = new PrintStream(pathString, "UTF-8")) {
@@ -803,8 +796,8 @@ final class ReferenceDocsGenerator {
     }
 
     private void writeServerConfigurationSettings(
-            final Path baseDir) throws IOException {
-        String pathString = baseDir.resolve(
+            final Path destinationDir) throws IOException {
+        String pathString = destinationDir.resolve(
                 SERVER_CONFIGURATION_SETTINGS_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
@@ -816,7 +809,8 @@ final class ReferenceDocsGenerator {
         System.out.println("Done.");
     }
 
-    private void writeValueSyntaxes(final Path baseDir) throws IOException {
+    private void writeValueSyntaxes(
+            final Path destinationDir) throws IOException {
         Map<String, Class<?>> valueTypeMap = new TreeMap<>(
                 String::compareToIgnoreCase);
         this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
@@ -826,7 +820,7 @@ final class ReferenceDocsGenerator {
         this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
         this.putFromValueType(valueTypeMap, Scheme.class);
         this.putFromValueType(valueTypeMap, UserInfo.class);
-        String pathString = baseDir.resolve(
+        String pathString = destinationDir.resolve(
                 VALUE_SYNTAXES_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {

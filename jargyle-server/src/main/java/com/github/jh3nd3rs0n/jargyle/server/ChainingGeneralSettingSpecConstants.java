@@ -20,6 +20,7 @@ public final class ChainingGeneralSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0.0.0.0",
 			description = "The binding host name or address for the client "
 					+ "socket that is used to connect to the other SOCKS "
 					+ "server",
@@ -33,10 +34,10 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.CLIENT_BIND_HOST.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS",
 			description = "The comma separated list of acceptable binding "
 					+ "host address types for the client socket that is used "
-					+ "to connect to the other SOCKS server "
-					+ "(default is IPv4,IPv6)",
+					+ "to connect to the other SOCKS server",
 			name = "chaining.clientBindHostAddressTypes",
 			syntax = "chaining.clientBindHostAddressTypes=HOST_ADDRESS_TYPES",
 			valueType = HostAddressTypes.class
@@ -47,9 +48,10 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0",
 			description = "The comma separated list of binding port ranges for "
 					+ "the client socket that is used to connect to the other "
-					+ "SOCKS server (default is 0)",
+					+ "SOCKS server",
 			name = "chaining.clientBindPortRanges",
 			syntax = "chaining.clientBindPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -60,10 +62,10 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "60000",
 			description = "The timeout in milliseconds on waiting for the "
 					+ "client socket to connect to the other SOCKS server "
-					+ "(a timeout of 0 is interpreted as an infinite timeout) "
-					+ "(default is 60000)",
+					+ "(a timeout of 0 is interpreted as an infinite timeout)",
 			name = "chaining.clientConnectTimeout",
 			syntax = "chaining.clientConnectTimeout=NON_NEGATIVE_INTEGER",
 			valueType = NonNegativeInteger.class

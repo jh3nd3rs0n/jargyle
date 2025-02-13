@@ -53,7 +53,7 @@ To generate reference documentation, you would run the following command:
 jargyle generate-reference-docs
 ```
 
-This command will generate reference documentation as XHTML files in the 
+This command will generate reference documentation as Markdown files in the 
 present working directory. To specify the destination directory for the output 
 files, you can use the command line option and argument `-d DIRECTORY` where 
 `DIRECTORY` is the specified destination directory for the output files. The 

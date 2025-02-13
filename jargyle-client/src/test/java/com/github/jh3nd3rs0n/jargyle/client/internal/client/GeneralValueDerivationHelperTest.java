@@ -40,7 +40,7 @@ public class GeneralValueDerivationHelperTest {
         Properties properties = Properties.of(
                 GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.newProperty(netInterface),
                 GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES.newProperty(
-                        HostAddressTypes.of(HostAddressType.IPV4)));
+                        HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
         Assert.assertEquals(
                 host,
                 GeneralValueDerivationHelper.getClientBindHostFrom(properties));

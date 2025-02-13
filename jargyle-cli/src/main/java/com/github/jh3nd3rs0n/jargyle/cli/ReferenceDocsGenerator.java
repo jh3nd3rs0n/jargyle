@@ -10,44 +10,29 @@ import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
 import com.github.jh3nd3rs0n.jargyle.server.Setting;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 final class ReferenceDocsGenerator {
 
     private static final String CLIENT_PROPERTIES_FILENAME =
-            "client-properties.xhtml";
+            "client-properties.md";
     private static final String CLI_HELP_INFO_FILENAME =
-            "cli-help-info.xhtml";
+            "cli-help-info.md";
     private static final String RULE_ACTIONS_FILENAME =
-            "rule-actions.xhtml";
+            "rule-actions.md";
     private static final String RULE_CONDITIONS_FILENAME =
-            "rule-conditions.xhtml";
+            "rule-conditions.md";
     private static final String SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME =
-            "server-configuration-file-schema.xhtml";
+            "server-configuration-file-schema.md";
     private static final String SERVER_CONFIGURATION_SETTINGS_FILENAME =
-            "server-configuration-settings.xhtml";
-    private static final String VALUE_SYNTAXES_FILENAME =
-            "value-syntaxes.xhtml";
-    private static final String FUTURE_VALUE_SYNTAXES_FILENAME =
-            "value-syntaxes.html";
-
-    private static final String DOCUMENT_START_TAGS =
-            "<!DOCTYPE html><html><head><title></title></head><body>";
-    private static final String DOCUMENT_END_TAGS = "</body></html>";
-    private static final String BOLD_TEXT_START_TAG = "<b>";
-    private static final String BOLD_TEXT_END_TAG = "</b>";
-    private static final String LIST_ITEM_START_TAG = "<li>";
-    private static final String LIST_ITEM_END_TAG = "</li>";
-    private static final String PARAGRAPH_START_TAG = "<p>";
-    private static final String PARAGRAPH_END_TAG = "</p>";
-    private static final String PREFORMATTED_TEXT_START_TAGS =
-            "<pre><code class=\"language-text\">";
-    private static final String PREFORMATTED_TEXT_END_TAGS = "</code></pre>";
-    private static final String UNORDERED_LIST_START_TAG = "<ul>";
-    private static final String UNORDERED_LIST_END_TAG = "</ul>";
+            "server-configuration-settings.md";
+    private static final String VALUE_TYPES_FILENAME =
+            "value-types.md";
 
     public ReferenceDocsGenerator() {
     }
@@ -74,543 +59,7 @@ final class ReferenceDocsGenerator {
         this.writeRuleConditions(destinationDir);
         this.writeServerConfigurationFileSchema(destinationDir);
         this.writeServerConfigurationSettings(destinationDir);
-        this.writeValueSyntaxes(destinationDir);
-    }
-
-    private String getBoldText(final String text) {
-        return String.format(
-                "%s%s%s",
-                BOLD_TEXT_START_TAG,
-                text,
-                BOLD_TEXT_END_TAG);
-    }
-
-    private String getCodeText(final String text) {
-        return String.format("<code>%s</code>", text);
-    }
-
-    private String getHeader1(final String text) {
-        return String.format(
-                "<h1 id=\"%s\">%s</h1>",
-                this.getId(text),
-                text);
-    }
-
-    private String getHeader2(final String text) {
-        return String.format(
-                "<h2 id=\"%s\">%s</h2>",
-                this.getId(text),
-                text);
-    }
-
-    private String getHeader3(final String text) {
-        return String.format(
-                "<h3 id=\"%s\">%s</h3>",
-                this.getId(text),
-                text);
-    }
-
-    private String getHeader4(final String text) {
-        return String.format(
-                "<h4 id=\"%s\">%s</h4>",
-                this.getId(text),
-                text);
-    }
-
-    private String getId(final String s) {
-        return s.toLowerCase().replaceAll("[^a-z0-9_]", "-");
-    }
-
-    private String getLinkToHeader(final String headerText) {
-        return String.format(
-                "<a href=\"#%s\">%s</a>",
-                this.getId(headerText),
-                headerText);
-    }
-
-    private String getLinkToHeader(
-            final String filename, final String headerText) {
-        return String.format(
-                "<a href=\"%s#%s\">%s</a>",
-                filename,
-                this.getId(headerText),
-                headerText);
-    }
-
-    private String getLinkToValueInfo(final Class<?> cls) {
-        EnumValueTypeDoc enumValueTypeDoc = cls.getAnnotation(
-                EnumValueTypeDoc.class);
-        if (enumValueTypeDoc != null) {
-            return this.getLinkToHeader(
-                    FUTURE_VALUE_SYNTAXES_FILENAME, enumValueTypeDoc.name());
-        }
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
-                cls.getAnnotation(NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            return this.getLinkToHeader(
-                    FUTURE_VALUE_SYNTAXES_FILENAME,
-                    nameValuePairValueTypeDoc.name());
-        }
-        SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
-                SingleValueTypeDoc.class);
-        if (singleValueTypeDoc != null) {
-            return this.getLinkToHeader(
-                    FUTURE_VALUE_SYNTAXES_FILENAME, singleValueTypeDoc.name());
-        }
-        ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
-                ValuesValueTypeDoc.class);
-        if (valuesValueTypeDoc != null) {
-            return this.getLinkToHeader(
-                    FUTURE_VALUE_SYNTAXES_FILENAME, valuesValueTypeDoc.name());
-        }
-        if (!cls.equals(String.class)) {
-            return cls.getName().concat(".toString()");
-        }
-        return cls.getName();
-    }
-
-    private String getTextAsListItem(final String text) {
-        return String.format(
-                "%s%s%s",
-                LIST_ITEM_START_TAG,
-                text,
-                LIST_ITEM_END_TAG);
-    }
-
-    private String getTextAsParagraph(final String text) {
-        return String.format(
-                "%s%s%s",
-                PARAGRAPH_START_TAG,
-                text,
-                PARAGRAPH_END_TAG);
-    }
-
-    private void printContentFrom(
-            final EnumValueTypeDoc enumValueTypeDoc,
-            final Class<?> cls,
-            final PrintWriter pw) {
-        pw.println(this.getHeader2(enumValueTypeDoc.name()));
-        pw.println(this.getTextAsParagraph(this.getBoldText(
-                "Syntax:")));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        pw.println(this.replaceReservedHtmlCharacters(
-                enumValueTypeDoc.syntax()));
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        String description = enumValueTypeDoc.description();
-        if (!description.isEmpty()) {
-            pw.println(this.getTextAsParagraph(this.getBoldText(
-                    "Description:")));
-            pw.println(this.getTextAsParagraph(
-                    this.replaceReservedHtmlCharacters(description)));
-        }
-        List<EnumValueDoc> enumValueDocList = Arrays.stream(cls.getDeclaredFields())
-                .map((field) -> field.getAnnotation(EnumValueDoc.class))
-                .filter((Objects::nonNull))
-                .collect(Collectors.toList());
-        if (!enumValueDocList.isEmpty()) {
-            pw.println(this.getTextAsParagraph(this.getBoldText(
-                    "Values:")));
-            pw.println(UNORDERED_LIST_START_TAG);
-            for (EnumValueDoc enumValueDoc : enumValueDocList) {
-                pw.print(LIST_ITEM_START_TAG);
-                pw.print(this.getCodeText(enumValueDoc.value()));
-                String desc = enumValueDoc.description();
-                if (!desc.isEmpty()) {
-                    pw.printf(
-                            ": %s",
-                            this.replaceReservedHtmlCharacters(desc));
-                }
-                pw.println(LIST_ITEM_END_TAG);
-            }
-            pw.println(UNORDERED_LIST_END_TAG);
-        }
-    }
-
-    private void printContentFrom(
-            final NameValuePairValueTypeDoc nameValuePairValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(this.getHeader2(nameValuePairValueTypeDoc.name()));
-        pw.println(this.getTextAsParagraph(this.getBoldText(
-                "Syntax:")));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        pw.println(this.replaceReservedHtmlCharacters(
-                nameValuePairValueTypeDoc.syntax()));
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        String description = nameValuePairValueTypeDoc.description();
-        if (!description.isEmpty()) {
-            pw.println(this.getTextAsParagraph(this.getBoldText(
-                    "Description:")));
-            pw.println(this.getTextAsParagraph(
-                    this.replaceReservedHtmlCharacters(description)));
-        }
-        for (Class<?> c : nameValuePairValueTypeDoc.nameValuePairValueSpecs()) {
-            NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc =
-                    c.getAnnotation(NameValuePairValueSpecsDoc.class);
-            if (nameValuePairValueSpecsDoc != null) {
-                pw.println(this.getHeader3(nameValuePairValueSpecsDoc.name()));
-                pw.println();
-                String desc = nameValuePairValueSpecsDoc.description();
-                if (!desc.isEmpty()) {
-                    pw.println(this.getTextAsParagraph(this.getBoldText(
-                            "Description:")));
-                    pw.println(this.getTextAsParagraph(
-                            this.replaceReservedHtmlCharacters(desc)));
-                }
-                for (Field field : c.getDeclaredFields()) {
-                    NameValuePairValueSpecDoc nameValuePairValueSpecDoc =
-                            field.getAnnotation(NameValuePairValueSpecDoc.class);
-                    if (nameValuePairValueSpecDoc != null) {
-                        pw.println(this.getHeader4(nameValuePairValueSpecDoc.name()));
-                        pw.println(this.getTextAsParagraph(this.getBoldText(
-                                "Syntax:")));
-                        pw.print(PREFORMATTED_TEXT_START_TAGS);
-                        pw.println(this.replaceReservedHtmlCharacters(
-                                nameValuePairValueSpecDoc.syntax()));
-                        pw.println(PREFORMATTED_TEXT_END_TAGS);
-                        String d = nameValuePairValueSpecDoc.description();
-                        if (!d.isEmpty()) {
-                            pw.println(this.getTextAsParagraph(this.getBoldText(
-                                    "Description:")));
-                            pw.println(this.getTextAsParagraph(
-                                    this.replaceReservedHtmlCharacters(d)));
-                        }
-                        pw.println(this.getTextAsParagraph(String.format(
-                                "%s %s",
-                                this.getBoldText("Value:"),
-                                this.getLinkToValueInfo(
-                                        nameValuePairValueSpecDoc.valueType()
-                                ))));
-                    }
-                }
-            }
-        }
-    }
-
-    private void printContentFrom(
-            final SingleValueTypeDoc singleValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(this.getHeader2(singleValueTypeDoc.name()));
-        pw.println(this.getTextAsParagraph(this.getBoldText(
-                "Syntax:")));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        pw.println(this.replaceReservedHtmlCharacters(
-                singleValueTypeDoc.syntax()));
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        String description = singleValueTypeDoc.description();
-        if (!description.isEmpty()) {
-            pw.println(this.getTextAsParagraph(this.getBoldText(
-                    "Description:")));
-            pw.println(this.getTextAsParagraph(
-                    this.replaceReservedHtmlCharacters(description)));
-        }
-        for (Class<?> c : singleValueTypeDoc.singleValueSpecs()) {
-            SingleValueSpecsDoc singleValueSpecsDoc = c.getAnnotation(
-                    SingleValueSpecsDoc.class);
-            if (singleValueSpecsDoc != null) {
-                pw.println(this.getHeader3(singleValueSpecsDoc.name()));
-                String desc = singleValueSpecsDoc.description();
-                if (!desc.isEmpty()) {
-                    pw.println(this.getTextAsParagraph(this.getBoldText(
-                            "Description:")));
-                    pw.println(this.getTextAsParagraph(this.getTextAsParagraph(
-                            desc)));
-                }
-                for (Field field : c.getDeclaredFields()) {
-                    SingleValueSpecDoc singleValueSpecDoc =
-                            field.getAnnotation(SingleValueSpecDoc.class);
-                    if (singleValueSpecDoc != null) {
-                        pw.println(this.getHeader4(singleValueSpecDoc.name()));
-                        pw.println(this.getTextAsParagraph(this.getBoldText(
-                                "Syntax:")));
-                        pw.print(PREFORMATTED_TEXT_START_TAGS);
-                        pw.println(this.replaceReservedHtmlCharacters(
-                                singleValueSpecDoc.syntax()));
-                        pw.println(PREFORMATTED_TEXT_END_TAGS);
-                        String d = singleValueSpecDoc.description();
-                        if (!d.isEmpty()) {
-                            pw.println(this.getTextAsParagraph(this.getBoldText(
-                                    "Description:")));
-                            pw.println(this.getTextAsParagraph(
-                                    this.replaceReservedHtmlCharacters(d)));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void printContentFrom(
-            final ValuesValueTypeDoc valuesValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(this.getHeader2(valuesValueTypeDoc.name()));
-        pw.println(this.getTextAsParagraph(this.getBoldText(
-                "Syntax:")));
-        pw.print(PREFORMATTED_TEXT_START_TAGS);
-        pw.println(this.replaceReservedHtmlCharacters(
-                valuesValueTypeDoc.syntax()));
-        pw.println(PREFORMATTED_TEXT_END_TAGS);
-        String description = valuesValueTypeDoc.description();
-        if (!description.isEmpty()) {
-            pw.println(this.getTextAsParagraph(this.getBoldText(
-                    "Description:")));
-            pw.println(this.getTextAsParagraph(
-                    this.replaceReservedHtmlCharacters(description)));
-        }
-        pw.println(this.getTextAsParagraph(String.format(
-                "%s %s",
-                this.getBoldText("Element value:"),
-                this.getLinkToValueInfo(valuesValueTypeDoc.elementValueType()))));
-    }
-
-    private void printContentFromValueType(
-            final Class<?> cls, final PrintWriter pw) {
-        EnumValueTypeDoc enumValueTypeDoc = cls.getAnnotation(
-                EnumValueTypeDoc.class);
-        if (enumValueTypeDoc != null) {
-            this.printContentFrom(enumValueTypeDoc, cls, pw);
-        }
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
-                cls.getAnnotation(NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            this.printContentFrom(nameValuePairValueTypeDoc, pw);
-        }
-        SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
-                SingleValueTypeDoc.class);
-        if (singleValueTypeDoc != null) {
-            this.printContentFrom(singleValueTypeDoc, pw);
-        }
-        ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
-                ValuesValueTypeDoc.class);
-        if (valuesValueTypeDoc != null) {
-            this.printContentFrom(valuesValueTypeDoc, pw);
-        }
-    }
-
-    private void printListItemOfLinkToContentFrom(
-            final EnumValueTypeDoc enumValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                enumValueTypeDoc.name())));
-    }
-
-    private void printListItemOfLinkToContentFrom(
-            final NameValuePairValueTypeDoc nameValuePairValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(LIST_ITEM_START_TAG);
-        pw.println(this.getLinkToHeader(nameValuePairValueTypeDoc.name()));
-        pw.println(UNORDERED_LIST_START_TAG);
-        for (Class<?> c : nameValuePairValueTypeDoc.nameValuePairValueSpecs()) {
-            NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc =
-                    c.getAnnotation(NameValuePairValueSpecsDoc.class);
-            if (nameValuePairValueSpecsDoc != null) {
-                pw.println(LIST_ITEM_START_TAG);
-                pw.println(this.getLinkToHeader(
-                        nameValuePairValueSpecsDoc.name()));
-                pw.println(UNORDERED_LIST_START_TAG);
-                for (Field field : c.getDeclaredFields()) {
-                    NameValuePairValueSpecDoc nameValuePairValueSpecDoc =
-                            field.getAnnotation(NameValuePairValueSpecDoc.class);
-                    if (nameValuePairValueSpecDoc != null) {
-                        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                                nameValuePairValueSpecDoc.name())));
-                    }
-                }
-                pw.println(UNORDERED_LIST_END_TAG);
-                pw.println(LIST_ITEM_END_TAG);
-            }
-        }
-        pw.println(UNORDERED_LIST_END_TAG);
-        pw.println(LIST_ITEM_END_TAG);
-    }
-
-    private void printListItemOfLinkToContentFrom(
-            final SingleValueTypeDoc singleValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(LIST_ITEM_START_TAG);
-        pw.println(this.getLinkToHeader(singleValueTypeDoc.name()));
-        pw.println(UNORDERED_LIST_START_TAG);
-        for (Class<?> c : singleValueTypeDoc.singleValueSpecs()) {
-            SingleValueSpecsDoc singleValueSpecsDoc = c.getAnnotation(
-                    SingleValueSpecsDoc.class);
-            if (singleValueSpecsDoc != null) {
-                pw.println(LIST_ITEM_START_TAG);
-                pw.println(this.getLinkToHeader(singleValueSpecsDoc.name()));
-                pw.println(UNORDERED_LIST_START_TAG);
-                for (Field field : c.getDeclaredFields()) {
-                    SingleValueSpecDoc singleValueSpecDoc =
-                            field.getAnnotation(SingleValueSpecDoc.class);
-                    if (singleValueSpecDoc != null) {
-                        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                                singleValueSpecDoc.name())));
-                    }
-                }
-                pw.println(UNORDERED_LIST_END_TAG);
-                pw.println(LIST_ITEM_END_TAG);
-            }
-        }
-        pw.println(UNORDERED_LIST_END_TAG);
-        pw.println(LIST_ITEM_END_TAG);
-    }
-
-    private void printListItemOfLinkToContentFrom(
-            final ValuesValueTypeDoc valuesValueTypeDoc,
-            final PrintWriter pw) {
-        pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                valuesValueTypeDoc.name())));
-    }
-
-    private void printListItemOfLinkToContentFromValueType(
-            final Class<?> cls, final PrintWriter pw) {
-        EnumValueTypeDoc enumValueTypeDoc = cls.getAnnotation(
-                EnumValueTypeDoc.class);
-        if (enumValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(enumValueTypeDoc, pw);
-        }
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
-                cls.getAnnotation(NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(nameValuePairValueTypeDoc, pw);
-        }
-        SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
-                SingleValueTypeDoc.class);
-        if (singleValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(singleValueTypeDoc, pw);
-        }
-        ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
-                ValuesValueTypeDoc.class);
-        if (valuesValueTypeDoc != null) {
-            this.printListItemOfLinkToContentFrom(valuesValueTypeDoc, pw);
-        }
-    }
-
-    private void printTableFromRootNameValuePairValueType(
-            final Class<?> cls, final PrintWriter pw) {
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc =
-                cls.getAnnotation(NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            Class<?>[] classes =
-                    nameValuePairValueTypeDoc.nameValuePairValueSpecs();
-            pw.println("<table>");
-            for (Class<?> c : classes) {
-                NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc =
-                        c.getAnnotation(NameValuePairValueSpecsDoc.class);
-                if (nameValuePairValueSpecsDoc != null) {
-                    pw.printf(
-                            "<tr><th colspan=\"3\">%s</th></tr>%n",
-                            nameValuePairValueSpecsDoc.name());
-                    pw.println("<tr><th>Name</th><th>Value</th><th>Description</th></tr>");
-                    for (Field field : c.getDeclaredFields()) {
-                        NameValuePairValueSpecDoc nameValuePairValueSpecDoc =
-                                field.getAnnotation(
-                                        NameValuePairValueSpecDoc.class);
-                        if (nameValuePairValueSpecDoc != null) {
-                            pw.printf(
-                                    "<tr><td><code>%s</code></td><td>%s</td><td>%s</td></tr>%n",
-                                    nameValuePairValueSpecDoc.name(),
-                                    this.getLinkToValueInfo(
-                                            nameValuePairValueSpecDoc.valueType()
-                                    ),
-                                    this.replaceReservedHtmlCharacters(
-                                            nameValuePairValueSpecDoc.description()));
-                        }
-                    }
-                }
-            }
-            pw.println("</table>");
-        }
-    }
-
-    private void putFromRootNameValuePairValueType(
-            final Map<String, Class<?>> valueTypeMap, final Class<?> cls) {
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc = cls.getAnnotation(
-                NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            Class<?>[] classes =
-                    nameValuePairValueTypeDoc.nameValuePairValueSpecs();
-            for (Class<?> c : classes) {
-                NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc =
-                        c.getAnnotation(NameValuePairValueSpecsDoc.class);
-                if (nameValuePairValueSpecsDoc != null) {
-                    for (Field field : c.getDeclaredFields()) {
-                        NameValuePairValueSpecDoc nameValuePairValueSpecDoc =
-                                field.getAnnotation(
-                                        NameValuePairValueSpecDoc.class);
-                        if (nameValuePairValueSpecDoc != null) {
-                            this.putFromValueType(
-                                    valueTypeMap,
-                                    nameValuePairValueSpecDoc.valueType());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void putFromValueType(
-            final Map<String, Class<?>> valueTypeMap, final Class<?> cls) {
-        EnumValueTypeDoc enumValueTypeDoc = cls.getAnnotation(
-                EnumValueTypeDoc.class);
-        if (enumValueTypeDoc != null) {
-            valueTypeMap.put(enumValueTypeDoc.syntaxName(), cls);
-        }
-        NameValuePairValueTypeDoc nameValuePairValueTypeDoc = cls.getAnnotation(
-                NameValuePairValueTypeDoc.class);
-        if (nameValuePairValueTypeDoc != null) {
-            valueTypeMap.put(nameValuePairValueTypeDoc.syntaxName(), cls);
-            for (Class<?> c :
-                    nameValuePairValueTypeDoc.nameValuePairValueSpecs()) {
-                NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc =
-                        c.getAnnotation(NameValuePairValueSpecsDoc.class);
-                if (nameValuePairValueSpecsDoc != null) {
-                    for (Field field : c.getDeclaredFields()) {
-                        NameValuePairValueSpecDoc nameValuePairValueSpecDoc =
-                                field.getAnnotation(
-                                        NameValuePairValueSpecDoc.class);
-                        if (nameValuePairValueSpecDoc != null) {
-                            this.putFromValueType(
-                                    valueTypeMap,
-                                    nameValuePairValueSpecDoc.valueType());
-                        }
-                    }
-                }
-            }
-        }
-        SingleValueTypeDoc singleValueTypeDoc = cls.getAnnotation(
-                SingleValueTypeDoc.class);
-        if (singleValueTypeDoc != null) {
-            valueTypeMap.put(singleValueTypeDoc.syntaxName(), cls);
-        }
-        ValuesValueTypeDoc valuesValueTypeDoc = cls.getAnnotation(
-                ValuesValueTypeDoc.class);
-        if (valuesValueTypeDoc != null) {
-            valueTypeMap.put(valuesValueTypeDoc.syntaxName(), cls);
-            this.putFromValueType(
-                    valueTypeMap, valuesValueTypeDoc.elementValueType());
-        }
-    }
-
-    private String replaceReservedHtmlCharacter(final char c) {
-        if (c == '<') {
-            return "&lt;";
-        }
-        if (c == '>') {
-            return "&gt;";
-        }
-        if (c == '&') {
-            return "&amp;";
-        }
-        if (c == '"') {
-            return "&quot;";
-        }
-        return Character.toString(c);
-    }
-
-    private String replaceReservedHtmlCharacters(final String s) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            stringBuilder.append(replaceReservedHtmlCharacter(c));
-        }
-        return stringBuilder.toString();
+        this.writeValueTypes(destinationDir);
     }
 
     private void writeClientProperties(
@@ -619,10 +68,16 @@ final class ReferenceDocsGenerator {
                 CLIENT_PROPERTIES_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
-            pw.println(DOCUMENT_START_TAGS);
-            pw.println(this.getHeader1("Client Properties"));
-            this.printTableFromRootNameValuePairValueType(Property.class, pw);
-            pw.println(DOCUMENT_END_TAGS);
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Client Properties");
+            mw.println();
+            mw.println();
+            this.writeNameValuePairValueSpecs(
+                    Arrays.asList(
+                            Property.class.getAnnotation(
+                                            NameValuePairValueTypeDoc.class)
+                                    .nameValuePairValueSpecs()),
+                    mw);
         }
         System.out.println("Done.");
     }
@@ -633,29 +88,47 @@ final class ReferenceDocsGenerator {
                 CLI_HELP_INFO_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
-            pw.println(DOCUMENT_START_TAGS);
-            pw.println(this.getHeader1(
-                    "Command Line Interface Help Information"));
-            pw.println(this.getHeader2("Page Contents"));
-            pw.println(UNORDERED_LIST_START_TAG);
-            pw.println(LIST_ITEM_START_TAG);
-            pw.println(this.getLinkToHeader("Help Information"));
-            pw.println(UNORDERED_LIST_START_TAG);
-            pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                    "Help Information for generate-reference-docs")));
-            pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                    "Help Information for manage-socks5-users")));
-            pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                    "Help Information for new-server-config-file")));
-            pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                    "Help Information for start-server")));
-            pw.println(this.getTextAsListItem(this.getLinkToHeader(
-                    "Settings Help Information")));
-            pw.println(UNORDERED_LIST_END_TAG);
-            pw.println(LIST_ITEM_END_TAG);
-            pw.println(UNORDERED_LIST_END_TAG);
-            pw.println(this.getHeader2("Help Information"));
-            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Command Line Interface Help Information");
+            mw.println();
+            mw.println();
+            mw.printHeader(2, "Page Contents");
+            mw.println();
+            mw.println();
+            mw.printUnorderedListItemStart();
+            mw.printLinkToHeader("Help Information");
+            mw.println();
+            mw.incrementIndentationCount();
+            mw.printIndentations();
+            mw.printUnorderedListItemStart();
+            mw.printLinkToHeader(
+                    "Help Information for generate-reference-docs");
+            mw.println();
+            mw.printIndentations();
+            mw.printUnorderedListItemStart();
+            mw.printLinkToHeader(
+                    "Help Information for manage-socks5-users");
+            mw.println();
+            mw.printIndentations();
+            mw.printUnorderedListItemStart();
+            mw.printLinkToHeader(
+                    "Help Information for new-server-config-file");
+            mw.println();
+            mw.printIndentations();
+            mw.printUnorderedListItemStart();
+            mw.printLinkToHeader("Help Information for start-server");
+            mw.println();
+            mw.printIndentations();
+            mw.printUnorderedListItemStart();
+            mw.printLinkToHeader("Settings Help Information");
+            mw.println();
+            mw.decrementIndentationCount();
+            mw.println();
+            mw.printHeader(2, "Help Information");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("text");
+            mw.println();
             try (StringWriter stringWriter = new StringWriter();
                  PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 new JargyleCLI(
@@ -664,13 +137,16 @@ final class ReferenceDocsGenerator {
                         new String[]{"--help"},
                         false).printProgramHelp(printWriter);
                 printWriter.flush();
-                pw.print(this.replaceReservedHtmlCharacters(
-                        stringWriter.toString()));
+                mw.print(stringWriter.toString());
             }
-            pw.println(PREFORMATTED_TEXT_END_TAGS);
-            pw.println(this.getHeader3(
-                    "Help Information for generate-reference-docs"));
-            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
+            mw.printHeader(3, "Help Information for generate-reference-docs");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("text");
+            mw.println();
             try (StringWriter stringWriter = new StringWriter();
                  PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 new ReferenceDocsGeneratorCLI(
@@ -679,13 +155,16 @@ final class ReferenceDocsGenerator {
                         new String[]{"--help"},
                         false).printProgramHelp(printWriter);
                 printWriter.flush();
-                pw.print(this.replaceReservedHtmlCharacters(
-                        stringWriter.toString()));
+                mw.print(stringWriter.toString());
             }
-            pw.println(PREFORMATTED_TEXT_END_TAGS);
-            pw.println(this.getHeader3(
-                    "Help Information for manage-socks5-users"));
-            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
+            mw.printHeader(3, "Help Information for manage-socks5-users");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("text");
+            mw.println();
             try (StringWriter stringWriter = new StringWriter();
                  PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 new Socks5UserManagerCLI(
@@ -694,13 +173,16 @@ final class ReferenceDocsGenerator {
                         new String[]{"--help"},
                         false).printProgramHelp(printWriter);
                 printWriter.flush();
-                pw.print(this.replaceReservedHtmlCharacters(
-                        stringWriter.toString()));
+                mw.print(stringWriter.toString());
             }
-            pw.println(PREFORMATTED_TEXT_END_TAGS);
-            pw.println(this.getHeader3(
-                    "Help Information for new-server-config-file"));
-            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
+            mw.printHeader(3, "Help Information for new-server-config-file");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("text");
+            mw.println();
             try (StringWriter stringWriter = new StringWriter();
                  PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 new ServerConfigurationFileCreatorCLI(
@@ -709,12 +191,16 @@ final class ReferenceDocsGenerator {
                         new String[]{"--help"},
                         false).printProgramHelp(printWriter);
                 printWriter.flush();
-                pw.print(this.replaceReservedHtmlCharacters(
-                        stringWriter.toString()));
+                mw.print(stringWriter.toString());
             }
-            pw.println(PREFORMATTED_TEXT_END_TAGS);
-            pw.println(this.getHeader3("Help Information for start-server"));
-            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
+            mw.printHeader(3, "Help Information for start-server");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("text");
+            mw.println();
             try (StringWriter stringWriter = new StringWriter();
                  PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 new ServerStarterCLI(
@@ -723,23 +209,72 @@ final class ReferenceDocsGenerator {
                         new String[]{"--help"},
                         false).printProgramHelp(printWriter);
                 printWriter.flush();
-                pw.print(this.replaceReservedHtmlCharacters(
-                        stringWriter.toString()));
+                mw.print(stringWriter.toString());
             }
-            pw.println(PREFORMATTED_TEXT_END_TAGS);
-            pw.println(this.getHeader3("Settings Help Information"));
-            pw.print(PREFORMATTED_TEXT_START_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
+            mw.printHeader(3, "Settings Help Information");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("text");
+            mw.println();
             try (StringWriter stringWriter = new StringWriter();
                  PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 new SettingsHelpPrinter().printSettingsHelp(printWriter);
                 printWriter.flush();
-                pw.print(this.replaceReservedHtmlCharacters(
-                        stringWriter.toString()));
+                mw.print(stringWriter.toString());
             }
-            pw.println(PREFORMATTED_TEXT_END_TAGS);
-            pw.println(DOCUMENT_END_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
         }
         System.out.println("Done.");
+    }
+
+    private void writeNameValuePairValueSpecs(
+            final List<Class<?>> nameValuePairValueSpecsDocAnnotatedClasses,
+            final MarkdownWriter mw) {
+        List<NameValuePairValueSpecDoc> nameValuePairValueSpecDocs =
+                new ArrayList<>();
+        ValueTypeNameMapFactory valueTypeNameMapFactory =
+                new ValueTypeNameMapFactory();
+        Map<Class<?>, String> valueTypeNameMap =
+                valueTypeNameMapFactory.newValueTypeNameMap(
+                        nameValuePairValueSpecsDocAnnotatedClasses);
+        DocAnnotatedElementsProcessor docAnnotatedElementsProcessor =
+                new DocAnnotatedElementsProcessorToNameValuePairValueSpecsLinkTablesMarkdown(
+                        mw, nameValuePairValueSpecDocs, valueTypeNameMap);
+        docAnnotatedElementsProcessor.process(
+                nameValuePairValueSpecsDocAnnotatedClasses);
+        nameValuePairValueSpecDocs.sort(Comparator.comparing(
+                NameValuePairValueSpecDoc::name));
+        for (NameValuePairValueSpecDoc nameValuePairValueSpecDoc :
+                nameValuePairValueSpecDocs) {
+            mw.printHeader(3, nameValuePairValueSpecDoc.name());
+            mw.println();
+            mw.println();
+            mw.printBoldText("Description:");
+            mw.print(" ");
+            mw.println(nameValuePairValueSpecDoc.description());
+            mw.println();
+            mw.printBoldText("Value Type:");
+            mw.print(" ");
+            mw.printLinkToHeader(
+                    valueTypeNameMap.get(
+                            nameValuePairValueSpecDoc.valueType()),
+                    VALUE_TYPES_FILENAME);
+            mw.println();
+            mw.println();
+            String defaultValue = nameValuePairValueSpecDoc.defaultValue();
+            if (!defaultValue.isEmpty()) {
+                mw.printBoldText("Default Value:");
+                mw.print(" ");
+                mw.printCodeText(defaultValue);
+                mw.println();
+                mw.println();
+            }
+        }
     }
 
     private void writeRuleActions(
@@ -748,11 +283,16 @@ final class ReferenceDocsGenerator {
                 RULE_ACTIONS_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
-            pw.println(DOCUMENT_START_TAGS);
-            pw.println(this.getHeader1("Rule Actions"));
-            this.printTableFromRootNameValuePairValueType(
-                    RuleAction.class, pw);
-            pw.println(DOCUMENT_END_TAGS);
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Rule Actions");
+            mw.println();
+            mw.println();
+            this.writeNameValuePairValueSpecs(
+                    Arrays.asList(
+                            RuleAction.class.getAnnotation(
+                                    NameValuePairValueTypeDoc.class)
+                            .nameValuePairValueSpecs()),
+                    mw);
         }
         System.out.println("Done.");
     }
@@ -763,11 +303,16 @@ final class ReferenceDocsGenerator {
                 RULE_CONDITIONS_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
-            pw.println(DOCUMENT_START_TAGS);
-            pw.println(this.getHeader1("Rule Conditions"));
-            this.printTableFromRootNameValuePairValueType(
-                    RuleCondition.class, pw);
-            pw.println(DOCUMENT_END_TAGS);
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Rule Conditions");
+            mw.println();
+            mw.println();
+            this.writeNameValuePairValueSpecs(
+                    Arrays.asList(
+                            RuleCondition.class.getAnnotation(
+                                            NameValuePairValueTypeDoc.class)
+                                    .nameValuePairValueSpecs()),
+                    mw);
         }
         System.out.println("Done.");
     }
@@ -777,20 +322,24 @@ final class ReferenceDocsGenerator {
         String pathString = destinationDir.resolve(
                 SERVER_CONFIGURATION_FILE_SCHEMA_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
-        try (PrintStream ps = new PrintStream(pathString, "UTF-8")) {
-            ps.println(DOCUMENT_START_TAGS);
-            ps.println(this.getHeader1("Server Configuration File Schema"));
-            ps.print("<pre><code class=\"language-xml\">");
+        try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Server Configuration File Schema");
+            mw.println();
+            mw.println();
+            mw.printPreformattedTextStart("xml");
+            mw.println();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ConfigurationSchema.newGeneratedInstance().toOutput(out);
             Reader reader = new InputStreamReader(new ByteArrayInputStream(
                     out.toByteArray()));
             int ch;
             while ((ch = reader.read()) != -1) {
-                ps.print(this.replaceReservedHtmlCharacter((char) ch));
+                mw.print((char) ch);
             }
-            ps.println("</code></pre>");
-            ps.println(DOCUMENT_END_TAGS);
+            mw.printPreformattedTextEnd();
+            mw.println();
+            mw.println();
         }
         System.out.println("Done.");
     }
@@ -801,43 +350,844 @@ final class ReferenceDocsGenerator {
                 SERVER_CONFIGURATION_SETTINGS_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
-            pw.println(DOCUMENT_START_TAGS);
-            pw.println(this.getHeader1("Server Configuration Settings"));
-            this.printTableFromRootNameValuePairValueType(Setting.class, pw);
-            pw.println(DOCUMENT_END_TAGS);
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Server Configuration Settings");
+            mw.println();
+            mw.println();
+            this.writeNameValuePairValueSpecs(
+                    Arrays.asList(
+                            Setting.class.getAnnotation(
+                                            NameValuePairValueTypeDoc.class)
+                                    .nameValuePairValueSpecs()),
+                    mw);
         }
         System.out.println("Done.");
     }
 
-    private void writeValueSyntaxes(
+    private void writeValueTypes(
             final Path destinationDir) throws IOException {
-        Map<String, Class<?>> valueTypeMap = new TreeMap<>(
-                String::compareToIgnoreCase);
-        this.putFromRootNameValuePairValueType(valueTypeMap, Property.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, RuleAction.class);
-        this.putFromRootNameValuePairValueType(
-                valueTypeMap, RuleCondition.class);
-        this.putFromRootNameValuePairValueType(valueTypeMap, Setting.class);
-        this.putFromValueType(valueTypeMap, Scheme.class);
-        this.putFromValueType(valueTypeMap, UserInfo.class);
+        List<Class<?>> classes = new ArrayList<>();
+        classes.addAll(Arrays.asList(
+                Property.class.getAnnotation(NameValuePairValueTypeDoc.class)
+                        .nameValuePairValueSpecs()));
+        classes.addAll(Arrays.asList(
+                RuleAction.class.getAnnotation(NameValuePairValueTypeDoc.class)
+                        .nameValuePairValueSpecs()));
+        classes.addAll(Arrays.asList(
+                RuleCondition.class.getAnnotation(
+                                NameValuePairValueTypeDoc.class)
+                        .nameValuePairValueSpecs()));
+        classes.addAll(Arrays.asList(
+                Setting.class.getAnnotation(NameValuePairValueTypeDoc.class)
+                        .nameValuePairValueSpecs()));
+        classes.add(Scheme.class);
+        classes.add(UserInfo.class);
+        AllDocAnnotatedClassesSortedByNameFactory factory =
+                new AllDocAnnotatedClassesSortedByNameFactory();
+        List<Class<?>> allDocAnnotatedClasses =
+                factory.newAllDocAnnotatedClassesSortedByName(classes);
         String pathString = destinationDir.resolve(
-                VALUE_SYNTAXES_FILENAME).toString();
+                VALUE_TYPES_FILENAME).toString();
         System.out.printf("Creating '%s'...", pathString);
         try (PrintWriter pw = new PrintWriter(pathString, "UTF-8")) {
-            pw.println(DOCUMENT_START_TAGS);
-            pw.println(this.getHeader1("Value Syntaxes"));
-            pw.println(this.getHeader2("Page Contents"));
-            pw.println(UNORDERED_LIST_START_TAG);
-            for (Class<?> cls : valueTypeMap.values()) {
-                this.printListItemOfLinkToContentFromValueType(cls, pw);
-            }
-            pw.println(UNORDERED_LIST_END_TAG);
-            for (Class<?> cls : valueTypeMap.values()) {
-                this.printContentFromValueType(cls, pw);
-            }
-            pw.println(DOCUMENT_END_TAGS);
+            MarkdownWriter mw = new MarkdownWriter(pw);
+            mw.printHeader(1, "Value Types");
+            mw.println();
+            mw.println();
+            mw.printHeader(2, "Page Contents");
+            mw.println();
+            mw.println();
+            DocAnnotatedElementsProcessor docAnnotatedElementsProcessor1 =
+                    new DocAnnotatedElementsProcessorToValueTypeLinkListMarkdown(
+                            mw);
+            docAnnotatedElementsProcessor1.process(allDocAnnotatedClasses);
+            mw.println();
+            ValueTypeNameMapFactory valueTypeNameMapFactory =
+                    new ValueTypeNameMapFactory();
+            Map<Class<?>, String> valueTypeNameMap =
+                    valueTypeNameMapFactory.newValueTypeNameMap(
+                            allDocAnnotatedClasses);
+            DocAnnotatedElementsProcessor docAnnotatedElementsProcessor2 =
+                    new DocAnnotatedElementsProcessorToValueTypesMarkdown(
+                            mw, valueTypeNameMap, 2);
+            docAnnotatedElementsProcessor2.process(allDocAnnotatedClasses);
         }
         System.out.println("Done.");
+    }
+
+    private static final class AllDocAnnotatedClassesSortedByNameFactory {
+
+        public AllDocAnnotatedClassesSortedByNameFactory() {
+        }
+
+        public List<Class<?>> newAllDocAnnotatedClassesSortedByName(
+                final List<Class<?>> classes) {
+            Map<String, Class<?>> docAnnotatedClassMap = new TreeMap<>(
+                    String::compareToIgnoreCase);
+            DocAnnotatedElementsProcessor docAnnotatedElementsProcessor =
+                    new DocAnnotatedElementsProcessorToDocAnnotatedClassMap(
+                            docAnnotatedClassMap);
+            docAnnotatedElementsProcessor.process(classes);
+            return new ArrayList<>(docAnnotatedClassMap.values());
+        }
+
+        private static final class DocAnnotatedElementsProcessorToDocAnnotatedClassMap
+                extends DocAnnotatedElementsProcessor {
+
+            private final Map<String, Class<?>> docAnnotatedClassMap;
+
+            public DocAnnotatedElementsProcessorToDocAnnotatedClassMap(
+                    final Map<String, Class<?>> docAnnotatedClsMap) {
+                this.docAnnotatedClassMap = docAnnotatedClsMap;
+            }
+
+            @Override
+            protected void process(
+                    final Class<?> cls,
+                    final ValuesValueTypeDoc valuesValueTypeDoc) {
+                this.docAnnotatedClassMap.put(valuesValueTypeDoc.name(), cls);
+                this.process(valuesValueTypeDoc.elementValueType());
+            }
+
+            @Override
+            protected void process(
+                    final Field field,
+                    final NameValuePairValueSpecDoc nameValuePairValueSpecDoc) {
+                this.process(nameValuePairValueSpecDoc.valueType());
+            }
+
+            @Override
+            protected void processBefore(
+                    final Class<?> cls, final EnumValueTypeDoc enumValueTypeDoc) {
+                this.docAnnotatedClassMap.put(enumValueTypeDoc.name(), cls);
+            }
+
+            @Override
+            protected void processBefore(
+                    final Class<?> cls,
+                    final NameValuePairValueTypeDoc nameValuePairValueTypeDoc) {
+                this.docAnnotatedClassMap.put(
+                        nameValuePairValueTypeDoc.name(), cls);
+            }
+
+            @Override
+            protected void processBefore(
+                    final Class<?> cls,
+                    final SingleValueTypeDoc singleValueTypeDoc) {
+                this.docAnnotatedClassMap.put(singleValueTypeDoc.name(), cls);
+            }
+
+            @Override
+            protected void processNonDocAnnotatedClass(final Class<?> cls) {
+                this.docAnnotatedClassMap.put(cls.getSimpleName(), cls);
+            }
+
+        }
+
+    }
+
+    private static final class DocAnnotatedElementsProcessorToNameValuePairValueSpecsLinkTablesMarkdown
+            extends DocAnnotatedElementsProcessor {
+
+        private final MarkdownWriter mw;
+        private final List<NameValuePairValueSpecDoc> nameValuePairValueSpecDocs;
+        private final Map<Class<?>, String> valueTypeNameMap;
+
+        public DocAnnotatedElementsProcessorToNameValuePairValueSpecsLinkTablesMarkdown(
+                final MarkdownWriter m,
+                final List<NameValuePairValueSpecDoc> docs,
+                final Map<Class<?>, String> nameMap) {
+            this.mw = m;
+            this.nameValuePairValueSpecDocs = docs;
+            this.valueTypeNameMap = nameMap;
+        }
+
+        @Override
+        protected void process(
+                final Field field,
+                final NameValuePairValueSpecDoc nameValuePairValueSpecDoc) {
+            String name = nameValuePairValueSpecDoc.name();
+            String valueTypeName = this.valueTypeNameMap.get(
+                    nameValuePairValueSpecDoc.valueType());
+            String description = nameValuePairValueSpecDoc.description();
+            String defaultValue = nameValuePairValueSpecDoc.defaultValue();
+            if (!defaultValue.isEmpty()) {
+                description = description.concat(String.format(
+                        "<br/><b>Default Value:</b> <code>%s</code>",
+                        defaultValue));
+            }
+            this.mw.printf(
+                    "<tr><td><a href=\"#%s\"><code>%s</code></a></td><td>%s</td><td>%s</td></tr>%n",
+                    MarkdownWriter.toId(name),
+                    name,
+                    valueTypeName,
+                    description);
+            this.nameValuePairValueSpecDocs.add(nameValuePairValueSpecDoc);
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc) {
+            this.mw.println("</table>");
+            this.mw.println();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc) {
+            this.mw.printHeader(2, nameValuePairValueSpecsDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.println("<table>");
+            this.mw.println("<tr><th>Name</th><th>Value Type</th><th>Description</th></tr>");
+        }
+
+    }
+
+    private static final class DocAnnotatedElementsProcessorToValueTypeLinkListMarkdown
+            extends DocAnnotatedElementsProcessor {
+
+        private final MarkdownWriter mw;
+
+        public DocAnnotatedElementsProcessorToValueTypeLinkListMarkdown(
+                final MarkdownWriter m) {
+            this.mw = m;
+        }
+
+        @Override
+        protected void process(
+                final Class<?> cls,
+                final ValuesValueTypeDoc valuesValueTypeDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(valuesValueTypeDoc.name());
+            this.mw.println();
+        }
+
+        @Override
+        protected void process(
+                final Field field,
+                final NameValuePairValueSpecDoc nameValuePairValueSpecDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(nameValuePairValueSpecDoc.name());
+            this.mw.println();
+        }
+
+        @Override
+        protected void process(
+                final Field field,
+                final SingleValueSpecDoc singleValueSpecDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(singleValueSpecDoc.name());
+            this.mw.println();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls, final EnumValueTypeDoc enumValueTypeDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(enumValueTypeDoc.name());
+            this.mw.println();
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc) {
+            this.mw.decrementIndentationCount();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(nameValuePairValueSpecsDoc.name());
+            this.mw.println();
+            this.mw.incrementIndentationCount();
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final NameValuePairValueTypeDoc nameValuePairValueTypeDoc) {
+            this.mw.decrementIndentationCount();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final NameValuePairValueTypeDoc nameValuePairValueTypeDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(nameValuePairValueTypeDoc.name());
+            this.mw.println();
+            this.mw.incrementIndentationCount();
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final SingleValueSpecsDoc singleValueSpecsDoc) {
+            this.mw.decrementIndentationCount();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final SingleValueSpecsDoc singleValueSpecsDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(singleValueSpecsDoc.name());
+            this.mw.println();
+            this.mw.incrementIndentationCount();
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final SingleValueTypeDoc singleValueTypeDoc) {
+            this.mw.decrementIndentationCount();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final SingleValueTypeDoc singleValueTypeDoc) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(singleValueTypeDoc.name());
+            this.mw.println();
+            this.mw.incrementIndentationCount();
+        }
+
+        @Override
+        protected void processNonDocAnnotatedClass(final Class<?> cls) {
+            this.mw.printIndentations();
+            this.mw.printUnorderedListItemStart();
+            this.mw.printLinkToHeader(cls.getSimpleName());
+            this.mw.println();
+        }
+
+    }
+
+    private static final class DocAnnotatedElementsProcessorToValueTypesMarkdown
+            extends DocAnnotatedElementsProcessor {
+
+        private final MarkdownWriter mw;
+        private final Map<Class<?>, String> valueTypeNameMap;
+        private int headingLevel;
+
+        public DocAnnotatedElementsProcessorToValueTypesMarkdown(
+                final MarkdownWriter m,
+                final Map<Class<?>, String> valTypeNameMap,
+                final int headerLevel) {
+            this.mw = m;
+            this.valueTypeNameMap = valTypeNameMap;
+            this.headingLevel = headerLevel;
+        }
+
+        @Override
+        protected void process(
+                final Class<?> cls,
+                final ValuesValueTypeDoc valuesValueTypeDoc) {
+            this.mw.printHeader(this.headingLevel, valuesValueTypeDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println(valuesValueTypeDoc.syntax());
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(valuesValueTypeDoc.description());
+            this.mw.println();
+            this.mw.printBoldText("Element Value Type:");
+            this.mw.print(" ");
+            this.mw.printLinkToHeader(this.valueTypeNameMap.get(
+                    valuesValueTypeDoc.elementValueType()));
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(cls.getName());
+            this.mw.println();
+            this.mw.println();
+        }
+
+        @Override
+        protected void process(
+                final Field field, final EnumValueDoc enumValueDoc) {
+            this.mw.printUnorderedListItemStart();
+            this.mw.printCodeText(enumValueDoc.value());
+            this.mw.print(" : ");
+            this.mw.println(enumValueDoc.description());
+        }
+
+        @Override
+        protected void process(
+                final Field field,
+                final NameValuePairValueSpecDoc nameValuePairValueSpecDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, nameValuePairValueSpecDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println(nameValuePairValueSpecDoc.syntax());
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(nameValuePairValueSpecDoc.description());
+            this.mw.println();
+            this.mw.printBoldText("Value Type:");
+            this.mw.print(" ");
+            this.mw.printLinkToHeader(this.valueTypeNameMap.get(
+                    nameValuePairValueSpecDoc.valueType()));
+            this.mw.println();
+            this.mw.println();
+            String defaultValue = nameValuePairValueSpecDoc.defaultValue();
+            if (!defaultValue.isEmpty()) {
+                this.mw.printBoldText("Default Value:");
+                this.mw.print(" ");
+                this.mw.printCodeText(defaultValue);
+                this.mw.println();
+                this.mw.println();
+            }
+        }
+
+        @Override
+        protected void process(
+                final Field field,
+                final SingleValueSpecDoc singleValueSpecDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, singleValueSpecDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println(singleValueSpecDoc.syntax());
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(singleValueSpecDoc.description());
+            this.mw.println();
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls, final EnumValueTypeDoc enumValueTypeDoc) {
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(cls.getName());
+            this.mw.println();
+            this.mw.println();
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls, final EnumValueTypeDoc enumValueTypeDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, enumValueTypeDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println(enumValueTypeDoc.syntax());
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(enumValueTypeDoc.description());
+            this.mw.println();
+            this.mw.printBoldText("Values:");
+            this.mw.println();
+            this.mw.println();
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc) {
+            this.headingLevel--;
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final NameValuePairValueSpecsDoc nameValuePairValueSpecsDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, nameValuePairValueSpecsDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(nameValuePairValueSpecsDoc.description());
+            this.mw.println();
+            this.headingLevel++;
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final NameValuePairValueTypeDoc nameValuePairValueTypeDoc) {
+            this.headingLevel--;
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final NameValuePairValueTypeDoc nameValuePairValueTypeDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, nameValuePairValueTypeDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println(nameValuePairValueTypeDoc.syntax());
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(nameValuePairValueTypeDoc.description());
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(cls.getName());
+            this.mw.println();
+            this.mw.println();
+            this.headingLevel++;
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final SingleValueSpecsDoc singleValueSpecsDoc) {
+            this.headingLevel--;
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final SingleValueSpecsDoc singleValueSpecsDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, singleValueSpecsDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(singleValueSpecsDoc.description());
+            this.mw.println();
+            this.headingLevel++;
+        }
+
+        @Override
+        protected void processAfter(
+                final Class<?> cls,
+                final SingleValueTypeDoc singleValueTypeDoc) {
+            this.headingLevel--;
+        }
+
+        @Override
+        protected void processBefore(
+                final Class<?> cls,
+                final SingleValueTypeDoc singleValueTypeDoc) {
+            this.mw.printHeader(
+                    this.headingLevel, singleValueTypeDoc.name());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println(singleValueTypeDoc.syntax());
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(singleValueTypeDoc.description());
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(cls.getName());
+            this.mw.println();
+            this.mw.println();
+            this.headingLevel++;
+        }
+
+        @Override
+        protected void processNonDocAnnotatedClass(final Class<?> cls) {
+            this.mw.printHeader(this.headingLevel, cls.getSimpleName());
+            this.mw.println();
+            this.mw.println();
+            if (String.class.isAssignableFrom(cls)) {
+                this.mw.printBoldText("Syntax:");
+                this.mw.println();
+                this.mw.println();
+                this.mw.printPreformattedTextStart("text");
+                this.mw.println();
+                this.mw.println("[CHARACTER1[CHARACTER2[...]]]");
+                this.mw.printPreformattedTextEnd();
+                this.mw.println();
+                this.mw.println();
+                this.mw.printBoldText("Description:");
+                this.mw.print(" ");
+                this.mw.println("A list of characters");
+                this.mw.println();
+                this.mw.printBoldText("Class:");
+                this.mw.print(" ");
+                this.mw.printCodeText(cls.getName());
+                this.mw.println();
+                this.mw.println();
+            } else {
+                this.mw.printBoldText("Syntax:");
+                this.mw.println();
+                this.mw.println();
+                this.mw.println(
+                        "Please see the Javadocs for the following "
+                                + "member(s) for the possible syntax "
+                                + "for the String parameter:");
+                this.mw.println();
+                for (Constructor<?> ctor : cls.getDeclaredConstructors()) {
+                    int modifiers = ctor.getModifiers();
+                    if (!ctor.isAnnotationPresent(Deprecated.class)
+                            && Modifier.isPublic(modifiers)
+                            && Arrays.equals(
+                            ctor.getParameterTypes(),
+                            new Class<?>[] { String.class })) {
+                        this.mw.printUnorderedListItemStart();
+                        this.mw.printCodeText(ctor.toString());
+                        this.mw.println();
+                    }
+                }
+                for (Method method : cls.getDeclaredMethods()) {
+                    int modifiers = method.getModifiers();
+                    if (!method.isAnnotationPresent(Deprecated.class)
+                            && Modifier.isPublic(modifiers)
+                            && Modifier.isStatic(modifiers)
+                            && method.getReturnType().equals(cls)
+                            && Arrays.equals(
+                            method.getParameterTypes(),
+                            new Class<?>[] { String.class })) {
+                        this.mw.printUnorderedListItemStart();
+                        this.mw.printCodeText(method.toString());
+                        this.mw.println();
+                    }
+                }
+                this.mw.println();
+                this.mw.printBoldText("Description:");
+                this.mw.print(" ");
+                this.mw.print(
+                        "Please see the Javadocs for the following class "
+                                + "for its description: ");
+                this.mw.printCodeText(cls.getName());
+                this.mw.println();
+                this.mw.println();
+                this.mw.printBoldText("Class:");
+                this.mw.print(" ");
+                this.mw.printCodeText(cls.getName());
+                this.mw.println();
+                this.mw.println();
+            }
+        }
+
+    }
+
+    private static final class MarkdownWriter {
+
+        private static final String INDENTATION = "    ";
+        private final PrintWriter pw;
+        private int indentationCount;
+
+        public MarkdownWriter(final PrintWriter p) {
+            this.indentationCount = 0;
+            this.pw = p;
+        }
+
+        public static String toId(final String s) {
+            return s.toLowerCase().replaceAll("[^a-z0-9_]", "-");
+        }
+
+        public void decrementIndentationCount() {
+            this.indentationCount--;
+        }
+
+        public void incrementIndentationCount() {
+            this.indentationCount++;
+        }
+
+        public void print(final String s) {
+            this.pw.print(s);
+        }
+
+        public void print(final char c) {
+            this.pw.print(c);
+        }
+
+        public void printBoldText(final String text) {
+            this.pw.printf("**%s**", text);
+        }
+
+        public void printCodeText(final String text) {
+            this.pw.printf("`%s`", text);
+        }
+
+        public void printf(final String format, final Object... args) {
+            this.pw.printf(format, args);
+        }
+
+        public void printHeader(final int level, final String text) {
+            int i = 0;
+            for (; i < level; i++) {
+                this.pw.print('#');
+            }
+            if (i > 0) {
+                this.pw.print(' ');
+            }
+            this.pw.print(text);
+        }
+
+        public void printIndentations() {
+            for (int i = 0; i < this.indentationCount; i++) {
+                this.pw.print(INDENTATION);
+            }
+        }
+
+        public void printLink(final String text, final String ref) {
+            this.pw.printf("[%s](%s)", text, ref);
+        }
+
+        public void printLinkToHeader(final String headerText) {
+            this.printLink(headerText, "#".concat(toId(headerText)));
+        }
+
+        public void printLinkToHeader(
+                final String headerText, final String location) {
+            this.printLink(
+                    headerText, location.concat("#").concat(toId(headerText)));
+        }
+
+        public void println() {
+            this.pw.println();
+        }
+
+        public void println(final String s) {
+            this.pw.println(s);
+        }
+
+        public void printPreformattedTextEnd() {
+            this.pw.print("```");
+        }
+
+        public void printPreformattedTextStart(final String language) {
+            this.pw.printf("```%s", language);
+        }
+
+        public void printUnorderedListItemStart() {
+            this.pw.print("-   ");
+        }
+
+    }
+
+    private static final class ValueTypeNameMapFactory {
+
+        public ValueTypeNameMapFactory() {
+        }
+
+        public Map<Class<?>, String> newValueTypeNameMap(
+                final List<Class<?>> classes) {
+            Map<Class<?>, String> valueTypeNameMap = new HashMap<>();
+            DocAnnotatedElementsProcessor docAnnotatedElementsProcessor =
+                    new DocAnnotatedElementsProcessorToValueTypeNameMap(
+                            valueTypeNameMap);
+            docAnnotatedElementsProcessor.process(classes);
+            return valueTypeNameMap;
+        }
+
+        private static final class DocAnnotatedElementsProcessorToValueTypeNameMap
+                extends DocAnnotatedElementsProcessor {
+
+            private final Map<Class<?>, String> valueTypeNameMap;
+
+            public DocAnnotatedElementsProcessorToValueTypeNameMap(
+                    final Map<Class<?>, String> valTypeNameMap) {
+                this.valueTypeNameMap = valTypeNameMap;
+            }
+
+            @Override
+            protected void process(
+                    final Class<?> cls,
+                    final ValuesValueTypeDoc valuesValueTypeDoc) {
+                this.valueTypeNameMap.put(cls, valuesValueTypeDoc.name());
+                this.process(valuesValueTypeDoc.elementValueType());
+            }
+
+            @Override
+            protected void process(
+                    final Field field,
+                    final NameValuePairValueSpecDoc nameValuePairValueSpecDoc) {
+                this.process(nameValuePairValueSpecDoc.valueType());
+            }
+
+            @Override
+            protected void processBefore(
+                    final Class<?> cls, final EnumValueTypeDoc enumValueTypeDoc) {
+                this.valueTypeNameMap.put(cls, enumValueTypeDoc.name());
+            }
+
+            @Override
+            protected void processBefore(
+                    final Class<?> cls,
+                    final NameValuePairValueTypeDoc nameValuePairValueTypeDoc) {
+                this.valueTypeNameMap.put(cls, nameValuePairValueTypeDoc.name());
+            }
+
+            @Override
+            protected void processBefore(
+                    final Class<?> cls,
+                    final SingleValueTypeDoc singleValueTypeDoc) {
+                this.valueTypeNameMap.put(cls, singleValueTypeDoc.name());
+            }
+
+            @Override
+            protected void processNonDocAnnotatedClass(final Class<?> cls) {
+                this.valueTypeNameMap.put(cls, cls.getSimpleName());
+            }
+
+        }
+
     }
 
 }

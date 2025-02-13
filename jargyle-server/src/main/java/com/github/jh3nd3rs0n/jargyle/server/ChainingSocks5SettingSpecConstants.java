@@ -22,9 +22,9 @@ public final class ChainingSocks5SettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "1.2.840.113554.1.2.2",
 			description = "The object ID for the GSS-API authentication "
-					+ "mechanism to the other SOCKS5 server "
-					+ "(default is 1.2.840.113554.1.2.2)",
+					+ "mechanism to the other SOCKS5 server",
 			name = "chaining.socks5.gssapimethod.mechanismOid",
 			syntax = "chaining.socks5.gssapimethod.mechanismOid=OID",
 			valueType = Oid.class
@@ -35,10 +35,11 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if the exchange of "
 					+ "the GSS-API protection level negotiation must be "
 					+ "unprotected should the other SOCKS5 server use the NEC "
-					+ "reference implementation (default is false)",
+					+ "reference implementation",
 			name = "chaining.socks5.gssapimethod.necReferenceImpl",
 			syntax = "chaining.socks5.gssapimethod.necReferenceImpl=true|false",
 			valueType = Boolean.class
@@ -49,11 +50,11 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE",
 			description = "The comma separated list of acceptable protection "
 					+ "levels after GSS-API authentication with the other "
 					+ "SOCKS5 server (The first is preferred. The remaining "
-					+ "are acceptable if the server does not accept the first.) "
-					+ "(default is REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)",
+					+ "are acceptable if the server does not accept the first.)",
 			name = "chaining.socks5.gssapimethod.protectionLevels",
 			syntax = "chaining.socks5.gssapimethod.protectionLevels=SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS",
 			valueType = ProtectionLevels.class
@@ -75,11 +76,11 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "true",
 			description = "The suggested privacy (i.e. confidentiality) state "
 					+ "for GSS-API messages sent after GSS-API authentication "
 					+ "with the other SOCKS5 server (applicable if the "
-					+ "negotiated protection level is SELECTIVE_INTEG_OR_CONF) "
-					+ "(default is true)",
+					+ "negotiated protection level is SELECTIVE_INTEG_OR_CONF)",
 			name = "chaining.socks5.gssapimethod.suggestedConf",
 			syntax = "chaining.socks5.gssapimethod.suggestedConf=true|false",
 			valueType = Boolean.class
@@ -90,11 +91,12 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0",
 			description = "The suggested quality-of-protection "
 					+ "(i.e. integrity) value for GSS-API messages sent after "
 					+ "GSS-API authentication with the other SOCKS5 server "
 					+ "(applicable if the negotiated protection level is "
-					+ "SELECTIVE_INTEG_OR_CONF) (default is 0)",
+					+ "SELECTIVE_INTEG_OR_CONF)",
 			name = "chaining.socks5.gssapimethod.suggestedInteg",
 			syntax = "chaining.socks5.gssapimethod.suggestedInteg=-2147483648-2147483647",
 			valueType = Integer.class
@@ -105,9 +107,9 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "NO_AUTHENTICATION_REQUIRED",
 			description = "The comma separated list of acceptable "
-					+ "authentication methods to the other SOCKS5 server "
-					+ "(default is NO_AUTHENTICATION_REQUIRED)",
+					+ "authentication methods to the other SOCKS5 server",
 			name = "chaining.socks5.methods",
 			syntax = "chaining.socks5.methods=SOCKS5_METHODS",
 			valueType = Methods.class
@@ -118,11 +120,12 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_METHODS.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if the client "
 					+ "information expected to be used to send UDP datagrams "
 					+ "(address and port) is unavailable to be sent to the "
 					+ "other SOCKS5 server (an address and port of all zeros "
-					+ "is sent instead) (default is false)",
+					+ "is sent instead)",
 			name = "chaining.socks5.socks5DatagramSocket.clientInfoUnavailable",
 			syntax = "chaining.socks5.socks5DatagramSocket.clientInfoUnavailable=true|false",
 			valueType = Boolean.class
@@ -133,9 +136,9 @@ public final class ChainingSocks5SettingSpecConstants {
 					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if host names "
-					+ "are to be resolved from the other SOCKS5 server "
-					+ "(default is false)",
+					+ "are to be resolved from the other SOCKS5 server",
 			name = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",
 			syntax = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true|false",
 			valueType = Boolean.class

@@ -27,13 +27,13 @@ public final class GeneralPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for {@code socksClient.clientBindHost}:
      * the {@code Host} for the binding host name or address for the client
-     * socket that is used to connect to the SOCKS server (default is
+     * socket that is used to connect to the SOCKS server (default value is
      * {@code 0.0.0.0}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "0.0.0.0",
             description = "The binding host name or address for the client "
-                    + "socket that is used to connect to the SOCKS server "
-                    + "(default is 0.0.0.0)",
+                    + "socket that is used to connect to the SOCKS server",
             name = "socksClient.clientBindHost",
             syntax = "socksClient.clientBindHost=HOST",
             valueType = Host.class
@@ -48,12 +48,13 @@ public final class GeneralPropertySpecConstants {
      * {@code socksClient.clientBindHostAddressTypes}: the
      * {@code HostAddressTypes} for the acceptable binding host address types
      * for the client socket that is used to connect to the SOCKS server
-     * (default is {@code IPv4,IPv6}).
+     * (default value is {@code HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS",
             description = "The comma separated list of acceptable binding "
                     + "host address types for the client socket that is used "
-                    + "to connect to the SOCKS server (default is IPv4,IPv6)",
+                    + "to connect to the SOCKS server",
             name = "socksClient.clientBindHostAddressTypes",
             syntax = "socksClient.clientBindHostAddressTypes=HOST_ADDRESS_TYPES",
             valueType = HostAddressTypes.class
@@ -67,12 +68,13 @@ public final class GeneralPropertySpecConstants {
      * {@code PropertySpec} constant for
      * {@code socksClient.clientBindPortRanges}: the {@code PortRanges} for
      * the binding port ranges for the client socket that is used to connect
-     * to the SOCKS server (default is {@code 0}).
+     * to the SOCKS server (default value is {@code 0}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "0",
             description = "The comma separated list of binding port ranges for "
                     + "the client socket that is used to connect to the SOCKS "
-                    + "server (default is 0)",
+                    + "server",
             name = "socksClient.clientBindPortRanges",
             syntax = "socksClient.clientBindPortRanges=PORT_RANGES",
             valueType = PortRanges.class
@@ -87,13 +89,13 @@ public final class GeneralPropertySpecConstants {
      * {@code socksClient.clientConnectTimeout}: the {@code NonNegativeInteger}
      * for the timeout in milliseconds on waiting for the client socket to
      * connect to the SOCKS server (a timeout of {@code 0} is interpreted as
-     * an infinite timeout) (default is {@code 60000}).
+     * an infinite timeout) (default value is {@code 60000}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "60000",
             description = "The timeout in milliseconds on waiting for the "
                     + "client socket to connect to the SOCKS server (a "
-                    + "timeout of 0 is interpreted as an infinite timeout) "
-                    + "(default is 60000)",
+                    + "timeout of 0 is interpreted as an infinite timeout)",
             name = "socksClient.clientConnectTimeout",
             syntax = "socksClient.clientConnectTimeout=NON_NEGATIVE_INTEGER",
             valueType = NonNegativeInteger.class

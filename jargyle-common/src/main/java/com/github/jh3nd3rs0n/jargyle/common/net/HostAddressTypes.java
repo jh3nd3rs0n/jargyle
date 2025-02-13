@@ -24,7 +24,9 @@ public final class HostAddressTypes {
      * The default instance of {@code HostAddressTypes}.
      */
     private static final HostAddressTypes DEFAULT_INSTANCE =
-            HostAddressTypes.of(HostAddressType.IPV4, HostAddressType.IPV6);
+            HostAddressTypes.of(
+                    HostAddressType.HOST_IPV4_ADDRESS,
+                    HostAddressType.HOST_IPV6_ADDRESS);
 
     /**
      * The {@code List} of {@code HostAddressType}s.
@@ -45,7 +47,7 @@ public final class HostAddressTypes {
     /**
      * Returns the default instance of {@code HostAddressTypes}. The default
      * instance contains the following {@code HostAddressType}s in the
-     * following order: {@code IPv4} and {@code IPv6}.
+     * following order: {@code HOST_IPV4_ADDRESS}, {@code HOST_IPV6_ADDRESS}.
      *
      * @return the default instance of {@code HostAddressTypes}
      */

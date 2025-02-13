@@ -88,7 +88,7 @@ public class ClientSocketBuilderIT {
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 InetAddress.getLoopbackAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(HostAddressType.IPV4);
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS);
         HostAddress hostAddress = netInterface.getHostAddresses(hostAddressTypes).get(0);
         SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);

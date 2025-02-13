@@ -21,8 +21,9 @@ public final class DtlsSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if DTLS connections "
-					+ "to the SOCKS server are enabled (default is false)",
+					+ "to the SOCKS server are enabled",
 			name = "dtls.enabled",
 			syntax = "dtls.enabled=true|false",
 			valueType = Boolean.class
@@ -87,8 +88,9 @@ public final class DtlsSettingSpecConstants {
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "PKCS12",
 			description = "The type of key store for the DTLS connections to "
-					+ "the SOCKS server (default is PKCS12)",
+					+ "the SOCKS server",
 			name = "dtls.keyStoreType",
 			syntax = "dtls.keyStoreType=TYPE",
 			valueType = String.class
@@ -99,8 +101,9 @@ public final class DtlsSettingSpecConstants {
 					"PKCS12"));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "DTLSv1.2",
 			description = "The protocol version for the DTLS connections to the "
-					+ "SOCKS server (default is DTLSv1.2)",
+					+ "SOCKS server",
 			name = "dtls.protocol",
 			syntax = "dtls.protocol=PROTOCOL",
 			valueType = String.class

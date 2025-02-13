@@ -29,11 +29,12 @@ public final class SslPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for {@code socksClient.ssl.enabled}: the
      * {@code Boolean} value to indicate if SSL/TLS connections to the SOCKS
-     * server are enabled (default is {@code false}).
+     * server are enabled (default value is {@code false}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "false",
             description = "The boolean value to indicate if SSL/TLS connections "
-                    + "to the SOCKS server are enabled (default is false)",
+                    + "to the SOCKS server are enabled",
             name = "socksClient.ssl.enabled",
             syntax = "socksClient.ssl.enabled=true|false",
             valueType = Boolean.class
@@ -129,11 +130,12 @@ public final class SslPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for {@code socksClient.ssl.keyStoreType}:
      * the type of key store for the SSL/TLS connections to the SOCKS server
-     * (default is {@code PKCS12}).
+     * (default value is {@code PKCS12}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "PKCS12",
             description = "The type of key store for the SSL/TLS connections "
-                    + "to the SOCKS server (default is PKCS12)",
+                    + "to the SOCKS server",
             name = "socksClient.ssl.keyStoreType",
             syntax = "socksClient.ssl.keyStoreType=TYPE",
             valueType = String.class
@@ -146,11 +148,12 @@ public final class SslPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for {@code socksClient.ssl.protocol}: the
      * protocol version for the SSL/TLS connections to the SOCKS server
-     * (default is {@code TLSv1.2}).
+     * (default value is {@code TLSv1.2}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "TLSv1.2",
             description = "The protocol version for the SSL/TLS connections to "
-                    + "the SOCKS server (default is TLSv1.2)",
+                    + "the SOCKS server",
             name = "socksClient.ssl.protocol",
             syntax = "socksClient.ssl.protocol=PROTOCOL",
             valueType = String.class
@@ -208,11 +211,13 @@ public final class SslPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for
      * {@code socksClient.ssl.trustStoreType}: the type of trust store for
-     * the SSL/TLS connections to the SOCKS server (default is {@code PKCS12}).
+     * the SSL/TLS connections to the SOCKS server (default value is
+     * {@code PKCS12}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "PKCS12",
             description = "The type of trust store for the SSL/TLS "
-                    + "connections to the SOCKS server (default is PKCS12)",
+                    + "connections to the SOCKS server",
             name = "socksClient.ssl.trustStoreType",
             syntax = "socksClient.ssl.trustStoreType=TYPE",
             valueType = String.class

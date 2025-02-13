@@ -20,8 +20,9 @@ public final class SslSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if SSL/TLS connections "
-					+ "to the SOCKS server are enabled (default is false)",
+					+ "to the SOCKS server are enabled",
 			name = "ssl.enabled",
 			syntax = "ssl.enabled=true|false",
 			valueType = Boolean.class
@@ -86,8 +87,9 @@ public final class SslSettingSpecConstants {
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "PKCS12",
 			description = "The type of key store for the SSL/TLS connections "
-					+ "to the SOCKS server (default is PKCS12)",
+					+ "to the SOCKS server",
 			name = "ssl.keyStoreType",
 			syntax = "ssl.keyStoreType=TYPE",
 			valueType = String.class
@@ -98,9 +100,10 @@ public final class SslSettingSpecConstants {
 					"PKCS12"));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate that client "
 					+ "authentication is required for SSL/TLS connections to "
-					+ "the SOCKS server (default is false)",
+					+ "the SOCKS server",
 			name = "ssl.needClientAuth",
 			syntax = "ssl.needClientAuth=true|false",
 			valueType = Boolean.class
@@ -111,8 +114,9 @@ public final class SslSettingSpecConstants {
 					Boolean.FALSE));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "TLSv1.2",
 			description = "The protocol version for the SSL/TLS connections to "
-					+ "the SOCKS server (default is TLSv1.2)",
+					+ "the SOCKS server",
 			name = "ssl.protocol",
 			syntax = "ssl.protocol=PROTOCOL",
 			valueType = String.class
@@ -152,8 +156,9 @@ public final class SslSettingSpecConstants {
 					EncryptedPassword.newInstance(new char[] { })));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "PKCS12",
 			description = "The type of trust store for the SSL/TLS "
-					+ "connections to the SOCKS server (default is PKCS12)",
+					+ "connections to the SOCKS server",
 			name = "ssl.trustStoreType",
 			syntax = "ssl.trustStoreType=TYPE",
 			valueType = String.class
@@ -164,9 +169,10 @@ public final class SslSettingSpecConstants {
 					"PKCS12"));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate that client "
 					+ "authentication is requested for SSL/TLS connections to "
-					+ "the SOCKS server (default is false)",
+					+ "the SOCKS server",
 			name = "ssl.wantClientAuth",
 			syntax = "ssl.wantClientAuth=true|false",
 			valueType = Boolean.class

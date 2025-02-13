@@ -16,6 +16,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface NameValuePairValueSpecDoc {
 
     /**
+     * The default value of the name value pair value.
+     *
+     * @return the default value of the name value pair value
+     */
+    String defaultValue() default "";
+
+    /**
      * The description of the name value pair value.
      *
      * @return the description of the name value pair value

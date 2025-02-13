@@ -103,7 +103,8 @@ public class NetInterfaceTest {
                 this.networkInterfaceName1);
         Assert.assertFalse(
                 netInterface.getHostAddresses(HostAddressTypes.of(
-                        HostAddressType.IPV4, HostAddressType.IPV6)).isEmpty());
+                        HostAddressType.HOST_IPV4_ADDRESS,
+                        HostAddressType.HOST_IPV6_ADDRESS)).isEmpty());
     }
 
     @Test

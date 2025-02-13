@@ -30,11 +30,12 @@ public final class DtlsPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for {@code socksClient.dtls.enabled}: the
      * {@code Boolean} value to indicate if DTLS connections to the SOCKS
-	 * server are enabled (default is {@code false}).
+	 * server are enabled (default value is {@code false}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "false",
             description = "The boolean value to indicate if DTLS connections "
-                    + "to the SOCKS server are enabled (default is false)",
+                    + "to the SOCKS server are enabled",
             name = "socksClient.dtls.enabled",
             syntax = "socksClient.dtls.enabled=true|false",
             valueType = Boolean.class
@@ -84,11 +85,12 @@ public final class DtlsPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for {@code socksClient.dtls.protocol}:
      * the protocol version for the DTLS connections to the SOCKS server
-     * (default is {@code DTLSv1.2}).
+     * (default value is {@code DTLSv1.2}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "DTLSv1.2",
             description = "The protocol version for the DTLS connections to "
-                    + "the SOCKS server (default is DTLSv1.2)",
+                    + "the SOCKS server",
             name = "socksClient.dtls.protocol",
             syntax = "socksClient.dtls.protocol=PROTOCOL",
             valueType = String.class
@@ -146,11 +148,13 @@ public final class DtlsPropertySpecConstants {
     /**
      * {@code PropertySpec} constant for
      * {@code socksClient.dtls.trustStoreType}: the type of trust store for
-     * the DTLS connections to the SOCKS server (default is {@code PKCS12}).
+     * the DTLS connections to the SOCKS server (default value is
+     * {@code PKCS12}).
      */
     @NameValuePairValueSpecDoc(
+            defaultValue = "PKCS12",
             description = "The type of trust store for the DTLS connections "
-                    + "to the SOCKS server (default is PKCS12)",
+                    + "to the SOCKS server",
             name = "socksClient.dtls.trustStoreType",
             syntax = "socksClient.dtls.trustStoreType=TYPE",
             valueType = String.class

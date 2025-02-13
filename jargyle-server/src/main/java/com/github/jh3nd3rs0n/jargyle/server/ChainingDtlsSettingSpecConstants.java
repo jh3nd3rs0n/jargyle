@@ -22,8 +22,9 @@ public final class ChainingDtlsSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if DTLS connections "
-					+ "to the other SOCKS server are enabled (default is false)",
+					+ "to the other SOCKS server are enabled",
 			name = "chaining.dtls.enabled",
 			syntax = "chaining.dtls.enabled=true|false",
 			valueType = Boolean.class
@@ -60,8 +61,9 @@ public final class ChainingDtlsSettingSpecConstants {
 					DtlsPropertySpecConstants.DTLS_ENABLED_PROTOCOLS.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "DTLSv1.2",
 			description = "The protocol version for the DTLS connections to "
-					+ "the other SOCKS server (default is DTLSv1.2)",
+					+ "the other SOCKS server",
 			name = "chaining.dtls.protocol",
 			syntax = "chaining.dtls.protocol=PROTOCOL",
 			valueType = String.class
@@ -101,8 +103,9 @@ public final class ChainingDtlsSettingSpecConstants {
 					DtlsPropertySpecConstants.DTLS_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "PKCS12",
 			description = "The type of trust store for the DTLS connections "
-					+ "to the other SOCKS server (default is PKCS12)",
+					+ "to the other SOCKS server",
 			name = "chaining.dtls.trustStoreType",
 			syntax = "chaining.dtls.trustStoreType=TYPE",
 			valueType = String.class

@@ -21,10 +21,11 @@ public final class Socks5SettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if the exchange of "
 					+ "the GSS-API protection level negotiation must be "
 					+ "unprotected according to the NEC reference "
-					+ "implementation (default is false)", 
+					+ "implementation",
 			name = "socks5.gssapimethod.necReferenceImpl",
 			syntax = "socks5.gssapimethod.necReferenceImpl=true|false",
 			valueType = Boolean.class
@@ -35,11 +36,11 @@ public final class Socks5SettingSpecConstants {
 					Boolean.FALSE));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE",
 			description = "The comma separated list of acceptable protection "
 					+ "levels after GSS-API authentication (The first is "
 					+ "preferred if the client does not provide a protection "
-					+ "level that is acceptable.) (default is "
-					+ "REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)",
+					+ "level that is acceptable.)",
 			name = "socks5.gssapimethod.protectionLevels",
 			syntax = "socks5.gssapimethod.protectionLevels=SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS",
 			valueType = ProtectionLevels.class
@@ -50,10 +51,11 @@ public final class Socks5SettingSpecConstants {
 					ProtectionLevels.getDefault()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "true",
 			description = "The suggested privacy (i.e. confidentiality) state "
 					+ "for GSS-API messages sent after GSS-API authentication "
 					+ "(applicable if the negotiated protection level is "
-					+ "SELECTIVE_INTEG_OR_CONF) (default is true)",
+					+ "SELECTIVE_INTEG_OR_CONF)",
 			name = "socks5.gssapimethod.suggestedConf",
 			syntax = "socks5.gssapimethod.suggestedConf=true|false",
 			valueType = Boolean.class
@@ -64,11 +66,11 @@ public final class Socks5SettingSpecConstants {
 					Boolean.TRUE));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0",
 			description = "The suggested quality-of-protection (i.e. "
 					+ "integrity) value for GSS-API messages sent after "
 					+ "GSS-API authentication (applicable if the negotiated "
-					+ "protection level is SELECTIVE_INTEG_OR_CONF) (default "
-					+ "is 0)",
+					+ "protection level is SELECTIVE_INTEG_OR_CONF)",
 			name = "socks5.gssapimethod.suggestedInteg",
 			syntax = "socks5.gssapimethod.suggestedInteg=-2147483648-2147483647",
 			valueType = Integer.class
@@ -79,9 +81,9 @@ public final class Socks5SettingSpecConstants {
 					Integer.valueOf(0)));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "NO_AUTHENTICATION_REQUIRED",
 			description = "The comma separated list of acceptable "
-					+ "authentication methods in order of preference (default "
-					+ "is NO_AUTHENTICATION_REQUIRED)",
+					+ "authentication methods in order of preference",
 			name = "socks5.methods",
 			syntax = "socks5.methods=SOCKS5_METHODS",
 			valueType = Methods.class
@@ -212,11 +214,12 @@ public final class Socks5SettingSpecConstants {
 					null));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if the target-facing "
 					+ "socket is to be prepared before connecting (involves "
 					+ "applying the specified socket settings, resolving the "
 					+ "target host name, and setting the specified timeout on "
-					+ "waiting to connect) (default is false)",
+					+ "waiting to connect)",
 			name = "socks5.onConnectRequest.prepareTargetFacingSocket",
 			syntax = "socks5.onConnectRequest.prepareTargetFacingSocket=true|false",
 			valueType = Boolean.class
@@ -309,8 +312,9 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "60000",
 			description = "The timeout in milliseconds on waiting for the "
-					+ "target-facing socket to connect (default is 60000)",
+					+ "target-facing socket to connect",
 			name = "socks5.onConnectRequest.targetFacingConnectTimeout",
 			syntax = "socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
@@ -477,8 +481,8 @@ public final class Socks5SettingSpecConstants {
 					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
-			description = "The buffer size in bytes for relaying the data "
-					+ "(default is 1024)",
+			defaultValue = "1024",
+			description = "The buffer size in bytes for relaying the data",
 			name = "socks5.onRequest.relayBufferSize",
 			syntax = "socks5.onRequest.relayBufferSize=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
@@ -489,8 +493,8 @@ public final class Socks5SettingSpecConstants {
 					PositiveInteger.valueOf(1024)));
 
 	@NameValuePairValueSpecDoc(
-			description = "The timeout in milliseconds on relaying no data "
-					+ "(default is 60000)",
+			defaultValue = "60000",
+			description = "The timeout in milliseconds on relaying no data",
 			name = "socks5.onRequest.relayIdleTimeout",
 			syntax = "socks5.onRequest.relayIdleTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
@@ -691,8 +695,9 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "StringSourceUserRepository:",
 			description = "The user repository used for username password "
-					+ "authentication (default is StringSourceUserRepository:)",
+					+ "authentication",
 			name = "socks5.userpassmethod.userRepository",
 			syntax = "socks5.userpassmethod.userRepository=SOCKS5_USERPASSMETHOD_USER_REPOSITORY",
 			valueType = UserRepository.class

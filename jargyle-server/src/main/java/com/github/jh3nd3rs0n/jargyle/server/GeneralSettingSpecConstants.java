@@ -18,8 +18,9 @@ public final class GeneralSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "50",
 			description = "The maximum length of the queue of incoming client "
-					+ "connections to the SOCKS server (default is 50)",
+					+ "connections to the SOCKS server",
 			name = "backlog",
 			syntax = "backlog=NON_NEGATIVE_INTEGER",
 			valueType = NonNegativeInteger.class
@@ -30,8 +31,9 @@ public final class GeneralSettingSpecConstants {
 					NonNegativeInteger.valueOf(50)));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0.0.0.0",
 			description = "The default binding host name or address for all "
-					+ "sockets (default is 0.0.0.0)",
+					+ "sockets",
 			name = "bindHost",
 			syntax = "bindHost=HOST",
 			valueType = Host.class
@@ -42,9 +44,9 @@ public final class GeneralSettingSpecConstants {
 					null));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS",
 			description = "The comma separated list of default acceptable "
-					+ "binding host address types for all sockets "
-					+ "(default is IPv4,IPv6)",
+					+ "binding host address types for all sockets",
 			name = "bindHostAddressTypes",
 			syntax = "bindHostAddressTypes=HOST_ADDRESS_TYPES",
 			valueType = HostAddressTypes.class
@@ -55,8 +57,9 @@ public final class GeneralSettingSpecConstants {
 					HostAddressTypes.getDefault()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0",
 			description = "The comma separated list of default binding port "
-					+ "ranges for all TCP sockets (default is 0)",
+					+ "ranges for all TCP sockets",
 			name = "bindTcpPortRanges",
 			syntax = "bindTcpPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -67,8 +70,9 @@ public final class GeneralSettingSpecConstants {
 					PortRanges.getDefault()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "0",
 			description = "The comma separated list of default binding port "
-					+ "ranges for all UDP sockets (default is 0)",
+					+ "ranges for all UDP sockets",
 			name = "bindUdpPortRanges",
 			syntax = "bindUdpPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -248,8 +252,8 @@ public final class GeneralSettingSpecConstants {
 					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The ID for the last and unassigned route "
-					+ "(default is lastRoute)",
+			defaultValue = "lastRoute",
+			description = "The ID for the last and unassigned route",
 			name = "lastRouteId",
 			syntax = "lastRouteId=ROUTE_ID",
 			valueType = String.class
@@ -272,7 +276,8 @@ public final class GeneralSettingSpecConstants {
 					null));
 
 	@NameValuePairValueSpecDoc(
-			description = "The port for the SOCKS server (default is 1080)",
+			defaultValue = "1080",
+			description = "The port for the SOCKS server",
 			name = "port",
 			syntax = "port=PORT",
 			valueType = Port.class
@@ -294,8 +299,8 @@ public final class GeneralSettingSpecConstants {
 					null));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The selection strategy for the next route "
-					+ "(default is CYCLICAL)",
+			defaultValue = "CYCLICAL",
+			description = "The selection strategy for the next route",
 			name = "routeSelectionStrategy",
 			syntax = "routeSelectionStrategy=SELECTION_STRATEGY",
 			valueType = SelectionStrategy.class
@@ -306,8 +311,8 @@ public final class GeneralSettingSpecConstants {
 					SelectionStrategySpecConstants.CYCLICAL.newSelectionStrategy()));
 	
 	@NameValuePairValueSpecDoc(
-			description = "A rule for the SOCKS server "
-					+ "(default is firewallAction=ALLOW)",
+			defaultValue = "firewallAction=ALLOW",
+			description = "A rule for the SOCKS server",
 			name = "rule",
 			syntax = "rule=RULE",
 			valueType = Rule.class

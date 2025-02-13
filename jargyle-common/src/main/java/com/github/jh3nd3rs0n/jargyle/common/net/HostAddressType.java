@@ -12,16 +12,19 @@ import java.util.stream.Collectors;
 @EnumValueTypeDoc(
         description = "Type of host address",
         name = "Host Address Type",
-        syntax = "IPv4|IPv6",
+        syntax = "HOST_IPV4_ADDRESS|HOST_IPV6_ADDRESS",
         syntaxName = "HOST_ADDRESS_TYPE"
 )
 public enum HostAddressType {
 
     /**
-     * IPv4.
+     * {@code HostIpv4Address}.
      */
-    @EnumValueDoc(description = "", value = "IPv4")
-    IPV4("IPv4") {
+    @EnumValueDoc(
+            description = "Host IPv4 address",
+            value = "HOST_IPV4_ADDRESS"
+    )
+    HOST_IPV4_ADDRESS("HOST_IPV4_ADDRESS") {
         @Override
         public boolean describes(final HostAddress hostAddress) {
             return hostAddress instanceof HostIpv4Address;
@@ -29,10 +32,13 @@ public enum HostAddressType {
     },
 
     /**
-     * IPv6.
+     * {@code HostIpv6Address}.
      */
-    @EnumValueDoc(description = "", value = "IPv6")
-    IPV6("IPv6") {
+    @EnumValueDoc(
+            description = "Host IPv6 address",
+            value = "HOST_IPV6_ADDRESS"
+    )
+    HOST_IPV6_ADDRESS("HOST_IPV6_ADDRESS") {
         @Override
         public boolean describes(final HostAddress hostAddress) {
             return hostAddress instanceof HostIpv6Address;

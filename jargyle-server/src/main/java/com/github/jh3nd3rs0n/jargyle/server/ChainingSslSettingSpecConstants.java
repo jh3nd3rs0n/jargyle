@@ -21,8 +21,9 @@ public final class ChainingSslSettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
 			description = "The boolean value to indicate if SSL/TLS connections "
-					+ "to the other SOCKS server are enabled (default is false)",
+					+ "to the other SOCKS server are enabled",
 			name = "chaining.ssl.enabled",
 			syntax = "chaining.ssl.enabled=true|false",
 			valueType = Boolean.class
@@ -88,8 +89,9 @@ public final class ChainingSslSettingSpecConstants {
 					SslPropertySpecConstants.SSL_KEY_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "PKCS12",
 			description = "The type of key store for the SSL/TLS connections "
-					+ "to the other SOCKS server (default is PKCS12)",
+					+ "to the other SOCKS server",
 			name = "chaining.ssl.keyStoreType",
 			syntax = "chaining.ssl.keyStoreType=TYPE",
 			valueType = String.class
@@ -100,8 +102,9 @@ public final class ChainingSslSettingSpecConstants {
 					SslPropertySpecConstants.SSL_KEY_STORE_TYPE.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "TLSv1.2",
 			description = "The protocol version for the SSL/TLS connections to "
-					+ "the other SOCKS server (default is TLSv1.2)",
+					+ "the other SOCKS server",
 			name = "chaining.ssl.protocol",
 			syntax = "chaining.ssl.protocol=PROTOCOL",
 			valueType = String.class
@@ -141,9 +144,9 @@ public final class ChainingSslSettingSpecConstants {
 					SslPropertySpecConstants.SSL_TRUST_STORE_PASSWORD.getDefaultProperty().getValue()));
 	
 	@NameValuePairValueSpecDoc(
+			defaultValue = "PKCS12",
 			description = "The type of trust store for the SSL/TLS "
-					+ "connections to the other SOCKS server (default is "
-					+ "PKCS12)",
+					+ "connections to the other SOCKS server",
 			name = "chaining.ssl.trustStoreType",
 			syntax = "chaining.ssl.trustStoreType=TYPE",
 			valueType = String.class

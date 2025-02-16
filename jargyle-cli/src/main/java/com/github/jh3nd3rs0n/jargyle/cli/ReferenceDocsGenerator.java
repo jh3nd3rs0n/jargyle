@@ -952,75 +952,161 @@ final class ReferenceDocsGenerator {
             this.mw.printHeader(this.headingLevel, cls.getSimpleName());
             this.mw.println();
             this.mw.println();
-            if (String.class.isAssignableFrom(cls)) {
-                this.mw.printBoldText("Syntax:");
-                this.mw.println();
-                this.mw.println();
-                this.mw.printPreformattedTextStart("text");
-                this.mw.println();
-                this.mw.println("[CHARACTER1[CHARACTER2[...]]]");
-                this.mw.printPreformattedTextEnd();
-                this.mw.println();
-                this.mw.println();
-                this.mw.printBoldText("Description:");
-                this.mw.print(" ");
-                this.mw.println("A list of characters");
-                this.mw.println();
-                this.mw.printBoldText("Class:");
-                this.mw.print(" ");
-                this.mw.printCodeText(cls.getName());
-                this.mw.println();
-                this.mw.println();
-            } else {
-                this.mw.printBoldText("Syntax:");
-                this.mw.println();
-                this.mw.println();
-                this.mw.println(
-                        "Please see the Javadocs for the following "
-                                + "member(s) for the possible syntax "
-                                + "for the String parameter:");
-                this.mw.println();
-                for (Constructor<?> ctor : cls.getDeclaredConstructors()) {
-                    int modifiers = ctor.getModifiers();
-                    if (!ctor.isAnnotationPresent(Deprecated.class)
-                            && Modifier.isPublic(modifiers)
-                            && Arrays.equals(
-                            ctor.getParameterTypes(),
-                            new Class<?>[] { String.class })) {
-                        this.mw.printUnorderedListItemStart();
-                        this.mw.printCodeText(ctor.toString());
-                        this.mw.println();
-                    }
-                }
-                for (Method method : cls.getDeclaredMethods()) {
-                    int modifiers = method.getModifiers();
-                    if (!method.isAnnotationPresent(Deprecated.class)
-                            && Modifier.isPublic(modifiers)
-                            && Modifier.isStatic(modifiers)
-                            && method.getReturnType().equals(cls)
-                            && Arrays.equals(
-                            method.getParameterTypes(),
-                            new Class<?>[] { String.class })) {
-                        this.mw.printUnorderedListItemStart();
-                        this.mw.printCodeText(method.toString());
-                        this.mw.println();
-                    }
-                }
-                this.mw.println();
-                this.mw.printBoldText("Description:");
-                this.mw.print(" ");
-                this.mw.print(
-                        "Please see the Javadocs for the following class "
-                                + "for its description: ");
-                this.mw.printCodeText(cls.getName());
-                this.mw.println();
-                this.mw.println();
-                this.mw.printBoldText("Class:");
-                this.mw.print(" ");
-                this.mw.printCodeText(cls.getName());
-                this.mw.println();
-                this.mw.println();
+            if (Boolean.class.isAssignableFrom(cls)) {
+                this.writeBooleanDoc();
+                return;
             }
+            if (File.class.isAssignableFrom(cls)) {
+                this.writeFileDoc();
+                return;
+            }
+            if (Integer.class.isAssignableFrom(cls)) {
+                this.writeIntegerDoc();
+                return;
+            }
+            if (String.class.isAssignableFrom(cls)) {
+                this.writeStringDoc();
+                return;
+            }
+            this.writeValueTypeDoc(cls);
+        }
+
+
+        private void writeBooleanDoc() {
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println("true|false");
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(
+                    "A value of either of the following: true or false");
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(Boolean.class.getName());
+            this.mw.println();
+            this.mw.println();
+        }
+
+        private void writeFileDoc() {
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println("ABSOLUTE_OR_RELATIVE_PATH_TO_FILE");
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println("An absolute or relative path to a file");
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(File.class.getName());
+            this.mw.println();
+            this.mw.println();
+        }
+
+        private void writeIntegerDoc() {
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println("-2147483648-2147483647");
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println(
+                    "An integer between -2147483648 and 2147483647 (inclusive)");
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(Integer.class.getName());
+            this.mw.println();
+            this.mw.println();
+        }
+
+        private void writeStringDoc() {
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.printPreformattedTextStart("text");
+            this.mw.println();
+            this.mw.println("[CHARACTER1[CHARACTER2[...]]]");
+            this.mw.printPreformattedTextEnd();
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.println("A list of characters");
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(String.class.getName());
+            this.mw.println();
+            this.mw.println();
+        }
+
+        private void writeValueTypeDoc(final Class<?> cls) {
+            this.mw.printBoldText("Syntax:");
+            this.mw.println();
+            this.mw.println();
+            this.mw.println(
+                    "Please see the Javadocs for the following "
+                            + "member(s) for the possible syntax "
+                            + "for the String parameter:");
+            this.mw.println();
+            for (Constructor<?> ctor : cls.getDeclaredConstructors()) {
+                int modifiers = ctor.getModifiers();
+                if (!ctor.isAnnotationPresent(Deprecated.class)
+                        && Modifier.isPublic(modifiers)
+                        && Arrays.equals(
+                        ctor.getParameterTypes(),
+                        new Class<?>[] { String.class })) {
+                    this.mw.printUnorderedListItemStart();
+                    this.mw.printCodeText(ctor.toString());
+                    this.mw.println();
+                }
+            }
+            for (Method method : cls.getDeclaredMethods()) {
+                int modifiers = method.getModifiers();
+                if (!method.isAnnotationPresent(Deprecated.class)
+                        && Modifier.isPublic(modifiers)
+                        && Modifier.isStatic(modifiers)
+                        && method.getReturnType().equals(cls)
+                        && Arrays.equals(
+                        method.getParameterTypes(),
+                        new Class<?>[] { String.class })) {
+                    this.mw.printUnorderedListItemStart();
+                    this.mw.printCodeText(method.toString());
+                    this.mw.println();
+                }
+            }
+            this.mw.println();
+            this.mw.printBoldText("Description:");
+            this.mw.print(" ");
+            this.mw.print(
+                    "Please see the Javadocs for the following class "
+                            + "for its description: ");
+            this.mw.printCodeText(cls.getName());
+            this.mw.println();
+            this.mw.println();
+            this.mw.printBoldText("Class:");
+            this.mw.print(" ");
+            this.mw.printCodeText(cls.getName());
+            this.mw.println();
+            this.mw.println();
         }
 
     }

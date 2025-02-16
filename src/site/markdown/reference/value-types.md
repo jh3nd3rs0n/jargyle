@@ -68,11 +68,11 @@ ADDRESS|IP_ADDRESS1-IP_ADDRESS2|regex:REGULAR_EXPRESSION
 
 **Syntax:**
 
-Please see the Javadocs for the following member(s) for the possible syntax for the String parameter:
+```text
+true|false
+```
 
--   `public static java.lang.Boolean java.lang.Boolean.valueOf(java.lang.String)`
-
-**Description:** Please see the Javadocs for the following class for its description: `java.lang.Boolean`
+**Description:** A value of either of the following: true or false
 
 **Class:** `java.lang.Boolean`
 
@@ -94,11 +94,11 @@ Please see the Javadocs for the following member(s) for the possible syntax for 
 
 **Syntax:**
 
-Please see the Javadocs for the following member(s) for the possible syntax for the String parameter:
+```text
+ABSOLUTE_OR_RELATIVE_PATH_TO_FILE
+```
 
--   `public java.io.File(java.lang.String)`
-
-**Description:** Please see the Javadocs for the following class for its description: `java.io.File`
+**Description:** An absolute or relative path to a file
 
 **Class:** `java.io.File`
 
@@ -166,13 +166,11 @@ HOST_IPV4_ADDRESS|HOST_IPV6_ADDRESS
 
 **Syntax:**
 
-Please see the Javadocs for the following member(s) for the possible syntax for the String parameter:
+```text
+-2147483648-2147483647
+```
 
--   `public static java.lang.Integer java.lang.Integer.valueOf(java.lang.String) throws java.lang.NumberFormatException`
--   `public static java.lang.Integer java.lang.Integer.decode(java.lang.String) throws java.lang.NumberFormatException`
--   `public static java.lang.Integer java.lang.Integer.getInteger(java.lang.String)`
-
-**Description:** Please see the Javadocs for the following class for its description: `java.lang.Integer`
+**Description:** An integer between -2147483648 and 2147483647 (inclusive)
 
 **Class:** `java.lang.Integer`
 

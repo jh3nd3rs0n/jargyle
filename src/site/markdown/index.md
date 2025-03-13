@@ -1,32 +1,46 @@
 # About Jargyle 
 
-Jargyle is a Java SOCKS5 API and server with TCP traffic that can be layered 
-with SSL/TLS, UDP traffic that can be layered with DTLS, and both types of 
-traffic that can be routed through multiple SOCKS5 servers. It is inspired by 
-[JSocks](https://jsocks.sourceforge.net/),
-[SocksLib](https://github.com/fengyouchao/sockslib),
-[Esocks](https://github.com/fengyouchao/esocks) and
-[Dante](https://www.inet.no/dante/index.html).
+## Contents
 
-**Warning:** Jargyle is not production ready. The user guide is complete, but
-the reference documentation and the Javadocs are incomplete. Breaking changes
-may occur, but any existing documentation will be updated to reflect the
-changes.
-
-## Page Contents
-
+-   [Overview](#overview)
 -   [Features](#features)
 -   [Uses](#uses)
 -   [Examples](#examples)
     -   [SOCKS Client API Example](#socks-client-api-example)
     -   [SOCKS Server API Example](#socks-server-api-example)
     -   [Command Line Example](#command-line-example)
+-   [Get Started](#get-started)
+
+## Overview
+
+Jargyle is a Java SOCKS5 API and server. It is inspired by
+[JSocks](https://jsocks.sourceforge.net/),
+[SocksLib](https://github.com/fengyouchao/sockslib),
+[Esocks](https://github.com/fengyouchao/esocks) and
+[Dante](https://www.inet.no/dante/index.html).
+
+Jargyle is licensed under the
+[MIT license](https://opensource.org/licenses/MIT).
+Its license can be found 
+[here](https://jh3nd3rs0n.github.io/jargyle/licenses.html).
 
 ## Features
 
 Jargyle consists of a SOCKS client API, a SOCKS server API, and a SOCKS server.
 
-The SOCKS client API has the following features:
+The SOCKS client API, the SOCKS server API, and the SOCKS server support the 
+following features:
+
+-   SOCKS5 authentication methods:
+    -   No authentication
+    -   Username password authentication
+    -   GSS-API authentication
+-   SOCKS5 requests:
+    -   CONNECT
+    -   BIND
+    -   UDP ASSOCIATE
+
+The SOCKS client API has the following additional features:
 
 -   SSL/TLS-layered TCP traffic between itself and SOCKS5 servers
 -   DTLS-layered UDP traffic between itself and SOCKS5 servers
@@ -34,7 +48,8 @@ The SOCKS client API has the following features:
     [SOCKS5 RESOLVE request](reference/socks5-resolve-request.md)
 -   Route traffic through a specified chain of SOCKS5 servers
 
-The SOCKS server API and the SOCKS server have the following features:
+The SOCKS server API and the SOCKS server have the following additional 
+features:
 
 -   SSL/TLS-layered TCP traffic between itself and clients
 -   DTLS-layered UDP traffic between itself and clients
@@ -231,3 +246,19 @@ jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
     --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
 ```
+
+## Get Started
+
+To download a release of Jargyle, please see [Releases](releases.md).
+
+To know how to use Jargyle, please see the [user guide](userguide/index.md). 
+For further information, please see the 
+[reference documentation](reference/index.md).
+
+To view the Javadocs for Jargyle, they can be found
+[here](https://jh3nd3rs0n.github.io/jargyle/apidocs/index.html).
+
+**Warning:** Jargyle is not production ready. The user guide is complete, but
+the reference documentation and the Javadocs are incomplete. Breaking changes
+may occur, but any existing documentation will be updated to reflect the
+changes.

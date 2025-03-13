@@ -1,10 +1,15 @@
 # Releases
 
-The following are the types of releases:
+## Contents
 
+-   [Overview](#overview)
 -   [Build System Dependency](#build-system-dependency)
 -   [Binary distribution](#binary-distribution)
 -   [Source distribution](#source-distribution)
+
+## Overview
+
+This document discusses the types of releases.
 
 ## Build System Dependency
 

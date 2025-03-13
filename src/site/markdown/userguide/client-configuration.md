@@ -1,9 +1,8 @@
 # Client Configuration
 
-The following are topics for configuring the client from the client API.
+## Contents
 
-## Page Contents
-
+-   [Overview](#overview)
 -   [Enabling SSL/TLS-layered TCP Traffic Between the Client and the SOCKS Server](#enabling-ssltls-layered-tcp-traffic-between-the-client-and-the-socks-server)
 -   [Enabling DTLS-layered UDP Traffic Between the Client and the SOCKS Server](#enabling-dtls-layered-udp-traffic-between-the-client-and-the-socks-server)
 -   [Accessing the SOCKS Server Using SOCKS5 Authentication](#accessing-the-socks-server-using-socks5-authentication)
@@ -12,6 +11,11 @@ The following are topics for configuring the client from the client API.
     -   [Accessing the SOCKS Server Using GSS-API Authentication](#accessing-the-socks-server-using-gss-api-authentication)
 -   [Resolving Host Names From the SOCKS5 Server](#resolving-host-names-from-the-socks5-server)
 -   [Routing Traffic Through a Specified Chain of SOCKS Servers](#routing-traffic-through-a-specified-chain-of-socks-servers)
+
+## Overview
+
+This document discusses how to further use the [client API](client-api.md) 
+by means of configuration.
 
 <a id="enabling-ssltls-layered-tcp-traffic-between-the-client-and-the-socks-server"></a>
 ## Enabling SSL/TLS-layered TCP Traffic Between the Client and the SOCKS Server

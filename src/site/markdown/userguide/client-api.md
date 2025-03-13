@@ -1,13 +1,18 @@
 # Client API
 
-## Page Contents
+## Contents
 
--   [Introduction](#introduction)
+-   [Overview](#overview)
+-   [Main Entry Point](#main-entry-point)
 -   [Creating the NetObjectFactory from System Properties](#creating-the-netobjectfactory-from-system-properties)
 -   [Creating the NetObjectFactory from the SocksClient Object](#creating-the-netobjectfactory-from-the-socksclient-object)
     -   [The Property Object and the Properties Object](#the-property-object-and-the-properties-object)
 
-## Introduction
+## Overview
+
+This document discusses how to use the client API.
+
+## Main Entry Point
 
 The main entry point object for the client API is the `NetObjectFactory` 
 object. The `NetObjectFactory` object creates networking objects such as 

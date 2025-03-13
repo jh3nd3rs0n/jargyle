@@ -1,5 +1,13 @@
 # Client Properties
 
+## Contents
+
+-   [General Properties](#general-properties)
+-   [DTLS Properties](#dtls-properties)
+-   [SOCKS5 Properties](#socks5-properties)
+-   [SSL/TLS Properties](#ssl-tls-properties)
+-   [All Properties](#all-properties)
+
 ## General Properties
 
 <table>
@@ -59,6 +67,8 @@
 <tr><td><a href="#socksclient-ssl-truststorepassword"><code>socksClient.ssl.trustStorePassword</code></a></td><td>String</td><td>The password for the trust store for the SSL/TLS connections to the SOCKS server</td></tr>
 <tr><td><a href="#socksclient-ssl-truststoretype"><code>socksClient.ssl.trustStoreType</code></a></td><td>String</td><td>The type of trust store for the SSL/TLS connections to the SOCKS server<br/><b>Default Value:</b> <code>PKCS12</code></td></tr>
 </table>
+
+## All Properties
 
 ### socksClient.clientBindHost
 

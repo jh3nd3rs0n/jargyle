@@ -1,10 +1,8 @@
 # Server Configuration
 
-The following are topics for configuring the server from the server API and from 
-the command line.
+## Contents
 
-## Page Contents
-
+-   [Overview](#overview)
 -   [Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients](#enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients)
 -   [Enabling DTLS-layered UDP Traffic Between the Server and Its Clients](#enabling-dtls-layered-udp-traffic-between-the-server-and-its-clients)
 -   [Using SOCKS5 Authentication](#using-socks5-authentication)
@@ -31,6 +29,11 @@ the command line.
     -   [Configuring Sockets](#configuring-sockets)
     -   [Configuring Relay Settings](#configuring-relay-settings)
     -   [Limiting Relay Bandwidth](#limiting-relay-bandwidth)
+
+## Overview
+
+This document discusses how to further use the [server API](server-api.md) and 
+the [server](cli.md#starting-the-server) by means of configuration.
 
 <a id="enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients"></a>
 ## Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients
@@ -2743,7 +2746,7 @@ clientAddress=127.0.0.1,clientAddress=0:0:0:0:0:0:0:1
 In the server configuration file, rule conditions are expressed in a 
 `<ruleConditions/>` XML element with zero to many `<ruleCondition/>` XML 
 elements. Each `<ruleCondition/>` XML element contains a `<name/>` XML 
-element for the name of the rule condition and the `<value/>` XML element of 
+element for the name of the rule condition and the `<value/>` XML element for 
 the value assigned to the rule condition.
 
 Partial server configuration file example:
@@ -2808,11 +2811,11 @@ Partial API and command line example:
 firewallAction=ALLOW,firewallActionLogAction=LOG_AS_INFO
 ```
 
-In the server configuration file, rule action are expressed in a `<ruleActions/>` 
-XML element with zero to many `<ruleAction/>` XML elements. Each 
-`<ruleAction/>` XML element contains a `<name/>` XML element for the name of 
-the rule action and the `<value/>` XML element of the value assigned to the 
-rule action.
+In the server configuration file, rule actions are expressed in a 
+`<ruleActions/>` XML element with zero to many `<ruleAction/>` XML elements. 
+Each `<ruleAction/>` XML element contains a `<name/>` XML element for the name 
+of the rule action and the `<value/>` XML element for the value assigned to 
+the rule action.
 
 Partial server configuration file example:
 

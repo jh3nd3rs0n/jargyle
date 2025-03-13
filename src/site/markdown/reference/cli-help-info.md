@@ -1,6 +1,6 @@
 # Command Line Interface Help Information
 
-## Page Contents
+## Contents
 
 -   [Help Information](#help-information)
     -   [Help Information for generate-reference-docs](#help-information-for-generate-reference-docs)

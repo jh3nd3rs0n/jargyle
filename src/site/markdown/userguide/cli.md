@@ -1,9 +1,8 @@
 # Command Line Interface
 
-The following are topics for using the command line interface.
+## Contents
 
-## Page Contents
-
+-   [Overview](#overview)
 -   [Environment Variables](#environment-variables)
 -   [Running the Command Line Interface](#running-the-command-line-interface)
 -   [Generating Reference Documentation](#generating-reference-documentation)
@@ -18,6 +17,10 @@ The following are topics for using the command line interface.
 -   [Starting the Server](#starting-the-server)
     -   [Starting the Server With a Monitored Server Configuration File](#starting-the-server-with-a-monitored-server-configuration-file)
 -   [Configuring Encryption and Decryption of XML Elements in a Server Configuration File](#configuring-encryption-and-decryption-of-xml-elements-in-a-server-configuration-file)
+
+## Overview
+
+This document discusses how to use the command line interface.
 
 ## Environment Variables
 
@@ -92,14 +95,14 @@ To add SOCKS5 users to a user repository, you would run the following command:
 jargyle manage-socks5-users USER_REPOSITORY add
 ```
 
-`USER_REPOSITORY` is the the user repository described in the 
+`USER_REPOSITORY` is the user repository described in the 
 [help information](../reference/cli-help-info.md#help-information-for-manage-socks5-users) 
 for the command `manage-socks5-users`.
 
 Once you have run the command, an interactive prompt will ask you for the new 
 SOCKS5 user's name, password, and re-typed password. It will repeat the 
 process to add another SOCKS5 user if you want to continue to enter another 
-SOCKS5 user. If you do not want to enter any more SOCKS5 users, the new SOCKS5 
+SOCKS5 user. If you do not want to enter more SOCKS5 users, the new SOCKS5 
 users will be saved.
 
 Command line example:
@@ -210,8 +213,15 @@ jargyle new-server-config-file empty_configuration.xml
 </configuration>
 ```
 
+In the server configuration file, the root XML element `<configuration/>` 
+contains a `<settings/>` XML element. The `<settings/>` XML element contains
+zero to many `<setting/>` XML elements. In the case of the empty server 
+configuration file, `empty_configuration.xml`, the `<settings/>` XML element 
+has zero `<setting/>` XML elements.
+
 As an example, the following command creates a server configuration file with 
-the port number and the number of allowed backlogged incoming client connections:
+the setting for the port number for the server and the setting for the number of 
+allowed backlogged incoming client connections to the server:
 
 ```bash
 jargyle new-server-config-file \
@@ -237,6 +247,29 @@ jargyle new-server-config-file \
     </settings>
 </configuration>
 ```
+
+The command line option `--setting` adds a setting to the server 
+configuration. The argument for the command line option `--setting` consists 
+of the syntax of `NAME=VALUE` where `NAME` is expressed as the name of the 
+setting and `VALUE` is expressed as the value assigned to the value. It can be 
+specified multiple times to add settings to the server configuration.
+
+In the server configuration file, a setting is expressed in a `<setting/>` XML 
+element. Each `<setting/>` XML element contains a `<name/>` XML element for 
+the name of the setting and the `<value/>` XML element or another XML element 
+for the value assigned to the setting.
+
+Unless stated otherwise, if there are settings of the same name, then from 
+those settings the last setting is recognized by the server.
+
+A complete listing of settings can be found by running either the command 
+`jargyle new-server-config-file --settings-help` or the command 
+`jargyle start-server --settings-help`. The output from either command would 
+appear like the following 
+[here](../reference/cli-help-info.md#settings-help-information).
+
+The same complete listing of settings can also be found 
+[here](../reference/server-configuration-settings.md).
 
 <a id="creating-a-server-configuration-file-supplemented-with-command-line-options"></a>
 ### Creating a Server Configuration File Supplemented With Command Line Options
@@ -280,6 +313,11 @@ jargyle new-server-config-file \
     </settings>
 </configuration>
 ```
+
+The command line option `--config-file` adds settings from a provided server 
+configuration file to the server configuration. It can be specified multiple 
+times to add settings from other server configuration files to the server 
+configuration.
 
 <a id="creating-a-server-configuration-file-combined-from-server-configuration-files"></a>
 ### Creating a Server Configuration File Combined From Server Configuration Files
@@ -498,15 +536,22 @@ jargyle start-server
 The aforementioned command will start the server on port 1080 at address 
 0.0.0.0.
 
-Supplemental command line options including multiple server configuration files 
-provided by the command line options `--config-file` can be included.
+Command line options described in the
+[help information](../reference/cli-help-info.md#help-information-for-start-server)
+for the command `start-server` can be included. They are the same command line 
+options described in the 
+[help information](../reference/cli-help-info.md#help-information-for-new-server-config-file) 
+for the command 
+[`new-server-config-file`](#creating-a-server-configuration-file).
 
-As an example, the following command starts the server with earlier server 
-configuration files:
+As an example, the following command starts the server with specified settings 
+and settings from an earlier server configuration file:
 
 ```bash
 jargyle start-server \
-    --config-file=supplemented_general_configuration.xml \
+    --setting=port=1234 \
+    --setting=backlog=100 \
+    --setting=socksServerSocketSettings=SO_TIMEOUT=0 \
     --config-file=socks5_configuration.xml
 ```
 
@@ -532,9 +577,9 @@ configuration file as the monitored server configuration file:
 jargyle start-server combined_configuration.xml
 ```
 
-When a monitored server configuration file is provided, any supplemental command 
-line options including multiple server configuration files provided by the 
-command line options `--config-file` will be ignored.
+When a monitored server configuration file is provided, any command line 
+options that add to the server configuration such as `--setting` and 
+`--config-file` will be ignored.
 
 The following are the settings in the monitored server configuration file that 
 if changed will have no effect during the running of the server:

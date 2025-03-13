@@ -1,5 +1,11 @@
 # Rule Actions
 
+## Contents
+
+-   [General Rule Actions](#general-rule-actions)
+-   [SOCKS5 Rule Actions](#socks5-rule-actions)
+-   [All Rule Actions](#all-rule-actions)
+
 ## General Rule Actions
 
 <table>
@@ -89,6 +95,8 @@
 <tr><td><a href="#socks5-request-desireddestinationportredirect"><code>socks5.request.desiredDestinationPortRedirect</code></a></td><td>Port</td><td>Specifies the desired destination port redirect for the request</td></tr>
 <tr><td><a href="#socks5-request-desireddestinationredirectlogaction"><code>socks5.request.desiredDestinationRedirectLogAction</code></a></td><td>Log Action</td><td>Specifies the logging action to take if the desired destination of the request is redirected</td></tr>
 </table>
+
+## All Rule Actions
 
 ### bindHost
 

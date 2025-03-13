@@ -12,12 +12,13 @@
 <script>hljs.highlightAll();</script>
 			]]>
 		</head>
-		<menu name="Overview">
-			<item name="Introduction" href="index.html" />
+		<menu>
+			<item name="About Jargyle" href="index.html" />
 			<item name="Licenses" href="licenses.html" />
 			<item name="Releases" href="releases.html" />
 		</menu>
 		<menu name="User Guide">
+			<item name="About the User Guide" href="userguide/index.html"/>
 			<item name="Client API" href="userguide/client-api.html" />
 			<item name="Client Configuration" href="userguide/client-configuration.html" />
 			<item name="Command Line Interface" href="userguide/cli.html" />
@@ -25,6 +26,7 @@
 			<item name="Server Configuration" href="userguide/server-configuration.html" />
 		</menu>
 		<menu name="Reference">
+			<item name="About the Reference Documentation" href="reference/index.html"/>
 			<item name="Client Properties" href="reference/client-properties.html" />
 			<item name="Command Line Interface Help Information" href="reference/cli-help-info.html" />
 			<item name="Rule Actions" href="reference/rule-actions.html" />

@@ -1,5 +1,17 @@
 # Server Configuration Settings
 
+## Contents
+
+-   [General Settings](#general-settings)
+-   [Chaining General Settings](#chaining-general-settings)
+-   [Chaining DTLS Settings](#chaining-dtls-settings)
+-   [Chaining SOCKS5 Settings](#chaining-socks5-settings)
+-   [Chaining SSL/TLS Settings](#chaining-ssl-tls-settings)
+-   [DTLS Settings](#dtls-settings)
+-   [SOCKS5 Settings](#socks5-settings)
+-   [SSL/TLS Settings](#ssl-tls-settings)
+-   [All Settings](#all-settings)
+
 ## General Settings
 
 <table>
@@ -191,6 +203,8 @@
 <tr><td><a href="#ssl-truststoretype"><code>ssl.trustStoreType</code></a></td><td>String</td><td>The type of trust store for the SSL/TLS connections to the SOCKS server<br/><b>Default Value:</b> <code>PKCS12</code></td></tr>
 <tr><td><a href="#ssl-wantclientauth"><code>ssl.wantClientAuth</code></a></td><td>Boolean</td><td>The boolean value to indicate that client authentication is requested for SSL/TLS connections to the SOCKS server<br/><b>Default Value:</b> <code>false</code></td></tr>
 </table>
+
+## All Settings
 
 ### backlog
 

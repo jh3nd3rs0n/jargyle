@@ -1,13 +1,18 @@
 # Server API
 
-## Page Contents
+## Contents
 
--   [Introduction](#introduction)
+-   [Overview](#overview)
+-   [Main Entry Point](#main-entry-point)
 -   [The Setting Object and the Settings Object](#the-setting-object-and-the-settings-object)
 -   [The Configuration Object](#the-configuration-object)
 -   [The SocksServer Object](#the-socksserver-object)
 
-## Introduction
+## Overview
+
+This document discusses how to use the server API.
+
+## Main Entry Point
 
 The main entry point object for the server API is the `SocksServer` object. To 
 construct the `SocksServer` object, a `Configuration` object must be 
@@ -123,6 +128,10 @@ public class ServerApp {
     }
 }
 ```
+
+Unless stated otherwise, if there are `Setting` objects of the same name in a 
+`Settings` object, then from those `Setting` objects the last `Setting` object 
+is recognized by the `SocksServer`.
 
 ## The Configuration Object
 

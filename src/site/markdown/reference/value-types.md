@@ -1,6 +1,6 @@
 # Value Types
 
-## Page Contents
+## Contents
 
 -   [Address Range](#address-range)
 -   [Boolean](#boolean)

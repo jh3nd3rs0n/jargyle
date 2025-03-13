@@ -2,35 +2,31 @@
 
 # Jargyle
 
-Jargyle is a Java SOCKS5 API and server with TCP traffic that can be layered
-with SSL/TLS, UDP traffic that can be layered with DTLS, and both types of
-traffic that can be routed through multiple SOCKS5 servers. It is inspired by
-[JSocks](https://jsocks.sourceforge.net/),
-[SocksLib](https://github.com/fengyouchao/sockslib),
-[Esocks](https://github.com/fengyouchao/esocks) and
-[Dante](https://www.inet.no/dante/index.html).
-
-**Warning:** Jargyle is not production ready. The user guide is complete, but
-the reference documentation and the Javadocs are incomplete. Breaking changes
-may occur, but any existing documentation will be updated to reflect the
-changes.
-
-You can find more information about Jargyle 
-[here](https://jh3nd3rs0n.github.io/jargyle).
-
 ## Contents
 
--   [License](#license)
+-   [Overview](#overview)
 -   [Contributing Guidelines](#contributing-guidelines) 
 -   [Directory Overview](#directory-overview) 
 -   [Build Requirements](#build-requirements)
 -   [Frequently Used Maven Commands](#frequently-used-maven-commands)
 
-## License
+## Overview
+
+Jargyle is a Java SOCKS5 API and server. It is inspired by
+[JSocks](https://jsocks.sourceforge.net/),
+[SocksLib](https://github.com/fengyouchao/sockslib),
+[Esocks](https://github.com/fengyouchao/esocks) and
+[Dante](https://www.inet.no/dante/index.html).
 
 Jargyle is licensed under the
 [MIT license](https://opensource.org/licenses/MIT).
 Its license can be found [here](LICENSE).
+
+This README file discusses how to get started in contributing and building 
+Jargyle. More information about Jargyle can be found 
+[here](https://jh3nd3rs0n.github.io/jargyle).
+
+**Warning:** Jargyle is not production ready.
 
 ## Contributing Guidelines
 
@@ -40,60 +36,61 @@ The contributing guidelines can be found [here](CONTRIBUTING.md).
 
 The following is a simple overview of the directory.
 
-`.github/workflows/`: Contains GitHub workflow files that perform analyses and 
-tests when a push has been made to the GitHub repository
+-   `.github/workflows/`: Contains GitHub workflow files that perform analyses 
+    and tests when a push has been made to the GitHub repository
 
-`docs/`: Contains the website/documentation
+-   `docs/`: Contains the website/documentation
 
-`jargyle-argmatey/`: Maven module for the extensible command line interface. 
-It is used for the Jargyle command line interface.
+-   `jargyle-argmatey/`: Maven module for the extensible command line 
+    interface. It is used for the Jargyle command line interface.
 
-`jargyle-cli/`: Maven module for the Jargyle command line interface
+-   `jargyle-cli/`: Maven module for the Jargyle command line interface
 
-`jargyle-client/`: Maven module for the SOCKS client API
+-   `jargyle-client/`: Maven module for the SOCKS client API
 
-`jargyle-common/`: Maven module for the public API used by all modules
+-   `jargyle-common/`: Maven module for the public API used by all modules
 
-`jargyle-distribution/`: Maven module for creating the binary distribution
+-   `jargyle-distribution/`: Maven module for creating the binary distribution
 
-`jargyle-internal/`: Maven module for the internal API used by all modules
+-   `jargyle-internal/`: Maven module for the internal API used by all modules
 
-`jargyle-protocolbase/`: Maven module for the foundational API for the SOCKS 
-client API and the SOCKS server API
+-   `jargyle-protocolbase/`: Maven module for the foundational API for the 
+    SOCKS client API and the SOCKS server API
 
-`jargyle-report-aggregate/`: Maven module for generating the aggregated
-test coverage reports
+-   `jargyle-report-aggregate/`: Maven module for generating the aggregated
+    test coverage reports
 
-`jargyle-server/`: Maven module for the SOCKS server API
+-   `jargyle-server/`: Maven module for the SOCKS server API
 
-`jargyle-test-echo/`: Maven module for clients and servers that send/receive 
-data and receive/send back the same data. The clients and one of the servers 
-use the SOCKS client API. When testing the clients and one of the servers, the 
-SOCKS client API and the SOCKS server API are also tested.
+-   `jargyle-test-echo/`: Maven module for clients and servers that 
+    send/receive data and receive/send back the same data. The clients and one 
+    of the servers use the SOCKS client API. When testing the clients and one 
+    of the servers, the SOCKS client API and the SOCKS server API are also 
+    tested.
 
-`jargyle-test-echo-server-performance/`: Maven module for performance testing 
-of servers that receive data and send back the same data. It includes 
-performance testing of the SOCKS server API.
+-   `jargyle-test-echo-server-performance/`: Maven module for performance 
+    testing of servers that receive data and send back the same data. It 
+    includes performance testing of the SOCKS server API.
 
-`jargyle-test-help/`: Maven module for the API for help with testing
+-   `jargyle-test-help/`: Maven module for the API for help with testing
 
-`jargyle-test-netty-example-socksproxy/`: Maven module for the modified 
-version of the Netty example SOCKS proxy. It is used for testing.
+-   `jargyle-test-netty-example-socksproxy/`: Maven module for the modified 
+    version of the Netty example SOCKS proxy. It is used for testing.
 
-`src/site/`: Contains files used to generate `docs/`
+-   `src/site/`: Contains files used to generate `docs/`
 
-`.gitignore`: List of directories and files for Git to ignore such as
-Eclipse and IntelliJ IDEA project directories and files
+-   `.gitignore`: List of directories and files for Git to ignore such as
+    Eclipse and IntelliJ IDEA project directories and files
 
-`CODE_OF_CONDUCT.md`: Code of conduct for contributing to this project
+-   `CODE_OF_CONDUCT.md`: Code of conduct for contributing to this project
 
-`CONTRIBUTING.md`: Contributing guidelines
+-   `CONTRIBUTING.md`: Contributing guidelines
 
-`LICENSE`: The license for this project
+-   `LICENSE`: The license for this project
 
-`pom.xml`: The Maven POM file for this project
+-   `pom.xml`: The Maven POM file for this project
 
-`README.md`: This README file
+-   `README.md`: This README file
 
 ## Build Requirements
 
@@ -110,66 +107,68 @@ variable `JAVA_HOME` set to the Java home directory.
 The following are Maven commands that are frequently used for this project.
 These commands are to be executed at the top directory of Jargyle.
 
-`mvn clean`: Deletes directories and files created by this project.
+-   `mvn clean`: Deletes directories and files created by this project.
 
-`mvn clean compile site:site site:stage site:deploy`: Performs a clean build 
-and produces the website/documentation. 
-
-The produced website/documentation can be found in `docs/`. 
-
-Included in the website/documentation is the reference documentation. The 
-reference documentation was generated from special annotations within in the 
-source code. Should any of these special annotations in the source code be 
-added, changed, moved, or removed, you will need to run the following commands:
-
-```bash
-# Perform a build of the binary distribution
-mvn clean package -DskipTests=true
-# Run Jargyle to generate Markdown reference documents to the directory of Markdown reference documentation 
-jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs -d src/site/markdown/reference/
-# Produce the website/documentation with the updated reference documentation
-mvn compile site:site site:stage site:deploy
-```
-
-`mvn clean package -DskipTests=true`: Performs a clean build of the binary 
-distribution skipping the execution of all tests. 
-
-The built binary distribution can be found as a directory and in multiple 
-archive formats in `jargyle-distribution/target/`.
-
-`mvn clean test -Pcoverage`:
-Performs a clean build, executes all tests except the integration tests, and 
-produces the aggregated test coverage reports.
-
-The aggregated test coverage reports can be found in
-`jargyle-report-aggregate/target/`.
-
-The option `-Pcoverage` can be removed if you do not want the aggregated test
-coverage reports produced.
-
-`mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
-Performs a clean build, executes all tests except the ones from the project 
-`jargyle-test-echo-server-performance`, skips building the binary 
-distribution, and produces the aggregated test coverage reports.
-
-The argument `\!jargyle-test-echo-server-performance,` from the option 
-`--projects` can be removed if you want the performance tests to be executed. 
-If the performance tests are executed, the results can be found in
-`jargyle-test-echo-server-performance/target/performance-results/`.
-
-The aggregated test coverage reports can be found in 
-`jargyle-report-aggregate/target/`. 
-
-The option `-Pcoverage` can be removed if you do not want the aggregated test 
-coverage reports produced.
-
-When executing the integration tests, the integration tests use only the 
-loopback address and the local port numbers assigned by the local system. 
-However, the following specified local port numbers need to be open:
-
--   `1080`: This default port number is used for SOCKS servers set up for 
-    testing.
--   `8000`: This port number is used for a Kerberos Key Distribution Center
-    (KDC) set up for testing.
--   `9000`: This port number is used for a Kerberos Key Distribution Center
-    (KDC) set up for testing. 
+-   `mvn clean compile site:site site:stage site:deploy`: Performs a clean 
+    build and produces the website/documentation. 
+    
+    The produced website/documentation can be found in `docs/`. 
+    
+    Included in the website/documentation is the reference documentation. The 
+    reference documentation was generated from special annotations within in 
+    the source code. Should any of these special annotations in the source 
+    code be added, changed, moved, or removed, you will need to run the 
+    following commands:
+    
+    ```bash
+    # Perform a build of the binary distribution
+    mvn clean package -DskipTests=true
+    # Run Jargyle to generate Markdown reference documents to the directory of Markdown reference documentation 
+    jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs -d src/site/markdown/reference/
+    # Produce the website/documentation with the updated reference documentation
+    mvn compile site:site site:stage site:deploy
+    ```
+    
+-   `mvn clean package -DskipTests=true`: Performs a clean build of the binary 
+    distribution skipping the execution of all tests. 
+    
+    The built binary distribution can be found as a directory and in multiple 
+    archive formats in `jargyle-distribution/target/`.
+    
+-   `mvn clean test -Pcoverage`: Performs a clean build, executes all tests 
+    except the integration tests, and produces the aggregated test coverage 
+    reports.
+    
+    The aggregated test coverage reports can be found in
+    `jargyle-report-aggregate/target/`.
+    
+    The option `-Pcoverage` can be removed if you do not want the aggregated 
+    test coverage reports produced.
+    
+-   `mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
+    Performs a clean build, executes all tests except the ones from the 
+    project `jargyle-test-echo-server-performance`, skips building the binary 
+    distribution, and produces the aggregated test coverage reports.
+    
+    The argument `\!jargyle-test-echo-server-performance,` from the option 
+    `--projects` can be removed if you want the performance tests to be 
+    executed. If the performance tests are executed, the results can be found 
+    in `jargyle-test-echo-server-performance/target/performance-results/`.
+    
+    The aggregated test coverage reports can be found in 
+    `jargyle-report-aggregate/target/`. 
+    
+    The option `-Pcoverage` can be removed if you do not want the aggregated 
+    test coverage reports produced.
+    
+    When executing the integration tests, the integration tests use only the 
+    loopback address and the local port numbers assigned by the local system. 
+    However, the following specified local port numbers need to be open:
+    
+    -   `1080`: This default port number is used for SOCKS servers set up for 
+        testing.
+    -   `8000`: This port number is used for a Kerberos Key Distribution Center
+        (KDC) set up for testing.
+    -   `9000`: This port number is used for a Kerberos Key Distribution Center
+        (KDC) set up for testing. 
+    

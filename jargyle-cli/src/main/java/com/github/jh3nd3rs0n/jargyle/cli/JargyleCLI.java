@@ -17,10 +17,6 @@ public final class JargyleCLI extends CLI {
 
 	private static enum Command {
 
-		@HelpText(
-				doc = "Generate reference documents",
-				usage = "generate-reference-docs [OPTION]"
-		)
 		GENERATE_REFERENCE_DOCS("generate-reference-docs") {
 
 			@Override

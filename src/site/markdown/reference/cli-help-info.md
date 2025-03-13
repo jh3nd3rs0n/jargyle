@@ -3,7 +3,6 @@
 ## Contents
 
 -   [Help Information](#help-information)
-    -   [Help Information for generate-reference-docs](#help-information-for-generate-reference-docs)
     -   [Help Information for manage-socks5-users](#help-information-for-manage-socks5-users)
     -   [Help Information for new-server-config-file](#help-information-for-new-server-config-file)
     -   [Help Information for start-server](#help-information-for-start-server)
@@ -17,8 +16,6 @@ Usage: jargyle COMMAND
        jargyle --version
 
 COMMANDS:
-  generate-reference-docs [OPTION]
-      Generate reference documents
   manage-socks5-users USER_REPOSITORY COMMAND
       Manage SOCKS5 users
   new-server-config-file [OPTIONS] FILE
@@ -31,20 +28,6 @@ OPTIONS:
       Print this help and exit
   --version, -V
       Print version information and exit
-
-```
-
-### Help Information for generate-reference-docs
-
-```text
-Usage: jargyle generate-reference-docs [-d DIRECTORY]
-       jargyle generate-reference-docs --help
-
-OPTIONS:
-  -d DIRECTORY
-      The destination directory for the output files
-  --help, -h
-      Print this help and exit
 
 ```
 

@@ -5,7 +5,6 @@
 -   [Overview](#overview)
 -   [Environment Variables](#environment-variables)
 -   [Running the Command Line Interface](#running-the-command-line-interface)
--   [Generating Reference Documentation](#generating-reference-documentation)
 -   [Managing SOCKS5 Users](#managing-socks5-users)
     -   [Adding SOCKS5 Users](#adding-socks5-users)
     -   [List All SOCKS5 Users](#list-all-socks5-users)
@@ -47,22 +46,6 @@ jargyle COMMAND
 `COMMAND` is the name of one of the commands described in the 
 [help information](../reference/cli-help-info.md#help-information) for 
 `jargyle`.
-
-## Generating Reference Documentation
-
-To generate reference documentation, you would run the following command:
-
-```text
-jargyle generate-reference-docs
-```
-
-This command will generate reference documentation as Markdown files in the 
-present working directory. To specify the destination directory for the output 
-files, you can use the command line option and argument `-d DIRECTORY` where 
-`DIRECTORY` is the specified destination directory for the output files. The 
-command line option and argument are described in the 
-[help information](../reference/cli-help-info.md#help-information-for-generate-reference-docs)
-for the command `generate-reference-docs`.
 
 ## Managing SOCKS5 Users
 

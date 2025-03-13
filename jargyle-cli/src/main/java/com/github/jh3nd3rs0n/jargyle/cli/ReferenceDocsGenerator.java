@@ -102,11 +102,6 @@ final class ReferenceDocsGenerator {
             mw.printIndentations();
             mw.printUnorderedListItemStart();
             mw.printLinkToHeader(
-                    "Help Information for generate-reference-docs");
-            mw.println();
-            mw.printIndentations();
-            mw.printUnorderedListItemStart();
-            mw.printLinkToHeader(
                     "Help Information for manage-socks5-users");
             mw.println();
             mw.printIndentations();
@@ -134,24 +129,6 @@ final class ReferenceDocsGenerator {
                 new JargyleCLI(
                         "jargyle",
                         "jargyle",
-                        new String[]{"--help"},
-                        false).printProgramHelp(printWriter);
-                printWriter.flush();
-                mw.print(stringWriter.toString());
-            }
-            mw.printPreformattedTextEnd();
-            mw.println();
-            mw.println();
-            mw.printHeader(3, "Help Information for generate-reference-docs");
-            mw.println();
-            mw.println();
-            mw.printPreformattedTextStart("text");
-            mw.println();
-            try (StringWriter stringWriter = new StringWriter();
-                 PrintWriter printWriter = new PrintWriter(stringWriter)) {
-                new ReferenceDocsGeneratorCLI(
-                        "generate-reference-docs",
-                        "jargyle generate-reference-docs",
                         new String[]{"--help"},
                         false).printProgramHelp(printWriter);
                 printWriter.flush();

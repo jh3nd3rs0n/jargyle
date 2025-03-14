@@ -262,3 +262,5 @@ To view the Javadocs for Jargyle, they can be found
 the reference documentation and the Javadocs are incomplete. Breaking changes
 may occur, but any existing documentation will be updated to reflect the
 changes.
+
+Still have questions? Maybe the [FAQ](faq.md) might answer some of them.

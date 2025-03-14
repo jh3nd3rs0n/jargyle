@@ -15,8 +15,8 @@
 		<menu>
 			<item name="About Jargyle" href="index.html" />
 			<item name="Licenses" href="licenses.html" />
-			<item name="FAQ" href="faq.html" />
 			<item name="Releases" href="releases.html" />
+			<item name="FAQ" href="faq.html" />
 		</menu>
 		<menu name="User Guide">
 			<item name="About the User Guide" href="userguide/index.html"/>

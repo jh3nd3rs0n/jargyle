@@ -3,14 +3,14 @@
 ## Contents
 
 -   [Why?](#why)
--   [Where does the name Jargyle come from?](#where-does-the-name-jargyle-come-from)
+-   [Why the name Jargyle?](#why-the-name-jargyle)
 -   [Will SOCKS4(a) be supported?](#will-socks4a-be-supported)
 
 ## Why?
 
 TL;DR: For fun and a desire to make something potentially useful for others.
 
-Jargyle came from a discarded project. Instead of scrapping the Java SOCKS5 
+Jargyle came from a discarded project. Instead of discarding the Java SOCKS5 
 server source code with the rest of the project, the Java source code was used 
 to create a SOCKS server that implemented all the SOCKS5 protocol 
 specification described in RFC 
@@ -38,7 +38,7 @@ other Java SOCKS APIs and servers (at least from the author's viewpoint).
 But the driving force behind Jargyle was for fun and a desire to make 
 something potentially useful for others. 
 
-## Where does the name Jargyle come from?
+## Why the name Jargyle?
 
 The beginning "J" of the name is the naming convention for some Java 
 applications (for example, JEdit and JCreator). The rest of the name, 

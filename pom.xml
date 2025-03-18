@@ -220,11 +220,6 @@
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.6.0</version>
-					<configuration>
-						<descriptors>
-							<descriptor>src/assembly/bin.xml</descriptor>
-						</descriptors>
-					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
@@ -289,6 +284,6 @@
 		<module>jargyle-argmatey</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-report-aggregate</module>
-		<module>jargyle-distribution</module>
+		<module>jargyle-distributions</module>
     </modules>
 </project>

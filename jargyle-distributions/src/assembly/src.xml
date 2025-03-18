@@ -1,0 +1,41 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+    <id>src</id>
+    <formats>
+        <format>dir</format>
+        <format>tar.gz</format>
+        <format>tar.bz2</format>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <useDefaultExcludes>false</useDefaultExcludes>
+            <directory>${project.parent.basedir}</directory>
+            <outputDirectory/>
+            <includes>
+                <include>.github/**</include>
+                <include>docs/**</include>
+                <include>jargyle-*/**</include>
+                <include>src/**</include>
+                <include>.gitignore</include>
+                <include>CODE_OF_CONDUCT.md</include>
+                <include>CONTRIBUTING.md</include>
+                <include>LICENSE</include>
+                <include>pom.xml</include>
+                <include>README.md</include>
+            </includes>
+            <excludes>
+                <!-- Files made by Eclipse -->
+                <exclude>**/.classpath</exclude>
+                <exclude>**/.project</exclude>
+                <exclude>**/.settings/**</exclude>
+                <!-- Files made by IntelliJ IDEA -->
+                <exclude>**/.idea/**</exclude>
+                <!-- Files made by Maven -->
+                <exclude>**/target/**</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>

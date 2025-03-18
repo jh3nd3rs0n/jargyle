@@ -50,7 +50,8 @@ The following is a simple overview of the directory.
 
 -   `jargyle-common/`: Maven module for the public API used by all modules
 
--   `jargyle-distribution/`: Maven module for creating the binary distribution
+-   `jargyle-distributions/`: Maven module for creating the binary and source 
+    distributions
 
 -   `jargyle-internal/`: Maven module for the internal API used by all modules
 
@@ -117,8 +118,8 @@ These commands are to be executed at the top directory of Jargyle.
     Included in the website/documentation is the reference documentation. The 
     reference documentation was generated from special annotations within in 
     the source code. Should any of these special annotations in the source 
-    code be added, changed, moved, or removed, you will need to run the 
-    following commands:
+    code be added, changed, moved, removed, or handled differently, you will 
+    need to run the following commands:
     
     ```bash
     # Perform a build of the binary distribution
@@ -130,10 +131,10 @@ These commands are to be executed at the top directory of Jargyle.
     ```
     
 -   `mvn clean package -DskipTests=true`: Performs a clean build of the binary 
-    distribution skipping the execution of all tests. 
+    and source distributions skipping the execution of all tests. 
     
-    The built binary distribution can be found as a directory and in multiple 
-    archive formats in `jargyle-distribution/target/`.
+    The built binary and source distributions can be found as directories and 
+    in multiple archive formats in `jargyle-distribution/target/`.
     
 -   `mvn clean test -Pcoverage`: Performs a clean build, executes all tests 
     except the integration tests, and produces the aggregated test coverage 
@@ -148,7 +149,8 @@ These commands are to be executed at the top directory of Jargyle.
 -   `mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
     Performs a clean build, executes all tests except the ones from the 
     project `jargyle-test-echo-server-performance`, skips building the binary 
-    distribution, and produces the aggregated test coverage reports.
+    and source distributions, and produces the aggregated test coverage 
+    reports.
     
     The argument `\!jargyle-test-echo-server-performance,` from the option 
     `--projects` can be removed if you want the performance tests to be 

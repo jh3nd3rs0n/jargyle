@@ -7,10 +7,10 @@
 		<artifactId>jargyle</artifactId>
 		<version>5.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>jargyle-distribution</artifactId>
+	<artifactId>jargyle-distributions</artifactId>
 	<packaging>pom</packaging>
-	<name>Jargyle Distribution</name>
-	<description>Creates the binary distribution (No website available for this module.)</description>
+	<name>Jargyle Distributions</name>
+	<description>Creates the binary and source distributions (No website available for this module.)</description>
 	<properties>
 		<maven.site.skip>true</maven.site.skip>
 		<maven.deploy.skip>true</maven.deploy.skip>
@@ -41,6 +41,7 @@
 						<configuration>
 							<descriptors>
 								<descriptor>src/assembly/bin.xml</descriptor>
+								<descriptor>src/assembly/src.xml</descriptor>
 							</descriptors>
 						</configuration>
 					</execution>

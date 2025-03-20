@@ -125,7 +125,7 @@ These commands are to be executed at the top directory of Jargyle.
     # Perform a build of the binary distribution
     mvn clean package -DskipTests=true
     # Run Jargyle to generate Markdown reference documents to the directory of Markdown reference documentation 
-    jargyle-distribution/target/jargyle-distribution-5.0.0-SNAPSHOT-bin/bin/jargyle generate-reference-docs -d src/site/markdown/reference/
+    jargyle-distributions/target/jargyle-5.0.0-SNAPSHOT-bin/jargyle-5.0.0-SNAPSHOT/bin/jargyle generate-reference-docs -d src/site/markdown/reference/
     # Produce the website/documentation with the updated reference documentation
     mvn compile site:site site:stage site:deploy
     ```
@@ -134,7 +134,7 @@ These commands are to be executed at the top directory of Jargyle.
     and source distributions skipping the execution of all tests. 
     
     The built binary and source distributions can be found as directories and 
-    in multiple archive formats in `jargyle-distribution/target/`.
+    in multiple archive formats in `jargyle-distributions/target/`.
     
 -   `mvn clean test -Pcoverage`: Performs a clean build, executes all tests 
     except the integration tests, and produces the aggregated test coverage 
@@ -146,7 +146,7 @@ These commands are to be executed at the top directory of Jargyle.
     The option `-Pcoverage` can be removed if you do not want the aggregated 
     test coverage reports produced.
     
--   `mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distribution -Pcoverage`: 
+-   `mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distributions -Pcoverage`: 
     Performs a clean build, executes all tests except the ones from the 
     project `jargyle-test-echo-server-performance`, skips building the binary 
     and source distributions, and produces the aggregated test coverage 

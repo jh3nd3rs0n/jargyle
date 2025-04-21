@@ -12,7 +12,7 @@
 
 ## Overview
 
-Jargyle is a Java SOCKS5 API and server. It is inspired by
+Jargyle is a Java SOCKS5 server and API. It is inspired by
 [JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and

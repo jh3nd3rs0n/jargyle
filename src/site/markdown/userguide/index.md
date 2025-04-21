@@ -8,4 +8,4 @@ This user guide contains the following:
 -   [Command Line Interface](cli.md): How to use the command line interface 
 -   [Server API](server-api.md): How to use the server API
 -   [Server Configuration](server-configuration.md): How to further use the 
-    server API and the server by means of configuration 
+    server and the server API by means of configuration 

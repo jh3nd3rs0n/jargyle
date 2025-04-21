@@ -32,8 +32,9 @@
 
 ## Overview
 
-This document discusses how to further use the [server API](server-api.md) and 
-the [server](cli.md#starting-the-server) by means of configuration.
+This document discusses how to further use the 
+[server](cli.md#starting-the-server) and the [server API](server-api.md) by 
+means of configuration.
 
 <a id="enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients"></a>
 ## Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients
@@ -46,32 +47,6 @@ addition, you will need to have the setting `ssl.keyStoreFile` to specify the
 server's key store file (this file would need to be created by Java's keytool 
 utility). Also, you will need to have the setting `ssl.keyStorePassword` to 
 specify the password for the server's key store file.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "ssl.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.keyStorePassword", "password")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -105,6 +80,32 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "ssl.enabled", "true"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.keyStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.keyStorePassword", "password")
+        ))).start();
+    }
+}
+```
+
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
 option `--enter-ssl-key-store-pass` instead. It will provide an interactive 
@@ -126,38 +127,6 @@ file to be used as a trust store (this file would need to be created by Java's
 keytool utility). Also, you will need to have the setting 
 `ssl.trustStorePassword` to specify the password for the client's trust 
 store file.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "ssl.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.keyStorePassword", "password"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.needClientAuth", "true"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.trustStoreFile", "client.jks"),
-            Setting.newInstanceWithParsedValue(
-                "ssl.trustStorePassword", "drowssap")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -207,6 +176,38 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "ssl.enabled", "true"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.keyStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.keyStorePassword", "password"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.needClientAuth", "true"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.trustStoreFile", "client.jks"),
+            Setting.newInstanceWithParsedValue(
+                "ssl.trustStorePassword", "drowssap")
+        ))).start();
+    }
+}
+```
+
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
 option `--enter-ssl-trust-store-pass` instead. It will provide an 
@@ -235,32 +236,6 @@ addition, you will need to have the setting `dtls.keyStoreFile` to specify the
 server's key store file (this file would need to be created by Java's keytool 
 utility). Also, you will need to have the setting `dtls.keyStorePassword` to 
 specify the password for the server's key store file.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "dtls.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "dtls.keyStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "dtls.keyStorePassword", "password")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -294,6 +269,32 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "dtls.enabled", "true"),
+            Setting.newInstanceWithParsedValue(
+                "dtls.keyStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue(
+                "dtls.keyStorePassword", "password")
+        ))).start();
+    }
+}
+```
+
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
 option `--enter-dtls-key-store-pass` instead. It will provide an 
@@ -316,9 +317,15 @@ The server has the following SOCKS5 authentication methods to choose from:
 -   `GSSAPI`: GSS-API authentication
 -   `USERNAME_PASSWORD`: Username password authentication
 
-From the API and from the command line, you can have one or more of the 
+From the command line and from the API, you can have one or more of the 
 aforementioned authentication methods set in the setting `socks5.methods` as 
 a comma separated list. 
+
+Command line example:
+
+```bash
+jargyle start-server --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI
+```
 
 API example:
 
@@ -343,12 +350,6 @@ public class ServerApp {
 }
 ```
 
-Command line example:
-
-```bash
-jargyle start-server --setting=socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI
-```
-
 In the server configuration file, you can have one or more of the aforementioned 
 authentication methods set in the setting `socks5.methods` as a 
 `<socks5.methods/>` XML element with one or more `<socks5.method/>` XML 
@@ -371,7 +372,8 @@ Server configuration file example:
 </configuration>
 ```
 
-If not set, the default value for the setting `socks5.methods` is set to `NO_AUTHENTICATION_REQUIRED`
+If not set, the default value for the setting `socks5.methods` is set to 
+`NO_AUTHENTICATION_REQUIRED`
 
 ### Using No Authentication
 
@@ -383,29 +385,6 @@ Because the default value for the setting `socks5.methods` is set to
 However, if other authentication methods are to be used in addition to 
 `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be 
 included in the setting `socks5.methods`
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "socks5.methods", 
-                "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -431,6 +410,29 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks5.methods", 
+                "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
+        ))).start();
+    }
+}
+```
+
 ### Using Username Password Authentication
 
 To use username password authentication, you will need to have the setting 
@@ -451,31 +453,6 @@ as the size of the file. If the file does not exist, it will be created and
 used. If the file does exist, the existing file will be used. To manage SOCKS5 
 users under a user repository, see 
 [Managing SOCKS5 Users](cli.md#managing-socks5-users).
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsedValue(
-                "socks5.userpassmethod.userRepository", 
-                "FileSourceUserRepository:users")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -508,6 +485,31 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks5.methods", "USERNAME_PASSWORD"),
+            Setting.newInstanceWithParsedValue(
+                "socks5.userpassmethod.userRepository", 
+                "FileSourceUserRepository:users")
+        ))).start();
+    }
+}
+```
+
 `StringSourceUserRepository`: This user repository handles the storage of 
 the SOCKS5 users from an initialization string value of a comma separated list 
 of URL encoded username and password pairs.
@@ -530,31 +532,6 @@ comma character must be replaced with the URL encoding character `%2C`.
 If the username or the password contains a percent sign character (`%`) not 
 used for URL encoding, then each percent sign character not used for URL 
 encoding must be replaced with the URL encoding character `%25`.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsedValue(
-                "socks5.userpassmethod.userRepository",
-                "StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -587,15 +564,6 @@ Server configuration file example:
 </configuration>
 ```
 
-### Using GSS-API Authentication
-
-To use GSS-API authentication, you will need to have the setting 
-`socks5.methods` to have `GSSAPI` included. You will need to specify Java 
-system properties to use a security mechanism that implements the GSS-API (for 
-example, Kerberos is a security mechanism that implements the GSS-API).
-
-The following are sufficient examples of using the Kerberos security mechanism:
-
 API example:
 
 ```java
@@ -610,18 +578,25 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty(
-            "javax.security.auth.useSubjectCredsOnly", "true");
-        System.setProperty(
-            "java.security.auth.login.config", "login.conf");
-        System.setProperty("java.security.krb5.conf", "krb5.conf");
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             Setting.newInstanceWithParsedValue(
-                "socks5.methods", "GSSAPI")
+                "socks5.methods", "USERNAME_PASSWORD"),
+            Setting.newInstanceWithParsedValue(
+                "socks5.userpassmethod.userRepository",
+                "StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible")
         ))).start();
     }
 }
 ```
+
+### Using GSS-API Authentication
+
+To use GSS-API authentication, you will need to have the setting 
+`socks5.methods` to have `GSSAPI` included. You will need to specify Java 
+system properties to use a security mechanism that implements the GSS-API (for 
+example, Kerberos is a security mechanism that implements the GSS-API).
+
+The following are sufficient examples of using the Kerberos security mechanism:
 
 Command line example:
 
@@ -648,6 +623,33 @@ export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.secu
         </setting>
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "javax.security.auth.useSubjectCredsOnly", "true");
+        System.setProperty(
+            "java.security.auth.login.config", "login.conf");
+        System.setProperty("java.security.krb5.conf", "krb5.conf");
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks5.methods", "GSSAPI")
+        ))).start();
+    }
+}
 ```
 
 The Java system property `javax.security.auth.useSubjectCredsOnly` with 
@@ -708,6 +710,26 @@ traffic can be routed through another SOCKS server. To have the server chained
 to another SOCKS server, you will need to specify the other SOCKS server as a 
 URI in the setting `chaining.socksServerUri`
 
+Command line example:
+
+```bash
+jargyle start-server --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
 API example:
 
 ```java
@@ -729,26 +751,6 @@ public class ServerApp {
         ))).start();
     }
 }
-```
-
-Command line example:
-
-```bash
-jargyle start-server --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111
-```
-
-Server configuration file example:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<configuration>
-    <settings>
-        <setting>
-            <name>chaining.socksServerUri</name>
-            <value>socks5://alpha-alpha.net:11111</value>
-        </setting>
-    </settings>
-</configuration>
 ```
 
 Please note that the scheme in the URI specifies the SOCKS protocol to be used 
@@ -775,35 +777,6 @@ store file used as a trust store (this file would need to be created by Java's
 keytool utility). Also, you will need to have the setting 
 `chaining.ssl.trustStorePassword` to specify the password for the other SOCKS 
 server's trust store file.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-alpha.net:11111"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.ssl.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.ssl.trustStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.ssl.trustStorePassword", "password")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -842,28 +815,6 @@ Server configuration file example:
 </configuration>
 ```
 
-If you do not want to have the password appear in any script or in any part of 
-the command line history for security reasons, you can use the command line 
-option `--enter-chaining-ssl-trust-store-pass` instead. It will provide 
-an interactive prompt for you to enter the password.
-
-Command line example:
-
-```bash
-jargyle start-server \
-    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
-    --setting=chaining.ssl.enabled=true \
-    --setting=chaining.ssl.trustStoreFile=server.jks \
-    --enter-chaining-ssl-trust-store-pass
-```
-
-If the other SOCKS server wants the client (the server) to authenticate using 
-SSL/TLS, you will need to have the setting `chaining.ssl.keyStoreFile` to 
-specify the client's key store file (this file would need to be created by 
-Java's keytool utility). Also, you will need to have the setting 
-`chaining.ssl.keyStorePassword` to specify the password for the client's 
-key store file.
-
 API example:
 
 ```java
@@ -885,10 +836,6 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "chaining.ssl.enabled", "true"),
             Setting.newInstanceWithParsedValue(
-                "chaining.ssl.keyStoreFile", "client.jks"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.ssl.keyStorePassword", "drowssap"),
-            Setting.newInstanceWithParsedValue(
                 "chaining.ssl.trustStoreFile", "server.jks"),
             Setting.newInstanceWithParsedValue(
                 "chaining.ssl.trustStorePassword", "password")
@@ -896,6 +843,28 @@ public class ServerApp {
     }
 }
 ```
+
+If you do not want to have the password appear in any script or in any part of 
+the command line history for security reasons, you can use the command line 
+option `--enter-chaining-ssl-trust-store-pass` instead. It will provide 
+an interactive prompt for you to enter the password.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.ssl.enabled=true \
+    --setting=chaining.ssl.trustStoreFile=server.jks \
+    --enter-chaining-ssl-trust-store-pass
+```
+
+If the other SOCKS server wants the client (the server) to authenticate using 
+SSL/TLS, you will need to have the setting `chaining.ssl.keyStoreFile` to 
+specify the client's key store file (this file would need to be created by 
+Java's keytool utility). Also, you will need to have the setting 
+`chaining.ssl.keyStorePassword` to specify the password for the client's 
+key store file.
 
 Command line example:
 
@@ -945,6 +914,39 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.enabled", "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.keyStoreFile", "client.jks"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.keyStorePassword", "drowssap"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.trustStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.trustStorePassword", "password")
+        ))).start();
+    }
+}
+```
+
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
 option `--enter-chaining-ssl-key-store-pass` instead. It will provide an 
@@ -979,35 +981,6 @@ store file used as a trust store (this file would need to be created by Java's
 keytool utility). Also, you will need to have the setting 
 `chaining.dtls.trustStorePassword` to specify the password for the other SOCKS 
 server's trust store file.
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-alpha.net:11111"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.dtls.enabled", "true"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.dtls.trustStoreFile", "server.jks"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.dtls.trustStorePassword", "password")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -1046,6 +1019,35 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.dtls.enabled", "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.dtls.trustStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.dtls.trustStorePassword", "password")
+        ))).start();
+    }
+}
+```
+
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
 option `--enter-chaining-dtls-trust-store-pass` instead. It will provide 
@@ -1070,9 +1072,17 @@ chaining to the other SOCKS5 server:
 -   `GSSAPI`: GSS-API authentication
 -   `USERNAME_PASSWORD`: Username password authentication
 
-From the API and from the command line, you can have one or more of the 
+From the command line and from the API, you can have one or more of the 
 aforementioned authentication methods set in the setting 
 `chaining.socks5.methods` as a comma separated list. 
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI
+```
 
 API example:
 
@@ -1098,14 +1108,6 @@ public class ServerApp {
         ))).start();
     }
 }
-```
-
-Command line example:
-
-```bash
-jargyle start-server \
-    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
-    --setting=chaining.socks5.methods=NO_AUTHENTICATION_REQUIRED,GSSAPI
 ```
 
 In the configuration file, you can have one or more of the aforementioned 
@@ -1148,32 +1150,6 @@ However, if other authentication methods are to be used in addition to
 `NO_AUTHENTICATION_REQUIRED`, `NO_AUTHENTICATION_REQUIRED` must be 
 included in the setting `chaining.socks5.methods`
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-alpha.net:11111"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.methods",
-                "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
@@ -1204,16 +1180,6 @@ Server configuration file example:
 </configuration>
 ```
 
-<a id="chaining-to-the-other-socks-server-using-username-password-authentication"></a>
-#### Chaining to the Other SOCKS Server Using Username Password Authentication
-
-To chain to the other SOCKS server using username password authentication, you 
-will need to have the setting `chaining.socks5.methods` to have 
-`USERNAME_PASSWORD` included. You will also need to have the settings 
-`chaining.socks5.userpassmethod.username` and 
-`chaining.socks5.userpassmethod.password` to specify the username and password 
-for the other SOCKS5 server.
-
 API example:
 
 ```java
@@ -1233,17 +1199,22 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://alpha-alpha.net:11111"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.username",
-                "Aladdin"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.password",
-                "opensesame")
+                "chaining.socks5.methods",
+                "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD")
         ))).start();
     }
 }
 ```
+
+<a id="chaining-to-the-other-socks-server-using-username-password-authentication"></a>
+#### Chaining to the Other SOCKS Server Using Username Password Authentication
+
+To chain to the other SOCKS server using username password authentication, you 
+will need to have the setting `chaining.socks5.methods` to have 
+`USERNAME_PASSWORD` included. You will also need to have the settings 
+`chaining.socks5.userpassmethod.username` and 
+`chaining.socks5.userpassmethod.password` to specify the username and password 
+for the other SOCKS5 server.
 
 Command line example:
 
@@ -1284,6 +1255,37 @@ Server configuration file example:
 </configuration>
 ```
 
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks5.methods", "USERNAME_PASSWORD"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks5.userpassmethod.username",
+                "Aladdin"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks5.userpassmethod.password",
+                "opensesame")
+        ))).start();
+    }
+}
+```
+
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
 option `--enter-chaining-socks5-userpassmethod-pass` instead. It will 
@@ -1320,6 +1322,27 @@ If the username or the password contains a percent sign character (`%`) not
 used for URL encoding, then each percent sign character not used for URL
 encoding must be replaced with the URL encoding character `%25`.
 
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://Jasmine:mission%3Aimpossible@alpha-alpha.net:11111
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://Jasmine:mission%3Aimpossible@alpha-alpha.net:11111</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
 API example:
 
 ```java
@@ -1343,27 +1366,6 @@ public class ServerApp {
 }
 ```
 
-Command line example:
-
-```bash
-jargyle start-server \
-    --setting=chaining.socksServerUri=socks5://Jasmine:mission%3Aimpossible@alpha-alpha.net:11111
-```
-
-Server configuration file example:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<configuration>
-    <settings>
-        <setting>
-            <name>chaining.socksServerUri</name>
-            <value>socks5://Jasmine:mission%3Aimpossible@alpha-alpha.net:11111</value>
-        </setting>
-    </settings>
-</configuration>
-```
-
 There is no need to have the setting `chaining.socks5.methods` to have
 `USERNAME_PASSWORD` included since it will be automatically included during 
 runtime.
@@ -1385,39 +1387,6 @@ mechanism that implements the GSS-API) and you will also need to specify the
 GSS-API service name for the other SOCKS5 server.
 
 The following are sufficient examples of using the Kerberos security mechanism:
-
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        System.setProperty(
-            "javax.security.auth.useSubjectCredsOnly", "false");
-        System.setProperty(
-            "java.security.auth.login.config", "login.conf");
-        System.setProperty("java.security.krb5.conf", "krb5.conf");
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-alpha.net:11111"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.methods", "GSSAPI"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.gssapimethod.serviceName",
-                "rcmd/alpha-alpha.net")
-        ))).start();
-    }
-}
-```
 
 Command line example:
 
@@ -1455,6 +1424,39 @@ export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.secu
         </setting>
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "javax.security.auth.useSubjectCredsOnly", "false");
+        System.setProperty(
+            "java.security.auth.login.config", "login.conf");
+        System.setProperty("java.security.krb5.conf", "krb5.conf");
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks5.methods", "GSSAPI"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks5.gssapimethod.serviceName",
+                "rcmd/alpha-alpha.net")
+        ))).start();
+    }
+}
 ```
 
 The Java system property `javax.security.auth.useSubjectCredsOnly` with 
@@ -1584,32 +1586,6 @@ setting enables the host resolver to resolve host names from the other SOCKS5
 server. This setting can only be used if the other SOCKS5 server supports 
 handling the RESOLVE request.
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-alpha.net:11111"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
-                "true")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
@@ -1636,14 +1612,6 @@ Server configuration file example:
 </configuration>
 ```
 
-## Chaining to a Specified Chain of Other SOCKS Servers
-
-You can have the server chained to a specified chain of other SOCKS servers, 
-meaning that its traffic can be routed through the specified chain of the other 
-SOCKS servers. To have the server chained to a specified chain of other SOCKS 
-servers, you will need to have the setting `chaining.socksServerUri` 
-specified multiple times with each setting specifying a SOCKS server as a URI.
-
 API example:
 
 ```java
@@ -1663,15 +1631,20 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://alpha-alpha.net:11111"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://beta-alpha.net:22221"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://gamma-alpha.net:33331")
+                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
+                "true")
         ))).start();
     }
 }
 ```
+
+## Chaining to a Specified Chain of Other SOCKS Servers
+
+You can have the server chained to a specified chain of other SOCKS servers, 
+meaning that its traffic can be routed through the specified chain of the other 
+SOCKS servers. To have the server chained to a specified chain of other SOCKS 
+servers, you will need to have the setting `chaining.socksServerUri` 
+specified multiple times with each setting specifying a SOCKS server as a URI.
 
 Command line example:
 
@@ -1704,10 +1677,6 @@ Server configuration file example:
 </configuration>
 ```
 
-To specify the settings regarding a SOCKS server in the chain, the settings 
-regarding a SOCKS server will need to be placed after that specified SOCKS 
-server but before the next specified SOCKS server if any.
-
 API example:
 
 ```java
@@ -1727,31 +1696,19 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://alpha-alpha.net:11111"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.methods", "GSSAPI"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.gssapimethod.serviceName",
-                "rcmd/alpha-alpha.net"),
-            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://beta-alpha.net:22221"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.methods", "USERNAME_PASSWORD"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.username",
-                "Aladdin"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.password",
-                "opensesame"),
-            Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
-                "socks5://gamma-alpha.net:33331"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
-                "true")
+                "socks5://gamma-alpha.net:33331")
         ))).start();
     }
 }
 ```
+
+To specify the settings regarding a SOCKS server in the chain, the settings 
+regarding a SOCKS server will need to be placed after that specified SOCKS 
+server but before the next specified SOCKS server if any.
 
 Command line example:
 
@@ -1819,21 +1776,6 @@ Server configuration file example:
 </configuration>
 ```
 
-The known limitations of chaining to a specified chain of other SOCKS servers 
-include the following:
-
--   Only TCP traffic can be routed through the chain.
-
-## Chaining to Specified Chains of Other SOCKS Servers
-
-You can have the server chained to specified chains of other SOCKS servers, 
-meaning that its traffic can be routed through one of the specified chains of 
-other SOCKS servers at a time. To have the server chained to multiple 
-specified chains of other SOCKS servers, you will need to have a route ID 
-assigned at the end of each 
-[chain](#chaining-to-a-specified-chain-of-other-socks-servers) by using the 
-setting `chaining.routeId`
-
 API example:
 
 ```java
@@ -1853,39 +1795,46 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://alpha-alpha.net:11111"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-beta.net:11112"),
+                "chaining.socks5.methods", "GSSAPI"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-gamma.net:11113"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.routeId", "alpha"),
+                "chaining.socks5.gssapimethod.serviceName",
+                "rcmd/alpha-alpha.net"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://beta-alpha.net:22221"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://beta-beta.net:22222"),
+                "chaining.socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://beta-gamma.net:22223"),
+                "chaining.socks5.userpassmethod.username",
+                "Aladdin"),
             Setting.newInstanceWithParsedValue(
-                "chaining.routeId", "beta"),
+                "chaining.socks5.userpassmethod.password",
+                "opensesame"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
                 "socks5://gamma-alpha.net:33331"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://gamma-beta.net:33332"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://gamma-gamma.net:33333"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.routeId", "gamma")
+                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
+                "true")
         ))).start();
     }
 }
 ```
+
+The known limitations of chaining to a specified chain of other SOCKS servers 
+include the following:
+
+-   Only TCP traffic can be routed through the chain.
+
+## Chaining to Specified Chains of Other SOCKS Servers
+
+You can have the server chained to specified chains of other SOCKS servers, 
+meaning that its traffic can be routed through one of the specified chains of 
+other SOCKS servers at a time. To have the server chained to multiple 
+specified chains of other SOCKS servers, you will need to have a route ID 
+assigned at the end of each 
+[chain](#chaining-to-a-specified-chain-of-other-socks-servers) by using the 
+setting `chaining.routeId`
 
 Command line example:
 
@@ -1963,25 +1912,6 @@ Server configuration file example:
 </configuration>
 ```
 
-From the aforementioned examples: 
-
--   The chain consisting of `socks5://alpha-alpha.net:11111`, 
-`socks5://alpha-beta.net:11112`, and `socks5://alpha-gamma.net:11113` is assigned 
-the route ID of `alpha`
--   The chain consisting of `socks5://beta-alpha.net:22221`, 
-`socks5://beta-beta.net:22222`, and `socks5://beta-gamma.net:22223` is assigned 
-the route ID of `beta`
--   The chain consisting of `socks5://gamma-alpha.net:33331`, 
-`socks5://gamma-beta.net:33332`, and `socks5://gamma-gamma.net:33333` is assigned 
-the route ID of `gamma`
-
-There is another route that is assigned a route ID. That route is the direct 
-route. The direct route uses no chain to route the traffic through. It is 
-assigned by default a route ID of `lastRoute`.
-
-To omit the direct route from being included, have the last chain not assigned a 
-route ID from the setting `chaining.routeId`.
-
 API example:
 
 ```java
@@ -2027,11 +1957,32 @@ public class ServerApp {
                 "socks5://gamma-beta.net:33332"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
-                "socks5://gamma-gamma.net:33333")
+                "socks5://gamma-gamma.net:33333"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.routeId", "gamma")
         ))).start();
     }
 }
 ```
+
+From the aforementioned examples: 
+
+-   The chain consisting of `socks5://alpha-alpha.net:11111`, 
+`socks5://alpha-beta.net:11112`, and `socks5://alpha-gamma.net:11113` is assigned 
+the route ID of `alpha`
+-   The chain consisting of `socks5://beta-alpha.net:22221`, 
+`socks5://beta-beta.net:22222`, and `socks5://beta-gamma.net:22223` is assigned 
+the route ID of `beta`
+-   The chain consisting of `socks5://gamma-alpha.net:33331`, 
+`socks5://gamma-beta.net:33332`, and `socks5://gamma-gamma.net:33333` is assigned 
+the route ID of `gamma`
+
+There is another route that is assigned a route ID. That route is the direct 
+route. The direct route uses no chain to route the traffic through. It is 
+assigned by default a route ID of `lastRoute`.
+
+To omit the direct route from being included, have the last chain not assigned a 
+route ID from the setting `chaining.routeId`.
 
 Command line example:
 
@@ -2104,21 +2055,6 @@ Server configuration file example:
 </configuration>
 ```
 
-From the aforementioned examples: 
-
--   The chain consisting of `socks5://alpha-alpha.net:11111`, 
-`socks5://alpha-beta.net:11112`, and `socks5://alpha-gamma.net:11113` is assigned 
-the route ID of `alpha`
--   The chain consisting of `socks5://beta-alpha.net:22221`, 
-`socks5://beta-beta.net:22222`, and `socks5://beta-gamma.net:22223` is assigned 
-the route ID of `beta`
--   The chain consisting of `socks5://gamma-alpha.net:33331`, 
-`socks5://gamma-beta.net:33332`, and `socks5://gamma-gamma.net:33333` is assigned 
-by default the route ID of `lastRoute`
-
-To change the route ID assigned to the last route, you can set the setting 
-`lastRouteId` to the route ID you want assigned to the last route.
-
 API example:
 
 ```java
@@ -2164,13 +2100,26 @@ public class ServerApp {
                 "socks5://gamma-beta.net:33332"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
-                "socks5://gamma-gamma.net:33333"),
-            Setting.newInstanceWithParsedValue(
-                "lastRouteId", "omega")
+                "socks5://gamma-gamma.net:33333")
         ))).start();
     }
 }
 ```
+
+From the aforementioned examples: 
+
+-   The chain consisting of `socks5://alpha-alpha.net:11111`, 
+`socks5://alpha-beta.net:11112`, and `socks5://alpha-gamma.net:11113` is assigned 
+the route ID of `alpha`
+-   The chain consisting of `socks5://beta-alpha.net:22221`, 
+`socks5://beta-beta.net:22222`, and `socks5://beta-gamma.net:22223` is assigned 
+the route ID of `beta`
+-   The chain consisting of `socks5://gamma-alpha.net:33331`, 
+`socks5://gamma-beta.net:33332`, and `socks5://gamma-gamma.net:33333` is assigned 
+by default the route ID of `lastRoute`
+
+To change the route ID assigned to the last route, you can set the setting 
+`lastRouteId` to the route ID you want assigned to the last route.
 
 Command line example:
 
@@ -2248,9 +2197,6 @@ Server configuration file example:
 </configuration>
 ```
 
-You can also set the setting `routeSelectionStrategy` to specify the 
-selection strategy for the next route. The default is `CYCLICAL`.
-
 API example:
 
 ```java
@@ -2298,13 +2244,14 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://gamma-gamma.net:33333"),
             Setting.newInstanceWithParsedValue(
-                "lastRouteId", "omega"),
-            Setting.newInstanceWithParsedValue(
-                "routeSelectionStrategy", "RANDOM")
+                "lastRouteId", "omega")
         ))).start();
     }
 }
 ```
+
+You can also set the setting `routeSelectionStrategy` to specify the 
+selection strategy for the next route. The default is `CYCLICAL`.
 
 Command line example:
 
@@ -2387,9 +2334,6 @@ Server configuration file example:
 </configuration>
 ```
 
-You can also set the setting `routeSelectionLogAction` to specify the 
-logging action to take if a route is selected.
-
 API example:
 
 ```java
@@ -2439,13 +2383,14 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "lastRouteId", "omega"),
             Setting.newInstanceWithParsedValue(
-                "routeSelectionStrategy", "RANDOM"),
-            Setting.newInstanceWithParsedValue(
-                "routeSelectionLogAction", "LOG_AS_INFO")
+                "routeSelectionStrategy", "RANDOM")
         ))).start();
     }
 }
 ```
+
+You can also set the setting `routeSelectionLogAction` to specify the 
+logging action to take if a route is selected.
 
 Command line example:
 
@@ -2533,27 +2478,6 @@ Server configuration file example:
 </configuration>
 ```
 
-## Using Rules to Manage Traffic
-
-A rule consists of the following:
-
--   Rule conditions: fields that altogether evaluates as true if they match a 
-specific instance of traffic
--   Rule actions: fields that are applied if the aforementioned rule conditions 
-evaluate as true for matching a specific instance of traffic
-
-From the API and from the command line, a rule consists of a comma separated 
-list of both rule conditions and rule actions. 
-
-In the server configuration file, a rule is expressed as a `<rule/>` XML 
-element with a `<ruleConditions/>` XML element and a `<ruleActions/>` XML 
-element. 
-
-See [Rule Conditions](#rule-conditions) and [Rule Actions](#rule-actions) for 
-more information.
-
-To specify a rule, you would need to have the setting `rule` specify the rule. 
-
 API example:
 
 ```java
@@ -2569,19 +2493,73 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Allows all forms of traffic
-             */
             Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-beta.net:11112"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-gamma.net:11113"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.routeId", "alpha"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-alpha.net:22221"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-beta.net:22222"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-gamma.net:22223"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.routeId", "beta"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-alpha.net:33331"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-beta.net:33332"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-gamma.net:33333"),
+            Setting.newInstanceWithParsedValue(
+                "lastRouteId", "omega"),
+            Setting.newInstanceWithParsedValue(
+                "routeSelectionStrategy", "RANDOM"),
+            Setting.newInstanceWithParsedValue(
+                "routeSelectionLogAction", "LOG_AS_INFO")
         ))).start();
     }
 }
 ```
 
+## Using Rules to Manage Traffic
+
+A rule consists of the following:
+
+-   Rule conditions: fields that altogether evaluates as true if they match a 
+specific instance of traffic
+-   Rule actions: fields that are applied if the aforementioned rule conditions 
+evaluate as true for matching a specific instance of traffic
+
+From the command line and from the API, a rule consists of a comma separated 
+list of both rule conditions and rule actions. 
+
+In the server configuration file, a rule is expressed as a `<rule/>` XML 
+element with a `<ruleConditions/>` XML element and a `<ruleActions/>` XML 
+element. 
+
+See [Rule Conditions](#rule-conditions) and [Rule Actions](#rule-actions) for 
+more information.
+
+To specify a rule, you would need to have the setting `rule` specify the rule. 
+
 Command line example:
 
 ```bash
+# Allow all forms of traffic.
 jargyle start-server --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2602,13 +2580,11 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow all forms of traffic.</doc>
         </setting>
     </settings>
 </configuration>
 ```
-
-To specify multiple rules, you would need to have the setting `rule` specified 
-multiple times with each setting specifying another rule.
 
 API example:
 
@@ -2626,24 +2602,7 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Allows the CONNECT request for any server on port 80 
-             * or 443
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationPort=80,"
-                + "socks5.request.desiredDestinationPort=443,"
-                + "firewallAction=ALLOW"),
-            /*
-             * Denies the CONNECT request for any server on any 
-             * other port
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.request.command=CONNECT,firewallAction=DENY"),
-            /*
-             * Allow anything else
+             * Allow all forms of traffic.
              */
             Setting.newInstanceWithParsedValue(
                 "rule", "firewallAction=ALLOW")
@@ -2652,9 +2611,15 @@ public class ServerApp {
 }
 ```
 
+To specify multiple rules, you would need to have the setting `rule` specified 
+multiple times with each setting specifying another rule.
+
 Command line example:
 
 ```bash
+# Allow the CONNECT request for any server on port 80 or 443.
+# Deny the CONNECT request for any server on any other port.
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationPort=80,socks5.request.desiredDestinationPort=443,firewallAction=ALLOW \
     --setting=rule=socks5.request.command=CONNECT,firewallAction=DENY \
@@ -2691,6 +2656,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow the CONNECT request for any server on port 80 or 443.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -2708,6 +2674,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Deny the CONNECT request for any server on any other port.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -2720,9 +2687,52 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>    
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Allow the CONNECT request for any server on port 80 
+             * or 443.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationPort=80,"
+                + "socks5.request.desiredDestinationPort=443,"
+                + "firewallAction=ALLOW"),
+            /*
+             * Deny the CONNECT request for any server on any 
+             * other port.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.request.command=CONNECT,firewallAction=DENY"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```
 
 When a specific instance of traffic is matched by the first rule, that rule is 
@@ -2732,12 +2742,12 @@ last.
 
 ### Rule Conditions
 
-From the API and from the command line, rule conditions consist of a comma 
+From the command line and from the API, rule conditions consist of a comma 
 separated list of rule conditions. Each rule condition consists of the syntax 
 of `NAME=VALUE` where `NAME` is expressed as the name of the rule condition 
 and `VALUE` is expressed as the value assigned to the rule condition. 
 
-Partial API and command line example:
+Partial command line and API example:
 
 ```text
 clientAddress=127.0.0.1,clientAddress=0:0:0:0:0:0:0:1
@@ -2770,29 +2780,71 @@ of one or more rule conditions with the same name, all rule conditions
 together are evaluated as true if at least one of the rule conditions within 
 that group is evaluated as true. Zero rule conditions is evaluated as true.
 
-Partial API examples:
+For instance, the following examples are evaluated as true if the client address 
+is the IPv4 loopback address or the IPv6 loopback address:
+
+Partial command line and API example:
 
 ```text
-/*
- * Evaluates as true if the client address is the IPv4 loopback 
- * address or the IPv6 loopback address
- */
-"clientAddress=127.0.0.1,clientAddress=0:0:0:0:0:0:0:1"
+clientAddress=127.0.0.1,clientAddress=0:0:0:0:0:0:0:1
 ```
 
-```text
-/*
- * Evaluates as true if username password authentication was used 
- * and the user is either 'guest' or 'specialuser'
- */
-"socks5.method=USERNAME_PASSWORD,socks5.user=guest,socks5.user=specialuser"
+Partial server configuration file example:
+
+```xml
+<ruleConditions>
+    <ruleCondition>
+        <name>clientAddress</name>
+        <value>127.0.0.1</value>
+    </ruleCondition>
+    <ruleCondition>
+        <name>clientAddress</name>
+        <value>0:0:0:0:0:0:0:1</value>
+    </ruleCondition>
+</ruleConditions>
 ```
 
+The next following examples are evaluated as true if username password 
+authentication was used and the user is either 'guest' or 'specialuser':
+
+Partial command line and API example:
+
 ```text
-/*
- * Evaluates as true since there are no rule conditions given
- */
-""
+socks5.method=USERNAME_PASSWORD,socks5.user=guest,socks5.user=specialuser
+```
+
+Partial server configuration file example:
+
+```xml
+<ruleConditions>
+    <ruleCondition>
+        <name>socks5.method</name>
+        <value>USERNAME_PASSWORD</value>
+    </ruleCondition>
+    <ruleCondition>
+        <name>socks5.user</name>
+        <value>guest</value>
+    </ruleCondition>
+    <ruleCondition>
+        <name>socks5.user</name>
+        <value>specialuser</value>
+    </ruleCondition>    
+</ruleConditions>
+```
+
+The next following examples are evaluated as true because there are no rule 
+conditions given:
+
+Partial command line and API example:
+
+```text
+
+```
+
+Partial server configuration file example:
+
+```xml
+<ruleConditions/>
 ```
 
 A complete listing of rule conditions can be found 
@@ -2800,12 +2852,12 @@ A complete listing of rule conditions can be found
 
 ### Rule Actions
 
-From the API and from the command line, rule actions consist of a comma 
+From the command line and from the API, rule actions consist of a comma 
 separated list of rule actions. Each rule action consists of the syntax of 
 `NAME=VALUE` where `NAME` is expressed as the name of the rule action and 
 `VALUE` is expressed as the value assigned to the rule action. 
 
-Partial API and command line example:
+Partial command line and API example:
 
 ```text
 firewallAction=ALLOW,firewallActionLogAction=LOG_AS_INFO
@@ -2883,44 +2935,12 @@ You can also specify the logging action to take if the rule action
 
 The rule action `firewallActionLogAction` is optional.
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Deny any BIND or UDP ASSOCIATE requests and log as a warning 
-             * message their denials
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule",
-                 "socks5.request.command=BIND,"
-                 + "socks5.request.command=UDP_ASSOCIATE,"
-                 + "firewallAction=DENY,"
-                 + "firewallActionLogAction=LOG_AS_WARNING"),
-            /*
-             * Allow anything else
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Deny any BIND or UDP ASSOCIATE requests and log as a warning message each 
+# denial.
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.request.command=BIND,socks5.request.command=UDP_ASSOCIATE,firewallAction=DENY,firewallActionLogAction=LOG_AS_WARNING \
     --setting=rule=firewallAction=ALLOW
@@ -2956,6 +2976,7 @@ Server configuration file example:
                     </ruleAction>                
                 </ruleActions>
             </rule>
+            <doc>Deny any BIND or UDP ASSOCIATE requests and log as a warning message each denial.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -2968,9 +2989,45 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>    
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Deny any BIND or UDP ASSOCIATE requests and log as a warning 
+             * message each denial.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule",
+                 "socks5.request.command=BIND,"
+                 + "socks5.request.command=UDP_ASSOCIATE,"
+                 + "firewallAction=DENY,"
+                 + "firewallActionLogAction=LOG_AS_WARNING"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```
 
 ### Allowing a Limited Number of Simultaneous Instances of Traffic
@@ -3005,47 +3062,13 @@ following rule action:
 
 The rule action `firewallActionAllowLimitReachedLogAction` is optional.
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Allow the user 'guest' from username password 
-             * authentication 50 simultaneous connections and log 
-             * as an informational message when the limit has been 
-             * reached
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.method=USERNAME_PASSWORD,"
-                + "socks5.user=guest,"
-                + "firewallAction=ALLOW,"
-                + "firewallActionAllowLimit=50,"
-                + "firewallActionAllowLimitReachedLogAction=LOG_AS_INFO"),
-            /*
-             * Allow anything else
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Allow the user 'guest' from username password authentication 50 simultaneous 
+# connections and log as an informational message when the limit has been 
+# reached.
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.method=USERNAME_PASSWORD,socks5.user=guest,firewallAction=ALLOW,firewallActionAllowLimit=50,firewallActionAllowLimitReachedLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
@@ -3085,6 +3108,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow the user 'guest' from username password authentication 50 simultaneous connections and log as an informational message when the limit has been reached.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -3097,9 +3121,48 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Allow the user 'guest' from username password 
+             * authentication 50 simultaneous connections and log 
+             * as an informational message when the limit has been 
+             * reached.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.method=USERNAME_PASSWORD,"
+                + "socks5.user=guest,"
+                + "firewallAction=ALLOW,"
+                + "firewallActionAllowLimit=50,"
+                + "firewallActionAllowLimitReachedLogAction=LOG_AS_INFO"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```
 
 <a id="routing-traffic-through-a-selection-of-specified-chains-of-socks-servers"></a>
@@ -3136,84 +3199,14 @@ the following rule action:
 The rule action `routeSelectionLogAction` is optional. If the rule action is 
 not specified, the setting `routeSelectionLogAction` is used.
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-alpha.net:11111"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-beta.net:11112"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://alpha-gamma.net:11113"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.routeId", "alpha"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://beta-alpha.net:22221"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://beta-beta.net:22222"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://beta-gamma.net:22223"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.routeId", "beta"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://gamma-alpha.net:33331"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://gamma-beta.net:33332"),
-            Setting.newInstanceWithParsedValue(
-                "chaining.socksServerUri", 
-                "socks5://gamma-gamma.net:33333"),
-            Setting.newInstanceWithParsedValue(
-                "lastRouteId", "omega"),
-            /*
-             * Randomly select either route 'alpha' or 'beta' when 
-             * allowing the CONNECT request and log as an 
-             * informational message the route that has been 
-             * selected
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule",
-                "socks5.request.command=CONNECT,"
-                + "firewallAction=ALLOW,"
-                + "routeSelectionStrategy=RANDOM,"
-                + "selectableRouteId=alpha,"
-                + "selectableRouteId=beta,"
-                + "routeSelectionLogAction=LOG_AS_INFO"),
-            /*
-             * Allow anything else to go through route 'omega'
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule",
-                "firewallAction=ALLOW,"
-                + "routeSelectionStrategy=CYCLICAL,"
-                + "selectableRouteId=omega")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Allow the CONNECT request, randomly select either route 'alpha' or 'beta' 
+# for the traffic to be routed through, and log as an informational message 
+# the route that has been selected.
+# Allow anything else and select route 'omega' for the traffic to be routed 
+# through.
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
     --setting=chaining.socksServerUri=socks5://alpha-beta.net:11112 \
@@ -3228,7 +3221,7 @@ jargyle start-server \
     --setting=chaining.socksServerUri=socks5://gamma-gamma.net:33333 \
     --setting=lastRouteId=omega \
     --setting=rule=socks5.request.command=CONNECT,firewallAction=ALLOW,routeSelectionStrategy=RANDOM,selectableRouteId=alpha,selectableRouteId=beta,routeSelectionLogAction=LOG_AS_INFO \
-    --setting=rule=firewallAction=ALLOW,routeSelectionStrategy=CYCLICAL,selectableRouteId=omega
+    --setting=rule=firewallAction=ALLOW,selectableRouteId=omega
 ```
 
 Server configuration file example:
@@ -3317,6 +3310,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow the CONNECT request, randomly select either route 'alpha' or 'beta' for the traffic to be routed through, and log as an informational message the route that has been selected.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -3328,18 +3322,89 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>routeSelectionStrategy</name>
-                        <value>CYCLICAL</value>
-                    </ruleAction>
-                    <ruleAction>
                         <name>selectableRouteId</name>
                         <value>omega</value>
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else and select route 'omega' for the traffic to be routed through.</doc>
         </setting>    
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-beta.net:11112"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-gamma.net:11113"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.routeId", "alpha"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-alpha.net:22221"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-beta.net:22222"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-gamma.net:22223"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.routeId", "beta"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-alpha.net:33331"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-beta.net:33332"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-gamma.net:33333"),
+            Setting.newInstanceWithParsedValue(
+                "lastRouteId", "omega"),
+            /*
+             * Allow the CONNECT request, randomly select either route 'alpha' 
+             * or 'beta' for the traffic to be routed through, and log as an 
+             * informational message the route that has been selected.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule",
+                "socks5.request.command=CONNECT,"
+                + "firewallAction=ALLOW,"
+                + "routeSelectionStrategy=RANDOM,"
+                + "selectableRouteId=alpha,"
+                + "selectableRouteId=beta,"
+                + "routeSelectionLogAction=LOG_AS_INFO"),
+            /*
+             * Allow anything else and select route 'omega' for the traffic 
+             * to be routed through.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule",
+                "firewallAction=ALLOW,"
+                + "selectableRouteId=omega")
+        ))).start();
+    }
+}
 ```
 
 ### Redirecting the Desired Destination
@@ -3369,45 +3434,12 @@ redirected by adding the following rule action:
 
 The rule action `socks5.request.desiredDestinationRedirectLogAction` is optional.
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Redirect desired destination 'discontinued-server.net' 
-             * to 'new-server.net' and log as an informational 
-             * message the redirection
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.request.desiredDestinationAddress=discontinued-server.net,"
-                + "firewallAction=ALLOW,"
-                + "socks5.request.desiredDestinationAddressRedirect=new-server.net,"
-                + "socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO"),
-            /*
-             * Allow anything else
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Redirect desired destination 'discontinued-server.net' to 'new-server.net' 
+# and log as an informational message the redirection.
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.request.desiredDestinationAddress=discontinued-server.net,firewallAction=ALLOW,socks5.request.desiredDestinationAddressRedirect=new-server.net,socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
@@ -3443,6 +3475,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Redirect desired destination 'discontinued-server.net' to 'new-server.net' and log as an informational message the redirection.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -3455,9 +3488,46 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>    
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Redirect desired destination 'discontinued-server.net' 
+             * to 'new-server.net' and log as an informational 
+             * message the redirection.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.request.desiredDestinationAddress=discontinued-server.net,"
+                + "firewallAction=ALLOW,"
+                + "socks5.request.desiredDestinationAddressRedirect=new-server.net,"
+                + "socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```
 
 ### Configuring Sockets
@@ -3634,47 +3704,12 @@ the following rule conditions:
 -   `socks5.reply.serverBoundAddress`
 -   `socks5.reply.serverBoundPort`
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Allow the CONNECT request to connect to 
-             * 'special-server.net' and configure the target-facing 
-             * socket
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationAddress=special-server.net,"
-                + "firewallAction=ALLOW,"
-                + "socks5.onConnectRequest.prepareTargetFacingSocket=true,"
-                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
-                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
-            /*
-             * Allow anything else
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Allow the CONNECT request to connect to 'special-server.net' and configure 
+# the target-facing socket.
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks5.onConnectRequest.prepareTargetFacingSocket=true,socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
@@ -3724,6 +3759,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow the CONNECT request to connect to 'special-server.net' and configure the target-facing socket.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -3736,9 +3772,48 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Allow the CONNECT request to connect to 
+             * 'special-server.net' and configure the target-facing 
+             * socket.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationAddress=special-server.net,"
+                + "firewallAction=ALLOW,"
+                + "socks5.onConnectRequest.prepareTargetFacingSocket=true,"
+                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
+                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```
 
 ### Configuring Relay Settings
@@ -3784,45 +3859,12 @@ These rule actions can be used with the following rule conditions:
 -   `socks5.user`
 -   `socksServerAddress`
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Allow the CONNECT request to connect to 
-             * 'intermittent-idling-server.net' with a relay idle 
-             * timeout of 1024000 milliseconds (1024 seconds)
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationAddress=intermittent-idling-server.net,"
-                + "firewallAction=ALLOW,"
-                + "socks5.onConnectRequest.relayIdleTimeout=1024000"),
-            /*
-             * Allow anything else
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Allow the CONNECT request to connect to 'intermittent-idling-server.net' 
+# with a relay idle timeout of 1024000 milliseconds (1024 seconds).
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=intermittent-idling-server.net,firewallAction=ALLOW,socks5.onConnectRequest.relayIdleTimeout=1024000 \
     --setting=rule=firewallAction=ALLOW
@@ -3858,6 +3900,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow the CONNECT request to connect to 'intermittent-idling-server.net' with a relay idle timeout of 1024000 milliseconds (1024 seconds).</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -3870,9 +3913,46 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>    
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Allow the CONNECT request to connect to 
+             * 'intermittent-idling-server.net' with a relay idle 
+             * timeout of 1024000 milliseconds (1024 seconds).
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationAddress=intermittent-idling-server.net,"
+                + "firewallAction=ALLOW,"
+                + "socks5.onConnectRequest.relayIdleTimeout=1024000"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```
 
 ### Limiting Relay Bandwidth
@@ -3915,47 +3995,13 @@ These rule actions can be used with the following rule conditions:
 -   `socks5.user`
 -   `socksServerAddress`
 
-API example:
-
-```java
-package com.example;
-
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
-
-import java.io.IOException;
-
-public class ServerApp {
-    public static void main(String[] args) throws IOException {
-        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-            /*
-             * Allow the CONNECT request to connect to 
-             * 'streaming-server.net' with an upper limit on the 
-             * relay inbound and outbound bandwidth of 1024000 
-             * bytes per second
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationAddress=streaming-server.net,"
-                + "firewallAction=ALLOW,"
-                + "socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,"
-                + "socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000"),
-            /*
-             * Allow anything else
-             */
-            Setting.newInstanceWithParsedValue(
-                "rule", "firewallAction=ALLOW")
-        ))).start();
-    }
-}
-```
-
 Command line example:
 
 ```bash
+# Allow the CONNECT request to connect to 'streaming-server.net' with an upper 
+# limit on the relay inbound and outbound bandwidth of 1024000 bytes per 
+# second.
+# Allow anything else.
 jargyle start-server \
     --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=streaming-server.net,firewallAction=ALLOW,socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000 \
     --setting=rule=firewallAction=ALLOW
@@ -3995,6 +4041,7 @@ Server configuration file example:
                     </ruleAction>                
                 </ruleActions>
             </rule>
+            <doc>Allow the CONNECT request to connect to 'streaming-server.net' with an upper limit on the relay inbound and outbound bandwidth of 1024000 bytes per second.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -4007,7 +4054,46 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
+            <doc>Allow anything else.</doc>
         </setting>    
     </settings>
 </configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            /*
+             * Allow the CONNECT request to connect to 
+             * 'streaming-server.net' with an upper limit on the 
+             * relay inbound and outbound bandwidth of 1024000 
+             * bytes per second.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", 
+                "socks5.request.command=CONNECT,"
+                + "socks5.request.desiredDestinationAddress=streaming-server.net,"
+                + "firewallAction=ALLOW,"
+                + "socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,"
+                + "socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000"),
+            /*
+             * Allow anything else.
+             */
+            Setting.newInstanceWithParsedValue(
+                "rule", "firewallAction=ALLOW")
+        ))).start();
+    }
+}
 ```

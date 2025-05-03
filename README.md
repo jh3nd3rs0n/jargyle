@@ -23,10 +23,9 @@ Jargyle is licensed under the
 Its license can be found [here](LICENSE).
 
 This README file discusses how to get started in contributing and building 
-Jargyle. More information about Jargyle can be found 
-[here](https://jh3nd3rs0n.github.io/jargyle).
-
-**Warning:** Jargyle is not production ready.
+Jargyle. For detailed examples and usage instructions including how to use 
+Jargyle with SOCKS5, please refer to the 
+[project website](https://jh3nd3rs0n.github.io/jargyle).
 
 ## Contributing Guidelines
 
@@ -116,10 +115,19 @@ These commands are to be executed at the top directory of Jargyle.
     The produced website/documentation can be found in `docs/`. 
     
     Included in the website/documentation is the reference documentation. The 
-    reference documentation was generated from special annotations within in 
-    the source code. Should any of these special annotations in the source 
-    code be added, changed, moved, removed, or handled differently, you will 
-    need to run the following commands:
+    reference documentation is generated from special annotations within the 
+    source code. If these annotations are added, changed, moved, removed, or 
+    handled differently, you'll need to regenerate the reference 
+    documentation. Here's how:
+    
+    1.   **Build the project:** This creates the necessary files to run the 
+         reference documentation generator.
+    
+    2.   **Generate the reference documentation:** This step extracts the 
+         information from the annotations and creates Markdown files.
+    
+    3.   **Build the website/documentation**: This step takes the generated 
+         Markdown files and integrates them into the website/documentation. 
     
     ```bash
     # Perform a build of the binary distribution
@@ -163,14 +171,17 @@ These commands are to be executed at the top directory of Jargyle.
     The option `-Pcoverage` can be removed if you do not want the aggregated 
     test coverage reports produced.
     
-    When executing the integration tests, the integration tests use only the 
-    loopback address and the local port numbers assigned by the local system. 
-    However, the following specified local port numbers need to be open:
+    **Important: Port Requirements for Integration Tests**
     
-    -   `1080`: This default port number is used for SOCKS servers set up for 
-        testing.
-    -   `8000`: This port number is used for a Kerberos Key Distribution Center
-        (KDC) set up for testing.
-    -   `9000`: This port number is used for a Kerberos Key Distribution Center
-        (KDC) set up for testing. 
+    The integration tests use the loopback address and local port numbers. To 
+    ensure the integration tests run correctly, the following local ports must 
+    be available (not blocked by a firewall or other application):
+    
+    -   `1080`: This port is used by the SOCKS servers created during testing. 
+        Ensure no other SOCKS server is running on this port.
+    
+    -   `8000` and `9000`: These ports are used by Kerberos Key Distribution 
+        Center (KDC) instances for testing GSS-API/Kerberos functionality. 
+        These are needed for running tests that involve GSS-API 
+        authentication.
     

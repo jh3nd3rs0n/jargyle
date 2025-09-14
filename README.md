@@ -121,22 +121,33 @@ These commands are to be executed at the top directory of Jargyle.
     documentation. Here's how:
     
     1.   **Build the project:** This creates the necessary files to run the 
-         reference documentation generator.
+         reference documentation generator. The following command creates the 
+         necessary files to run the reference documentation generator:
+         
+         ```bash
+         # Perform a build of the binary distribution
+         mvn clean package -DskipTests=true         
+         ```
     
     2.   **Generate the reference documentation:** This step extracts the 
-         information from the annotations and creates Markdown files.
+         information from the annotations and creates Markdown files. The 
+         following command extracts the information from the annotations 
+         and creates Markdown files:
+         
+         ```bash
+         # Run Jargyle to generate Markdown reference documents to the directory of Markdown reference documentation
+         jargyle-distributions/target/jargyle-5.0.0-SNAPSHOT-bin/jargyle-5.0.0-SNAPSHOT/bin/jargyle generate-reference-docs -d src/site/markdown/reference/
+         ```
     
     3.   **Build the website/documentation**: This step takes the generated 
          Markdown files and integrates them into the website/documentation. 
-    
-    ```bash
-    # Perform a build of the binary distribution
-    mvn clean package -DskipTests=true
-    # Run Jargyle to generate Markdown reference documents to the directory of Markdown reference documentation 
-    jargyle-distributions/target/jargyle-5.0.0-SNAPSHOT-bin/jargyle-5.0.0-SNAPSHOT/bin/jargyle generate-reference-docs -d src/site/markdown/reference/
-    # Produce the website/documentation with the updated reference documentation
-    mvn compile site:site site:stage site:deploy
-    ```
+         The following command takes the generated Markdown files and 
+         integrates them into the website/documentation:
+         
+         ```bash
+         # Produce the website/documentation with the updated reference documentation
+         mvn compile site:site site:stage site:deploy
+         ```
     
 -   `mvn clean package -DskipTests=true`: Performs a clean build of the binary 
     and source distributions skipping the execution of all tests. 

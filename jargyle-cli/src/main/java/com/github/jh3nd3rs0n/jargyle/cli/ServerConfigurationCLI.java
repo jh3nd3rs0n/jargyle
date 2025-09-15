@@ -382,8 +382,8 @@ public abstract class ServerConfigurationCLI extends CLI {
 	}
 
 	private char[] readPassword(final String prompt) {
-		ConsoleWrapper consoleWrapper = new ConsoleWrapper(System.console());
-		return consoleWrapper.readPassword(prompt);
+		AbstractConsole abstractConsole = AbstractConsole.newInstance();
+		return abstractConsole.readPassword(prompt);
 	}
 
 	@Option(

@@ -41,47 +41,46 @@ public final class Socks5UserManagerCLI extends CLI {
 									Collectors.joining(", "))));
 				}
 				Users users = Users.of();
-				ConsoleWrapper consoleWrapper = new ConsoleWrapper(
-						System.console());
+				AbstractConsole abstractConsole = AbstractConsole.newInstance();
 				boolean addAnotherUser = false;
 				do {
-					consoleWrapper.printf("User%n");
+					abstractConsole.printf("User%n");
 					String name;
 					while (true) {
-						name = consoleWrapper.readLine("Name: ");
+						name = abstractConsole.readLine("Name: ");
 						try {
 							User.validateName(name);
 							break;
 						} catch (IllegalArgumentException e) {
-							consoleWrapper.printf(
+							abstractConsole.printf(
 									"Name must be no more than %s byte(s).%n", 
 									User.MAX_NAME_LENGTH);
 						}
 					}
 					char[] password;
 					while (true) {
-						password = consoleWrapper.readPassword("Password: ");
+						password = abstractConsole.readPassword("Password: ");
 						try {
 							User.validatePassword(password);
 						} catch (IllegalArgumentException e) {
-							consoleWrapper.printf(
+							abstractConsole.printf(
 									"Password must be no more than %s byte(s).%n",
 									User.MAX_PASSWORD_LENGTH);
 							continue;
 						}
-						char[] retypedPassword = consoleWrapper.readPassword(
+						char[] retypedPassword = abstractConsole.readPassword(
 								"Re-type password: ");
 						if (Arrays.equals(password, retypedPassword)) {
 							break;
 						} else {
-							consoleWrapper.printf(
+							abstractConsole.printf(
 									"Password and re-typed password do not match.%n");
 						}
 					}
 					users.put(User.newInstance(name, password));
 					Arrays.fill(password, '\0');
-					consoleWrapper.printf("User '%s' added.%n", name);
-					String decision = consoleWrapper.readLine(
+					abstractConsole.printf("User '%s' added.%n", name);
+					String decision = abstractConsole.readLine(
 							"Would you like to enter another user? ('Y' for yes): ");
 					addAnotherUser = decision.equals("Y");
 				} while (addAnotherUser);

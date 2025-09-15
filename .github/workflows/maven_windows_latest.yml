@@ -39,5 +39,5 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Test with Maven and Analyze
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_2 }}
         run: mvn --batch-mode --file=pom.xml --update-snapshots --projects=!jargyle-test-echo-server-performance,!jargyle-distributions verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=jh3nd3rs0n_jargyle -P coverage

@@ -7,7 +7,7 @@ public abstract class EchoServerTestRunnerFactory {
     public abstract EchoServerTestRunner newEchoServerTestRunner(
             final InetAddress echServerInetAddress,
             final int echServerPort,
-            final String scksServerHostAddress,
+            final InetAddress scksServerInetAddress,
             final int scksServerPort);
 
 }

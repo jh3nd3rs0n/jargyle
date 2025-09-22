@@ -45,7 +45,6 @@
 			<groupId>com.github.jh3nd3rs0n</groupId>
 			<artifactId>jargyle-test-netty-example-socksproxy</artifactId>
 			<version>${project.parent.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -58,7 +57,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
-	</dependencies>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -75,7 +74,7 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>**/EchoObjectsUsingSocks5ClientToSocksServerUsingSocks5GssapiMethod*IT</exclude>
+						<exclude>**/EchoObjectsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiMethod*IT</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

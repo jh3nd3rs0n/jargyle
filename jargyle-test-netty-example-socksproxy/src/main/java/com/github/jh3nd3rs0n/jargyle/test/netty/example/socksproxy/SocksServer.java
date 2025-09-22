@@ -32,44 +32,39 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
 
 public final class SocksServer {
 
-    static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
+    public static final InetAddress INET_ADDRESS = InetAddress.getLoopbackAddress();
 
-    static final int PORT = Integer.parseInt(System.getProperty("port", "1080"));
+    public static final int PORT = 1080;
 
     private ExecutorService executor;
+    private final InetAddress inetAddress;
+    private final int port;
     private State state;
 
     public SocksServer() {
+        this(PORT);
+    }
+
+    public SocksServer(final int prt) {
+        this(prt, INET_ADDRESS);
+    }
+
+    public SocksServer(final int prt, final InetAddress inetAddr) {
         this.executor = null;
+        this.inetAddress = inetAddr;
+        this.port = prt;
         this.state = State.STOPPED;
     }
 
-    public static void main(String[] args) throws Exception {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             // Disable logging to get actual performance under performance testing
-             // .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new SocksServerInitializer());
-            b.bind(INET_ADDRESS, PORT).sync().channel().closeFuture().sync();
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
-    }
-    public String getHostAddress() {
-        return INET_ADDRESS.getHostAddress();
+    public InetAddress getInetAddress() {
+        return this.inetAddress;
     }
 
     public int getPort() {
-        return PORT;
+        return this.port;
     }
 
     public State getState() {
@@ -77,30 +72,30 @@ public final class SocksServer {
     }
 
     public void start() throws IOException {
-        AtomicReference<Exception> exceptionAtomicReference =
-                new AtomicReference<>();
         this.executor = Executors.newSingleThreadExecutor();
         this.executor.execute(() -> {
+            EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+            EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
-                SocksServer.main(new String[]{});
+                ServerBootstrap b = new ServerBootstrap();
+                b.group(bossGroup, workerGroup)
+                        .channel(NioServerSocketChannel.class)
+                        .childHandler(new SocksServerInitializer());
+                b.bind(this.inetAddress, this.port).sync().channel().closeFuture().sync();
             } catch (InterruptedException e) {
                 // caused by this.executor.shutdownNow();
-            } catch (Exception e) {
-                exceptionAtomicReference.set(e);
+            } finally {
+                bossGroup.shutdownGracefully();
+                workerGroup.shutdownGracefully();
             }
         });
         boolean socksServerActive = false;
-        Exception e = null;
         do {
             try (Socket socket = new Socket(INET_ADDRESS, PORT)) {
                 socksServerActive = socket.isConnected();
             } catch (IOException ignored) {
             }
-        } while (!socksServerActive
-                && (e = exceptionAtomicReference.get()) == null);
-        if (e != null) {
-            throw new IOException(e);
-        }
+        } while (!socksServerActive);
         this.state = State.STARTED;
     }
 

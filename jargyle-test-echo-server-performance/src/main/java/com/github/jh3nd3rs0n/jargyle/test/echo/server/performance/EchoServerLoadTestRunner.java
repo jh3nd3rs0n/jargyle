@@ -1,8 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.server.performance;
 
 import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.test.echo.AbstractSocksServer;
+import com.github.jh3nd3rs0n.jargyle.test.echo.EchoServer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
@@ -10,23 +13,22 @@ public final class EchoServerLoadTestRunner {
 
     private static final int HALF_SECOND = 500;
 
-    private final EchoServerInterface echoServerInterface;
-    private final SocksServerInterface socksServerInterface;
+    private final EchoServer echoServer;
+    private final AbstractSocksServer socksServer;
     private final long delayBetweenThreadsStarting;
     private final EchoServerTestRunnerFactory echoServerTestRunnerFactory;
     private final int threadCount;
     private final long timeout;
 
     public EchoServerLoadTestRunner(
-            final EchoServerInterface echServerInterface,
-            final SocksServerInterface scksServerInterface,
+            final EchoServer echServer,
+            final AbstractSocksServer scksServer,
             final int numberOfThreads,
             final long delayBetweenThreadsStart,
             final EchoServerTestRunnerFactory echServerTestRunnerFactory,
             final long tmt) {
-        this.echoServerInterface = Objects.requireNonNull(
-                echServerInterface);
-        this.socksServerInterface = scksServerInterface;
+        this.echoServer = Objects.requireNonNull(echServer);
+        this.socksServer = scksServer;
         this.delayBetweenThreadsStarting = delayBetweenThreadsStart;
         this.echoServerTestRunnerFactory = Objects.requireNonNull(
                 echServerTestRunnerFactory);
@@ -41,21 +43,21 @@ public final class EchoServerLoadTestRunner {
                 ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                         ExecutorsHelper.newCachedThreadPoolBuilder());
         try {
-            String socksServerHostAddress = null;
+            InetAddress socksServerInetAddress = null;
             int socksServerPort = -1;
-            if (this.socksServerInterface != null) {
-                this.socksServerInterface.start();
-                socksServerHostAddress = this.socksServerInterface.getHostAddress();
-                socksServerPort = this.socksServerInterface.getPort();
+            if (this.socksServer != null) {
+                this.socksServer.start();
+                socksServerInetAddress = this.socksServer.getInetAddress();
+                socksServerPort = this.socksServer.getPort();
             }
-            this.echoServerInterface.start();
+            this.echoServer.start();
             for (int i = 0; i < this.threadCount; i++) {
                 executor.execute(new LoadTestRunnerWorker(
                         i * this.delayBetweenThreadsStarting,
                         this.echoServerTestRunnerFactory.newEchoServerTestRunner(
-                                this.echoServerInterface.getInetAddress(),
-                                this.echoServerInterface.getPort(),
-                                socksServerHostAddress,
+                                this.echoServer.getInetAddress(),
+                                this.echoServer.getPort(),
+                                socksServerInetAddress,
                                 socksServerPort),
                         loadTestRunnerResults));
             }
@@ -70,14 +72,14 @@ public final class EchoServerLoadTestRunner {
                     && System.currentTimeMillis() - startWaitTime < this.timeout);
         } finally {
             executor.shutdownNow();
-            if (!this.echoServerInterface.getState().equals(
-                    EchoServerInterface.State.STOPPED)) {
-                this.echoServerInterface.stop();
+            if (!this.echoServer.getState().equals(
+                    EchoServer.State.STOPPED)) {
+                this.echoServer.stop();
             }
-            if (this.socksServerInterface != null
-                    && !this.socksServerInterface.getState().equals(
-                            SocksServerInterface.State.STOPPED)) {
-                this.socksServerInterface.stop();
+            if (this.socksServer != null
+                    && !this.socksServer.getState().equals(
+                            AbstractSocksServer.State.STOPPED)) {
+                this.socksServer.stop();
             }
         }
         return loadTestRunnerResults;

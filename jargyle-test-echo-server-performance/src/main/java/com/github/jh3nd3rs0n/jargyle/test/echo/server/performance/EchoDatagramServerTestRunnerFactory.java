@@ -7,7 +7,7 @@ public abstract class EchoDatagramServerTestRunnerFactory {
     public abstract EchoDatagramServerTestRunner newEchoDatagramServerTestRunner(
             final InetAddress echDatagramServerInetAddress,
             final int echDatagramServerPort,
-            final String scksServerHostAddress,
+            final InetAddress scksServerInetAddress,
             final int scksServerPort);
 
 }

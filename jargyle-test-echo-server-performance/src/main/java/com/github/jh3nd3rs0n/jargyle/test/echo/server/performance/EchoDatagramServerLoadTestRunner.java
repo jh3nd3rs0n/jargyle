@@ -1,8 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.server.performance;
 
 import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.test.echo.AbstractSocksServer;
+import com.github.jh3nd3rs0n.jargyle.test.echo.EchoDatagramServer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
@@ -10,23 +13,22 @@ public final class EchoDatagramServerLoadTestRunner {
 
     private static final int HALF_SECOND = 500;
 
-    private final EchoDatagramServerInterface echoDatagramServerInterface;
-    private final SocksServerInterface socksServerInterface;
+    private final EchoDatagramServer echoDatagramServer;
+    private final AbstractSocksServer socksServer;
     private final long delayBetweenThreadsStarting;
     private final EchoDatagramServerTestRunnerFactory echoDatagramServerTestRunnerFactory;
     private final int threadCount;
     private final long timeout;
 
     public EchoDatagramServerLoadTestRunner(
-            final EchoDatagramServerInterface echDatagramServerInterface,
-            final SocksServerInterface scksServerInterface,
+            final EchoDatagramServer echDatagramServer,
+            final AbstractSocksServer scksServer,
             final int numberOfThreads,
             final long delayBetweenThreadsStart,
             final EchoDatagramServerTestRunnerFactory echDatagramServerTestRunnerFactory,
             final long tmt) {
-        this.echoDatagramServerInterface = Objects.requireNonNull(
-                echDatagramServerInterface);
-        this.socksServerInterface = scksServerInterface;
+        this.echoDatagramServer = Objects.requireNonNull(echDatagramServer);
+        this.socksServer = scksServer;
         this.delayBetweenThreadsStarting = delayBetweenThreadsStart;
         this.echoDatagramServerTestRunnerFactory = Objects.requireNonNull(
                 echDatagramServerTestRunnerFactory);
@@ -41,21 +43,21 @@ public final class EchoDatagramServerLoadTestRunner {
                 ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
                         ExecutorsHelper.newCachedThreadPoolBuilder());
         try {
-            String socksServerHostAddress = null;
+            InetAddress socksServerInetAddress = null;
             int socksServerPort = -1;
-            if (this.socksServerInterface != null) {
-                this.socksServerInterface.start();
-                socksServerHostAddress = this.socksServerInterface.getHostAddress();
-                socksServerPort = this.socksServerInterface.getPort();
+            if (this.socksServer != null) {
+                this.socksServer.start();
+                socksServerInetAddress = this.socksServer.getInetAddress();
+                socksServerPort = this.socksServer.getPort();
             }
-            this.echoDatagramServerInterface.start();
+            this.echoDatagramServer.start();
             for (int i = 0; i < this.threadCount; i++) {
                 executor.execute(new LoadTestRunnerWorker(
                         i * this.delayBetweenThreadsStarting,
                         this.echoDatagramServerTestRunnerFactory.newEchoDatagramServerTestRunner(
-                                this.echoDatagramServerInterface.getInetAddress(),
-                                this.echoDatagramServerInterface.getPort(),
-                                socksServerHostAddress,
+                                this.echoDatagramServer.getInetAddress(),
+                                this.echoDatagramServer.getPort(),
+                                socksServerInetAddress,
                                 socksServerPort),
                         loadTestRunnerResults));
             }
@@ -70,14 +72,14 @@ public final class EchoDatagramServerLoadTestRunner {
                     && System.currentTimeMillis() - startWaitTime < this.timeout);
         } finally {
             executor.shutdownNow();
-            if (!this.echoDatagramServerInterface.getState().equals(
-                    EchoDatagramServerInterface.State.STOPPED)) {
-                this.echoDatagramServerInterface.stop();
+            if (!this.echoDatagramServer.getState().equals(
+                    EchoDatagramServer.State.STOPPED)) {
+                this.echoDatagramServer.stop();
             }
-            if (this.socksServerInterface != null
-                    && !this.socksServerInterface.getState().equals(
-                            SocksServerInterface.State.STOPPED)) {
-                this.socksServerInterface.stop();
+            if (this.socksServer != null
+                    && !this.socksServer.getState().equals(
+                            AbstractSocksServer.State.STOPPED)) {
+                this.socksServer.stop();
             }
         }
         return loadTestRunnerResults;

@@ -12,7 +12,7 @@ import java.nio.file.Path;
 public class GssEnvironment {
 
     private static final String BASE_DIR_PREFIX =
-            "com.github.jh3nd3rs0n.jargyle.integration.test-";
+            "com.github.jh3nd3rs0n.jargyle.test.echo-";
 
     private static final String KDC_REALM = "EXAMPLE.COM";
     private static final String KDC_HOST =

@@ -7,17 +7,17 @@ public abstract class EchoDatagramServerTestRunner implements Runnable {
     protected final InetAddress echoDatagramServerInetAddress;
     protected final int echoDatagramServerPort;
 
-    protected final String socksServerHostAddress;
+    protected final InetAddress socksServerInetAddress;
     protected final int socksServerPort;
 
     public EchoDatagramServerTestRunner(
             final InetAddress echDatagramServerInetAddress,
             final int echDatagramServerPort,
-            final String scksServerHostAddress,
+            final InetAddress scksServerInetAddress,
             final int scksServerPort) {
         this.echoDatagramServerInetAddress = echDatagramServerInetAddress;
         this.echoDatagramServerPort = echDatagramServerPort;
-        this.socksServerHostAddress = scksServerHostAddress;
+        this.socksServerInetAddress = scksServerInetAddress;
         this.socksServerPort = scksServerPort;
     }
 

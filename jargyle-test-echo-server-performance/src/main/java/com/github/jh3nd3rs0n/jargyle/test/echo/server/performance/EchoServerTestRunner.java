@@ -7,17 +7,17 @@ public abstract class EchoServerTestRunner implements Runnable {
     protected final InetAddress echoServerInetAddress;
     protected final int echoServerPort;
 
-    protected final String socksServerHostAddress;
+    protected final InetAddress socksServerInetAddress;
     protected final int socksServerPort;
 
     public EchoServerTestRunner(
             final InetAddress echServerInetAddress,
             final int echServerPort,
-            final String scksServerHostAddress,
+            final InetAddress scksServerInetAddress,
             final int scksServerPort) {
         this.echoServerInetAddress = echServerInetAddress;
         this.echoServerPort = echServerPort;
-        this.socksServerHostAddress = scksServerHostAddress;
+        this.socksServerInetAddress = scksServerInetAddress;
         this.socksServerPort = scksServerPort;
     }
 

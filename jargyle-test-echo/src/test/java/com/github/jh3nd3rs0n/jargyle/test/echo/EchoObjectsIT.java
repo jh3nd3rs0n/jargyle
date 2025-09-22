@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo;
 
-import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
-import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
@@ -17,9 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 public class EchoObjectsIT {
 
-	private static DatagramServer echoDatagramServer;
+	private static EchoDatagramServer echoDatagramServer;
 	private static int echoDatagramServerPort;
-	private static Server echoServer;
+	private static EchoServer echoServer;
 	private static int echoServerPort;
 
 	@Rule
@@ -30,10 +28,10 @@ public class EchoObjectsIT {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws IOException {
-		echoDatagramServer = EchoDatagramServerHelper.newEchoDatagramServer(0);
+		echoDatagramServer = EchoDatagramServer.newInstance(0);
 		echoDatagramServer.start();
 		echoDatagramServerPort = echoDatagramServer.getPort();
-		echoServer = EchoServerHelper.newEchoServer(0);
+		echoServer = EchoServer.newInstance(0);
 		echoServer.start();
 		echoServerPort = echoServer.getPort();
 	}
@@ -41,11 +39,11 @@ public class EchoObjectsIT {
 	@AfterClass
 	public static void tearDownAfterClass() throws IOException {
 		if (echoDatagramServer != null
-				&& !echoDatagramServer.getState().equals(DatagramServer.State.STOPPED)) {
+				&& !echoDatagramServer.getState().equals(EchoDatagramServer.State.STOPPED)) {
 			echoDatagramServer.stop();
 		}
 		if (echoServer != null
-				&& !echoServer.getState().equals(Server.State.STOPPED)) {
+				&& !echoServer.getState().equals(EchoServer.State.STOPPED)) {
 			echoServer.stop();
 		}		
 		ThreadHelper.interruptibleSleepForThreeSeconds();

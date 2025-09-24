@@ -9,30 +9,26 @@ import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedDatagramSocket;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.Socks5ValueDerivationHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.Iterator;
 
-final class UdpAssociateRequestWorker extends RequestWorker {
+final class UdpAssociateRequestHandler extends RequestHandler {
 
 	private static final int HALF_SECOND = 500;
 
-	private final Logger logger;
+    private final RequestHandlerContext requestHandlerContext;
+	private final ServerEventLogger serverEventLogger;
 	
-	public UdpAssociateRequestWorker(
-			final Socks5Worker socks5Worker, 
-			final MethodSubNegotiationResults methSubNegotiationResults, 
-			final Request req) {
-		super(socks5Worker, methSubNegotiationResults, req);
-		this.logger = LoggerFactory.getLogger(UdpAssociateRequestWorker.class);
+	public UdpAssociateRequestHandler(
+            final RequestHandlerContext handlerContext) {
+        this.requestHandlerContext = handlerContext;
+		this.serverEventLogger = handlerContext.getServerEventLogger();
 	}
 	
 	private boolean configureClientFacingDatagramSocket(
@@ -41,13 +37,14 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			socketSettings.applyTo(clientFacingDatagramSock);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the client-facing UDP socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
 		}
         return true;
@@ -59,13 +56,14 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			socketSettings.applyTo(peerFacingDatagramSock);
 		} catch (UnsupportedOperationException | SocketException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in setting the peer-facing UDP socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
 		}
         return true;
@@ -73,48 +71,57 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private Host getClientFacingBindHost() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(
-				this.getApplicableRule(), this.getSettings());
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings());
 	}
 	
 	private PortRanges getClientFacingBindPortRanges() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
-				this.getApplicableRule(), this.getSettings());
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings());
 	}
 	
 	private SocketSettings getClientFacingSocketSettings() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(
-				this.getApplicableRule(), this.getSettings());
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings());
 	}
 	
 	private Host getPeerFacingBindHost() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(
-				this.getApplicableRule(), this.getSettings());
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings());
 	}
 	
 	private PortRanges getPeerFacingBindPortRanges() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
-				this.getApplicableRule(), this.getSettings());
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings());
 	}
 	
 	private SocketSettings getPeerFacingSocketSettings() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(
-				this.getApplicableRule(), this.getSettings());
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings());
 	}
 	
 	private int getRelayBufferSize() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestRelayBufferSizeFrom(
-				this.getApplicableRule(), this.getSettings()).intValue();
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings()).intValue();
 	}
 	
 	private int getRelayIdleTimeout() {
 		return Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestRelayIdleTimeoutFrom(
-				this.getApplicableRule(), this.getSettings()).intValue();
+				this.requestHandlerContext.getApplicableRule(),
+                this.requestHandlerContext.getSettings()).intValue();
 	}
 	
 	private Integer getRelayInboundBandwidthLimit() {
 		PositiveInteger relayInboundBandwidthLimit =
 				Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestRelayInboundBandwidthLimitFrom(
-						this.getApplicableRule(), this.getSettings());
+						this.requestHandlerContext.getApplicableRule(),
+                        this.requestHandlerContext.getSettings());
 		if (relayInboundBandwidthLimit != null) {
 			return relayInboundBandwidthLimit.intValue();
 		}
@@ -124,23 +131,129 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private Integer getRelayOutboundBandwidthLimit() {
 		PositiveInteger relayOutboundBandwidthLimit =
 				Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(
-						this.getApplicableRule(), this.getSettings());
+						this.requestHandlerContext.getApplicableRule(),
+                        this.requestHandlerContext.getSettings());
 		if (relayOutboundBandwidthLimit != null) {
 			return relayOutboundBandwidthLimit.intValue();
 		}
 		return null;
 	}
-	
+
+    @Override
+    public void handleRequest() {
+        DatagramSocket peerFacingDatagramSock = null;
+        DatagramSocket clientFacingDatagramSock = null;
+        Reply rep;
+        try {
+            peerFacingDatagramSock = this.newPeerFacingDatagramSocket();
+            if (peerFacingDatagramSock == null) {
+                return;
+            }
+            clientFacingDatagramSock = this.newClientFacingDatagramSocket();
+            if (clientFacingDatagramSock == null) {
+                return;
+            }
+            /*
+             * Create a temporary variable to avoid the resource-never-closed warning
+             * (The resource will get closed)
+             */
+            DatagramSocket clientFacingDatagramSck =
+                    this.wrapClientFacingDatagramSocket(
+                            clientFacingDatagramSock);
+            if (clientFacingDatagramSck == null) {
+                return;
+            }
+            clientFacingDatagramSock = clientFacingDatagramSck;
+            InetAddress inetAddress =
+                    clientFacingDatagramSock.getLocalAddress();
+            String serverBoundAddress = inetAddress.getHostAddress();
+            int serverBoundPort = clientFacingDatagramSock.getLocalPort();
+            rep = Reply.newSuccessInstance(
+                    Address.newInstanceFrom(serverBoundAddress),
+                    Port.valueOf(serverBoundPort));
+            RuleContext ruleContext =
+                    this.requestHandlerContext.newReplyRuleContext(rep);
+            this.requestHandlerContext.setRuleContext(ruleContext);
+            Rule applicableRule =
+                    this.requestHandlerContext.getRules().firstAppliesTo(
+                            this.requestHandlerContext.getRuleContext());
+            if (applicableRule == null) {
+                this.serverEventLogger.warn(ObjectLogMessageHelper.objectLogMessage(
+                        this,
+                        "No applicable rule found based on the following "
+                                + "context: %s",
+                        this.requestHandlerContext.getRuleContext()));
+                this.requestHandlerContext.sendReply(
+                        Reply.newFailureInstance(
+                                ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
+                return;
+            }
+            this.requestHandlerContext.setApplicableRule(applicableRule);
+            if (!this.requestHandlerContext.canAllowReply()) {
+                return;
+            }
+            if (!this.requestHandlerContext.sendReply(rep)) {
+                return;
+            }
+            /*
+             * Create a temporary variable to avoid the resource-never-closed warning
+             * (The resource will get closed)
+             */
+            DatagramSocket peerFacingDatagramSck =
+                    this.limitPeerFacingDatagramSocket(
+                            peerFacingDatagramSock);
+            if (peerFacingDatagramSck == null) {
+                return;
+            }
+            peerFacingDatagramSock = peerFacingDatagramSck;
+            clientFacingDatagramSock = this.limitClientFacingDatagramSocket(
+                    clientFacingDatagramSock);
+            if (clientFacingDatagramSock == null) {
+                return;
+            }
+            UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
+                    this.requestHandlerContext.getDesiredDestinationAddress().toString(),
+                    this.requestHandlerContext.getDesiredDestinationPort().intValue(),
+                    clientFacingDatagramSock,
+                    peerFacingDatagramSock);
+            builder.bufferSize(this.getRelayBufferSize());
+            NetObjectFactory netObjectFactory =
+                    this.requestHandlerContext.getSelectedRoute().getNetObjectFactory();
+            builder.hostResolver(netObjectFactory.newHostResolver());
+            builder.idleTimeout(this.getRelayIdleTimeout());
+            builder.ruleContext(this.requestHandlerContext.getRuleContext());
+            builder.rules(this.requestHandlerContext.getRules());
+            UdpRelayServer udpRelayServer = builder.build();
+            try {
+                this.passPackets(udpRelayServer);
+            } catch (IOException e) {
+                this.serverEventLogger.warn(
+                        ObjectLogMessageHelper.objectLogMessage(
+                                this, "Error in starting the UDP association"),
+                        e);
+            }
+        } finally {
+            if (clientFacingDatagramSock != null
+                    && !clientFacingDatagramSock.isClosed()) {
+                clientFacingDatagramSock.close();
+            }
+            if (peerFacingDatagramSock != null
+                    && !peerFacingDatagramSock.isClosed()) {
+                peerFacingDatagramSock.close();
+            }
+        }
+    }
+
 	private DatagramSocket limitClientFacingDatagramSocket(
 			final DatagramSocket clientFacingDatagramSock) {
 		Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
 		if (outboundBandwidthLimit != null) {
 			try {
 				return new BandwidthLimitedDatagramSocket(
-						clientFacingDatagramSock, 
-						outboundBandwidthLimit.intValue());
+						clientFacingDatagramSock,
+                        outboundBandwidthLimit);
 			} catch (SocketException e) {
-				this.logger.warn( 
+				this.serverEventLogger.warn(
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in creating the bandwidth-limited "
@@ -159,9 +272,9 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			try {
 				return new BandwidthLimitedDatagramSocket(
 						peerFacingDatagramSock,
-						inboundBandwidthLimit.intValue());
+                        inboundBandwidthLimit);
 			} catch (SocketException e) {
-				this.logger.warn( 
+				this.serverEventLogger.warn(
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Error in creating the bandwidth-limited "
@@ -175,18 +288,19 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private DatagramSocket newClientFacingDatagramSocket() {
 		Host clientFacingBindHost = this.getClientFacingBindHost();
-		InetAddress bindInetAddress = null;
+		InetAddress bindInetAddress;
 		try {
 			bindInetAddress = clientFacingBindHost.toInetAddress();
 		} catch (UnknownHostException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the client-facing UDP socket to "
 							+ "the following host: %s",
 							clientFacingBindHost));
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		PortRanges bindPortRanges = this.getClientFacingBindPortRanges();
@@ -212,7 +326,7 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			}
 		}
 		if (!clientFacingDatagramSockBound) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the client-facing UDP socket to "
@@ -220,8 +334,9 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 							+ "%s %s",
 							bindInetAddress,
 							bindPortRanges));
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;			
 		}
 		return clientFacingDatagramSock;
@@ -230,18 +345,19 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	private DatagramSocket newClientFacingDatagramSocket(
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
-		DatagramSocket clientFacingDatagramSock = null;
+		DatagramSocket clientFacingDatagramSock;
 		try {
 			clientFacingDatagramSock = new DatagramSocket(null);
 		} catch (SocketException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the client-facing UDP "
 							+ "socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		if (!this.configureClientFacingDatagramSocket(
@@ -260,14 +376,15 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 				clientFacingDatagramSock.close();
 				throw new BindException();
 			}
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in binding the client-facing UDP "
 							+ "socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			clientFacingDatagramSock.close();
 			return null;
 		}
@@ -276,18 +393,19 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 	
 	private DatagramSocket newPeerFacingDatagramSocket() {
 		Host peerFacingBindHost = this.getPeerFacingBindHost();
-		InetAddress bindInetAddress = null;
+		InetAddress bindInetAddress;
 		try {
 			bindInetAddress = peerFacingBindHost.toInetAddress();
 		} catch (UnknownHostException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the peer-facing UDP socket to "
 							+ "the following host: %s",
 							peerFacingBindHost));
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		PortRanges bindPortRanges = this.getPeerFacingBindPortRanges();
@@ -313,15 +431,16 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			}
 		}
 		if (!peerFacingDatagramSockBound) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Unable to bind the peer-facing UDP socket to the "
 							+ "following address and port (range(s)): %s %s",
 							bindInetAddress,
 							bindPortRanges));
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;			
 		}
 		return peerFacingDatagramSock;
@@ -331,20 +450,21 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
 		NetObjectFactory netObjectFactory = 
-				this.getSelectedRoute().getNetObjectFactory();
-		DatagramSocket peerFacingDatagramSock = null;
+				this.requestHandlerContext.getSelectedRoute().getNetObjectFactory();
+		DatagramSocket peerFacingDatagramSock;
 		try {
 			peerFacingDatagramSock =
 					netObjectFactory.newDatagramSocket(null);
 		} catch (SocketException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in creating the peer-facing UDP "
 							+ "socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		if (!this.configurePeerFacingDatagramSocket(
@@ -363,14 +483,15 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 				peerFacingDatagramSock.close();
 				throw new BindException();
 			}
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in binding the peer-facing UDP "
 							+ "socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			peerFacingDatagramSock.close();
 			return null;
 		}
@@ -382,14 +503,14 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 		try {
 			udpRelayServer.start();
 			try {
-				while (this.getClientSocket().getInputStream().read() != -1) {
+				while (this.requestHandlerContext.getClientSocket().getInputStream().read() != -1) {
 					try {
 						Thread.sleep(HALF_SECOND);
 					} catch (InterruptedException e) {
 						Thread.currentThread().interrupt();
 					}
 				}
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 		} finally {
 			if (!udpRelayServer.getState().equals(
@@ -398,141 +519,48 @@ final class UdpAssociateRequestWorker extends RequestWorker {
 			}
 		}
 	}
-	
-	@Override
-	public void run() {
-		DatagramSocket peerFacingDatagramSock = null;
-		DatagramSocket clientFacingDatagramSock = null;		
-		Reply rep = null;
-		try {
-			peerFacingDatagramSock = this.newPeerFacingDatagramSocket();
-			if (peerFacingDatagramSock == null) {
-				return;
-			}
-			clientFacingDatagramSock = this.newClientFacingDatagramSocket();
-			if (clientFacingDatagramSock == null) {
-				return;
-			}
-			/*
-			 * Create a temporary variable to avoid the resource-never-closed warning
-			 * (The resource will get closed)
-			 */
-			DatagramSocket clientFacingDatagramSck = 
-					this.wrapClientFacingDatagramSocket(
-							clientFacingDatagramSock);
-			if (clientFacingDatagramSck == null) {
-				return;
-			}
-			clientFacingDatagramSock = clientFacingDatagramSck; 
-			InetAddress inetAddress =
-					clientFacingDatagramSock.getLocalAddress();
-			String serverBoundAddress = inetAddress.getHostAddress();
-			int serverBoundPort = clientFacingDatagramSock.getLocalPort();
-			rep = Reply.newSuccessInstance(
-					Address.newInstanceFrom(serverBoundAddress),
-					Port.valueOf(serverBoundPort));
-			RuleContext ruleContext = this.newReplyRuleContext(
-					rep);
-			this.setRuleContext(ruleContext);
-			Rule applicableRule = this.getRules().firstAppliesTo(
-					this.getRuleContext());
-			if (applicableRule == null) {
-				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
-						this, 
-						"No applicable rule found based on the following "
-						+ "context: %s",
-						this.getRuleContext()));				
-				this.sendReply(
-						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
-				return;
-			}			
-			this.setApplicableRule(applicableRule);
-			if (!this.canAllowReply()) {
-				return;
-			}			
-			if (!this.sendReply(rep)) {
-				return;
-			}
-			/*
-			 * Create a temporary variable to avoid the resource-never-closed warning
-			 * (The resource will get closed)
-			 */
-			DatagramSocket peerFacingDatagramSck = 
-					this.limitPeerFacingDatagramSocket(
-							peerFacingDatagramSock);
-			if (peerFacingDatagramSck == null) {
-				return;
-			}
-			peerFacingDatagramSock = peerFacingDatagramSck; 
-			clientFacingDatagramSock = this.limitClientFacingDatagramSocket(
-					clientFacingDatagramSock);
-			if (clientFacingDatagramSock == null) {
-				return;
-			}
-			UdpRelayServer.Builder builder = new UdpRelayServer.Builder(
-					this.getDesiredDestinationAddress().toString(), 
-					this.getDesiredDestinationPort().intValue(),
-					clientFacingDatagramSock, 
-					peerFacingDatagramSock);
-			builder.bufferSize(this.getRelayBufferSize());
-			NetObjectFactory netObjectFactory = 
-					this.getSelectedRoute().getNetObjectFactory();
-			builder.hostResolver(netObjectFactory.newHostResolver());
-			builder.idleTimeout(this.getRelayIdleTimeout());
-			builder.ruleContext(this.getRuleContext());
-			builder.rules(this.getRules());
-			UdpRelayServer udpRelayServer = builder.build();
-			try {
-				this.passPackets(udpRelayServer);
-			} catch (IOException e) {
-				this.logger.warn( 
-						ObjectLogMessageHelper.objectLogMessage(
-								this, "Error in starting the UDP association"), 
-						e);
-			}
-		} finally {
-			if (clientFacingDatagramSock != null 
-					&& !clientFacingDatagramSock.isClosed()) {
-				clientFacingDatagramSock.close();
-			}
-			if (peerFacingDatagramSock != null 
-					&& !peerFacingDatagramSock.isClosed()) {
-				peerFacingDatagramSock.close();
-			}
-		}
-	}
-	
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                " [requestHandlerContext=" +
+                this.requestHandlerContext +
+                "]";
+    }
+
 	private DatagramSocket wrapClientFacingDatagramSocket(
 			final DatagramSocket clientFacingDatagramSock) {
 		DatagramSocket clientFacingDatagramSck = clientFacingDatagramSock;
 		DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory =
-				this.getClientFacingDtlsDatagramSocketFactory();
+				this.requestHandlerContext.getClientFacingDtlsDatagramSocketFactory();
 		try {
 			clientFacingDatagramSck =
 					clientFacingDtlsDatagramSocketFactory.getDatagramSocket(
 							clientFacingDatagramSck);
 		} catch (IOException e) {
-			this.logger.warn(
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this,
 							"Error in wrapping the client-facing UDP socket"),
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		try {
 			clientFacingDatagramSck = 
-					this.getMethodSubNegotiationResults().getDatagramSocket(
+					this.requestHandlerContext.getMethodSubNegotiationResults().getDatagramSocket(
 							clientFacingDatagramSck);
 		} catch (IOException e) {
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in wrapping the client-facing UDP socket"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+			this.requestHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
 		return clientFacingDatagramSck;

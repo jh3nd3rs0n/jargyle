@@ -16,14 +16,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Listener implements Runnable {
 
-	private final ConfiguredWorkerPropertiesProvider configuredWorkerPropertiesProvider;
+	private final ConfiguredObjectsProvider configuredObjectsProvider;
 	private final AtomicInteger currentWorkerCount;	
 	private final Logger logger;
 	private final ServerSocket serverSocket;
 			
 	public Listener(final ServerSocket serverSock, final Configuration config) {
-		this.configuredWorkerPropertiesProvider =
-				new ConfiguredWorkerPropertiesProvider(config);
+		this.configuredObjectsProvider =
+				new ConfiguredObjectsProvider(config);
 		this.currentWorkerCount = new AtomicInteger(0);
 		this.logger = LoggerFactory.getLogger(Listener.class);
 		this.serverSocket = serverSock;
@@ -40,7 +40,7 @@ public final class Listener implements Runnable {
 					executor.execute(new Worker(
 							clientSocket,
 							this.currentWorkerCount,
-							this.configuredWorkerPropertiesProvider));
+							this.configuredObjectsProvider));
 				} catch (SocketTimeoutException e) {
 					this.logger.error(
 							ObjectLogMessageHelper.objectLogMessage(

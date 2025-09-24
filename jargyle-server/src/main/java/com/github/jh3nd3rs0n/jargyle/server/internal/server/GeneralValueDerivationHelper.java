@@ -90,7 +90,7 @@ public final class GeneralValueDerivationHelper {
         return getClientSocketSettingsFrom(settings);
     }
     
-    static Host getExternalFacingBindHostFrom(final Rule rule) {
+    public static Host getExternalFacingBindHostFrom(final Rule rule) {
         Host host = rule.getLastRuleActionValue(
                 GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST);
         if (host != null) {
@@ -99,7 +99,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostFrom(rule);
     }
     
-    static Host getExternalFacingBindHostFrom(final Settings settings) {
+    public static Host getExternalFacingBindHostFrom(final Settings settings) {
         Host host = settings.getLastValue(
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
         if (host != null) {
@@ -108,7 +108,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostFrom(settings);
     }
     
-    static HostAddressTypes getExternalFacingBindHostAddressTypesFrom(
+    public static HostAddressTypes getExternalFacingBindHostAddressTypesFrom(
             final Rule rule) {
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(
                 rule.getRuleActionValues(
@@ -119,7 +119,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostAddressTypesFrom(rule);
     }
     
-    static HostAddressTypes getExternalFacingBindHostAddressTypesFrom(
+    public static HostAddressTypes getExternalFacingBindHostAddressTypesFrom(
             final Settings settings) {
         HostAddressTypes hostAddressTypes = settings.getLastValue(
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES);
@@ -129,7 +129,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostAddressTypesFrom(settings);
     }
     
-    static PortRanges getExternalFacingTcpPortRangesFrom(final Rule rule) {
+    public static PortRanges getExternalFacingTcpPortRangesFrom(final Rule rule) {
         PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
                 GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE));
         if (!portRanges.toList().isEmpty()) {
@@ -138,7 +138,7 @@ public final class GeneralValueDerivationHelper {
         return getBindTcpPortRangesFrom(rule);
     }
     
-    static PortRanges getExternalFacingTcpPortRangesFrom(
+    public static PortRanges getExternalFacingTcpPortRangesFrom(
             final Settings settings) {
         PortRanges portRanges = settings.getLastValue(
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
@@ -148,7 +148,7 @@ public final class GeneralValueDerivationHelper {
         return getBindTcpPortRangesFrom(settings);
     }
     
-    static PortRanges getExternalFacingUdpPortRangesFrom(final Rule rule) {
+    public static PortRanges getExternalFacingUdpPortRangesFrom(final Rule rule) {
         PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
                 GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGE));
         if (!portRanges.toList().isEmpty()) {
@@ -157,7 +157,7 @@ public final class GeneralValueDerivationHelper {
         return getBindUdpPortRangesFrom(rule);
     }
     
-    static PortRanges getExternalFacingUdpPortRangesFrom(
+    public static PortRanges getExternalFacingUdpPortRangesFrom(
             final Settings settings) {
         PortRanges portRanges = settings.getLastValue(
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
@@ -167,7 +167,7 @@ public final class GeneralValueDerivationHelper {
         return getBindUdpPortRangesFrom(settings);
     }
     
-    static NetInterface getExternalFacingNetInterfaceFrom(final Rule rule) {
+    public static NetInterface getExternalFacingNetInterfaceFrom(final Rule rule) {
         NetInterface netInterface = rule.getLastRuleActionValue(
                 GeneralRuleActionSpecConstants.EXTERNAL_FACING_NET_INTERFACE);
         if (netInterface != null) {
@@ -176,7 +176,7 @@ public final class GeneralValueDerivationHelper {
         return getNetInterfaceFrom(rule);
     }
     
-    static NetInterface getExternalFacingNetInterfaceFrom(
+    public static NetInterface getExternalFacingNetInterfaceFrom(
             final Settings settings) {
         NetInterface netInterface = settings.getLastValue(
                 GeneralSettingSpecConstants.EXTERNAL_FACING_NET_INTERFACE);
@@ -186,7 +186,7 @@ public final class GeneralValueDerivationHelper {
         return getNetInterfaceFrom(settings);
     }
     
-    static SocketSettings getExternalFacingSocketSettingsFrom(
+    public static SocketSettings getExternalFacingSocketSettingsFrom(
             final Rule rule) {
         SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
                 rule.getRuleActionValues(
@@ -197,7 +197,7 @@ public final class GeneralValueDerivationHelper {
         return getSocketSettingsFrom(rule);
     }
     
-    static SocketSettings getExternalFacingSocketSettingsFrom(
+    public static SocketSettings getExternalFacingSocketSettingsFrom(
             final Settings settings) {
         SocketSettings socketSettings = settings.getLastValue(
                 GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
@@ -207,7 +207,7 @@ public final class GeneralValueDerivationHelper {
         return getSocketSettingsFrom(settings);
     }
 
-    static Host getInternalFacingBindHostFrom(final Rule rule) {
+    public static Host getInternalFacingBindHostFrom(final Rule rule) {
         Host host = rule.getLastRuleActionValue(
                 GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_HOST);
         if (host != null) {
@@ -216,7 +216,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostFrom(rule);
     }
 
-    static Host getInternalFacingBindHostFrom(final Settings settings) {
+    public static Host getInternalFacingBindHostFrom(final Settings settings) {
         Host host = settings.getLastValue(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST);
         if (host != null) {
@@ -225,7 +225,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostFrom(settings);
     }
 
-    static HostAddressTypes getInternalFacingBindHostAddressTypesFrom(
+    public static HostAddressTypes getInternalFacingBindHostAddressTypesFrom(
             final Rule rule) {
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(
                 rule.getRuleActionValues(
@@ -236,7 +236,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostAddressTypesFrom(rule);
     }
 
-    static HostAddressTypes getInternalFacingBindHostAddressTypesFrom(
+    public static HostAddressTypes getInternalFacingBindHostAddressTypesFrom(
             final Settings settings) {
         HostAddressTypes hostAddressTypes = settings.getLastValue(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES);
@@ -246,7 +246,7 @@ public final class GeneralValueDerivationHelper {
         return getBindHostAddressTypesFrom(settings);
     }
 
-    static PortRanges getInternalFacingUdpPortRangesFrom(final Rule rule) {
+    public static PortRanges getInternalFacingUdpPortRangesFrom(final Rule rule) {
         PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
                 GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGE));
         if (!portRanges.toList().isEmpty()) {
@@ -255,7 +255,7 @@ public final class GeneralValueDerivationHelper {
         return getBindUdpPortRangesFrom(rule);
     }
 
-    static PortRanges getInternalFacingUdpPortRangesFrom(
+    public static PortRanges getInternalFacingUdpPortRangesFrom(
             final Settings settings) {
         PortRanges portRanges = settings.getLastValue(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGES);
@@ -265,7 +265,7 @@ public final class GeneralValueDerivationHelper {
         return getBindUdpPortRangesFrom(settings);
     }
 
-    static NetInterface getInternalFacingNetInterfaceFrom(final Rule rule) {
+    public static NetInterface getInternalFacingNetInterfaceFrom(final Rule rule) {
         NetInterface netInterface = rule.getLastRuleActionValue(
                 GeneralRuleActionSpecConstants.INTERNAL_FACING_NET_INTERFACE);
         if (netInterface != null) {
@@ -274,7 +274,7 @@ public final class GeneralValueDerivationHelper {
         return getNetInterfaceFrom(rule);
     }
 
-    static NetInterface getInternalFacingNetInterfaceFrom(
+    public static NetInterface getInternalFacingNetInterfaceFrom(
             final Settings settings) {
         NetInterface netInterface = settings.getLastValue(
                 GeneralSettingSpecConstants.INTERNAL_FACING_NET_INTERFACE);
@@ -284,7 +284,7 @@ public final class GeneralValueDerivationHelper {
         return getNetInterfaceFrom(settings);
     }
 
-    static SocketSettings getInternalFacingSocketSettingsFrom(
+    public static SocketSettings getInternalFacingSocketSettingsFrom(
             final Rule rule) {
         SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
                 rule.getRuleActionValues(
@@ -295,7 +295,7 @@ public final class GeneralValueDerivationHelper {
         return getSocketSettingsFrom(rule);
     }
 
-    static SocketSettings getInternalFacingSocketSettingsFrom(
+    public static SocketSettings getInternalFacingSocketSettingsFrom(
             final Settings settings) {
         SocketSettings socketSettings = settings.getLastValue(
                 GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS);

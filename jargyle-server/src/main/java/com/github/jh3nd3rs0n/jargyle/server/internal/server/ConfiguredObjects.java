@@ -4,7 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 
-final class ConfiguredWorkerProperties {
+final class ConfiguredObjects {
 	
 	private final DtlsDatagramSocketFactory clientFacingDtlsDatagramSocketFactory;
 	private final SslSocketFactory clientSslSocketFactory;
@@ -12,7 +12,7 @@ final class ConfiguredWorkerProperties {
 	private final Routes routes;
 	private final Rules rules;
 	
-	public ConfiguredWorkerProperties(
+	public ConfiguredObjects(
 			final DtlsDatagramSocketFactory clientFacingDtlsDatagramSockFactory,
 			final SslSocketFactory clientSslSockFactory,
 			final Configuration config,

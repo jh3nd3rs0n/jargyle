@@ -5,28 +5,28 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationsHelper;
 
-final class ConfiguredWorkerPropertiesProvider {
+final class ConfiguredObjectsProvider {
 
 	private final Configuration configuration;
-	private ConfiguredWorkerProperties configuredWorkerProperties;
+	private ConfiguredObjects configuredObjects;
 	private Configuration lastConfiguration;
 	private final ReentrantLock lock;
 	
-	public ConfiguredWorkerPropertiesProvider(final Configuration config) {
+	public ConfiguredObjectsProvider(final Configuration config) {
 		this.configuration = config;
-		this.configuredWorkerProperties = null;
+		this.configuredObjects = null;
 		this.lastConfiguration = null;
 		this.lock = new ReentrantLock();
 	}
 	
-	public ConfiguredWorkerProperties getConfiguredWorkerProperties() {
+	public ConfiguredObjects getConfiguredObjects() {
 		this.lock.lock();
 		try {
 			Configuration config = Configuration.newUnmodifiableInstance(
 					this.configuration);
 			if (!ConfigurationsHelper.equals(this.lastConfiguration, config)) {
-				this.configuredWorkerProperties =
-						new ConfiguredWorkerProperties(
+				this.configuredObjects =
+						new ConfiguredObjects(
 								ConfiguredDtlsDatagramSocketFactory.newInstance(
 										config),
 								ConfiguredSslSocketFactory.newInstance(config),
@@ -38,6 +38,6 @@ final class ConfiguredWorkerPropertiesProvider {
 		} finally {
 			this.lock.unlock();
 		}
-		return this.configuredWorkerProperties;
+		return this.configuredObjects;
 	}
 }

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.internal.server;
+package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
@@ -6,6 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.Settings;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleActionSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.GeneralValueDerivationHelper;
 
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * Helper class for deriving SOCKS5 specific values from {@code RuleAction}s
  * and {@code Settings}.
  */
-public final class Socks5ValueDerivationHelper {
+final class Socks5ValueDerivationHelper {
 
     /**
      * Prevents the construction of unnecessary instances.

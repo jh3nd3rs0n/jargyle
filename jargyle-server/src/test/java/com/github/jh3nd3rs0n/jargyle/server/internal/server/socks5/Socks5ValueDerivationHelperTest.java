@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.server.internal.server;
+package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;

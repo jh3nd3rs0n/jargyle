@@ -6,37 +6,42 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Routes;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.Worker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Socks5Worker extends Worker {
+public final class Socks5ConnectionHandler {
 
 	private InputStream clientInputStream;
-	private final Logger logger;
+	private final ServerEventLogger serverEventLogger;
+    private final Socks5ConnectionHandlerContext socks5ConnectionHandlerContext;
 	
-	public Socks5Worker(final Worker worker) {
-		super(worker);
+	public Socks5ConnectionHandler(
+            final Socks5ConnectionHandlerContext handlerContext) {
 		this.clientInputStream = null;
-		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.serverEventLogger = handlerContext.getServerEventLogger();
+        this.socks5ConnectionHandlerContext = handlerContext;
 	}
 
 	private boolean canAllowRequest() {
-		Rule applicableRule = this.getApplicableRule();
-		RuleContext ruleContext = this.getRuleContext();
+		Rule applicableRule =
+                this.socks5ConnectionHandlerContext.getApplicableRule();
+		RuleContext ruleContext =
+                this.socks5ConnectionHandlerContext.getRuleContext();
 		if (!this.hasRequestRuleCondition()) {
 			return true;
 		}
 		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
 				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
+			this.socks5ConnectionHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 			return false;
 		}
 		LogAction firewallActionLogAction =	
@@ -68,14 +73,17 @@ public class Socks5Worker extends Worker {
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
 			return true;
 		}
-		this.sendReply(
-				Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
+		this.socks5ConnectionHandlerContext.sendReply(
+				Reply.newFailureInstance(
+                        ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 		return false;
 	}
 	
 	private boolean canAllowRequestWithinLimit() {
-		Rule applicableRule = this.getApplicableRule();
-		RuleContext ruleContext = this.getRuleContext();
+		Rule applicableRule =
+                this.socks5ConnectionHandlerContext.getApplicableRule();
+		RuleContext ruleContext =
+                this.socks5ConnectionHandlerContext.getRuleContext();
 		NonNegativeIntegerLimit firewallActionAllowLimit =
 				applicableRule.getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
@@ -94,11 +102,13 @@ public class Socks5Worker extends Worker {
 									applicableRule,
 									ruleContext));
 				}
-				this.sendReply(
-						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
+				this.socks5ConnectionHandlerContext.sendReply(
+                        Reply.newFailureInstance(
+                                ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return false;
 			}
-			this.addBelowAllowLimitRule(applicableRule);
+			this.socks5ConnectionHandlerContext.addBelowAllowLimitRule(
+                    applicableRule);
 		}
 		return true;
 	}
@@ -107,13 +117,14 @@ public class Socks5Worker extends Worker {
 			final Method method) {
 		MethodSubNegotiator methodSubNegotiator =
 				MethodSubNegotiator.getInstance(method);
-		MethodSubNegotiationResults methodSubNegotiationResults = null;
+		MethodSubNegotiationResults methodSubNegotiationResults;
 		try {
 			methodSubNegotiationResults = methodSubNegotiator.subNegotiate(
-					this.getClientSocket(), this.getConfiguration());
+					this.socks5ConnectionHandlerContext.getClientSocket(),
+                    this.socks5ConnectionHandlerContext.getConfiguration());
 		} catch (MethodSubNegotiationException e) {
 			if (e.getCause() == null) {
-				this.logger.debug( 
+				this.serverEventLogger.debug(
 						ObjectLogMessageHelper.objectLogMessage(
 								this, 
 								"Unable to sub-negotiate with the client "
@@ -122,7 +133,7 @@ public class Socks5Worker extends Worker {
 						e);
 				return null;
 			}
-			this.logger.warn( 
+			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in sub-negotiating with the client using "
@@ -131,7 +142,7 @@ public class Socks5Worker extends Worker {
 					e);
 			return null;				
 		} catch (IOException e) {
-			this.logClientIoException(
+			this.serverEventLogger.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in sub-negotiating with the client using "
@@ -144,29 +155,29 @@ public class Socks5Worker extends Worker {
 	}
 	
 	private Address getDesiredDestinationAddressRedirect() {
-		return this.getApplicableRule().getLastRuleActionValue(
+		return this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS_REDIRECT);
 	}
 	
 	private Port getDesiredDestinationPortRedirect() {
-		return this.getApplicableRule().getLastRuleActionValue(
+		return this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT_REDIRECT);
 	}
 	
 	private LogAction getDesiredDestinationRedirectLogAction() {
-		return this.getApplicableRule().getLastRuleActionValue(
+		return this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_REDIRECT_LOG_ACTION);
 	}
 	
 	private Routes getRequestRoutes() {
-		Routes routes = this.getRoutes();
-		List<Route> rtes = this.getApplicableRule().getRuleActionValues(
+		Routes routes = this.socks5ConnectionHandlerContext.getRoutes();
+		List<Route> rtes = this.socks5ConnectionHandlerContext.getApplicableRule().getRuleActionValues(
 				GeneralRuleActionSpecConstants.SELECTABLE_ROUTE_ID)
 				.stream()
-				.map(rteId -> routes.get(rteId))
-				.filter(rte -> rte != null)
+				.map(routes::get)
+				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
-		if (rtes.size() > 0) {
+		if (!rtes.isEmpty()) {
 			return Routes.of(rtes);
 		}
 		return routes;
@@ -174,28 +185,76 @@ public class Socks5Worker extends Worker {
 	
 	private LogAction getRequestRouteSelectionLogAction() {
 		LogAction routeSelectionLogAction = 
-				this.getApplicableRule().getLastRuleActionValue(
+				this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 		if (routeSelectionLogAction != null) {
 			return routeSelectionLogAction;
 		}
-		return this.getSettings().getLastValue(
+		return this.socks5ConnectionHandlerContext.getSettings().getLastValue(
 				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 	}
 	
 	private SelectionStrategy getRequestRouteSelectionStrategy() {
 		SelectionStrategy routeSelectionStrategy =
-				this.getApplicableRule().getLastRuleActionValue(
+				this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.ROUTE_SELECTION_STRATEGY);
 		if (routeSelectionStrategy != null) {
 			return routeSelectionStrategy;
 		}
-		return this.getSettings().getLastValue(
+		return this.socks5ConnectionHandlerContext.getSettings().getLastValue(
 				GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
 	}
-	
+
+    public void handleSocks5Connection() throws IOException {
+        this.clientInputStream =
+                this.socks5ConnectionHandlerContext.getClientSocket().getInputStream();
+        Method method = this.negotiateMethod();
+        if (method == null) { return; }
+        MethodSubNegotiationResults methodSubNegotiationResults =
+                this.doMethodSubNegotiation(method);
+        if (methodSubNegotiationResults == null) { return; }
+        Socket socket = methodSubNegotiationResults.getSocket();
+        this.clientInputStream = socket.getInputStream();
+        this.socks5ConnectionHandlerContext.setClientSocket(socket);
+        Request request = this.newRequest();
+        if (request == null) { return; }
+        RuleContext ruleContext = this.newRequestRuleContext(
+                methodSubNegotiationResults,
+                request);
+        this.socks5ConnectionHandlerContext.setRuleContext(ruleContext);
+        Rule applicableRule =
+                this.socks5ConnectionHandlerContext.getRules().firstAppliesTo(
+                        this.socks5ConnectionHandlerContext.getRuleContext());
+        if (applicableRule == null) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "No applicable rule found based on the following "
+                                    + "context: %s",
+                            this.socks5ConnectionHandlerContext.getRuleContext()));
+            this.socks5ConnectionHandlerContext.sendReply(
+                    Reply.newFailureInstance(
+                            ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
+            return;
+        }
+        this.socks5ConnectionHandlerContext.setApplicableRule(applicableRule);
+        if (!this.canAllowRequest()) {
+            return;
+        }
+        request = this.redirectRequestIfSpecified(request);
+        Route selectedRoute = this.selectRequestRoute();
+        this.socks5ConnectionHandlerContext.setSelectedRoute(selectedRoute);
+        RequestHandlerFactory requestHandlerFactory =
+                RequestHandlerFactory.getInstance(request.getCommand());
+        RequestHandler requestHandler = requestHandlerFactory.newRequestHandler(
+                this.socks5ConnectionHandlerContext,
+                methodSubNegotiationResults,
+                request);
+        requestHandler.handleRequest();
+    }
+
 	private boolean hasRequestRuleCondition() {
-		Rule applicableRule = this.getApplicableRule();
+		Rule applicableRule = this.socks5ConnectionHandlerContext.getApplicableRule();
 		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_METHOD)) {
 			return true;
@@ -212,23 +271,20 @@ public class Socks5Worker extends Worker {
 				Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS)) {
 			return true;
 		}
-		if (applicableRule.hasRuleCondition(
-				Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT)) {
-			return true;
-		}
-		return false;
-	}
+        return applicableRule.hasRuleCondition(
+                Socks5RuleConditionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT);
+    }
 	
 	private Method negotiateMethod() {
 		InputStream in = new SequenceInputStream(
 				new ByteArrayInputStream(new byte[] { Version.V5.byteValue() }),
 				this.clientInputStream);
-		ClientMethodSelectionMessage cmsm = null;
+		ClientMethodSelectionMessage cmsm;
 		try {
 			cmsm = ClientMethodSelectionMessage.newInstanceFrom(
 					in);
 		} catch (IOException e) {
-			this.logClientIoException(
+			this.serverEventLogger.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in parsing the method selection message "
@@ -236,12 +292,13 @@ public class Socks5Worker extends Worker {
 					e);
 			return null;
 		}
-		this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
-				this, 
-				"Received %s", 
-				cmsm.toString()));
+		this.serverEventLogger.debug(
+                ObjectLogMessageHelper.objectLogMessage(
+                        this,
+                        "Received %s",
+                        cmsm.toString()));
 		Method method = null;
-		Methods methods = this.getSettings().getLastValue(
+		Methods methods = this.socks5ConnectionHandlerContext.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_METHODS);
 		for (Method meth : methods.toList()) {
 			if (cmsm.getMethods().contains(meth)) {
@@ -254,14 +311,15 @@ public class Socks5Worker extends Worker {
 		}
 		ServerMethodSelectionMessage smsm = 
 				ServerMethodSelectionMessage.newInstance(method);
-		this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
+		this.serverEventLogger.debug(ObjectLogMessageHelper.objectLogMessage(
 				this, 
 				"Sending %s", 
 				smsm.toString()));
 		try {
-			this.sendToClient(smsm.toByteArray());
+			this.socks5ConnectionHandlerContext.sendToClient(
+                    smsm.toByteArray());
 		} catch (IOException e) {
-			this.logClientIoException(
+			this.serverEventLogger.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, 
 							"Error in writing the method selection message to "
@@ -273,33 +331,35 @@ public class Socks5Worker extends Worker {
 	}
 	
 	private Request newRequest() {
-		Request request = null;
+		Request request;
 		try {
 			request = Request.newInstanceFrom(
 					this.clientInputStream);
 		} catch (AddressTypeNotSupportedException e) {
-			this.logger.debug( 
+			this.serverEventLogger.debug(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
-			this.sendReply(
-					Reply.newFailureInstance(ReplyCode.ADDRESS_TYPE_NOT_SUPPORTED));
+			this.socks5ConnectionHandlerContext.sendReply(
+					Reply.newFailureInstance(
+                            ReplyCode.ADDRESS_TYPE_NOT_SUPPORTED));
 			return null;
 		} catch (CommandNotSupportedException e) {
-			this.logger.debug( 
+			this.serverEventLogger.debug(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
-			this.sendReply(Reply.newFailureInstance(ReplyCode.COMMAND_NOT_SUPPORTED));
+			this.socks5ConnectionHandlerContext.sendReply(
+                    Reply.newFailureInstance(ReplyCode.COMMAND_NOT_SUPPORTED));
 			return null;
 		} catch (IOException e) {
-			this.logClientIoException(
+			this.serverEventLogger.logClientIoException(
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in parsing the SOCKS5 request"),
 					e);
 			return null;
 		}
-		this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
+		this.serverEventLogger.debug(ObjectLogMessageHelper.objectLogMessage(
 				this, 
 				"Received %s", 
 				request.toString()));
@@ -310,7 +370,7 @@ public class Socks5Worker extends Worker {
 			final MethodSubNegotiationResults methSubNegotiationResults, 
 			final Request req) {
 		RuleContext requestRuleContext = new RuleContext(
-				this.getRuleContext());
+				this.socks5ConnectionHandlerContext.getRuleContext());
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				methSubNegotiationResults.getMethod().toString());
@@ -352,63 +412,19 @@ public class Socks5Worker extends Worker {
 					this, 
 					"Redirecting desired destination based on the following "
 					+ "rule and context: rule: %s context: %s", 
-					this.getApplicableRule(),
-					this.getRuleContext()));
+					this.socks5ConnectionHandlerContext.getApplicableRule(),
+					this.socks5ConnectionHandlerContext.getRuleContext()));
 		}
 		return r;
 	}
-	
-	@Override
-	public void run() {
-		try {
-			this.clientInputStream = this.getClientSocket().getInputStream();
-			Method method = this.negotiateMethod();
-			if (method == null) { return; } 
-			MethodSubNegotiationResults methodSubNegotiationResults = 
-					this.doMethodSubNegotiation(method);
-			if (methodSubNegotiationResults == null) { return; }
-			Socket socket = methodSubNegotiationResults.getSocket();
-			this.clientInputStream = socket.getInputStream();
-			this.setClientSocket(socket);
-			Request request = this.newRequest();
-			if (request == null) { return; }
-			RuleContext ruleContext = this.newRequestRuleContext(
-					methodSubNegotiationResults,
-                    request);
-			this.setRuleContext(ruleContext);
-			Rule applicableRule = this.getRules().firstAppliesTo(
-					this.getRuleContext());
-			if (applicableRule == null) {
-				this.logger.warn(ObjectLogMessageHelper.objectLogMessage(
-						this, 
-						"No applicable rule found based on the following "
-						+ "context: %s",
-						this.getRuleContext()));				
-				this.sendReply(
-						Reply.newFailureInstance(ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
-				return;
-			}
-			this.setApplicableRule(applicableRule);			
-			if (!this.canAllowRequest()) {
-				return;
-			}
-			request = this.redirectRequestIfSpecified(request);
-			Route selectedRoute = this.selectRequestRoute();
-			this.setSelectedRoute(selectedRoute);
-			RequestWorkerFactory requestWorkerFactory =
-					RequestWorkerFactory.getInstance(request.getCommand());
-			RequestWorker requestWorker = requestWorkerFactory.newRequestWorker(
-					this, methodSubNegotiationResults, request);
-			requestWorker.run();
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
-	
+
 	private Route selectRequestRoute() {
-		Rule applicableRule = this.getApplicableRule();
-		RuleContext ruleContext = this.getRuleContext();
-		Route selectedRte = this.getSelectedRoute();
+		Rule applicableRule =
+                this.socks5ConnectionHandlerContext.getApplicableRule();
+		RuleContext ruleContext =
+                this.socks5ConnectionHandlerContext.getRuleContext();
+		Route selectedRte =
+                this.socks5ConnectionHandlerContext.getSelectedRoute();
 		if (!this.hasRequestRuleCondition()) {
 			return selectedRte;
 		}
@@ -426,7 +442,7 @@ public class Socks5Worker extends Worker {
 		LogAction rteSelectionLogAction = 
 				this.getRequestRouteSelectionLogAction();
 		selectedRte = rteSelectionStrategy.selectFrom(
-				rtes.toMap().values().stream().collect(Collectors.toList()));
+                new ArrayList<>(rtes.toMap().values()));
 		if (rteSelectionLogAction != null) {
 			rteSelectionLogAction.invoke(
 					ObjectLogMessageHelper.objectLogMessage(
@@ -440,22 +456,13 @@ public class Socks5Worker extends Worker {
 		}
 		return selectedRte;
 	}
-	
-	protected final boolean sendReply(final Reply rep) {
-		this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
-				this, 
-				"Sending %s",
-				rep.toString()));		
-		try {
-			this.sendToClient(rep.toByteArray());
-		} catch (IOException e) {
-			this.logClientIoException(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in writing SOCKS5 reply"), 
-					e);
-			return false;
-		}
-		return true;
-	}
-	
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() +
+                " [socks5ConnectionHandlerContext=" +
+                this.socks5ConnectionHandlerContext +
+                "]";
+    }
+
 }

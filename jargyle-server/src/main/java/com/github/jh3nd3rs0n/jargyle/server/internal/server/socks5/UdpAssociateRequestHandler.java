@@ -28,6 +28,7 @@ final class UdpAssociateRequestHandler extends RequestHandler {
 	public UdpAssociateRequestHandler(
             final RequestHandlerContext handlerContext) {
         this.requestHandlerContext = handlerContext;
+        this.requestHandlerContext.setLogMessageAuthor(this);
 		this.serverEventLogger = handlerContext.getServerEventLogger();
 	}
 	

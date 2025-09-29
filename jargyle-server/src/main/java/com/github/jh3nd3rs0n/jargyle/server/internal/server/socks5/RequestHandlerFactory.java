@@ -4,6 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,27 +14,14 @@ abstract class RequestHandlerFactory {
     private static final Map<Command, RequestHandlerFactory> REQUEST_HANDLER_FACTORY_MAP;
 
     static {
-        REQUEST_HANDLER_FACTORY_MAP = new HashMap<>();
-        RequestHandlerFactory bindRequestHandlerFactory =
-                new BindRequestHandlerFactory();
-        REQUEST_HANDLER_FACTORY_MAP.put(
-                bindRequestHandlerFactory.getCommand(),
-                bindRequestHandlerFactory);
-        RequestHandlerFactory connectRequestHandlerFactory =
-                new ConnectRequestHandlerFactory();
-        REQUEST_HANDLER_FACTORY_MAP.put(
-                connectRequestHandlerFactory.getCommand(),
-                connectRequestHandlerFactory);
-        RequestHandlerFactory resolveRequestHandlerFactory =
-                new ResolveRequestHandlerFactory();
-        REQUEST_HANDLER_FACTORY_MAP.put(
-                resolveRequestHandlerFactory.getCommand(),
-                resolveRequestHandlerFactory);
-        RequestHandlerFactory udpAssociateRequestHandlerFactory =
-                new UdpAssociateRequestHandlerFactory();
-        REQUEST_HANDLER_FACTORY_MAP.put(
-                udpAssociateRequestHandlerFactory.getCommand(),
-                udpAssociateRequestHandlerFactory);
+        RequestHandlerFactories requestHandlerFactories =
+                new RequestHandlerFactories();
+        requestHandlerFactories.add(new BindRequestHandlerFactory());
+        requestHandlerFactories.add(new ConnectRequestHandlerFactory());
+        requestHandlerFactories.add(new ResolveRequestHandlerFactory());
+        requestHandlerFactories.add(new UdpAssociateRequestHandlerFactory());
+        REQUEST_HANDLER_FACTORY_MAP = new HashMap<>(
+                requestHandlerFactories.toMap());
     }
 
     private final Command command;
@@ -107,6 +95,24 @@ abstract class RequestHandlerFactory {
                             methSubNegotiationResults, 
                             req, 
                             ServerEventLogger.newInstance(ConnectRequestHandler.class))));
+        }
+
+    }
+
+    private static final class RequestHandlerFactories {
+
+        private final Map<Command, RequestHandlerFactory> requestHandlerFactoryMap;
+
+        public RequestHandlerFactories() {
+            this.requestHandlerFactoryMap = new HashMap<>();
+        }
+
+        public void add(final RequestHandlerFactory value) {
+            this.requestHandlerFactoryMap.put(value.getCommand(), value);
+        }
+
+        public Map<Command, RequestHandlerFactory> toMap() {
+            return Collections.unmodifiableMap(this.requestHandlerFactoryMap);
         }
 
     }

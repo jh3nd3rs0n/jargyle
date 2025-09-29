@@ -13,23 +13,21 @@ final class ConnectionHandlerContext {
 
     private Rule applicableRule;
     private final Set<Rule> belowAllowLimitRules;
-    private Socket clientSocket;
     private final ConfiguredObjects configuredObjects;
     private RuleContext ruleContext;
     private Route selectedRoute;
     private final ServerEventLogger serverEventLogger;
+    private final WorkerContext workerContext;
 
     public ConnectionHandlerContext(
-            final Socket clientSock,
-            final ConfiguredObjects configuredObjs,
-            final ServerEventLogger logger) {
+            final WorkerContext context, final ServerEventLogger logger) {
         this.applicableRule = null;
         this.belowAllowLimitRules = new HashSet<>();
-        this.clientSocket = clientSock;
-        this.configuredObjects = configuredObjs;
+        this.configuredObjects = context.getConfiguredObjects();
         this.ruleContext = null;
         this.selectedRoute = null;
         this.serverEventLogger = logger;
+        this.workerContext = context;
     }
 
     public void addBelowAllowLimitRule(final Rule belowAllowLimitRl) {
@@ -83,7 +81,7 @@ final class ConnectionHandlerContext {
     }
 
     public Socket getClientSocket() {
-        return this.clientSocket;
+        return this.workerContext.getClientSocket();
     }
 
     public Configuration getConfiguration() {
@@ -119,7 +117,7 @@ final class ConnectionHandlerContext {
     }
 
     public void setClientSocket(final Socket clientSock) {
-        this.clientSocket = clientSock;
+        this.workerContext.setClientSocket(clientSock);
     }
 
     public void setRuleContext(final RuleContext rlContext) {
@@ -133,8 +131,8 @@ final class ConnectionHandlerContext {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [clientSocket=" +
-                this.clientSocket +
+                " [getClientSocket()=" +
+                this.getClientSocket() +
                 "]";
     }
 

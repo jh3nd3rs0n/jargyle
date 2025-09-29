@@ -11,12 +11,14 @@ import java.net.Socket;
 
 public final class Socks5ConnectionHandlerContext {
 
+    private Object logMessageAuthor;
     private final ServerEventLogger serverEventLogger;
     private final SocksConnectionHandlerContext socksConnectionHandlerContext;
 
     public Socks5ConnectionHandlerContext(
             final SocksConnectionHandlerContext handlerContext,
             final ServerEventLogger logger) {
+        this.logMessageAuthor = null;
         this.serverEventLogger = logger;
         this.socksConnectionHandlerContext = handlerContext;
     }
@@ -39,6 +41,10 @@ public final class Socks5ConnectionHandlerContext {
 
     public Configuration getConfiguration() {
         return this.socksConnectionHandlerContext.getConfiguration();
+    }
+
+    public Object getLogMessageAuthor() {
+        return this.logMessageAuthor;
     }
 
     public Routes getRoutes() {
@@ -79,7 +85,7 @@ public final class Socks5ConnectionHandlerContext {
 
     public boolean sendReply(final Reply rep) {
         this.serverEventLogger.debug(ObjectLogMessageHelper.objectLogMessage(
-                this,
+                this.getLogMessageAuthor(),
                 "Sending %s",
                 rep.toString()));
         try {
@@ -87,7 +93,8 @@ public final class Socks5ConnectionHandlerContext {
         } catch (IOException e) {
             this.serverEventLogger.logClientIoException(
                     ObjectLogMessageHelper.objectLogMessage(
-                            this, "Error in writing SOCKS5 reply"),
+                            this.getLogMessageAuthor(),
+                            "Error in writing SOCKS5 reply"),
                     e);
             return false;
         }
@@ -104,6 +111,10 @@ public final class Socks5ConnectionHandlerContext {
 
     public void setClientSocket(final Socket clientSock) {
         this.socksConnectionHandlerContext.setClientSocket(clientSock);
+    }
+
+    public void setLogMessageAuthor(final Object obj) {
+        this.logMessageAuthor = obj;
     }
 
     public void setRuleContext(final RuleContext rlContext) {

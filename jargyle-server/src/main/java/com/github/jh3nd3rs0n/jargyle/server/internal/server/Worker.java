@@ -9,19 +9,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 final class Worker implements Runnable {
 	
-	private final Socket clientSocket;
-    private final ConfiguredObjectsProvider configuredObjectsProvider;
-	private final AtomicInteger currentWorkerCount;
     private final Logger logger;
+    private final WorkerContext workerContext;
 
-	public Worker(
-			final Socket clientSock, 
-			final AtomicInteger workerCount,
-			final ConfiguredObjectsProvider configuredObjsProvider) {
-		this.clientSocket = clientSock;
-        this.configuredObjectsProvider = configuredObjsProvider;
-		this.currentWorkerCount = workerCount;		
+	public Worker(final WorkerContext context) {
 		this.logger = LoggerFactory.getLogger(Worker.class);
+        this.workerContext = context;
 	}
 
 	public void run() {
@@ -29,12 +22,11 @@ final class Worker implements Runnable {
         this.logger.debug(ObjectLogMessageHelper.objectLogMessage(
                 this,
                 "Started. Current Worker count: %s",
-                this.currentWorkerCount.incrementAndGet()));
+                this.workerContext.incrementAndGetCurrentWorkerCount()));
 		try {
             ConnectionHandler connectionHandler = new ConnectionHandler(
                     new ConnectionHandlerContext(
-                            this.clientSocket,
-                            this.configuredObjectsProvider.getConfiguredObjects(),
+                            this.workerContext,
                             ServerEventLogger.newInstance(ConnectionHandler.class)));
             connectionHandler.handleConnection();
 		} catch (Throwable t) {
@@ -47,15 +39,15 @@ final class Worker implements Runnable {
 					this, 
 					"Finished in %s ms. Current Worker count: %s",
 					System.currentTimeMillis() - startTime,
-					this.currentWorkerCount.decrementAndGet()));
+					this.workerContext.decrementAndGetCurrentWorkerCount()));
 		}
 	}
 
 	@Override
 	public String toString() {
         return this.getClass().getSimpleName() +
-                " [clientSocket=" +
-                this.clientSocket +
+                " [workerContext=" +
+                this.workerContext +
                 "]";
 	}
 

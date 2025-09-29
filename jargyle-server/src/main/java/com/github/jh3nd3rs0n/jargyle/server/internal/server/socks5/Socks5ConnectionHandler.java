@@ -26,6 +26,7 @@ public final class Socks5ConnectionHandler {
 		this.clientInputStream = null;
 		this.serverEventLogger = handlerContext.getServerEventLogger();
         this.socks5ConnectionHandlerContext = handlerContext;
+        this.socks5ConnectionHandlerContext.setLogMessageAuthor(this);
 	}
 
 	private boolean canAllowRequest() {

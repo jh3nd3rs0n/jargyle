@@ -37,10 +37,10 @@ public final class Listener implements Runnable {
 			while (true) {
 				try {
 					Socket clientSocket = this.serverSocket.accept();
-					executor.execute(new Worker(
+					executor.execute(new Worker(new WorkerContext(
 							clientSocket,
 							this.currentWorkerCount,
-							this.configuredObjectsProvider));
+							this.configuredObjectsProvider)));
 				} catch (SocketTimeoutException e) {
 					this.logger.error(
 							ObjectLogMessageHelper.objectLogMessage(

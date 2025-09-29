@@ -27,6 +27,7 @@ final class BindRequestHandler extends RequestHandler {
 			final TcpBasedRequestHandlerContext handlerContext) {
 		this.serverEventLogger = handlerContext.getServerEventLogger();
         this.tcpBasedRequestHandlerContext = handlerContext;
+        this.tcpBasedRequestHandlerContext.setLogMessageAuthor(this);
 	}
 	
 	private Socket acceptInboundSocketFrom(final ServerSocket listenSocket) {

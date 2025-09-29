@@ -57,7 +57,7 @@ final class RequestHandlerContext {
             if (firewallActionLogAction != null) {
                 firewallActionLogAction.invoke(
                         ObjectLogMessageHelper.objectLogMessage(
-                                this,
+                                this.getLogMessageAuthor(),
                                 "SOCKS5 reply allowed based on the following "
                                         + "rule and context: rule: %s context: %s",
                                 applicableRule,
@@ -67,7 +67,7 @@ final class RequestHandlerContext {
                 && firewallActionLogAction != null) {
             firewallActionLogAction.invoke(
                     ObjectLogMessageHelper.objectLogMessage(
-                            this,
+                            this.getLogMessageAuthor(),
                             "SOCKS5 reply denied based on the following "
                                     + "rule and context: rule: %s context: %s",
                             applicableRule,
@@ -95,7 +95,7 @@ final class RequestHandlerContext {
                 if (firewallActionAllowLimitReachedLogAction != null) {
                     firewallActionAllowLimitReachedLogAction.invoke(
                             ObjectLogMessageHelper.objectLogMessage(
-                                    this,
+                                    this.getLogMessageAuthor(),
                                     "Allowed limit has been reached based on "
                                             + "the following rule and context: rule: "
                                             + "%s context: %s",
@@ -129,6 +129,10 @@ final class RequestHandlerContext {
 
     public Port getDesiredDestinationPort() {
         return this.request.getDesiredDestinationPort();
+    }
+
+    private Object getLogMessageAuthor() {
+        return this.socks5ConnectionHandlerContext.getLogMessageAuthor();
     }
 
     public MethodSubNegotiationResults getMethodSubNegotiationResults() {
@@ -175,6 +179,10 @@ final class RequestHandlerContext {
 
     public void setApplicableRule(final Rule applicableRl) {
         this.socks5ConnectionHandlerContext.setApplicableRule(applicableRl);
+    }
+
+    public void setLogMessageAuthor(final Object obj) {
+        this.socks5ConnectionHandlerContext.setLogMessageAuthor(obj);
     }
 
     public void setRuleContext(final RuleContext rlContext) {

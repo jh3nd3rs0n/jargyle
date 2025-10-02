@@ -4,6 +4,7 @@ import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.server.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.LogMessageSource;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Routes;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public final class Socks5ConnectionHandler {
+public final class Socks5ConnectionHandler implements LogMessageSource {
 
 	private InputStream clientInputStream;
 	private final ServerEventLogger serverEventLogger;
@@ -26,7 +27,7 @@ public final class Socks5ConnectionHandler {
 		this.clientInputStream = null;
 		this.serverEventLogger = handlerContext.getServerEventLogger();
         this.socks5ConnectionHandlerContext = handlerContext;
-        this.socks5ConnectionHandlerContext.setLogMessageAuthor(this);
+        this.socks5ConnectionHandlerContext.setLogMessageSource(this);
 	}
 
 	private boolean canAllowRequest() {

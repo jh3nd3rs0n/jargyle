@@ -30,7 +30,7 @@ final class ConnectRequestHandler extends RequestHandler {
 			final TcpBasedRequestHandlerContext handlerContext) {
 		this.serverEventLogger = handlerContext.getServerEventLogger();
         this.tcpBasedRequestHandlerContext = handlerContext;
-        this.tcpBasedRequestHandlerContext.setLogMessageAuthor(this);
+        this.tcpBasedRequestHandlerContext.setLogMessageSource(this);
 	}
 	
 	private boolean canPrepareTargetFacingSocket() {

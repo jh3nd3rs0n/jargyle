@@ -57,7 +57,7 @@ final class RequestHandlerContext {
             if (firewallActionLogAction != null) {
                 firewallActionLogAction.invoke(
                         ObjectLogMessageHelper.objectLogMessage(
-                                this.getLogMessageAuthor(),
+                                this.getLogMessageSource(),
                                 "SOCKS5 reply allowed based on the following "
                                         + "rule and context: rule: %s context: %s",
                                 applicableRule,
@@ -67,7 +67,7 @@ final class RequestHandlerContext {
                 && firewallActionLogAction != null) {
             firewallActionLogAction.invoke(
                     ObjectLogMessageHelper.objectLogMessage(
-                            this.getLogMessageAuthor(),
+                            this.getLogMessageSource(),
                             "SOCKS5 reply denied based on the following "
                                     + "rule and context: rule: %s context: %s",
                             applicableRule,
@@ -95,7 +95,7 @@ final class RequestHandlerContext {
                 if (firewallActionAllowLimitReachedLogAction != null) {
                     firewallActionAllowLimitReachedLogAction.invoke(
                             ObjectLogMessageHelper.objectLogMessage(
-                                    this.getLogMessageAuthor(),
+                                    this.getLogMessageSource(),
                                     "Allowed limit has been reached based on "
                                             + "the following rule and context: rule: "
                                             + "%s context: %s",
@@ -131,8 +131,8 @@ final class RequestHandlerContext {
         return this.request.getDesiredDestinationPort();
     }
 
-    private Object getLogMessageAuthor() {
-        return this.socks5ConnectionHandlerContext.getLogMessageAuthor();
+    private LogMessageSource getLogMessageSource() {
+        return this.socks5ConnectionHandlerContext.getLogMessageSource();
     }
 
     public MethodSubNegotiationResults getMethodSubNegotiationResults() {
@@ -181,8 +181,8 @@ final class RequestHandlerContext {
         this.socks5ConnectionHandlerContext.setApplicableRule(applicableRl);
     }
 
-    public void setLogMessageAuthor(final Object obj) {
-        this.socks5ConnectionHandlerContext.setLogMessageAuthor(obj);
+    public void setLogMessageSource(final LogMessageSource source) {
+        this.socks5ConnectionHandlerContext.setLogMessageSource(source);
     }
 
     public void setRuleContext(final RuleContext rlContext) {

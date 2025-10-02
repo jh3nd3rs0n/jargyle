@@ -11,14 +11,14 @@ import java.net.Socket;
 
 public final class Socks5ConnectionHandlerContext {
 
-    private Object logMessageAuthor;
+    private LogMessageSource logMessageSource;
     private final ServerEventLogger serverEventLogger;
     private final SocksConnectionHandlerContext socksConnectionHandlerContext;
 
     public Socks5ConnectionHandlerContext(
             final SocksConnectionHandlerContext handlerContext,
             final ServerEventLogger logger) {
-        this.logMessageAuthor = null;
+        this.logMessageSource = null;
         this.serverEventLogger = logger;
         this.socksConnectionHandlerContext = handlerContext;
     }
@@ -43,8 +43,8 @@ public final class Socks5ConnectionHandlerContext {
         return this.socksConnectionHandlerContext.getConfiguration();
     }
 
-    public Object getLogMessageAuthor() {
-        return this.logMessageAuthor;
+    public LogMessageSource getLogMessageSource() {
+        return this.logMessageSource;
     }
 
     public Routes getRoutes() {
@@ -85,7 +85,7 @@ public final class Socks5ConnectionHandlerContext {
 
     public boolean sendReply(final Reply rep) {
         this.serverEventLogger.debug(ObjectLogMessageHelper.objectLogMessage(
-                this.getLogMessageAuthor(),
+                this.getLogMessageSource(),
                 "Sending %s",
                 rep.toString()));
         try {
@@ -93,7 +93,7 @@ public final class Socks5ConnectionHandlerContext {
         } catch (IOException e) {
             this.serverEventLogger.logClientIoException(
                     ObjectLogMessageHelper.objectLogMessage(
-                            this.getLogMessageAuthor(),
+                            this.getLogMessageSource(),
                             "Error in writing SOCKS5 reply"),
                     e);
             return false;
@@ -113,8 +113,8 @@ public final class Socks5ConnectionHandlerContext {
         this.socksConnectionHandlerContext.setClientSocket(clientSock);
     }
 
-    public void setLogMessageAuthor(final Object obj) {
-        this.logMessageAuthor = obj;
+    public void setLogMessageSource(final LogMessageSource source) {
+        this.logMessageSource = source;
     }
 
     public void setRuleContext(final RuleContext rlContext) {

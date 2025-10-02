@@ -95,8 +95,8 @@ final class TcpBasedRequestHandlerContext {
         this.requestHandlerContext.setApplicableRule(applicableRl);
     }
 
-    public void setLogMessageAuthor(final Object obj) {
-        this.requestHandlerContext.setLogMessageAuthor(obj);
+    public void setLogMessageSource(final LogMessageSource source) {
+        this.requestHandlerContext.setLogMessageSource(source);
     }
 
     public void setRuleContext(final RuleContext rlContext) {

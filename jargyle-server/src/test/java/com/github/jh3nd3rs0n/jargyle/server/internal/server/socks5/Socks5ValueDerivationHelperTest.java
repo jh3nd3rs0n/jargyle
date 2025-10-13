@@ -28,10 +28,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -44,10 +46,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -60,10 +64,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -76,10 +82,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -537,10 +545,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -553,10 +563,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -569,10 +581,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -585,10 +599,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -1534,10 +1550,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -1550,10 +1568,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -1566,10 +1586,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -1582,10 +1604,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2043,10 +2067,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2059,10 +2085,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2075,10 +2103,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2091,10 +2121,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2552,10 +2584,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2568,10 +2602,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2584,10 +2620,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -2600,10 +2638,12 @@ public class Socks5ValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(

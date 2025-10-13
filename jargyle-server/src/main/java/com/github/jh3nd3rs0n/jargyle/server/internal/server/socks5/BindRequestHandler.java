@@ -19,15 +19,14 @@ import java.net.*;
 import java.util.Iterator;
 
 final class BindRequestHandler extends RequestHandler {
-	
+
+    private final TcpBasedRequestHandlerContext context;
 	private final ServerEventLogger serverEventLogger;
-    private final TcpBasedRequestHandlerContext tcpBasedRequestHandlerContext;
 		
-	public BindRequestHandler(
-			final TcpBasedRequestHandlerContext handlerContext) {
-		this.serverEventLogger = handlerContext.getServerEventLogger();
-        this.tcpBasedRequestHandlerContext = handlerContext;
-        this.tcpBasedRequestHandlerContext.setLogMessageSource(this);
+	public BindRequestHandler(final TcpBasedRequestHandlerContext cntxt) {
+        this.context = cntxt;
+        this.context.setLogMessageSource(this);
+		this.serverEventLogger = cntxt.getServerEventLogger();
 	}
 	
 	private Socket acceptInboundSocketFrom(final ServerSocket listenSocket) {
@@ -40,7 +39,7 @@ final class BindRequestHandler extends RequestHandler {
 							this, 
 							"Error in waiting for an inbound socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
@@ -50,16 +49,16 @@ final class BindRequestHandler extends RequestHandler {
 	
 	private boolean canAllowSecondReply() {
 		Rule applicableRule =
-                this.tcpBasedRequestHandlerContext.getApplicableRule();
+                this.context.getApplicableRule();
 		RuleContext ruleContext =
-                this.tcpBasedRequestHandlerContext.getRuleContext();
+                this.context.getRuleContext();
 		if (!this.hasSecondReplyRuleCondition()) {
 			return true;
 		}
 		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
 				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 			return false;
@@ -95,7 +94,7 @@ final class BindRequestHandler extends RequestHandler {
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
 			return true;
 		}
-		this.tcpBasedRequestHandlerContext.sendReply(
+		this.context.sendReply(
 				Reply.newFailureInstance(
                         ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 		return false;
@@ -103,9 +102,9 @@ final class BindRequestHandler extends RequestHandler {
 	
 	private boolean canAllowSecondReplyWithinLimit() {
 		Rule applicableRule =
-                this.tcpBasedRequestHandlerContext.getApplicableRule();
+                this.context.getApplicableRule();
 		RuleContext ruleContext =
-                this.tcpBasedRequestHandlerContext.getRuleContext();
+                this.context.getRuleContext();
 		NonNegativeIntegerLimit firewallActionAllowLimit =
 				applicableRule.getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
@@ -124,12 +123,12 @@ final class BindRequestHandler extends RequestHandler {
 									applicableRule,
 									ruleContext));
 				}
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
 						Reply.newFailureInstance(
                                 ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return false;				
 			}
-			this.tcpBasedRequestHandlerContext.addBelowAllowLimitRule(
+			this.context.addBelowAllowLimitRule(
                     applicableRule);
 		}
 		return true;
@@ -144,7 +143,7 @@ final class BindRequestHandler extends RequestHandler {
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the inbound socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
@@ -161,7 +160,7 @@ final class BindRequestHandler extends RequestHandler {
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the listen socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
@@ -171,45 +170,45 @@ final class BindRequestHandler extends RequestHandler {
 
 	private SocketSettings getInboundSocketSettings() {
 		return Socks5ValueDerivationHelper.getSocks5OnBindRequestInboundSocketSettingsFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 
 	private Host getListenBindHost() {
 		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 	
 	private PortRanges getListenBindPortRanges() {
 		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindPortRangesFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 	
 	private SocketSettings getListenSocketSettings() {
 		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenSocketSettingsFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 	
 	private int getRelayBufferSize() {
 		return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayBufferSizeFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings()).intValue();
+				this.context.getApplicableRule(),
+                this.context.getSettings()).intValue();
 	}
 	
 	private int getRelayIdleTimeout() {
 		return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayIdleTimeoutFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings()).intValue();
+				this.context.getApplicableRule(),
+                this.context.getSettings()).intValue();
 	}
 	
 	private Integer getRelayInboundBandwidthLimit() {
 		PositiveInteger relayInboundBandwidthLimit =
 				Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayInboundBandwidthLimitFrom(
-						this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                        this.tcpBasedRequestHandlerContext.getSettings());
+						this.context.getApplicableRule(),
+                        this.context.getSettings());
 		if (relayInboundBandwidthLimit != null) {
 			return relayInboundBandwidthLimit.intValue();
 		}
@@ -219,8 +218,8 @@ final class BindRequestHandler extends RequestHandler {
 	private Integer getRelayOutboundBandwidthLimit() {
 		PositiveInteger relayOutboundBandwidthLimit =
 				Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(
-						this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                        this.tcpBasedRequestHandlerContext.getSettings());
+						this.context.getApplicableRule(),
+                        this.context.getSettings());
 		if (relayOutboundBandwidthLimit != null) {
 			return relayOutboundBandwidthLimit.intValue();
 		}
@@ -229,7 +228,7 @@ final class BindRequestHandler extends RequestHandler {
 	
 	private boolean hasSecondReplyRuleCondition() {
 		Rule applicableRule =
-                this.tcpBasedRequestHandlerContext.getApplicableRule();
+                this.context.getApplicableRule();
 		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
 			return true;
@@ -244,7 +243,7 @@ final class BindRequestHandler extends RequestHandler {
         Reply rep;
         Socket inboundSocket = null;
         Socket clientSocket =
-                this.tcpBasedRequestHandlerContext.getClientSocket();
+                this.context.getClientSocket();
         Reply secondRep;
         try {
             listenSocket = this.newListenSocket();
@@ -258,28 +257,28 @@ final class BindRequestHandler extends RequestHandler {
                     Address.newInstanceFrom(serverBoundAddress),
                     Port.valueOf(serverBoundPort));
             RuleContext ruleContext =
-                    this.tcpBasedRequestHandlerContext.newReplyRuleContext(
+                    this.context.newReplyRuleContext(
                             rep);
-            this.tcpBasedRequestHandlerContext.setRuleContext(ruleContext);
+            this.context.setRuleContext(ruleContext);
             Rule applicableRule =
-                    this.tcpBasedRequestHandlerContext.getRules().firstAppliesTo(
-                            this.tcpBasedRequestHandlerContext.getRuleContext());
+                    this.context.getRules().firstAppliesTo(
+                            this.context.getRuleContext());
             if (applicableRule == null) {
                 this.serverEventLogger.warn(ObjectLogMessageHelper.objectLogMessage(
                         this,
                         "No applicable rule found based on the following "
                                 + "context: %s",
-                        this.tcpBasedRequestHandlerContext.getRuleContext()));
-                this.tcpBasedRequestHandlerContext.sendReply(
+                        this.context.getRuleContext()));
+                this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
                 return;
             }
-            this.tcpBasedRequestHandlerContext.setApplicableRule(applicableRule);
-            if (!this.tcpBasedRequestHandlerContext.canAllowReply()) {
+            this.context.setApplicableRule(applicableRule);
+            if (!this.context.canAllowReply()) {
                 return;
             }
-            if (!this.tcpBasedRequestHandlerContext.sendReply(rep)) {
+            if (!this.context.sendReply(rep)) {
                 return;
             }
             inboundSocket = this.acceptInboundSocketFrom(listenSocket);
@@ -290,7 +289,7 @@ final class BindRequestHandler extends RequestHandler {
                         ObjectLogMessageHelper.objectLogMessage(
                                 this, "Error in closing the listen socket"),
                         e);
-                this.tcpBasedRequestHandlerContext.sendReply(
+                this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
                 return;
@@ -309,27 +308,27 @@ final class BindRequestHandler extends RequestHandler {
                     Port.valueOf(serverBoundPort));
             ruleContext = this.newSecondReplyRuleContext(
                     secondRep);
-            this.tcpBasedRequestHandlerContext.setRuleContext(ruleContext);
+            this.context.setRuleContext(ruleContext);
             applicableRule =
-                    this.tcpBasedRequestHandlerContext.getRules().firstAppliesTo(
-                            this.tcpBasedRequestHandlerContext.getRuleContext());
+                    this.context.getRules().firstAppliesTo(
+                            this.context.getRuleContext());
             if (applicableRule == null) {
                 this.serverEventLogger.warn(ObjectLogMessageHelper.objectLogMessage(
                         this,
                         "No applicable rule found based on the following "
                                 + "context: %s",
-                        this.tcpBasedRequestHandlerContext.getRuleContext()));
-                this.tcpBasedRequestHandlerContext.sendReply(
+                        this.context.getRuleContext()));
+                this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
                 return;
             }
-            this.tcpBasedRequestHandlerContext.setApplicableRule(
+            this.context.setApplicableRule(
                     applicableRule);
             if (!this.canAllowSecondReply()) {
                 return;
             }
-            if (!this.tcpBasedRequestHandlerContext.sendReply(secondRep)) {
+            if (!this.context.sendReply(secondRep)) {
                 return;
             }
             inboundSocket = this.limitInboundSocket(inboundSocket);
@@ -340,7 +339,7 @@ final class BindRequestHandler extends RequestHandler {
             builder.idleTimeout(this.getRelayIdleTimeout());
             Relay relay = builder.build();
             try {
-                this.tcpBasedRequestHandlerContext.passData(relay);
+                this.context.passData(relay);
             } catch (IOException e) {
                 this.serverEventLogger.warn(
                         ObjectLogMessageHelper.objectLogMessage(
@@ -378,7 +377,7 @@ final class BindRequestHandler extends RequestHandler {
 	private ServerSocket newListenSocket() {
 		InetAddress desiredDestinationInetAddress =
 				this.resolveDesiredDestinationAddress(
-						this.tcpBasedRequestHandlerContext.getDesiredDestinationAddress().toString());
+						this.context.getDesiredDestinationAddress().toString());
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
@@ -395,14 +394,14 @@ final class BindRequestHandler extends RequestHandler {
 								"Unable to bind the listen socket to the "
 								+ "following host: %s",
 								listenBindHost));
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
 						Reply.newFailureInstance(
                                 ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 				return null;
 			}
 		}
 		int desiredDestinationPort =
-                this.tcpBasedRequestHandlerContext.getDesiredDestinationPort().intValue();
+                this.context.getDesiredDestinationPort().intValue();
 		PortRanges bindPortRanges = (desiredDestinationPort == 0) ?
 				this.getListenBindPortRanges() : PortRanges.of(
 						PortRange.of(Port.valueOf(
@@ -435,7 +434,7 @@ final class BindRequestHandler extends RequestHandler {
 							+ "following address and port (range(s)): %s %s",
 							bindInetAddress,
 							bindPortRanges));
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
@@ -447,7 +446,7 @@ final class BindRequestHandler extends RequestHandler {
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
 		NetObjectFactory netObjectFactory =
-				this.tcpBasedRequestHandlerContext.getSelectedRoute().getNetObjectFactory();
+				this.context.getSelectedRoute().getNetObjectFactory();
 		ServerSocket listenSocket;
 		try {
 			listenSocket = netObjectFactory.newServerSocket();
@@ -457,7 +456,7 @@ final class BindRequestHandler extends RequestHandler {
 							this, 
 							"Error in creating the listen socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
@@ -494,7 +493,7 @@ final class BindRequestHandler extends RequestHandler {
 							this, 
 							"Error in binding the listen socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			try {
@@ -510,7 +509,7 @@ final class BindRequestHandler extends RequestHandler {
 	private RuleContext newSecondReplyRuleContext(
 			final Reply secondRep) {
 		RuleContext secondReplyRuleContext = new RuleContext(
-				this.tcpBasedRequestHandlerContext.getRuleContext());
+				this.context.getRuleContext());
 		secondReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS,
 				secondRep.getServerBoundAddress().toString());
@@ -523,7 +522,7 @@ final class BindRequestHandler extends RequestHandler {
 	private InetAddress resolveDesiredDestinationAddress(
 			final String desiredDestinationAddress) {
 		NetObjectFactory netObjectFactory =
-				this.tcpBasedRequestHandlerContext.getSelectedRoute().getNetObjectFactory();
+				this.context.getSelectedRoute().getNetObjectFactory();
 		HostResolver hostResolver =	netObjectFactory.newHostResolver();
 		InetAddress desiredDestinationInetAddress;
 		try {
@@ -537,7 +536,7 @@ final class BindRequestHandler extends RequestHandler {
 							+ "address for the listen socket: %s",
 							desiredDestinationAddress), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		} catch (IOException e) {
@@ -550,7 +549,7 @@ final class BindRequestHandler extends RequestHandler {
 								+ "address for the listen socket: %s",
 								desiredDestinationAddress), 
 						e);
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
                         Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return null;				
 			}
@@ -561,7 +560,7 @@ final class BindRequestHandler extends RequestHandler {
 							+ "address for the listen socket: %s",
 							desiredDestinationAddress), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		}
@@ -571,8 +570,8 @@ final class BindRequestHandler extends RequestHandler {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [tcpBasedRequestHandlerContext=" +
-                this.tcpBasedRequestHandlerContext +
+                " [context=" +
+                this.context +
                 "]";
     }
 

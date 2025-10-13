@@ -17,23 +17,22 @@ final class ConnectionHandler {
 
     private Rule applicableRule;
     private final SslSocketFactory clientSslSocketFactory;
-    private final ConnectionHandlerContext connectionHandlerContext;
+    private final ConnectionHandlerContext context;
     private final Routes routes;
     private RuleContext ruleContext;
     private final Rules rules;
     private final ServerEventLogger serverEventLogger;
     private final Settings settings;
 
-    public ConnectionHandler(final ConnectionHandlerContext handlerContext) {
+    public ConnectionHandler(final ConnectionHandlerContext cntxt) {
         this.applicableRule = null;
-        this.clientSslSocketFactory =
-                handlerContext.getClientSslSocketFactory();
-        this.connectionHandlerContext = handlerContext;
-        this.routes = handlerContext.getRoutes();
+        this.clientSslSocketFactory = cntxt.getClientSslSocketFactory();
+        this.context = cntxt;
+        this.routes = cntxt.getRoutes();
         this.ruleContext = null;
-        this.rules = handlerContext.getRules();
-        this.serverEventLogger = handlerContext.getServerEventLogger();
-        this.settings = handlerContext.getSettings();
+        this.rules = cntxt.getRules();
+        this.serverEventLogger = cntxt.getServerEventLogger();
+        this.settings = cntxt.getSettings();
     }
 
     private boolean canAllowClientSocket() {
@@ -88,7 +87,7 @@ final class ConnectionHandler {
                 }
                 return false;
             }
-            this.connectionHandlerContext.addBelowAllowLimitRule(this.applicableRule);
+            this.context.addBelowAllowLimitRule(this.applicableRule);
         }
         return true;
     }
@@ -162,7 +161,7 @@ final class ConnectionHandler {
             return;
         }
         try {
-            Socket clientSocket = this.connectionHandlerContext.getClientSocket();
+            Socket clientSocket = this.context.getClientSocket();
             if (!this.configureClientSocket(clientSocket)) {
                 return;
             }
@@ -170,21 +169,21 @@ final class ConnectionHandler {
             if (clientSocket == null) {
                 return;
             }
-            this.connectionHandlerContext.setClientSocket(clientSocket);
-            this.connectionHandlerContext.setApplicableRule(this.applicableRule);
-            this.connectionHandlerContext.setRuleContext(this.ruleContext);
-            this.connectionHandlerContext.setSelectedRoute(this.selectClientRoute());
+            this.context.setClientSocket(clientSocket);
+            this.context.setApplicableRule(this.applicableRule);
+            this.context.setRuleContext(this.ruleContext);
+            this.context.setSelectedRoute(this.selectClientRoute());
             SocksConnectionHandler socksConnectionHandler =
                     new SocksConnectionHandler(
                             new SocksConnectionHandlerContext(
-                                    this.connectionHandlerContext,
+                                    this.context,
                                     ServerEventLogger.newInstance(
                                             SocksConnectionHandler.class)));
             socksConnectionHandler.handleSocksConnection();
         } finally {
-            this.connectionHandlerContext.decrementAllCurrentAllowedCounts();
+            this.context.decrementAllCurrentAllowedCounts();
             Socket clientSocket =
-                    this.connectionHandlerContext.getClientSocket();
+                    this.context.getClientSocket();
             if (!clientSocket.isClosed()) {
                 try {
                     clientSocket.close();
@@ -202,7 +201,7 @@ final class ConnectionHandler {
 
     private RuleContext newClientRuleContext() {
         RuleContext clientRuleContext = new RuleContext();
-        Socket clientSocket = this.connectionHandlerContext.getClientSocket();
+        Socket clientSocket = this.context.getClientSocket();
         clientRuleContext.putRuleArgValue(
                 GeneralRuleArgSpecConstants.CLIENT_ADDRESS,
                 clientSocket.getInetAddress().getHostAddress());
@@ -249,8 +248,8 @@ final class ConnectionHandler {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [connectionHandlerContext=" +
-                this.connectionHandlerContext +
+                " [context=" +
+                this.context +
                 "]";
     }
 

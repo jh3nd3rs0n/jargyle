@@ -17,31 +17,30 @@ import java.net.UnknownHostException;
 
 final class ResolveRequestHandler extends RequestHandler {
 
+    private final TcpBasedRequestHandlerContext context;
 	private final ServerEventLogger serverEventLogger;
-    private final TcpBasedRequestHandlerContext tcpBasedRequestHandlerContext;
-	
-	public ResolveRequestHandler(
-			final TcpBasedRequestHandlerContext handlerContext) {
-		this.serverEventLogger = handlerContext.getServerEventLogger();
-        this.tcpBasedRequestHandlerContext = handlerContext;
-        this.tcpBasedRequestHandlerContext.setLogMessageSource(this);
+
+	public ResolveRequestHandler(final TcpBasedRequestHandlerContext cntxt) {
+        this.context = cntxt;
+        this.context.setLogMessageSource(this);
+		this.serverEventLogger = cntxt.getServerEventLogger();
 	}
 
     @Override
     public void handleRequest() {
         HostResolver hostResolver =
-                this.tcpBasedRequestHandlerContext.getSelectedRoute().getNetObjectFactory().newHostResolver();
+                this.context.getSelectedRoute().getNetObjectFactory().newHostResolver();
         InetAddress inetAddress;
         Reply rep;
         try {
             inetAddress = hostResolver.resolve(
-                    this.tcpBasedRequestHandlerContext.getDesiredDestinationAddress().toString());
+                    this.context.getDesiredDestinationAddress().toString());
         } catch (UnknownHostException e) {
             this.serverEventLogger.warn(
                     ObjectLogMessageHelper.objectLogMessage(
                             this, "Error in resolving the hostname"),
                     e);
-            this.tcpBasedRequestHandlerContext.sendReply(
+            this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
             return;
         } catch (IOException e) {
@@ -51,7 +50,7 @@ final class ResolveRequestHandler extends RequestHandler {
                         ObjectLogMessageHelper.objectLogMessage(
                                 this, "Error in resolving the hostname"),
                         e);
-                this.tcpBasedRequestHandlerContext.sendReply(
+                this.context.sendReply(
                         Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
                 return;
             }
@@ -59,47 +58,47 @@ final class ResolveRequestHandler extends RequestHandler {
                     ObjectLogMessageHelper.objectLogMessage(
                             this, "Error in resolving the hostname"),
                     e);
-            this.tcpBasedRequestHandlerContext.sendReply(
+            this.context.sendReply(
                     Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
             return;
         }
         String serverBoundAddress = inetAddress.getHostAddress();
         Port serverBoundPort =
-                this.tcpBasedRequestHandlerContext.getDesiredDestinationPort();
+                this.context.getDesiredDestinationPort();
         rep = Reply.newSuccessInstance(
                 Address.newInstanceFrom(serverBoundAddress),
                 serverBoundPort);
         RuleContext ruleContext =
-                this.tcpBasedRequestHandlerContext.newReplyRuleContext(rep);
-        this.tcpBasedRequestHandlerContext.setRuleContext(ruleContext);
+                this.context.newReplyRuleContext(rep);
+        this.context.setRuleContext(ruleContext);
         Rule applicableRule =
-                this.tcpBasedRequestHandlerContext.getRules().firstAppliesTo(
-                        this.tcpBasedRequestHandlerContext.getRuleContext());
+                this.context.getRules().firstAppliesTo(
+                        this.context.getRuleContext());
         if (applicableRule == null) {
             this.serverEventLogger.warn(
                     ObjectLogMessageHelper.objectLogMessage(
                             this,
                             "No applicable rule found based on the following "
                             + "context: %s",
-                            this.tcpBasedRequestHandlerContext.getRuleContext()));
-            this.tcpBasedRequestHandlerContext.sendReply(
+                            this.context.getRuleContext()));
+            this.context.sendReply(
                     Reply.newFailureInstance(
                             ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
             return;
         }
-        this.tcpBasedRequestHandlerContext.setApplicableRule(applicableRule);
-        if (!this.tcpBasedRequestHandlerContext.canAllowReply()) {
+        this.context.setApplicableRule(applicableRule);
+        if (!this.context.canAllowReply()) {
             return;
         }
-        this.tcpBasedRequestHandlerContext.sendReply(rep);
+        this.context.sendReply(rep);
     }
 
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [tcpBasedRequestHandlerContext=" +
-                this.tcpBasedRequestHandlerContext +
+                " [context=" +
+                this.context +
                 "]";
     }
 

@@ -23,23 +23,22 @@ import java.util.Iterator;
 
 final class ConnectRequestHandler extends RequestHandler {
 
+    private final TcpBasedRequestHandlerContext context;
 	private final ServerEventLogger serverEventLogger;
-    private final TcpBasedRequestHandlerContext tcpBasedRequestHandlerContext;
-	
-	public ConnectRequestHandler(
-			final TcpBasedRequestHandlerContext handlerContext) {
-		this.serverEventLogger = handlerContext.getServerEventLogger();
-        this.tcpBasedRequestHandlerContext = handlerContext;
-        this.tcpBasedRequestHandlerContext.setLogMessageSource(this);
+
+	public ConnectRequestHandler(final TcpBasedRequestHandlerContext cntxt) {
+        this.context = cntxt;
+        this.context.setLogMessageSource(this);
+		this.serverEventLogger = cntxt.getServerEventLogger();
 	}
 	
 	private boolean canPrepareTargetFacingSocket() {
-		Boolean b = this.tcpBasedRequestHandlerContext.getApplicableRule().getLastRuleActionValue(
+		Boolean b = this.context.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
 		if (b != null) {
 			return b;
 		}
-		return this.tcpBasedRequestHandlerContext.getSettings().getLastValue(
+		return this.context.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
 	}
 
@@ -53,7 +52,7 @@ final class ConnectRequestHandler extends RequestHandler {
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Error in setting the target-facing socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return false;			
@@ -63,21 +62,21 @@ final class ConnectRequestHandler extends RequestHandler {
 	
 	private int getRelayBufferSize() {
 		return Socks5ValueDerivationHelper.getSocks5OnConnectRequestRelayBufferSizeFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings()).intValue();
+				this.context.getApplicableRule(),
+                this.context.getSettings()).intValue();
 	}
 	
 	private int getRelayIdleTimeout() {
 		return Socks5ValueDerivationHelper.getSocks5OnConnectRequestRelayIdleTimeoutFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings()).intValue();
+				this.context.getApplicableRule(),
+                this.context.getSettings()).intValue();
 	}
 	
 	private Integer getRelayInboundBandwidthLimit() {
 		PositiveInteger relayInboundBandwidthLimit =
 				Socks5ValueDerivationHelper.getSocks5OnConnectRequestRelayInboundBandwidthLimitFrom(
-						this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                        this.tcpBasedRequestHandlerContext.getSettings());
+						this.context.getApplicableRule(),
+                        this.context.getSettings());
 		if (relayInboundBandwidthLimit != null) {
 			return relayInboundBandwidthLimit.intValue();
 		}
@@ -87,8 +86,8 @@ final class ConnectRequestHandler extends RequestHandler {
 	private Integer getRelayOutboundBandwidthLimit() {
 		PositiveInteger relayOutboundBandwidthLimit =
 				Socks5ValueDerivationHelper.getSocks5OnConnectRequestRelayOutboundBandwidthLimitFrom(
-						this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                        this.tcpBasedRequestHandlerContext.getSettings());
+						this.context.getApplicableRule(),
+                        this.context.getSettings());
 		if (relayOutboundBandwidthLimit != null) {
 			return relayOutboundBandwidthLimit.intValue();
 		}
@@ -97,38 +96,38 @@ final class ConnectRequestHandler extends RequestHandler {
 	
 	private Host getTargetFacingBindHost() {
 		return Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 	
 	private PortRanges getTargetFacingBindPortRanges() {
 		return Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 	
 	private int getTargetFacingConnectTimeout() {
 		PositiveInteger connectTimeout =
-                this.tcpBasedRequestHandlerContext.getApplicableRule().getLastRuleActionValue(
+                this.context.getApplicableRule().getLastRuleActionValue(
                         Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
 		if (connectTimeout != null) {
 			return connectTimeout.intValue();
 		}
-		connectTimeout = this.tcpBasedRequestHandlerContext.getSettings().getLastValue(
+		connectTimeout = this.context.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
 		return connectTimeout.intValue();
 	}
 	
 	private SocketSettings getTargetFacingSocketSettings() {
 		return Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(
-				this.tcpBasedRequestHandlerContext.getApplicableRule(),
-                this.tcpBasedRequestHandlerContext.getSettings());
+				this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 
     @Override
     public void handleRequest() throws IOException {
         Socket targetFacingSocket = null;
-        Socket clientSocket = this.tcpBasedRequestHandlerContext.getClientSocket();
+        Socket clientSocket = this.context.getClientSocket();
         Reply rep;
         try {
             targetFacingSocket = this.newTargetFacingSocket();
@@ -142,29 +141,29 @@ final class ConnectRequestHandler extends RequestHandler {
                     Address.newInstanceFrom(serverBoundAddress),
                     Port.valueOf(serverBoundPort));
             RuleContext ruleContext =
-                    this.tcpBasedRequestHandlerContext.newReplyRuleContext(
+                    this.context.newReplyRuleContext(
                             rep);
-            this.tcpBasedRequestHandlerContext.setRuleContext(ruleContext);
+            this.context.setRuleContext(ruleContext);
             Rule applicableRule =
-                    this.tcpBasedRequestHandlerContext.getRules().firstAppliesTo(
-                            this.tcpBasedRequestHandlerContext.getRuleContext());
+                    this.context.getRules().firstAppliesTo(
+                            this.context.getRuleContext());
             if (applicableRule == null) {
                 this.serverEventLogger.warn(ObjectLogMessageHelper.objectLogMessage(
                         this,
                         "No applicable rule found based on the following "
                                 + "context: %s",
-                        this.tcpBasedRequestHandlerContext.getRuleContext()));
-                this.tcpBasedRequestHandlerContext.sendReply(
+                        this.context.getRuleContext()));
+                this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
                 return;
             }
-            this.tcpBasedRequestHandlerContext.setApplicableRule(
+            this.context.setApplicableRule(
                     applicableRule);
-            if (!this.tcpBasedRequestHandlerContext.canAllowReply()) {
+            if (!this.context.canAllowReply()) {
                 return;
             }
-            if (!this.tcpBasedRequestHandlerContext.sendReply(rep)) {
+            if (!this.context.sendReply(rep)) {
                 return;
             }
             targetFacingSocket = this.limitTargetFacingSocket(
@@ -176,7 +175,7 @@ final class ConnectRequestHandler extends RequestHandler {
             builder.idleTimeout(this.getRelayIdleTimeout());
             Relay relay = builder.build();
             try {
-                this.tcpBasedRequestHandlerContext.passData(relay);
+                this.context.passData(relay);
             } catch (IOException e) {
                 this.serverEventLogger.warn(
                         ObjectLogMessageHelper.objectLogMessage(
@@ -212,12 +211,12 @@ final class ConnectRequestHandler extends RequestHandler {
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
 		NetObjectFactory netObjectFactory =
-				this.tcpBasedRequestHandlerContext.getSelectedRoute().getNetObjectFactory();
+				this.context.getSelectedRoute().getNetObjectFactory();
 		Socket targetFacingSocket;
 		try {
 			targetFacingSocket = netObjectFactory.newSocket(
-					this.tcpBasedRequestHandlerContext.getDesiredDestinationAddress().toString(),
-					this.tcpBasedRequestHandlerContext.getDesiredDestinationPort().intValue(),
+					this.context.getDesiredDestinationAddress().toString(),
+					this.context.getDesiredDestinationPort().intValue(),
 					bindInetAddress, 
 					bindPort.intValue());
 		} catch (UnknownHostException e) {
@@ -227,7 +226,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							"Error in creating the target-facing "
 							+ "socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		} catch (IOException e) {
@@ -243,7 +242,7 @@ final class ConnectRequestHandler extends RequestHandler {
 								"Error in creating the target-facing "
 								+ "socket"), 
 						e);
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
                         Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return null;				
 			}
@@ -255,7 +254,7 @@ final class ConnectRequestHandler extends RequestHandler {
 								"Error in connecting the target-facing "
 								+ "socket"), 
 						e);
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
                         Reply.newFailureInstance(ReplyCode.NETWORK_UNREACHABLE));
 				return null;						
 			}
@@ -265,7 +264,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							"Error in connecting the target-facing "
 							+ "socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
@@ -305,7 +304,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							+ "following address and port (range(s)): %s %s",
 							bindInetAddress,
 							bindPortRanges));
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;			
@@ -318,12 +317,12 @@ final class ConnectRequestHandler extends RequestHandler {
 			final Port bindPort) throws SocketException {
 		InetAddress desiredDestinationInetAddress =
 				this.resolveDesiredDestinationAddress(
-						this.tcpBasedRequestHandlerContext.getDesiredDestinationAddress().toString());
+						this.context.getDesiredDestinationAddress().toString());
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
 		NetObjectFactory netObjectFactory = 
-				this.tcpBasedRequestHandlerContext.getSelectedRoute().getNetObjectFactory();
+				this.context.getSelectedRoute().getNetObjectFactory();
 		Socket targetFacingSocket;
 		int connectTimeout = this.getTargetFacingConnectTimeout();		
 		targetFacingSocket = netObjectFactory.newSocket();
@@ -360,7 +359,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							"Error in binding the target-facing "
 							+ "socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			try {
@@ -373,7 +372,7 @@ final class ConnectRequestHandler extends RequestHandler {
 		try {
 			targetFacingSocket.connect(new InetSocketAddress(
 					desiredDestinationInetAddress,
-					this.tcpBasedRequestHandlerContext.getDesiredDestinationPort().intValue()),
+					this.context.getDesiredDestinationPort().intValue()),
 					connectTimeout);
 		} catch (IOException e) {
 			if (ThrowableHelper.isOrHasInstanceOf(
@@ -393,7 +392,7 @@ final class ConnectRequestHandler extends RequestHandler {
 								"Error in connecting the target-facing "
 								+ "socket"), 
 						e);
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.NETWORK_UNREACHABLE));
 				try {
@@ -409,7 +408,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							"Error in connecting the target-facing "
 							+ "socket"), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			try {
@@ -453,7 +452,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							+ "following address and port (range(s)): %s %s",
 							bindInetAddress,
 							bindPortRanges));
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
@@ -473,7 +472,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							"Unable to bind the target-facing socket to the "
 							+ "following host: %s",
 							targetFacingBindHost));
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
@@ -489,7 +488,7 @@ final class ConnectRequestHandler extends RequestHandler {
 	private InetAddress resolveDesiredDestinationAddress(
 			final String desiredDestinationAddress) {
 		NetObjectFactory netObjectFactory =
-				this.tcpBasedRequestHandlerContext.getSelectedRoute().getNetObjectFactory();
+				this.context.getSelectedRoute().getNetObjectFactory();
 		HostResolver hostResolver =	netObjectFactory.newHostResolver();
 		InetAddress desiredDestinationInetAddress;
 		try {
@@ -503,7 +502,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							+ "address for the target-facing socket: %s",
 							desiredDestinationAddress), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		} catch (IOException e) {
@@ -516,7 +515,7 @@ final class ConnectRequestHandler extends RequestHandler {
 								+ "address for the target-facing socket: %s",
 								desiredDestinationAddress), 
 						e);
-				this.tcpBasedRequestHandlerContext.sendReply(
+				this.context.sendReply(
                         Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 				return null;				
 			}
@@ -527,7 +526,7 @@ final class ConnectRequestHandler extends RequestHandler {
 							+ "address for the target-facing socket: %s",
 							desiredDestinationAddress), 
 					e);
-			this.tcpBasedRequestHandlerContext.sendReply(
+			this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
 			return null;
 		}
@@ -537,8 +536,8 @@ final class ConnectRequestHandler extends RequestHandler {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [tcpBasedRequestHandlerContext=" +
-                this.tcpBasedRequestHandlerContext +
+                " [context=" +
+                this.context +
                 "]";
     }
 

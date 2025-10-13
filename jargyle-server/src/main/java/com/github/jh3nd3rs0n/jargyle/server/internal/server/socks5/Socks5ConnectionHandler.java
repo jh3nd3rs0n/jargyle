@@ -22,29 +22,29 @@ import java.util.stream.Collectors;
 public final class Socks5ConnectionHandler implements LogMessageSource {
 
 	private InputStream clientInputStream;
+    private final Socks5ConnectionHandlerContext context;
 	private final ServerEventLogger serverEventLogger;
-    private final Socks5ConnectionHandlerContext socks5ConnectionHandlerContext;
-	
+
 	public Socks5ConnectionHandler(
-            final Socks5ConnectionHandlerContext handlerContext) {
+            final Socks5ConnectionHandlerContext cntxt) {
 		this.clientInputStream = null;
-		this.serverEventLogger = handlerContext.getServerEventLogger();
-        this.socks5ConnectionHandlerContext = handlerContext;
-        this.socks5ConnectionHandlerContext.setLogMessageSource(this);
+        this.context = cntxt;
+        this.context.setLogMessageSource(this);
+		this.serverEventLogger = cntxt.getServerEventLogger();
 	}
 
 	private boolean canAllowRequest() {
 		Rule applicableRule =
-                this.socks5ConnectionHandlerContext.getApplicableRule();
+                this.context.getApplicableRule();
 		RuleContext ruleContext =
-                this.socks5ConnectionHandlerContext.getRuleContext();
+                this.context.getRuleContext();
 		if (!this.hasRequestRuleCondition()) {
 			return true;
 		}
 		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
 				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
-			this.socks5ConnectionHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 			return false;
@@ -78,7 +78,7 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 		if (FirewallAction.ALLOW.equals(firewallAction)) {
 			return true;
 		}
-		this.socks5ConnectionHandlerContext.sendReply(
+		this.context.sendReply(
 				Reply.newFailureInstance(
                         ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 		return false;
@@ -86,9 +86,9 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 	
 	private boolean canAllowRequestWithinLimit() {
 		Rule applicableRule =
-                this.socks5ConnectionHandlerContext.getApplicableRule();
+                this.context.getApplicableRule();
 		RuleContext ruleContext =
-                this.socks5ConnectionHandlerContext.getRuleContext();
+                this.context.getRuleContext();
 		NonNegativeIntegerLimit firewallActionAllowLimit =
 				applicableRule.getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
@@ -107,12 +107,12 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 									applicableRule,
 									ruleContext));
 				}
-				this.socks5ConnectionHandlerContext.sendReply(
+				this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
 				return false;
 			}
-			this.socks5ConnectionHandlerContext.addBelowAllowLimitRule(
+			this.context.addBelowAllowLimitRule(
                     applicableRule);
 		}
 		return true;
@@ -125,8 +125,8 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 		MethodSubNegotiationResults methodSubNegotiationResults;
 		try {
 			methodSubNegotiationResults = methodSubNegotiator.subNegotiate(
-					this.socks5ConnectionHandlerContext.getClientSocket(),
-                    this.socks5ConnectionHandlerContext.getConfiguration());
+					this.context.getClientSocket(),
+                    this.context.getConfiguration());
 		} catch (MethodSubNegotiationException e) {
 			if (e.getCause() == null) {
 				this.serverEventLogger.debug(
@@ -160,23 +160,23 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 	}
 	
 	private Address getDesiredDestinationAddressRedirect() {
-		return this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
+		return this.context.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS_REDIRECT);
 	}
 	
 	private Port getDesiredDestinationPortRedirect() {
-		return this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
+		return this.context.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT_REDIRECT);
 	}
 	
 	private LogAction getDesiredDestinationRedirectLogAction() {
-		return this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
+		return this.context.getApplicableRule().getLastRuleActionValue(
 				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_REDIRECT_LOG_ACTION);
 	}
 	
 	private Routes getRequestRoutes() {
-		Routes routes = this.socks5ConnectionHandlerContext.getRoutes();
-		List<Route> rtes = this.socks5ConnectionHandlerContext.getApplicableRule().getRuleActionValues(
+		Routes routes = this.context.getRoutes();
+		List<Route> rtes = this.context.getApplicableRule().getRuleActionValues(
 				GeneralRuleActionSpecConstants.SELECTABLE_ROUTE_ID)
 				.stream()
 				.map(routes::get)
@@ -190,29 +190,29 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 	
 	private LogAction getRequestRouteSelectionLogAction() {
 		LogAction routeSelectionLogAction = 
-				this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
+				this.context.getApplicableRule().getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 		if (routeSelectionLogAction != null) {
 			return routeSelectionLogAction;
 		}
-		return this.socks5ConnectionHandlerContext.getSettings().getLastValue(
+		return this.context.getSettings().getLastValue(
 				GeneralSettingSpecConstants.ROUTE_SELECTION_LOG_ACTION);
 	}
 	
 	private SelectionStrategy getRequestRouteSelectionStrategy() {
 		SelectionStrategy routeSelectionStrategy =
-				this.socks5ConnectionHandlerContext.getApplicableRule().getLastRuleActionValue(
+				this.context.getApplicableRule().getLastRuleActionValue(
 						GeneralRuleActionSpecConstants.ROUTE_SELECTION_STRATEGY);
 		if (routeSelectionStrategy != null) {
 			return routeSelectionStrategy;
 		}
-		return this.socks5ConnectionHandlerContext.getSettings().getLastValue(
+		return this.context.getSettings().getLastValue(
 				GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
 	}
 
     public void handleSocks5Connection() throws IOException {
         this.clientInputStream =
-                this.socks5ConnectionHandlerContext.getClientSocket().getInputStream();
+                this.context.getClientSocket().getInputStream();
         Method method = this.negotiateMethod();
         if (method == null) { return; }
         MethodSubNegotiationResults methodSubNegotiationResults =
@@ -220,46 +220,46 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
         if (methodSubNegotiationResults == null) { return; }
         Socket socket = methodSubNegotiationResults.getSocket();
         this.clientInputStream = socket.getInputStream();
-        this.socks5ConnectionHandlerContext.setClientSocket(socket);
+        this.context.setClientSocket(socket);
         Request request = this.newRequest();
         if (request == null) { return; }
         RuleContext ruleContext = this.newRequestRuleContext(
                 methodSubNegotiationResults,
                 request);
-        this.socks5ConnectionHandlerContext.setRuleContext(ruleContext);
+        this.context.setRuleContext(ruleContext);
         Rule applicableRule =
-                this.socks5ConnectionHandlerContext.getRules().firstAppliesTo(
-                        this.socks5ConnectionHandlerContext.getRuleContext());
+                this.context.getRules().firstAppliesTo(
+                        this.context.getRuleContext());
         if (applicableRule == null) {
             this.serverEventLogger.warn(
                     ObjectLogMessageHelper.objectLogMessage(
                             this,
                             "No applicable rule found based on the following "
                                     + "context: %s",
-                            this.socks5ConnectionHandlerContext.getRuleContext()));
-            this.socks5ConnectionHandlerContext.sendReply(
+                            this.context.getRuleContext()));
+            this.context.sendReply(
                     Reply.newFailureInstance(
                             ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
             return;
         }
-        this.socks5ConnectionHandlerContext.setApplicableRule(applicableRule);
+        this.context.setApplicableRule(applicableRule);
         if (!this.canAllowRequest()) {
             return;
         }
         request = this.redirectRequestIfSpecified(request);
         Route selectedRoute = this.selectRequestRoute();
-        this.socks5ConnectionHandlerContext.setSelectedRoute(selectedRoute);
+        this.context.setSelectedRoute(selectedRoute);
         RequestHandlerFactory requestHandlerFactory =
                 RequestHandlerFactory.getInstance(request.getCommand());
         RequestHandler requestHandler = requestHandlerFactory.newRequestHandler(
-                this.socks5ConnectionHandlerContext,
+                this.context,
                 methodSubNegotiationResults,
                 request);
         requestHandler.handleRequest();
     }
 
 	private boolean hasRequestRuleCondition() {
-		Rule applicableRule = this.socks5ConnectionHandlerContext.getApplicableRule();
+		Rule applicableRule = this.context.getApplicableRule();
 		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_METHOD)) {
 			return true;
@@ -303,7 +303,7 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
                         "Received %s",
                         cmsm.toString()));
 		Method method = null;
-		Methods methods = this.socks5ConnectionHandlerContext.getSettings().getLastValue(
+		Methods methods = this.context.getSettings().getLastValue(
 				Socks5SettingSpecConstants.SOCKS5_METHODS);
 		for (Method meth : methods.toList()) {
 			if (cmsm.getMethods().contains(meth)) {
@@ -321,7 +321,7 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 				"Sending %s", 
 				smsm.toString()));
 		try {
-			this.socks5ConnectionHandlerContext.sendToClient(
+			this.context.sendToClient(
                     smsm.toByteArray());
 		} catch (IOException e) {
 			this.serverEventLogger.logClientIoException(
@@ -345,7 +345,7 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
-			this.socks5ConnectionHandlerContext.sendReply(
+			this.context.sendReply(
 					Reply.newFailureInstance(
                             ReplyCode.ADDRESS_TYPE_NOT_SUPPORTED));
 			return null;
@@ -354,7 +354,7 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 					ObjectLogMessageHelper.objectLogMessage(
 							this, "Unable to parse the SOCKS5 request"), 
 					e);
-			this.socks5ConnectionHandlerContext.sendReply(
+			this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.COMMAND_NOT_SUPPORTED));
 			return null;
 		} catch (IOException e) {
@@ -375,7 +375,7 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 			final MethodSubNegotiationResults methSubNegotiationResults, 
 			final Request req) {
 		RuleContext requestRuleContext = new RuleContext(
-				this.socks5ConnectionHandlerContext.getRuleContext());
+				this.context.getRuleContext());
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
 				methSubNegotiationResults.getMethod().toString());
@@ -417,19 +417,19 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 					this, 
 					"Redirecting desired destination based on the following "
 					+ "rule and context: rule: %s context: %s", 
-					this.socks5ConnectionHandlerContext.getApplicableRule(),
-					this.socks5ConnectionHandlerContext.getRuleContext()));
+					this.context.getApplicableRule(),
+					this.context.getRuleContext()));
 		}
 		return r;
 	}
 
 	private Route selectRequestRoute() {
 		Rule applicableRule =
-                this.socks5ConnectionHandlerContext.getApplicableRule();
+                this.context.getApplicableRule();
 		RuleContext ruleContext =
-                this.socks5ConnectionHandlerContext.getRuleContext();
+                this.context.getRuleContext();
 		Route selectedRte =
-                this.socks5ConnectionHandlerContext.getSelectedRoute();
+                this.context.getSelectedRoute();
 		if (!this.hasRequestRuleCondition()) {
 			return selectedRte;
 		}
@@ -465,8 +465,8 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [socks5ConnectionHandlerContext=" +
-                this.socks5ConnectionHandlerContext +
+                " [context=" +
+                this.context +
                 "]";
     }
 

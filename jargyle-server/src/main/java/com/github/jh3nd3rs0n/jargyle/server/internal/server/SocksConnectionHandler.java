@@ -10,18 +10,17 @@ import java.net.Socket;
 
 final class SocksConnectionHandler {
 
+    private final SocksConnectionHandlerContext context;
     private final ServerEventLogger serverEventLogger;
-    private final SocksConnectionHandlerContext socksConnectionHandlerContext;
 
-    public SocksConnectionHandler(
-            final SocksConnectionHandlerContext handlerContext) {
-        this.serverEventLogger = handlerContext.getServerEventLogger();
-        this.socksConnectionHandlerContext = handlerContext;
+    public SocksConnectionHandler(final SocksConnectionHandlerContext cntxt) {
+        this.context = cntxt;
+        this.serverEventLogger = cntxt.getServerEventLogger();
     }
 
     public void handleSocksConnection() throws IOException {
         Socket clientSocket =
-                this.socksConnectionHandlerContext.getClientSocket();
+                this.context.getClientSocket();
         InputStream clientInputStream = clientSocket.getInputStream();
         int version;
         try {
@@ -40,7 +39,7 @@ final class SocksConnectionHandler {
             Socks5ConnectionHandler socks5ConnectionHandler =
                     new Socks5ConnectionHandler(
                             new Socks5ConnectionHandlerContext(
-                                    this.socksConnectionHandlerContext,
+                                    this.context,
                                     ServerEventLogger.newInstance(
                                             Socks5ConnectionHandler.class)));
             socks5ConnectionHandler.handleSocks5Connection();
@@ -55,8 +54,8 @@ final class SocksConnectionHandler {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() +
-                " [socksConnectionHandlerContext=" +
-                this.socksConnectionHandlerContext +
+                " [context=" +
+                this.context +
                 "]";
     }
 

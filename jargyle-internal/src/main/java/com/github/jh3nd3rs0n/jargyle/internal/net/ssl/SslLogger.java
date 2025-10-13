@@ -2,6 +2,8 @@ package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.Instant;
@@ -219,6 +221,25 @@ final class SslLogger {
                         PATTERN, Locale.ENGLISH)
                 .withZone(ZoneId.systemDefault());
 
+        private static final String THREAD_GET_ID_METHOD_NAME = "getId";
+        private static final String THREAD_THREAD_ID_METHOD_NAME = "threadId";
+
+        private static Method threadGetIdMethod = null;
+        private static Method threadThreadIdMethod = null;
+
+        static {
+            try {
+                threadThreadIdMethod = Thread.class.getMethod(THREAD_THREAD_ID_METHOD_NAME);
+            } catch (NoSuchMethodException ignored) {
+            }
+            if (threadThreadIdMethod == null) {
+                try {
+                    threadGetIdMethod = Thread.class.getMethod(THREAD_GET_ID_METHOD_NAME);
+                } catch (NoSuchMethodException ignored) {
+                }
+            }
+        }
+
         private final String loggerName;
         private final boolean useCompactFormat;
 
@@ -236,6 +257,21 @@ final class SslLogger {
                             .findFirst().orElse("unknown caller"));
         }
 
+        private static long getThreadId(final Thread thread) {
+            if (threadThreadIdMethod != null) {
+                try {
+                    return (long) threadThreadIdMethod.invoke(thread);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new AssertionError(e);
+                }
+            }
+            try {
+                return (long) threadGetIdMethod.invoke(thread);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new AssertionError(e);
+            }
+        }
+
         private String format(
                 final Level level,
                 final String message,
@@ -244,7 +280,7 @@ final class SslLogger {
                 Object[] messageFields = {
                         this.loggerName,
                         level.getName(),
-                        Long.toHexString(Thread.currentThread().getId()),
+                        Long.toHexString(getThreadId(Thread.currentThread())),
                         Thread.currentThread().getName(),
                         DATE_TIME_FORMATTER.format(Instant.now()),
                         formatCaller(),
@@ -259,7 +295,7 @@ final class SslLogger {
             Object[] messageFields = {
                     this.loggerName,
                     level.getName(),
-                    Long.toHexString(Thread.currentThread().getId()),
+                    Long.toHexString(getThreadId(Thread.currentThread())),
                     Thread.currentThread().getName(),
                     DATE_TIME_FORMATTER.format(Instant.now()),
                     formatCaller(),

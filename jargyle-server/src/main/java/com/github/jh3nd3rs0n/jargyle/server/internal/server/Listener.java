@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

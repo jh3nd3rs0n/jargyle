@@ -2,7 +2,6 @@ package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
 import com.github.jh3nd3rs0n.jargyle.common.bytes.Bytes;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
@@ -68,7 +67,6 @@ public class ConfiguredSslSocketFactoryIT {
         server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         server.start();
         serverPort = server.getPort();

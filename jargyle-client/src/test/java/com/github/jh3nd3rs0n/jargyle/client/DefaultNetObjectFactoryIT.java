@@ -145,7 +145,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -181,7 +180,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -208,7 +206,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -258,7 +255,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -283,7 +279,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -320,7 +315,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -347,7 +341,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -373,7 +366,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {
@@ -402,7 +394,6 @@ public class DefaultNetObjectFactoryIT {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         Socket socket = null;
         try {

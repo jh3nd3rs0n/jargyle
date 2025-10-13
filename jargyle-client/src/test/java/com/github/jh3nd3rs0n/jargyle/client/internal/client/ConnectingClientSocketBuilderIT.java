@@ -26,7 +26,6 @@ public class ConnectingClientSocketBuilderIT {
         server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         server.start();
         serverPort = server.getPort();

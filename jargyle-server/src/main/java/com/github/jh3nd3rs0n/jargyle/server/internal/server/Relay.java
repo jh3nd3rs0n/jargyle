@@ -1,5 +1,11 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
+import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.ExecutorsHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,13 +17,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
-import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 
 public final class Relay {
 	

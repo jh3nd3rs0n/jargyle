@@ -1,20 +1,19 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
-
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 final class ResolveRequestHandler extends RequestHandler {
 

@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.test.help.net;
 
+import com.github.jh3nd3rs0n.jargyle.test.help.concurrent.ExecutorsHelper;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,19 +51,6 @@ public final class DatagramServer {
     private final ServerDatagramSocketFactory serverDatagramSocketFactory;
 
     /**
-     * The {@code ExecutorFactory} used for creating an {@code Executor} to
-     * execute the {@code ReceivingPacketRelay}, the
-     * {@code ForwardingPacketRelay}, and the {@code SendingPacketRelay}.
-     */
-    private final ExecutorFactory tripleThreadExecutorFactory;
-
-    /**
-     * The {@code ExecutorFactory} used for creating an {@code Executor} to
-     * execute {@code Worker}s.
-     */
-    private final ExecutorFactory multipleThreadsExecutorFactory;
-
-    /**
      * The specified binding port of this {@code DatagramServer}.
      */
     private final int specifiedPort;
@@ -96,40 +84,25 @@ public final class DatagramServer {
     /**
      * Constructs a {@code DatagramServer} with the provided
      * {@code ServerDatagramSocketFactory} used for creating a server
-     * {@code DatagramSocket}, the provided specified binding port, the
-     * provided {@code ExecutorFactory} used for creating an {@code Executor}
-     * to execute three threads, the provided {@code ExecutorFactory} used for
-     * creating an {@code Executor} to execute {@code Worker}s, and the
+     * {@code DatagramSocket}, the provided specified binding port, and the
      * provided {@code WorkerFactory} used for creating {@code Worker}s.
      *
-     * @param serverDatagramSockFactory   the provided
-     *                                    {@code ServerDatagramSocketFactory} used
-     *                                    for creating a server
-     *                                    {@code DatagramSocket}
-     * @param prt                         the provided specified binding port
-     * @param threeThreadExecutorFactory  the provided {@code ExecutorFactory}
-     *                                    used for creating an
-     *                                    {@code Executor} to execute three
-     *                                    threads
-     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
-     *                                    used for creating an
-     *                                    {@code Executor} to execute
-     *                                    {@code Worker}s
-     * @param factory                     the provided {@code WorkerFactory}
-     *                                    used for creating {@code Worker}s
+     * @param serverDatagramSockFactory the provided
+     *                                  {@code ServerDatagramSocketFactory} used
+     *                                  for creating a server
+     *                                  {@code DatagramSocket}
+     * @param prt                       the provided specified binding port
+     * @param factory                   the provided {@code WorkerFactory}
+     *                                  used for creating {@code Worker}s
      */
     public DatagramServer(
             final ServerDatagramSocketFactory serverDatagramSockFactory,
             final int prt,
-            final ExecutorFactory threeThreadExecutorFactory,
-            final ExecutorFactory multiThreadsExecutorFactory,
             final WorkerFactory factory) {
         this(
                 serverDatagramSockFactory,
                 prt,
                 INET_ADDRESS,
-                threeThreadExecutorFactory,
-                multiThreadsExecutorFactory,
                 factory);
     }
 
@@ -137,42 +110,27 @@ public final class DatagramServer {
      * Constructs a {@code DatagramServer} with the provided
      * {@code ServerDatagramSocketFactory} used for creating a server
      * {@code DatagramSocket}, the provided specified binding port, the
-     * provided binding {@code InetAddress}, the provided
-     * {@code ExecutorFactory} used for creating an {@code Executor} to
-     * execute three threads, the provided {@code ExecutorFactory} used for
-     * creating an {@code Executor} to execute {@code Worker}s, and the
-     * provided {@code WorkerFactory} used for creating {@code Worker}s.
+     * provided binding {@code InetAddress}, and the provided
+     * {@code WorkerFactory} used for creating {@code Worker}s.
      *
-     * @param serverDatagramSockFactory   the provided
-     *                                    {@code ServerDatagramSocketFactory} used
-     *                                    for creating a server
-     *                                    {@code DatagramSocket}
-     * @param prt                         the provided specified binding port
-     * @param bindInetAddr                the provided binding
-     *                                    {@code InetAddress}
-     * @param threeThreadExecutorFactory  the provided {@code ExecutorFactory}
-     *                                    used for creating an
-     *                                    {@code Executor} to execute three
-     *                                    threads
-     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
-     *                                    used for creating an
-     *                                    {@code Executor} to execute
-     *                                    {@code Worker}s
-     * @param factory                     the provided {@code WorkerFactory}
-     *                                    used for creating {@code Worker}s
+     * @param serverDatagramSockFactory the provided
+     *                                  {@code ServerDatagramSocketFactory} used
+     *                                  for creating a server
+     *                                  {@code DatagramSocket}
+     * @param prt                       the provided specified binding port
+     * @param bindInetAddr              the provided binding
+     *                                  {@code InetAddress}
+     * @param factory                   the provided {@code WorkerFactory}
+     *                                  used for creating {@code Worker}s
      */
     public DatagramServer(
             final ServerDatagramSocketFactory serverDatagramSockFactory,
             final int prt,
             final InetAddress bindInetAddr,
-            final ExecutorFactory threeThreadExecutorFactory,
-            final ExecutorFactory multiThreadsExecutorFactory,
             final WorkerFactory factory) {
         this.bindInetAddress = bindInetAddr;
         this.serverDatagramSocketFactory = serverDatagramSockFactory;
-        this.tripleThreadExecutorFactory = threeThreadExecutorFactory;
         this.executor = null;
-        this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
         this.port = -1;
         this.serverSocket = null;
         this.specifiedPort = prt;
@@ -253,8 +211,6 @@ public final class DatagramServer {
         this.executor = Executors.newSingleThreadExecutor();
         this.executor.execute(new PacketRelay(
                 this.serverSocket,
-                this.tripleThreadExecutorFactory,
-                this.multipleThreadsExecutorFactory,
                 this.workerFactory));
         this.state = State.STARTED;
     }
@@ -422,19 +378,6 @@ public final class DatagramServer {
     private static final class PacketRelay implements Runnable {
 
         /**
-         * The {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute the {@code ReceivingPacketRelay} and the
-         * {@code SendingPacketRelay}.
-         */
-        private final ExecutorFactory tripleThreadExecutorFactory;
-
-        /**
-         * The {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute {@code Worker}s.
-         */
-        private final ExecutorFactory multipleThreadsExecutorFactory;
-
-        /**
          * The {@code Queue} of received {@code DatagramPacket}s.
          */
         private final Queue<DatagramPacket> receivedPackets;
@@ -456,40 +399,18 @@ public final class DatagramServer {
 
         /**
          * Constructs a {@code PacketRelay} with the provided server
-         * {@code DatagramSocket}, the provided {@code ExecutorFactory} used
-         * for creating an {@code Executor} to execute the
-         * {@code ReceivingPacketRelay}, the {@code ForwardingPacketRelay},
-         * and the {@code SendingPacketRelay}, the provided
-         * {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute {@code Worker}s, and the provided {@code WorkerFactory}
+         * {@code DatagramSocket} and the provided {@code WorkerFactory}
          * used for creating {@code Worker}s.
          *
-         * @param serverSock                  the provided server
-         *                                    {@code DatagramSocket}
-         * @param threeThreadExecutorFactory  the provided
-         *                                    {@code ExecutorFactory} used for
-         *                                    creating an {@code Executor} to
-         *                                    execute the
-         *                                    {@code ReceivingPacketRelay},
-         *                                    the
-         *                                    {@code ForwardingPacketRelay},
-         *                                    and the
-         *                                    {@code SendingPacketRelay}
-         * @param multiThreadsExecutorFactory the provided
-         *                                    {@code ExecutorFactory} used for
-         *                                    creating an {@code Executor} to
-         *                                    execute {@code Worker}s
-         * @param factory                     the provided
-         *                                    {@code WorkerFactory} used for
-         *                                    creating {@code Worker}s
+         * @param serverSock the provided server
+         *                   {@code DatagramSocket}
+         * @param factory    the provided
+         *                   {@code WorkerFactory} used for
+         *                   creating {@code Worker}s
          */
         public PacketRelay(
                 final DatagramSocket serverSock,
-                final ExecutorFactory threeThreadExecutorFactory,
-                final ExecutorFactory multiThreadsExecutorFactory,
                 final WorkerFactory factory) {
-            this.tripleThreadExecutorFactory = threeThreadExecutorFactory;
-            this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
             this.receivedPackets = new ConcurrentLinkedQueue<>();
             this.sendablePackets = new ConcurrentLinkedQueue<>();
             this.serverSocket = serverSock;
@@ -498,12 +419,12 @@ public final class DatagramServer {
 
         public void run() {
             ExecutorService executor =
-                    this.tripleThreadExecutorFactory.newExecutor();
+                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
+                            ExecutorsHelper.newFixedThreadPoolBuilder(3));
             try {
                 executor.execute(new ReceivingPacketRelay(
                         this.serverSocket, this.receivedPackets));
                 executor.execute(new ForwardingPacketRelay(
-                        this.multipleThreadsExecutorFactory,
                         this.receivedPackets,
                         this.sendablePackets,
                         this.workerFactory));
@@ -747,12 +668,6 @@ public final class DatagramServer {
     private static final class ForwardingPacketRelay implements Runnable {
 
         /**
-         * The {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute {@code Worker}s.
-         */
-        private final ExecutorFactory multipleThreadsExecutorFactory;
-
-        /**
          * The {@code Queue} of received {@code DatagramPacket}s.
          */
         private final Queue<DatagramPacket> receivedPackets;
@@ -769,30 +684,22 @@ public final class DatagramServer {
 
         /**
          * Constructs a {@code ForwardingPacketRelay} with the provided
-         * {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute {@code Worker}s, the provided {@code Queue} of received
-         * {@code DatagramPacket}s, the provided {@code Queue} of sendable
-         * {@code DatagramPacket}s, and the provided {@code WorkerFactory}
-         * used for creating {@code Worker}s.
+         * {@code Queue} of received {@code DatagramPacket}s, the provided
+         * {@code Queue} of sendable {@code DatagramPacket}s, and the provided
+         * {@code WorkerFactory} used for creating {@code Worker}s.
          *
-         * @param multiThreadsExecutorFactory the provided
-         *                                    {@code ExecutorFactory} for
-         *                                    creating an {@code Executor} to
-         *                                    execute {@code Worker}s
-         * @param receivedPckts               the provided {@code Queue} of
-         *                                    received {@code DatagramPacket}s
-         * @param sendablePckts               the provided {@code Queue} of
-         *                                    sendable {@code DatagramPacket}s
-         * @param factory                     the provided
-         *                                    {@code WorkerFactory} used for
-         *                                    creating {@code Worker}s
+         * @param receivedPckts the provided {@code Queue} of
+         *                      received {@code DatagramPacket}s
+         * @param sendablePckts the provided {@code Queue} of
+         *                      sendable {@code DatagramPacket}s
+         * @param factory       the provided
+         *                      {@code WorkerFactory} used for
+         *                      creating {@code Worker}s
          */
         public ForwardingPacketRelay(
-                final ExecutorFactory multiThreadsExecutorFactory,
                 final Queue<DatagramPacket> receivedPckts,
                 final Queue<DatagramPacket> sendablePckts,
                 final WorkerFactory factory) {
-            this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
             this.receivedPackets = receivedPckts;
             this.sendablePackets = sendablePckts;
             this.workerFactory = factory;
@@ -802,7 +709,8 @@ public final class DatagramServer {
         public void run() {
             Packets packets = new Packets();
             ExecutorService executor =
-                    this.multipleThreadsExecutorFactory.newExecutor();
+                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
+                            ExecutorsHelper.newCachedThreadPoolBuilder());
             try {
                 while (true) {
                     try {

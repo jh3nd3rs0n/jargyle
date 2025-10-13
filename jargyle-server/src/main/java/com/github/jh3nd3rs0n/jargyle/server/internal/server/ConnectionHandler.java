@@ -1,14 +1,16 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.server.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 final class ConnectionHandler {

@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.logging;
+package com.github.jh3nd3rs0n.jargyle.server.internal.logging;
 
 import java.util.Objects;
 

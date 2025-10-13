@@ -1,15 +1,18 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
 import com.github.jh3nd3rs0n.jargyle.server.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.LogMessageSource;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Route;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Routes;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;

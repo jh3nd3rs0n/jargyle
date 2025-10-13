@@ -1,6 +1,5 @@
-package com.github.jh3nd3rs0n.jargyle.internal.logging;
+package com.github.jh3nd3rs0n.jargyle.server.internal.logging;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import org.junit.Test;
 
 import java.util.IllegalFormatException;

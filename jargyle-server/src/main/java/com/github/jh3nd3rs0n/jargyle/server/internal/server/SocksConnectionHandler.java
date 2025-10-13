@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5.Socks5ConnectionHandler;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5.Socks5ConnectionHandlerContext;
 

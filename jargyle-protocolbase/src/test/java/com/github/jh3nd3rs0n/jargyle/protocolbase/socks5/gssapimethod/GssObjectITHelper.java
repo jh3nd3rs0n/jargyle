@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.GssEnvironment;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import org.ietf.jgss.*;
 
@@ -90,7 +89,6 @@ public class GssObjectITHelper {
         Server server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new GssServerWorkerFactory(serverGssObjectTester));
         Socket socket = null;
         GSSContext gssContext = null;

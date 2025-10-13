@@ -53,7 +53,6 @@ public final class EchoServer {
                 port,
                 backlog,
                 inetAddress,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new EchoWorkerFactory()));
     }
 

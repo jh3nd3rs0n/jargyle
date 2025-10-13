@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.concurrent;
+package com.github.jh3nd3rs0n.jargyle.test.help.concurrent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public final class ExecutorsHelper {
      * platform threads.
      */
     static final String USE_VIRTUAL_THREADS_SYSTEM_PROPERTY_NAME =
-            "com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads";
+            "com.github.jh3nd3rs0n.jargyle.test.help.concurrent.useVirtualThreads";
 
     /**
      * The {@code ReentrantLock} used for controlling access to

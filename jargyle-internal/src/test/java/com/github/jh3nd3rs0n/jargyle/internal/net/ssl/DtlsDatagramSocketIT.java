@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
-import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
-import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
@@ -67,8 +65,6 @@ public class DtlsDatagramSocketIT {
         return new DatagramServer(
                 serverDtlsDatagramSocketFactory,
                 0,
-                new VirtualThreadPerTaskExecutorOrTripleThreadPoolFactory(),
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new EchoWorkerFactory());
     }
 
@@ -76,6 +72,7 @@ public class DtlsDatagramSocketIT {
     public static void setUpBeforeClass() throws IOException, NoSuchAlgorithmException, KeyManagementException {
 
         // System.setProperty("javax.net.debug", "ssl,handshake");
+        // System.setProperty("com.github.jh3nd3rs0n.jargyle.internal.net.debug", "expand,dtls");
 
         clientDtlsContextUsingDtlsv1point2 = SslContextHelper.getSslContext(
                 "DTLSv1.2",
@@ -104,6 +101,7 @@ public class DtlsDatagramSocketIT {
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
         // System.clearProperty("javax.net.debug");
+        // System.clearProperty("com.github.jh3nd3rs0n.jargyle.internal.net.debug");
         if (echoDtlsDatagramServerUsingDtlsv1Point2 != null
                 && !echoDtlsDatagramServerUsingDtlsv1Point2.getState().equals(DatagramServer.State.STOPPED)) {
             echoDtlsDatagramServerUsingDtlsv1Point2.stop();

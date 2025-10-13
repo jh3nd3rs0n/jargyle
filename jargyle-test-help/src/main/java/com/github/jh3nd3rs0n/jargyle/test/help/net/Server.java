@@ -1,5 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.test.help.net;
 
+import com.github.jh3nd3rs0n.jargyle.test.help.concurrent.ExecutorsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +36,6 @@ public final class Server {
      * The binding {@code InetAddress} of this {@code Server}.
      */
     private final InetAddress bindInetAddress;
-
-    /**
-     * The {@code ExecutorFactory} used for creating an {@code Executor} to
-     * execute {@code Worker}s.
-     */
-    private final ExecutorFactory multipleThreadsExecutorFactory;
 
     /**
      * The {@code ServerSocketFactory} used for creating a
@@ -81,32 +76,25 @@ public final class Server {
     /**
      * Constructs a {@code Server} with the provided
      * {@code ServerSocketFactory} used for creating a {@code ServerSocket},
-     * the provided specified port, the provided {@code ExecutorFactory} used
-     * for creating an {@code Executor} to execute {@code Worker}s, and the
-     * provided {@code WorkerFactory} used for creating {@code Worker}s.
+     * the provided specified port, and the provided {@code WorkerFactory}
+     * used for creating {@code Worker}s.
      *
-     * @param serverSockFactory           the provided
-     *                                    {@code ServerSocketFactory} used for
-     *                                    creating a {@code ServerSocket}
-     * @param prt                         the provided specified port
-     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
-     *                                    used for creating an
-     *                                    {@code Executor} to execute
-     *                                    {@code Worker}s
-     * @param factory                     the provided {@code WorkerFactory}
-     *                                    used for creating {@code Worker}s
+     * @param serverSockFactory the provided
+     *                          {@code ServerSocketFactory} used for
+     *                          creating a {@code ServerSocket}
+     * @param prt               the provided specified port
+     * @param factory           the provided {@code WorkerFactory}
+     *                          used for creating {@code Worker}s
      */
     public Server(
             final ServerSocketFactory serverSockFactory,
             final int prt,
-            final ExecutorFactory multiThreadsExecutorFactory,
             final WorkerFactory factory) {
         this(
                 serverSockFactory,
                 prt,
                 BACKLOG,
                 INET_ADDRESS,
-                multiThreadsExecutorFactory,
                 factory);
     }
 
@@ -114,37 +102,29 @@ public final class Server {
      * Constructs a {@code Server} with the provided
      * {@code ServerSocketFactory} used for creating a {@code ServerSocket},
      * the provided specified port, the provided maximum length of the queue
-     * of incoming connections, the provided binding {@code InetAddress}, the
-     * provided {@code ExecutorFactory} used for creating an {@code Executor}
-     * to execute {@code Worker}s, and the provided {@code WorkerFactory} used
-     * for creating {@code Worker}s.
+     * of incoming connections, the provided binding {@code InetAddress}, and
+     * the provided {@code WorkerFactory} used for creating {@code Worker}s.
      *
-     * @param serverSockFactory           the provided
-     *                                    {@code ServerSocketFactory} used for
-     *                                    creating a {@code ServerSocket}
-     * @param prt                         the provided specified port
-     * @param bklog                       the provided maximum length of the
-     *                                    queue of incoming connections
-     * @param bindInetAddr                the provided binding
-     *                                    {@code InetAddress}
-     * @param multiThreadsExecutorFactory the provided {@code ExecutorFactory}
-     *                                    used for creating an
-     *                                    {@code Executor} to execute
-     *                                    {@code Worker}s
-     * @param factory                     the provided {@code WorkerFactory}
-     *                                    used for creating {@code Worker}s
+     * @param serverSockFactory the provided
+     *                          {@code ServerSocketFactory} used for
+     *                          creating a {@code ServerSocket}
+     * @param prt               the provided specified port
+     * @param bklog             the provided maximum length of the
+     *                          queue of incoming connections
+     * @param bindInetAddr      the provided binding
+     *                          {@code InetAddress}
+     * @param factory           the provided {@code WorkerFactory}
+     *                          used for creating {@code Worker}s
      */
     public Server(
             final ServerSocketFactory serverSockFactory,
             final int prt,
             final int bklog,
             final InetAddress bindInetAddr,
-            final ExecutorFactory multiThreadsExecutorFactory,
             final WorkerFactory factory) {
         this.backlog = bklog;
         this.bindInetAddress = bindInetAddr;
         this.executor = null;
-        this.multipleThreadsExecutorFactory = multiThreadsExecutorFactory;
         this.port = -1;
         this.serverSocket = null;
         this.serverSocketFactory = serverSockFactory;
@@ -212,7 +192,6 @@ public final class Server {
         this.executor = Executors.newSingleThreadExecutor();
         this.executor.execute(new Listener(
                 this.serverSocket,
-                this.multipleThreadsExecutorFactory,
                 this.workerFactory));
         this.state = State.STARTED;
     }
@@ -327,12 +306,6 @@ public final class Server {
         private final Logger logger;
 
         /**
-         * The {@code ExecutorFactory} used for creating an {@code Executor} to
-         * execute {@code Worker}s.
-         */
-        private final ExecutorFactory multiThreadsExecutorFactory;
-
-        /**
          * The {@code ServerSocket}.
          */
         private final ServerSocket serverSocket;
@@ -344,24 +317,17 @@ public final class Server {
 
         /**
          * Constructs a {@code Listener} with the provided
-         * {@code ServerSocket}, the provided {@code ExecutorFactory} used for
-         * creating an {@code Executor} to execute {@code Worker}s, and the
-         * provided {@code WorkerFactory} used for creating {@code Worker}s.
+         * {@code ServerSocket} and the provided {@code WorkerFactory} used
+         * for creating {@code Worker}s.
          *
-         * @param serverSock                  the provided {@code ServerSocket}
-         * @param multiThreadsExecutorFactory the provided
-         *                                    {@code ExecutorFactory} used for
-         *                                    creating an {@code Executor} to
-         *                                    execute {@code Worker}s
-         * @param factory                     the provided
-         *                                    {@code WorkerFactory} used for
-         *                                    creating {@code Worker}s
+         * @param serverSock the provided {@code ServerSocket}
+         * @param factory    the provided
+         *                   {@code WorkerFactory} used for
+         *                   creating {@code Worker}s
          */
         public Listener(
                 final ServerSocket serverSock,
-                final ExecutorFactory multiThreadsExecutorFactory,
                 final WorkerFactory factory) {
-            this.multiThreadsExecutorFactory = multiThreadsExecutorFactory;
             this.logger = LoggerFactory.getLogger(Listener.class);
             this.serverSocket = serverSock;
             this.workerFactory = factory;
@@ -370,7 +336,8 @@ public final class Server {
         @Override
         public void run() {
             ExecutorService executor =
-                    this.multiThreadsExecutorFactory.newExecutor();
+                    ExecutorsHelper.newVirtualThreadPerTaskExecutorOrElse(
+                            ExecutorsHelper.newCachedThreadPoolBuilder());
             try {
                 while (true) {
                     try {

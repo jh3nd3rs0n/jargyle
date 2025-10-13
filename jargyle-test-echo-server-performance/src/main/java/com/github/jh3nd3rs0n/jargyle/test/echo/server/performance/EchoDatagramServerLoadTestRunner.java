@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.server.performance;
 
-import com.github.jh3nd3rs0n.jargyle.internal.concurrent.ExecutorsHelper;
 import com.github.jh3nd3rs0n.jargyle.test.echo.AbstractSocksServer;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoDatagramServer;
+import com.github.jh3nd3rs0n.jargyle.test.help.concurrent.ExecutorsHelper;
 
 import java.io.IOException;
 import java.net.InetAddress;

@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.internal.net.ssl;
 
-import com.github.jh3nd3rs0n.jargyle.internal.VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
@@ -25,7 +24,6 @@ public class DefaultSslSocketFactoryIT {
         server = new Server(
                 new Server.DefaultServerSocketFactory(),
                 0,
-                new VirtualThreadPerTaskExecutorOrCachedThreadPoolFactory(),
                 new Server.DefaultWorkerFactory());
         server.start();
         serverPort = server.getPort();

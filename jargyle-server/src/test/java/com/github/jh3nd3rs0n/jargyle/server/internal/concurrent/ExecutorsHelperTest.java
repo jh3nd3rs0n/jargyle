@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.internal.concurrent;
+package com.github.jh3nd3rs0n.jargyle.server.internal.concurrent;
 
 import org.junit.AfterClass;
 import org.junit.Assert;

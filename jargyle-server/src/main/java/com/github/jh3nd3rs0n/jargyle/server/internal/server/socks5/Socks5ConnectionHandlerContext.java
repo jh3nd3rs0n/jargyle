@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.server.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.*;
 
 import java.io.IOException;

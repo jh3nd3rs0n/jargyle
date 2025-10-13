@@ -1,11 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
-import com.github.jh3nd3rs0n.jargyle.internal.logging.ObjectLogMessageHelper;
+import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.Socket;
-import java.util.concurrent.atomic.AtomicInteger;
 
 final class Worker implements Runnable {
 	

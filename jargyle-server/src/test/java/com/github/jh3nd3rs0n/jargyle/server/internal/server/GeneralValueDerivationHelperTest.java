@@ -27,10 +27,12 @@ public class GeneralValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -43,10 +45,12 @@ public class GeneralValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(
@@ -59,10 +63,12 @@ public class GeneralValueDerivationHelperTest {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
                 .addRuleAction(GeneralRuleActionSpecConstants.CLIENT_SOCKET_SETTING.newRuleAction(
-                        (SocketSetting<Object>) socketSetting))
+                        socketSttng))
                 .build();
         Settings settings = Settings.of();
         Assert.assertEquals(

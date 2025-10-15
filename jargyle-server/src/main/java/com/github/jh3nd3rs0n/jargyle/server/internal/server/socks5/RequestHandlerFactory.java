@@ -2,35 +2,29 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Request;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.ServerEventLogger;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 abstract class RequestHandlerFactory {
 
-    private static final Map<Command, RequestHandlerFactory> REQUEST_HANDLER_FACTORY_MAP;
+    private static final Map<Command, RequestHandlerFactory> REQUEST_HANDLER_FACTORY_MAP =
+            new HashMap<>();
 
-    static {
-        RequestHandlerFactories requestHandlerFactories =
-                new RequestHandlerFactories();
-        requestHandlerFactories.add(new BindRequestHandlerFactory());
-        requestHandlerFactories.add(new ConnectRequestHandlerFactory());
-        requestHandlerFactories.add(new ResolveRequestHandlerFactory());
-        requestHandlerFactories.add(new UdpAssociateRequestHandlerFactory());
-        REQUEST_HANDLER_FACTORY_MAP = new HashMap<>(
-                requestHandlerFactories.toMap());
-    }
+    private static final ReentrantLock REENTRANT_LOCK = new ReentrantLock();
+
+    private static boolean initialized = false;
 
     private final Command command;
 
-    private RequestHandlerFactory(final Command cmd) {
+    public RequestHandlerFactory(final Command cmd) {
         this.command = cmd;
     }
 
     public static RequestHandlerFactory getInstance(final Command cmd) {
+        initializeIfNotInitialized();
         RequestHandlerFactory requestHandlerFactory =
                 REQUEST_HANDLER_FACTORY_MAP.get(cmd);
         if (requestHandlerFactory != null) {
@@ -46,6 +40,25 @@ abstract class RequestHandlerFactory {
                 cmd));
     }
 
+    private static void initializeIfNotInitialized() {
+        REENTRANT_LOCK.lock();
+        try {
+            if (initialized) {
+                return;
+            }
+            RequestHandlerFactories requestHandlerFactories =
+                    new RequestHandlerFactories();
+            requestHandlerFactories.add(new BindRequestHandlerFactory());
+            requestHandlerFactories.add(new ConnectRequestHandlerFactory());
+            requestHandlerFactories.add(new ResolveRequestHandlerFactory());
+            requestHandlerFactories.add(new UdpAssociateRequestHandlerFactory());
+            REQUEST_HANDLER_FACTORY_MAP.putAll(requestHandlerFactories.toMap());
+            initialized = true;
+        } finally {
+            REENTRANT_LOCK.unlock();
+        }
+    }
+
     public Command getCommand() {
         return this.command;
     }
@@ -54,111 +67,5 @@ abstract class RequestHandlerFactory {
             final Socks5ConnectionHandlerContext handlerContext,
             final MethodSubNegotiationResults methSubNegotiationResults,
             final Request req);
-
-    private static final class BindRequestHandlerFactory
-            extends RequestHandlerFactory {
-
-        public BindRequestHandlerFactory() {
-            super(Command.BIND);
-        }
-
-        @Override
-        public RequestHandler newRequestHandler(
-                final Socks5ConnectionHandlerContext handlerContext,
-                final MethodSubNegotiationResults methSubNegotiationResults,
-                final Request req) {
-            return new BindRequestHandler(new TcpBasedRequestHandlerContext(
-                    new RequestHandlerContext(
-                            handlerContext,
-                            methSubNegotiationResults,
-                            req,
-                            ServerEventLogger.newInstance(BindRequestHandler.class))));
-        }
-
-    }
-
-    private static final class ConnectRequestHandlerFactory
-            extends RequestHandlerFactory {
-
-        public ConnectRequestHandlerFactory() {
-            super(Command.CONNECT);
-        }
-
-        @Override
-        public RequestHandler newRequestHandler(
-                final Socks5ConnectionHandlerContext handlerContext,
-                final MethodSubNegotiationResults methSubNegotiationResults,
-                final Request req) {
-            return new ConnectRequestHandler(new TcpBasedRequestHandlerContext(
-                    new RequestHandlerContext(
-                            handlerContext, 
-                            methSubNegotiationResults, 
-                            req, 
-                            ServerEventLogger.newInstance(ConnectRequestHandler.class))));
-        }
-
-    }
-
-    private static final class RequestHandlerFactories {
-
-        private final Map<Command, RequestHandlerFactory> requestHandlerFactoryMap;
-
-        public RequestHandlerFactories() {
-            this.requestHandlerFactoryMap = new HashMap<>();
-        }
-
-        public void add(final RequestHandlerFactory value) {
-            this.requestHandlerFactoryMap.put(value.getCommand(), value);
-        }
-
-        public Map<Command, RequestHandlerFactory> toMap() {
-            return Collections.unmodifiableMap(this.requestHandlerFactoryMap);
-        }
-
-    }
-
-    private static final class ResolveRequestHandlerFactory
-            extends RequestHandlerFactory {
-
-        public ResolveRequestHandlerFactory() {
-            super(Command.RESOLVE);
-        }
-
-        @Override
-        public RequestHandler newRequestHandler(
-                final Socks5ConnectionHandlerContext handlerContext,
-                final MethodSubNegotiationResults methSubNegotiationResults,
-                final Request req) {
-            return new ResolveRequestHandler(new TcpBasedRequestHandlerContext(
-                    new RequestHandlerContext(
-                            handlerContext,
-                            methSubNegotiationResults,
-                            req,
-                            ServerEventLogger.newInstance(ResolveRequestHandler.class))));
-        }
-
-    }
-
-    private static final class UdpAssociateRequestHandlerFactory
-            extends RequestHandlerFactory {
-
-        public UdpAssociateRequestHandlerFactory() {
-            super(Command.UDP_ASSOCIATE);
-        }
-
-        @Override
-        public RequestHandler newRequestHandler(
-                final Socks5ConnectionHandlerContext handlerContext,
-                final MethodSubNegotiationResults methSubNegotiationResults,
-                final Request req) {
-            return new UdpAssociateRequestHandler(
-                    new RequestHandlerContext(
-                            handlerContext,
-                            methSubNegotiationResults,
-                            req,
-                            ServerEventLogger.newInstance(UdpAssociateRequestHandler.class)));
-        }
-
-    }
 
 }

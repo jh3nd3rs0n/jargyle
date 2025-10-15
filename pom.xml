@@ -193,7 +193,8 @@
 					<configuration>
 						<systemPropertyVariables>
 							<!--
-							<com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.internal.concurrent.useVirtualThreads>
+							<com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.server.internal.concurrent.useVirtualThreads>
+							<com.github.jh3nd3rs0n.jargyle.test.help.concurrent.useVirtualThreads>false</com.github.jh3nd3rs0n.jargyle.test.help.concurrent.useVirtualThreads>
 							-->
 							<!-- -->
 							<jdk.virtualThreadScheduler.parallelism>2000</jdk.virtualThreadScheduler.parallelism>

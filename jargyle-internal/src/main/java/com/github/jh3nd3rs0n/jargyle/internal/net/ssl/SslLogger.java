@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -221,24 +222,14 @@ final class SslLogger {
                         PATTERN, Locale.ENGLISH)
                 .withZone(ZoneId.systemDefault());
 
+        private static final ReentrantLock REENTRANT_LOCK = new ReentrantLock();
+
         private static final String THREAD_GET_ID_METHOD_NAME = "getId";
         private static final String THREAD_THREAD_ID_METHOD_NAME = "threadId";
 
+        private static boolean initialized = false;
         private static Method threadGetIdMethod = null;
         private static Method threadThreadIdMethod = null;
-
-        static {
-            try {
-                threadThreadIdMethod = Thread.class.getMethod(THREAD_THREAD_ID_METHOD_NAME);
-            } catch (NoSuchMethodException ignored) {
-            }
-            if (threadThreadIdMethod == null) {
-                try {
-                    threadGetIdMethod = Thread.class.getMethod(THREAD_GET_ID_METHOD_NAME);
-                } catch (NoSuchMethodException ignored) {
-                }
-            }
-        }
 
         private final String loggerName;
         private final boolean useCompactFormat;
@@ -258,6 +249,7 @@ final class SslLogger {
         }
 
         private static long getThreadId(final Thread thread) {
+            initializeIfNotInitialized();
             if (threadThreadIdMethod != null) {
                 try {
                     return (long) threadThreadIdMethod.invoke(thread);
@@ -269,6 +261,30 @@ final class SslLogger {
                 return (long) threadGetIdMethod.invoke(thread);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new AssertionError(e);
+            }
+        }
+
+        private static void initializeIfNotInitialized() {
+            REENTRANT_LOCK.lock();
+            try {
+                if (initialized) {
+                    return;
+                }
+                try {
+                    threadThreadIdMethod = Thread.class.getMethod(
+                            THREAD_THREAD_ID_METHOD_NAME);
+                } catch (NoSuchMethodException ignored) {
+                }
+                if (threadThreadIdMethod == null) {
+                    try {
+                        threadGetIdMethod = Thread.class.getMethod(
+                                THREAD_GET_ID_METHOD_NAME);
+                    } catch (NoSuchMethodException ignored) {
+                    }
+                }
+                initialized = true;
+            } finally {
+                REENTRANT_LOCK.unlock();
             }
         }
 

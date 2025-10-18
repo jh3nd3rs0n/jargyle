@@ -38,11 +38,11 @@ final class RequestHandlerContext {
     }
 
     public boolean canAllowReply() {
-        Rule applicableRule = this.getApplicableRule();
-        RuleContext ruleContext = this.getRuleContext();
         if (!this.hasReplyRuleCondition()) {
             return true;
         }
+        Rule applicableRule = this.getApplicableRule();
+        RuleContext ruleContext = this.getRuleContext();
         FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
                 GeneralRuleActionSpecConstants.FIREWALL_ACTION);
         if (firewallAction == null) {

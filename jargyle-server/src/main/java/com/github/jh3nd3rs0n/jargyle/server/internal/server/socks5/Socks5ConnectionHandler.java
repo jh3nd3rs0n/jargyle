@@ -34,13 +34,13 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 	}
 
 	private boolean canAllowRequest() {
+        if (!this.hasRequestRuleCondition()) {
+            return true;
+        }
 		Rule applicableRule =
                 this.context.getApplicableRule();
 		RuleContext ruleContext =
                 this.context.getRuleContext();
-		if (!this.hasRequestRuleCondition()) {
-			return true;
-		}
 		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
 				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {
@@ -424,15 +424,15 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 	}
 
 	private Route selectRequestRoute() {
-		Rule applicableRule =
-                this.context.getApplicableRule();
-		RuleContext ruleContext =
-                this.context.getRuleContext();
 		Route selectedRte =
                 this.context.getSelectedRoute();
 		if (!this.hasRequestRuleCondition()) {
 			return selectedRte;
 		}
+        Rule applicableRule =
+                this.context.getApplicableRule();
+        RuleContext ruleContext =
+                this.context.getRuleContext();
 		if (!applicableRule.hasRuleAction(
 				GeneralRuleActionSpecConstants.ROUTE_SELECTION_LOG_ACTION)
 				&& !applicableRule.hasRuleAction(

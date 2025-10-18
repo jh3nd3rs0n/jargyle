@@ -48,13 +48,13 @@ final class BindRequestHandler extends RequestHandler {
 	}
 	
 	private boolean canAllowSecondReply() {
+        if (!this.hasSecondReplyRuleCondition()) {
+            return true;
+        }
 		Rule applicableRule =
                 this.context.getApplicableRule();
 		RuleContext ruleContext =
                 this.context.getRuleContext();
-		if (!this.hasSecondReplyRuleCondition()) {
-			return true;
-		}
 		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
 				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
 		if (firewallAction == null) {

@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Jargyle is a Java SOCKS5 server and API designed to be both flexible and 
-powerful. It allows you to create SOCKS5 proxies, integrate SOCKS5 
-functionality into your Java applications, and manage network traffic with 
-fine-grained control. Inspired by projects like JSocks, SocksLib, Esocks, and 
-Dante, Jargyle aims to provide a modern and robust solution for SOCKS5 in Java.
+Jargyle is a Java SOCKS5 server and a Java SOCKS5 client/server API. It is 
+inspired by [JSocks](https://jsocks.sourceforge.net/),
+[SocksLib](https://github.com/fengyouchao/sockslib),
+[Esocks](https://github.com/fengyouchao/esocks) and
+[Dante](https://www.inet.no/dante/index.html).
 
 ## Project Status
 
@@ -24,36 +24,9 @@ Here’s why:
 **Warning**: Breaking changes may occur as the project evolves. However, any 
 existing documentation will be updated to reflect these changes.
 
-## Key Concepts
-
-Before diving into the features and examples, it's important to understand the 
-core concepts behind Jargyle:
-
--   **SOCKS5**: A network protocol that allows clients to connect to servers 
-    through a proxy server. SOCKS5 provides advantages like firewall traversal 
-    and anonymity.
-
--   **SOCKS Server**: Accepts connections from clients, forwards their 
-    requests to the destination server, and relays the responses back.
-
--   **SOCKS Client API**: Allows Java applications to act as SOCKS clients, 
-    routing their network traffic through a SOCKS server.
-
--   **Proxy Chaining**: Routes traffic through multiple SOCKS servers, 
-    creating a chain of proxies.
-
--   **SSL/TLS and DTLS**: Encrypts traffic between clients and the SOCKS 
-    server (SSL/TLS for TCP, DTLS for UDP) for enhanced security.
-
--   **Authentication Methods**: SOCKS5 supports different authentication 
-    methods, including no authentication, username/password, and GSS-API.
-
 ## Features
 
 ### Core Functionality
-
--   **SOCKS5 Server and API**: Create and manage SOCKS5 servers and integrate 
-    SOCKS5 client functionality into your Java applications.
 
 -   **CONNECT, BIND, and UDP ASSOCIATE**: Supports all standard SOCKS5 
     requests.
@@ -66,12 +39,13 @@ core concepts behind Jargyle:
 -   **SSL/TLS and DTLS Support**: Encrypt TCP and UDP traffic for enhanced 
     security.
 
--   **Proxy Chaining**: Route traffic through multiple SOCKS5 servers.
+-   **Proxy Chaining**: Route traffic through multiple SOCKS servers.
 
 -   **Host Resolution**: Resolve hostnames locally or through a SOCKS5 server.
 
--   **Rule-Based Traffic Management**:
-    
+-   **Rule-Based Traffic Management (for the SOCKS server and the SOCKS server 
+    API)**:
+  
     -   **Firewall Rules**: Allow or deny traffic based on various criteria.
     
     -   **Rate Limiting**: Limit the number of simultaneous connections.
@@ -86,29 +60,16 @@ core concepts behind Jargyle:
     
     -   **Bandwidth Limiting**: Control the bandwidth used for data relay.
 
-### API Highlights
-
--   **Configuration-Based Design**: Tailor the SOCKS server and client 
-    behavior through a flexible configuration system.
-
--   **Synchronous I/O**: Utilizes a straightforward and predictable 
-    synchronous I/O model, emphasizing simplicity and reliability.
-
 ## Uses
 
 -   **Enhancing SOCKS Support**: Use Jargyle to provide advanced SOCKS 
     features (e.g., authentication, proxy chaining) to applications that only 
     have basic SOCKS support.
 
--   **Secure Tunneling**: Encrypt your network traffic using SSL/TLS or DTLS.
-
--   **Circumventing Restrictions**: Bypass firewalls and geo-restrictions.
+-   **Secure Tunneling**: Encrypt your network traffic using SSL/TLS and DTLS.
 
 -   **Testing and Development**: Simulate different network conditions and 
-    test SOCKS5 client/server implementations.
-
--   **Adding SOCKS5 Support to Applications**: Integrate the SOCKS client API 
-    into your Java applications to route traffic through a SOCKS server.
+    test SOCKS client/server implementations.
 
 ## Examples
 

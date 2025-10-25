@@ -11,13 +11,13 @@ import com.github.jh3nd3rs0n.jargyle.server.internal.server.*;
 import java.io.IOException;
 import java.net.Socket;
 
-final class TcpBasedRequestHandlerContext {
+final class RelayRequestHandlerContext {
 
     private static final int HALF_SECOND = 500;
 
     private final RequestHandlerContext requestHandlerContext;
     
-    public TcpBasedRequestHandlerContext(
+    public RelayRequestHandlerContext(
             final RequestHandlerContext handlerContext) {
         this.requestHandlerContext = handlerContext;
     }

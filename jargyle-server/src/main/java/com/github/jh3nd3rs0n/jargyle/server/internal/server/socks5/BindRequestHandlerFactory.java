@@ -16,7 +16,7 @@ final class BindRequestHandlerFactory
             final Socks5ConnectionHandlerContext handlerContext,
             final MethodSubNegotiationResults methSubNegotiationResults,
             final Request req) {
-        return new BindRequestHandler(new TcpBasedRequestHandlerContext(
+        return new BindRequestHandler(new RelayRequestHandlerContext(
                 new RequestHandlerContext(
                         handlerContext,
                         methSubNegotiationResults,

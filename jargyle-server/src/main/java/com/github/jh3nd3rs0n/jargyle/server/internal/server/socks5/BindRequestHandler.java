@@ -20,10 +20,10 @@ import java.util.Iterator;
 
 final class BindRequestHandler extends RequestHandler {
 
-    private final TcpBasedRequestHandlerContext context;
+    private final RelayRequestHandlerContext context;
 	private final ServerEventLogger serverEventLogger;
 		
-	public BindRequestHandler(final TcpBasedRequestHandlerContext cntxt) {
+	public BindRequestHandler(final RelayRequestHandlerContext cntxt) {
         this.context = cntxt;
         this.context.setLogMessageSource(this);
 		this.serverEventLogger = cntxt.getServerEventLogger();

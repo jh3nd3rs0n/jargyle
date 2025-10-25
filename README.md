@@ -12,8 +12,8 @@
 
 ## Overview
 
-Jargyle is a Java SOCKS5 server and API. It is inspired by
-[JSocks](https://jsocks.sourceforge.net/),
+Jargyle is a Java SOCKS5 server and a Java SOCKS5 client/server API. It is
+inspired by [JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
@@ -24,7 +24,7 @@ Its license can be found [here](LICENSE).
 
 This README file discusses how to get started in contributing and building 
 Jargyle. For detailed examples and usage instructions including how to use 
-Jargyle with SOCKS5, please refer to the 
+Jargyle, please refer to the 
 [project website](https://jh3nd3rs0n.github.io/jargyle).
 
 ## Contributing Guidelines

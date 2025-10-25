@@ -16,7 +16,7 @@ final class ConnectRequestHandlerFactory
             final Socks5ConnectionHandlerContext handlerContext,
             final MethodSubNegotiationResults methSubNegotiationResults,
             final Request req) {
-        return new ConnectRequestHandler(new TcpBasedRequestHandlerContext(
+        return new ConnectRequestHandler(new RelayRequestHandlerContext(
                 new RequestHandlerContext(
                         handlerContext,
                         methSubNegotiationResults,

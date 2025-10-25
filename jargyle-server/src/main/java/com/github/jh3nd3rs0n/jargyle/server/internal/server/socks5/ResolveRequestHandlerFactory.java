@@ -16,12 +16,12 @@ final class ResolveRequestHandlerFactory
             final Socks5ConnectionHandlerContext handlerContext,
             final MethodSubNegotiationResults methSubNegotiationResults,
             final Request req) {
-        return new ResolveRequestHandler(new TcpBasedRequestHandlerContext(
+        return new ResolveRequestHandler(
                 new RequestHandlerContext(
                         handlerContext,
                         methSubNegotiationResults,
                         req,
-                        ServerEventLogger.newInstance(ResolveRequestHandler.class))));
+                        ServerEventLogger.newInstance(ResolveRequestHandler.class)));
     }
 
 }

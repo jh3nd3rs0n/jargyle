@@ -17,10 +17,10 @@ import java.net.UnknownHostException;
 
 final class ResolveRequestHandler extends RequestHandler {
 
-    private final TcpBasedRequestHandlerContext context;
+    private final RequestHandlerContext context;
 	private final ServerEventLogger serverEventLogger;
 
-	public ResolveRequestHandler(final TcpBasedRequestHandlerContext cntxt) {
+	public ResolveRequestHandler(final RequestHandlerContext cntxt) {
         this.context = cntxt;
         this.context.setLogMessageSource(this);
 		this.serverEventLogger = cntxt.getServerEventLogger();

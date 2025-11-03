@@ -46,17 +46,20 @@ abstract class RequestHandlerFactory {
             if (initialized) {
                 return;
             }
-            RequestHandlerFactories requestHandlerFactories =
-                    new RequestHandlerFactories();
-            requestHandlerFactories.add(new BindRequestHandlerFactory());
-            requestHandlerFactories.add(new ConnectRequestHandlerFactory());
-            requestHandlerFactories.add(new ResolveRequestHandlerFactory());
-            requestHandlerFactories.add(new UdpAssociateRequestHandlerFactory());
-            REQUEST_HANDLER_FACTORY_MAP.putAll(requestHandlerFactories.toMap());
+            put(new BindRequestHandlerFactory());
+            put(new ConnectRequestHandlerFactory());
+            put(new ResolveRequestHandlerFactory());
+            put(new UdpAssociateRequestHandlerFactory());
             initialized = true;
         } finally {
             REENTRANT_LOCK.unlock();
         }
+    }
+
+    private static void put(
+            final RequestHandlerFactory requestHandlerFactory) {
+        REQUEST_HANDLER_FACTORY_MAP.put(
+                requestHandlerFactory.getCommand(), requestHandlerFactory);
     }
 
     public Command getCommand() {

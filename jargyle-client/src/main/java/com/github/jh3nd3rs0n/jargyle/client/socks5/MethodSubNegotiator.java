@@ -41,17 +41,19 @@ abstract class MethodSubNegotiator {
             if (initialized) {
                 return;
             }
-            MethodSubNegotiators methodSubNegotiators = new MethodSubNegotiators();
-            methodSubNegotiators.add(new GssapiMethodSubNegotiator());
-            methodSubNegotiators.add(new NoAcceptableMethodsMethodSubNegotiator());
-            methodSubNegotiators.add(
-                    new NoAuthenticationRequiredMethodSubNegotiator());
-            methodSubNegotiators.add(new UsernamePasswordMethodSubNegotiator());
-            METHOD_SUB_NEGOTIATORS_MAP.putAll(methodSubNegotiators.toMap());
+            put(new GssapiMethodSubNegotiator());
+            put(new NoAcceptableMethodsMethodSubNegotiator());
+            put(new NoAuthenticationRequiredMethodSubNegotiator());
+            put(new UsernamePasswordMethodSubNegotiator());
             initialized = true;
         } finally {
             REENTRANT_LOCK.unlock();
         }
+    }
+
+    private static void put(final MethodSubNegotiator methodSubNegotiator) {
+        METHOD_SUB_NEGOTIATORS_MAP.put(
+                methodSubNegotiator.getMethod(), methodSubNegotiator);
     }
 
 	private final Method method;

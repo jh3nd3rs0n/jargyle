@@ -41,10 +41,10 @@ abstract class MethodSubNegotiator {
             if (initialized) {
                 return;
             }
-            put(new GssapiMethodSubNegotiator());
+            put(new GssapiAuthMethodSubNegotiator());
             put(new NoAcceptableMethodsMethodSubNegotiator());
             put(new NoAuthenticationRequiredMethodSubNegotiator());
-            put(new UsernamePasswordMethodSubNegotiator());
+            put(new UsernamePasswordAuthMethodSubNegotiator());
             initialized = true;
         } finally {
             REENTRANT_LOCK.unlock();

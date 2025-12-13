@@ -3,6 +3,7 @@
 ## Contents
 
 -   [General Rule Actions](#general-rule-actions)
+-   [SOCKS Rule Actions](#socks-rule-actions)
 -   [SOCKS5 Rule Actions](#socks5-rule-actions)
 -   [All Rule Actions](#all-rule-actions)
 
@@ -37,6 +38,65 @@
 <tr><td><a href="#socketsetting"><code>socketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for all sockets (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
 </table>
 
+## SOCKS Rule Actions
+
+<table>
+<tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
+<tr><td><a href="#socks-onbindrequest-inboundsocketsetting"><code>socks.onBindRequest.inboundSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for the inbound socket (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onbindrequest-listenbindhost"><code>socks.onBindRequest.listenBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for the listen socket if the provided host address is all zeros</td></tr>
+<tr><td><a href="#socks-onbindrequest-listenbindhostaddresstype"><code>socks.onBindRequest.listenBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for the listen socket if the provided host address is all zeros (can be specified multiple times with each rule specifying another host address type)</td></tr>
+<tr><td><a href="#socks-onbindrequest-listenbindportrange"><code>socks.onBindRequest.listenBindPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for the listen socket if the provided port is zero (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onbindrequest-listennetinterface"><code>socks.onBindRequest.listenNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for the listen socket if the provided host address is all zeros</td></tr>
+<tr><td><a href="#socks-onbindrequest-listensocketsetting"><code>socks.onBindRequest.listenSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for the listen socket (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onbindrequest-relaybuffersize"><code>socks.onBindRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>Specifies the buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onbindrequest-relayidletimeout"><code>socks.onBindRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onbindrequest-relayinboundbandwidthlimit"><code>socks.onBindRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onbindrequest-relayoutboundbandwidthlimit"><code>socks.onBindRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onconnectrequest-preparetargetfacingsocket"><code>socks.onConnectRequest.prepareTargetFacingSocket</code></a></td><td>Boolean</td><td>Specifies the boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relaybuffersize"><code>socks.onConnectRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>Specifies the buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relayidletimeout"><code>socks.onConnectRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relayinboundbandwidthlimit"><code>socks.onConnectRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relayoutboundbandwidthlimit"><code>socks.onConnectRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingbindhost"><code>socks.onConnectRequest.targetFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingbindhostaddresstype"><code>socks.onConnectRequest.targetFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for the target-facing socket (can be specified multiple times with each rule action specifying another host address type)</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingbindportrange"><code>socks.onConnectRequest.targetFacingBindPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingconnecttimeout"><code>socks.onConnectRequest.targetFacingConnectTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on waiting for the target-facing socket to connect</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingnetinterface"><code>socks.onConnectRequest.targetFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingsocketsetting"><code>socks.onConnectRequest.targetFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindhost"><code>socks.onRequest.externalFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for all external-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindhostaddresstype"><code>socks.onRequest.externalFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for all external-facing sockets (can be specified multiple times with each rule action specifying another host address type)</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindtcpportrange"><code>socks.onRequest.externalFacingBindTcpPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindudpportrange"><code>socks.onRequest.externalFacingBindUdpPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingnetinterface"><code>socks.onRequest.externalFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for all external-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingsocketsetting"><code>socks.onRequest.externalFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingbindhost"><code>socks.onRequest.internalFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for all internal-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingbindhostaddresstype"><code>socks.onRequest.internalFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for all internal-facing sockets (can be specified multiple times with each rule action specifying another host address type)</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingbindudpportrange"><code>socks.onRequest.internalFacingBindUdpPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingnetinterface"><code>socks.onRequest.internalFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for all internal-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingsocketsetting"><code>socks.onRequest.internalFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onrequest-relaybuffersize"><code>socks.onRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>Specifies the buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onrequest-relayidletimeout"><code>socks.onRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onrequest-relayinboundbandwidthlimit"><code>socks.onRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onrequest-relayoutboundbandwidthlimit"><code>socks.onRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingbindhost"><code>socks.onUdpAssociateRequest.clientFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingbindhostaddresstype"><code>socks.onUdpAssociateRequest.clientFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for the client-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingbindportrange"><code>socks.onUdpAssociateRequest.clientFacingBindPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingnetinterface"><code>socks.onUdpAssociateRequest.clientFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingsocketsetting"><code>socks.onUdpAssociateRequest.clientFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingbindhost"><code>socks.onUdpAssociateRequest.peerFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingbindhostaddresstype"><code>socks.onUdpAssociateRequest.peerFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingbindportrange"><code>socks.onUdpAssociateRequest.peerFacingBindPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another port range)</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingnetinterface"><code>socks.onUdpAssociateRequest.peerFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingsocketsetting"><code>socks.onUdpAssociateRequest.peerFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relaybuffersize"><code>socks.onUdpAssociateRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>Specifies the buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relayidletimeout"><code>socks.onUdpAssociateRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relayinboundbandwidthlimit"><code>socks.onUdpAssociateRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relayoutboundbandwidthlimit"><code>socks.onUdpAssociateRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-request-desireddestinationaddressredirect"><code>socks.request.desiredDestinationAddressRedirect</code></a></td><td>String</td><td>Specifies the desired destination address redirect for the request.</td></tr>
+<tr><td><a href="#socks-request-desireddestinationportredirect"><code>socks.request.desiredDestinationPortRedirect</code></a></td><td>Port</td><td>Specifies the desired destination port redirect for the request</td></tr>
+<tr><td><a href="#socks-request-desireddestinationredirectlogaction"><code>socks.request.desiredDestinationRedirectLogAction</code></a></td><td>Log Action</td><td>Specifies the logging action to take if the desired destination of the request is redirected</td></tr>
+</table>
+
 ## SOCKS5 Rule Actions
 
 <table>
@@ -62,21 +122,6 @@
 <tr><td><a href="#socks5-onconnectrequest-targetfacingconnecttimeout"><code>socks5.onConnectRequest.targetFacingConnectTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on waiting for the target-facing socket to connect</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-targetfacingnetinterface"><code>socks5.onConnectRequest.targetFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for the target-facing socket</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-targetfacingsocketsetting"><code>socks5.onConnectRequest.targetFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindhost"><code>socks5.onRequest.externalFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for all external-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindhostaddresstype"><code>socks5.onRequest.externalFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for all external-facing sockets (can be specified multiple times with each rule action specifying another host address type)</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindtcpportrange"><code>socks5.onRequest.externalFacingBindTcpPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindudpportrange"><code>socks5.onRequest.externalFacingBindUdpPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingnetinterface"><code>socks5.onRequest.externalFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for all external-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingsocketsetting"><code>socks5.onRequest.externalFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingbindhost"><code>socks5.onRequest.internalFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for all internal-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingbindhostaddresstype"><code>socks5.onRequest.internalFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for all internal-facing sockets (can be specified multiple times with each rule action specifying another host address type)</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingbindudpportrange"><code>socks5.onRequest.internalFacingBindUdpPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingnetinterface"><code>socks5.onRequest.internalFacingNetInterface</code></a></td><td>Network Interface</td><td>Specifies the network interface that provides a binding host address for all internal-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingsocketsetting"><code>socks5.onRequest.internalFacingSocketSetting</code></a></td><td>Socket Setting</td><td>Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)</td></tr>
-<tr><td><a href="#socks5-onrequest-relaybuffersize"><code>socks5.onRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>Specifies the buffer size in bytes for relaying the data</td></tr>
-<tr><td><a href="#socks5-onrequest-relayidletimeout"><code>socks5.onRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>Specifies the timeout in milliseconds on relaying no data</td></tr>
-<tr><td><a href="#socks5-onrequest-relayinboundbandwidthlimit"><code>socks5.onRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
-<tr><td><a href="#socks5-onrequest-relayoutboundbandwidthlimit"><code>socks5.onRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-clientfacingbindhost"><code>socks5.onUdpAssociateRequest.clientFacingBindHost</code></a></td><td>Host</td><td>Specifies the binding host name or address for the client-facing UDP socket</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-clientfacingbindhostaddresstype"><code>socks5.onUdpAssociateRequest.clientFacingBindHostAddressType</code></a></td><td>Host Address Type</td><td>Specifies an acceptable binding host address type for the client-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-clientfacingbindportrange"><code>socks5.onUdpAssociateRequest.clientFacingBindPortRange</code></a></td><td>Port Range</td><td>Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule action specifying another port range)</td></tr>
@@ -248,6 +293,324 @@
 
 **Value Type:** [Socket Setting](value-types.md#socket-setting)
 
+### socks.onBindRequest.inboundSocketSetting
+
+**Description:** Specifies a socket setting for the inbound socket (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onBindRequest.listenBindHost
+
+**Description:** Specifies the binding host name or address for the listen socket if the provided host address is all zeros
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onBindRequest.listenBindHostAddressType
+
+**Description:** Specifies an acceptable binding host address type for the listen socket if the provided host address is all zeros (can be specified multiple times with each rule specifying another host address type)
+
+**Value Type:** [Host Address Type](value-types.md#host-address-type)
+
+### socks.onBindRequest.listenBindPortRange
+
+**Description:** Specifies a binding port range for the listen socket if the provided port is zero (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onBindRequest.listenNetInterface
+
+**Description:** Specifies the network interface that provides a binding host address for the listen socket if the provided host address is all zeros
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onBindRequest.listenSocketSetting
+
+**Description:** Specifies a socket setting for the listen socket (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onBindRequest.relayBufferSize
+
+**Description:** Specifies the buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onBindRequest.relayIdleTimeout
+
+**Description:** Specifies the timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onBindRequest.relayInboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onBindRequest.relayOutboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.prepareTargetFacingSocket
+
+**Description:** Specifies the boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+### socks.onConnectRequest.relayBufferSize
+
+**Description:** Specifies the buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.relayIdleTimeout
+
+**Description:** Specifies the timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.relayInboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.relayOutboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.targetFacingBindHost
+
+**Description:** Specifies the binding host name or address for the target-facing socket
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onConnectRequest.targetFacingBindHostAddressType
+
+**Description:** Specifies an acceptable binding host address type for the target-facing socket (can be specified multiple times with each rule action specifying another host address type)
+
+**Value Type:** [Host Address Type](value-types.md#host-address-type)
+
+### socks.onConnectRequest.targetFacingBindPortRange
+
+**Description:** Specifies a binding port range for the target-facing socket (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onConnectRequest.targetFacingConnectTimeout
+
+**Description:** Specifies the timeout in milliseconds on waiting for the target-facing socket to connect
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.targetFacingNetInterface
+
+**Description:** Specifies the network interface that provides a binding host address for the target-facing socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onConnectRequest.targetFacingSocketSetting
+
+**Description:** Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onRequest.externalFacingBindHost
+
+**Description:** Specifies the binding host name or address for all external-facing sockets
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onRequest.externalFacingBindHostAddressType
+
+**Description:** Specifies an acceptable binding host address type for all external-facing sockets (can be specified multiple times with each rule action specifying another host address type)
+
+**Value Type:** [Host Address Type](value-types.md#host-address-type)
+
+### socks.onRequest.externalFacingBindTcpPortRange
+
+**Description:** Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onRequest.externalFacingBindUdpPortRange
+
+**Description:** Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onRequest.externalFacingNetInterface
+
+**Description:** Specifies the network interface that provides a binding host address for all external-facing sockets
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onRequest.externalFacingSocketSetting
+
+**Description:** Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onRequest.internalFacingBindHost
+
+**Description:** Specifies the binding host name or address for all internal-facing sockets
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onRequest.internalFacingBindHostAddressType
+
+**Description:** Specifies an acceptable binding host address type for all internal-facing sockets (can be specified multiple times with each rule action specifying another host address type)
+
+**Value Type:** [Host Address Type](value-types.md#host-address-type)
+
+### socks.onRequest.internalFacingBindUdpPortRange
+
+**Description:** Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onRequest.internalFacingNetInterface
+
+**Description:** Specifies the network interface that provides a binding host address for all internal-facing sockets
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onRequest.internalFacingSocketSetting
+
+**Description:** Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onRequest.relayBufferSize
+
+**Description:** Specifies the buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onRequest.relayIdleTimeout
+
+**Description:** Specifies the timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onRequest.relayInboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onRequest.relayOutboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.clientFacingBindHost
+
+**Description:** Specifies the binding host name or address for the client-facing UDP socket
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onUdpAssociateRequest.clientFacingBindHostAddressType
+
+**Description:** Specifies an acceptable binding host address type for the client-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)
+
+**Value Type:** [Host Address Type](value-types.md#host-address-type)
+
+### socks.onUdpAssociateRequest.clientFacingBindPortRange
+
+**Description:** Specifies a binding port range for the client-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onUdpAssociateRequest.clientFacingNetInterface
+
+**Description:** Specifies the network interface that provides a binding host address for the client-facing UDP socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onUdpAssociateRequest.clientFacingSocketSetting
+
+**Description:** Specifies a socket setting for the client-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onUdpAssociateRequest.peerFacingBindHost
+
+**Description:** Specifies the binding host name or address for the peer-facing UDP socket
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onUdpAssociateRequest.peerFacingBindHostAddressType
+
+**Description:** Specifies an acceptable binding host address type for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another host address type)
+
+**Value Type:** [Host Address Type](value-types.md#host-address-type)
+
+### socks.onUdpAssociateRequest.peerFacingBindPortRange
+
+**Description:** Specifies a binding port range for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another port range)
+
+**Value Type:** [Port Range](value-types.md#port-range)
+
+### socks.onUdpAssociateRequest.peerFacingNetInterface
+
+**Description:** Specifies the network interface that provides a binding host address for the peer-facing UDP socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onUdpAssociateRequest.peerFacingSocketSetting
+
+**Description:** Specifies a socket setting for the peer-facing UDP socket (can be specified multiple times with each rule action specifying another socket setting)
+
+**Value Type:** [Socket Setting](value-types.md#socket-setting)
+
+### socks.onUdpAssociateRequest.relayBufferSize
+
+**Description:** Specifies the buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.relayIdleTimeout
+
+**Description:** Specifies the timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.relayInboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.relayOutboundBandwidthLimit
+
+**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.request.desiredDestinationAddressRedirect
+
+**Description:** Specifies the desired destination address redirect for the request.
+
+**Value Type:** [String](value-types.md#string)
+
+### socks.request.desiredDestinationPortRedirect
+
+**Description:** Specifies the desired destination port redirect for the request
+
+**Value Type:** [Port](value-types.md#port)
+
+### socks.request.desiredDestinationRedirectLogAction
+
+**Description:** Specifies the logging action to take if the desired destination of the request is redirected
+
+**Value Type:** [Log Action](value-types.md#log-action)
+
 ### socks5.onBindRequest.inboundSocketSetting
 
 **Description:** Specifies a socket setting for the inbound socket (can be specified multiple times with each rule action specifying another socket setting)
@@ -373,96 +736,6 @@
 **Description:** Specifies a socket setting for the target-facing socket (can be specified multiple times with each rule action specifying another socket setting)
 
 **Value Type:** [Socket Setting](value-types.md#socket-setting)
-
-### socks5.onRequest.externalFacingBindHost
-
-**Description:** Specifies the binding host name or address for all external-facing sockets
-
-**Value Type:** [Host](value-types.md#host)
-
-### socks5.onRequest.externalFacingBindHostAddressType
-
-**Description:** Specifies an acceptable binding host address type for all external-facing sockets (can be specified multiple times with each rule action specifying another host address type)
-
-**Value Type:** [Host Address Type](value-types.md#host-address-type)
-
-### socks5.onRequest.externalFacingBindTcpPortRange
-
-**Description:** Specifies a binding port range for all external-facing TCP sockets (can be specified multiple times with each rule action specifying another port range)
-
-**Value Type:** [Port Range](value-types.md#port-range)
-
-### socks5.onRequest.externalFacingBindUdpPortRange
-
-**Description:** Specifies a binding port range for all external-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
-
-**Value Type:** [Port Range](value-types.md#port-range)
-
-### socks5.onRequest.externalFacingNetInterface
-
-**Description:** Specifies the network interface that provides a binding host address for all external-facing sockets
-
-**Value Type:** [Network Interface](value-types.md#network-interface)
-
-### socks5.onRequest.externalFacingSocketSetting
-
-**Description:** Specifies a socket setting for all external-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
-
-**Value Type:** [Socket Setting](value-types.md#socket-setting)
-
-### socks5.onRequest.internalFacingBindHost
-
-**Description:** Specifies the binding host name or address for all internal-facing sockets
-
-**Value Type:** [Host](value-types.md#host)
-
-### socks5.onRequest.internalFacingBindHostAddressType
-
-**Description:** Specifies an acceptable binding host address type for all internal-facing sockets (can be specified multiple times with each rule action specifying another host address type)
-
-**Value Type:** [Host Address Type](value-types.md#host-address-type)
-
-### socks5.onRequest.internalFacingBindUdpPortRange
-
-**Description:** Specifies a binding port range for all internal-facing UDP sockets (can be specified multiple times with each rule action specifying another port range)
-
-**Value Type:** [Port Range](value-types.md#port-range)
-
-### socks5.onRequest.internalFacingNetInterface
-
-**Description:** Specifies the network interface that provides a binding host address for all internal-facing sockets
-
-**Value Type:** [Network Interface](value-types.md#network-interface)
-
-### socks5.onRequest.internalFacingSocketSetting
-
-**Description:** Specifies a socket setting for all internal-facing sockets (can be specified multiple times with each rule action specifying another socket setting)
-
-**Value Type:** [Socket Setting](value-types.md#socket-setting)
-
-### socks5.onRequest.relayBufferSize
-
-**Description:** Specifies the buffer size in bytes for relaying the data
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
-
-### socks5.onRequest.relayIdleTimeout
-
-**Description:** Specifies the timeout in milliseconds on relaying no data
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
-
-### socks5.onRequest.relayInboundBandwidthLimit
-
-**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
-
-### socks5.onRequest.relayOutboundBandwidthLimit
-
-**Description:** Specifies the upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
 
 ### socks5.onUdpAssociateRequest.clientFacingBindHost
 

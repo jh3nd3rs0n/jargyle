@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.propertyspec.impl;
 
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ public class SocksServerUriPropertySpecTest {
     @Test
     public void testParseString01() {
         Assert.assertEquals(
-                Scheme.SOCKS5.newSocksServerUri("localhost"),
+                SocksServerUriScheme.SOCKS5.newSocksServerUri("localhost"),
                 new SocksServerUriPropertySpec("socksServerUriProperty", null)
                         .parse("socks5://localhost"));
     }
@@ -17,7 +17,7 @@ public class SocksServerUriPropertySpecTest {
     @Test
     public void testParseString02() {
         Assert.assertEquals(
-                Scheme.SOCKS5.newSocksServerUri(
+                SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         "Jasmine:mission%3Aimpossible",
                         "localhost"),
                 new SocksServerUriPropertySpec("socksServerUriProperty", null)
@@ -27,7 +27,7 @@ public class SocksServerUriPropertySpecTest {
     @Test
     public void testParseString03() {
         Assert.assertEquals(
-                Scheme.SOCKS5.newSocksServerUri(
+                SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         "localhost",
                         1080),
                 new SocksServerUriPropertySpec("socksServerUriProperty", null)
@@ -37,7 +37,7 @@ public class SocksServerUriPropertySpecTest {
     @Test
     public void testParseString04() {
         Assert.assertEquals(
-                Scheme.SOCKS5.newSocksServerUri(
+                SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         "Jasmine:mission%3Aimpossible",
                         "localhost",
                         1080),

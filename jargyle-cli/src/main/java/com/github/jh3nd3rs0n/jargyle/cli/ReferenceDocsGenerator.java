@@ -1,7 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
 import com.github.jh3nd3rs0n.jargyle.client.Property;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.client.UserInfo;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.*;
 import com.github.jh3nd3rs0n.jargyle.server.ConfigurationSchema;
@@ -379,7 +379,7 @@ final class ReferenceDocsGenerator {
         classes.addAll(Arrays.asList(
                 Setting.class.getAnnotation(NameValuePairValueTypeDoc.class)
                         .nameValuePairValueSpecs()));
-        classes.add(Scheme.class);
+        classes.add(SocksServerUriScheme.class);
         classes.add(UserInfo.class);
         AllDocAnnotatedClassesSortedByNameFactory factory =
                 new AllDocAnnotatedClassesSortedByNameFactory();

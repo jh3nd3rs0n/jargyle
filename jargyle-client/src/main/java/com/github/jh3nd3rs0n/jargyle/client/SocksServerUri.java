@@ -14,7 +14,7 @@ import java.util.Objects;
 @SingleValueTypeDoc(
         description = "The URI of the SOCKS server",
         name = "SOCKS Server URI",
-        syntax = "SCHEME://[USER_INFO@]HOST[:PORT]",
+        syntax = "SOCKS_SERVER_URI_SCHEME://[USER_INFO@]HOST[:PORT]",
         syntaxName = "SOCKS_SERVER_URI"
 )
 public abstract class SocksServerUri {
@@ -46,9 +46,9 @@ public abstract class SocksServerUri {
     private final Port port;
 
     /**
-     * The {@code Scheme} of this {@code SocksServerUri}.
+     * The {@code SocksServerUriScheme} of this {@code SocksServerUri}.
      */
-    private final Scheme scheme;
+    private final SocksServerUriScheme socksServerUriScheme;
 
     /**
      * The {@code URI} of this {@code SocksServerUri}.
@@ -61,11 +61,11 @@ public abstract class SocksServerUri {
     private final UserInfo userInfo;
 
     /**
-     * Constructs a {@code SocksServerUri} with the provided {@code Scheme},
-     * the optionally provided {@code UserInfo}, the provided {@code Host},
-     * and the optionally provided {@code Port}.
+     * Constructs a {@code SocksServerUri} with the provided
+     * {@code SocksServerUriScheme}, the optionally provided {@code UserInfo},
+     * the provided {@code Host}, and the optionally provided {@code Port}.
      *
-     * @param schm    the provided {@code Scheme}
+     * @param scheme  the provided {@code SocksServerUriScheme}
      * @param usrInfo the optionally provided {@code UserInfo} (can be
      *                {@code null})
      * @param hst     the provided {@code Host}
@@ -73,16 +73,16 @@ public abstract class SocksServerUri {
      *                {@code null})
      */
     public SocksServerUri(
-            final Scheme schm,
+            final SocksServerUriScheme scheme,
             final UserInfo usrInfo,
             final Host hst,
             final Port prt) {
-        Objects.requireNonNull(schm, "scheme must not be null");
+        Objects.requireNonNull(scheme, "socksServerUriScheme must not be null");
         Objects.requireNonNull(hst, "host must not be null");
         URI u;
         try {
             u = new URI(
-                    schm.toString(),
+                    scheme.toString(),
                     (usrInfo != null) ? usrInfo.toString() : null,
                     hst.toString(),
                     (prt != null) ? prt.intValue() : UNDEFINED_PORT_INT_VALUE,
@@ -94,7 +94,7 @@ public abstract class SocksServerUri {
         }
         this.host = hst;
         this.port = prt;
-        this.scheme = schm;
+        this.socksServerUriScheme = scheme;
         this.uri = u;
         this.userInfo = usrInfo;
     }
@@ -129,7 +129,7 @@ public abstract class SocksServerUri {
      * {@code String} of a URI are ignored. An
      * {@code IllegalArgumentException} is thrown if the provided
      * {@code String} of a URI is invalid or if the provided {@code String} of
-     * a URI does not have a scheme component or a host component.
+     * a URI does not have a socksServerUriScheme component or a host component.
      *
      * @param s the provided {@code String}
      * @return a new {@code SocksServerUri} from the provided {@code String}
@@ -149,19 +149,20 @@ public abstract class SocksServerUri {
      * Returns a new {@code SocksServerUri} from the provided {@code URI}. The
      * path, query, fragment components of the provided {@code URI} are
      * ignored. An {@code IllegalArgumentException} is thrown if the provided
-     * {@code URI} does not have a scheme component or a host component.
+     * {@code URI} does not have a socksServerUriScheme component or a host component.
      *
      * @param uri the provided {@code URI}
      * @return a new {@code SocksServerUri} from the provided {@code URI}
      */
     public static SocksServerUri newInstanceFrom(final URI uri) {
         String message = "URI must be in the following format: "
-                + "SCHEME://[USER_INFO@]HOST[:PORT]";
+                + "SOCKS_SERVER_URI_SCHEME://[USER_INFO@]HOST[:PORT]";
         String scheme = uri.getScheme();
         if (scheme == null) {
             throw new IllegalArgumentException(message);
         }
-        Scheme schm = Scheme.valueOfString(scheme);
+        SocksServerUriScheme socksServerUriScheme =
+                SocksServerUriScheme.valueOfString(scheme);
         String host = uri.getHost();
         if (host == null) {
             throw new IllegalArgumentException(message);
@@ -171,7 +172,7 @@ public abstract class SocksServerUri {
         }
         String userInfo = uri.getRawUserInfo();
         int port = uri.getPort();
-        return schm.newSocksServerUri(
+        return socksServerUriScheme.newSocksServerUri(
                 (userInfo != null) ? UserInfo.newInstance(userInfo) : null,
                 Host.newInstance(host),
                 (port != UNDEFINED_PORT_INT_VALUE) ? Port.valueOf(port) : null);
@@ -212,12 +213,12 @@ public abstract class SocksServerUri {
     }
 
     /**
-     * Returns the {@code Scheme} of this {@code SocksServerUri}.
+     * Returns the {@code SocksServerUriScheme} of this {@code SocksServerUri}.
      *
-     * @return the {@code Scheme} of this {@code SocksServerUri}
+     * @return the {@code SocksServerUriScheme} of this {@code SocksServerUri}
      */
-    public final Scheme getScheme() {
-        return this.scheme;
+    public final SocksServerUriScheme getSocksServerUriScheme() {
+        return this.socksServerUriScheme;
     }
 
     /**

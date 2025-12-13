@@ -6,13 +6,6 @@ import org.junit.Test;
 public class MethodsTest {
 
     @Test
-    public void testGetDefault() {
-        Assert.assertEquals(
-                Methods.of(Method.NO_AUTHENTICATION_REQUIRED),
-                Methods.getDefault());
-    }
-
-    @Test
     public void testNewInstanceFromString01() {
         Assert.assertNotNull(
                 Methods.newInstanceFrom(""));

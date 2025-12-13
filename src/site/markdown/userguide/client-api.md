@@ -124,8 +124,8 @@ public class ClientApp {
             "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         
         System.setProperty("socksClient.socks5.methods", "USERNAME_PASSWORD");
-        System.setProperty("socksClient.socks5.userpassmethod.username", "Aladdin");
-        System.setProperty("socksClient.socks5.userpassmethod.password", "opensesame");
+        System.setProperty("socksClient.socks5.userpassauthmethod.username", "Aladdin");
+        System.setProperty("socksClient.socks5.userpassauthmethod.password", "opensesame");
         
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
 
@@ -167,8 +167,8 @@ Partial command line example:
 ```text
 java -DsocksClient.socksServerUri=socks5://jargyle.net:1234 \
      -DsocksClient.socks5.methods=USERNAME_PASSWORD \
-     -DsocksClient.socks5.userpassmethod.username=Aladdin \
-     -DsocksClient.socks5.userpassmethod.password=opensesame \
+     -DsocksClient.socks5.userpassauthmethod.username=Aladdin \
+     -DsocksClient.socks5.userpassauthmethod.password=opensesame \
      ...
 ```
 
@@ -178,9 +178,9 @@ A complete listing of the properties can be found
 ## Creating the NetObjectFactory from the SocksClient Object
 
 To create a `SocksClient` object with properties, a `SocksServerUri` 
-object must be created. To create a `SocksServerUri` object, a `Scheme` 
-enum value must be selected. The `Scheme` enum has at this time the only 
-following value:
+object must be created. To create a `SocksServerUri` object, a 
+`SocksServerUriScheme` enum value must be selected. The 
+`SocksServerUriScheme` enum has at this time the only following value:
 
 -   `SOCKS5`: the SOCKS protocol version 5
 
@@ -192,8 +192,9 @@ package com.example;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 
 import java.io.IOException;
 
@@ -206,7 +207,7 @@ public class ClientApp {
     public static void main(String[] args) throws IOException {
         
         SocksServerUri socksServerUri = 
-            Scheme.SOCKS5.newSocksServerUri(
+            SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "jargyle.net", 1234);
         
         SocksClient socksClient = socksServerUri.newSocksClient(
@@ -259,8 +260,9 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Property;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 
 import java.io.IOException;
 
@@ -278,12 +280,12 @@ public class ClientApp {
                 
         Property<Object> username =
             Property.newInstanceWithParsedValue(
-                "socksClient.socks5.userpassmethod.username", 
+                "socksClient.socks5.userpassauthmethod.username", 
                 "Aladdin");
                 
         Property<Object> password =
             Property.newInstanceWithParsedValue(
-                "socksClient.socks5.userpassmethod.password", 
+                "socksClient.socks5.userpassauthmethod.password", 
                 "opensesame");
         
         // ...
@@ -307,8 +309,9 @@ import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.client.Property;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 
 import java.io.IOException;
 
@@ -326,19 +329,19 @@ public class ClientApp {
                 
         Property<Object> username =
             Property.newInstanceWithParsedValue(
-                "socksClient.socks5.userpassmethod.username", 
+                "socksClient.socks5.userpassauthmethod.username", 
                 "Aladdin");
                 
         Property<Object> password =
             Property.newInstanceWithParsedValue(
-                "socksClient.socks5.userpassmethod.password", 
+                "socksClient.socks5.userpassauthmethod.password", 
                 "opensesame");
                 
         Properties properties = Properties.of(
             socks5Methods, username, password);
         
         SocksServerUri socksServerUri = 
-            Scheme.SOCKS5.newSocksServerUri(
+            SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "jargyle.net", 1234);
         
         SocksClient socksClient = socksServerUri.newSocksClient(

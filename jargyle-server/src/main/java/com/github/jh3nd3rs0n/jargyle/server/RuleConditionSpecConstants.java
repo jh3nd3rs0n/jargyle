@@ -15,10 +15,12 @@ final class RuleConditionSpecConstants {
 		List<RuleConditionSpec<Object, Object>> values = 
 				new ArrayList<RuleConditionSpec<Object, Object>>();
 		values.addAll(GeneralRuleConditionSpecConstants.values());
+        values.addAll(SocksRuleConditionSpecConstants.values());
 		values.addAll(Socks5RuleConditionSpecConstants.values());
 		Map<String, RuleConditionSpec<Object, Object>> valuesMap =
 				new HashMap<String, RuleConditionSpec<Object, Object>>();
 		valuesMap.putAll(GeneralRuleConditionSpecConstants.valuesMap());
+        valuesMap.putAll(SocksRuleConditionSpecConstants.valuesMap());
 		valuesMap.putAll(Socks5RuleConditionSpecConstants.valuesMap());
 		VALUES = values;
 		VALUES_MAP = valuesMap;

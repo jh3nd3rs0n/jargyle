@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 		name = "Rule Action",
 		nameValuePairValueSpecs = {
 				GeneralRuleActionSpecConstants.class,
+                SocksRuleActionSpecConstants.class,
 				Socks5RuleActionSpecConstants.class
 		},
 		syntax = "NAME=VALUE",

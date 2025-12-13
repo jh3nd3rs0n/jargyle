@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocksClientAgent;
 import com.github.jh3nd3rs0n.jargyle.client.UserInfo;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.*;
@@ -37,8 +36,8 @@ final class Socks5ClientAgent extends SocksClientAgent {
     }
 
     private Methods getMethods() {
-        Methods methods = this.getProperties().getValue(
-                Socks5PropertySpecConstants.SOCKS5_METHODS);
+        Methods methods = Socks5ValueDerivationHelper.getSocks5MethodsFrom(
+                this.getProperties());
         UserInfo userInfo = this.getSocksServerUri().getUserInfo();
         if (userInfo == null) {
             return methods;
@@ -51,7 +50,7 @@ final class Socks5ClientAgent extends SocksClientAgent {
         if (methods.contains(Method.USERNAME_PASSWORD)) {
             return methods;
         }
-        if (methods.equals(Methods.getDefault())) {
+        if (methods.equals(Methods.of(Method.NO_AUTHENTICATION_REQUIRED))) {
             return Methods.of(Method.USERNAME_PASSWORD);
         }
         List<Method> meths = new ArrayList<>();

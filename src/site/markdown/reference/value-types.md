@@ -20,7 +20,6 @@
 -   [Port Ranges](#port-ranges)
 -   [Positive Integer](#positive-integer)
 -   [Rule](#rule)
--   [Scheme](#scheme)
 -   [Selection Strategy](#selection-strategy)
     -   [Selection Strategies](#selection-strategies)
         -   [CYCLICAL](#cyclical)
@@ -38,6 +37,7 @@
         -   [TCP_NODELAY](#tcp_nodelay)
 -   [Socket Settings](#socket-settings)
 -   [SOCKS Server URI](#socks-server-uri)
+-   [SOCKS Server URI Scheme](#socks-server-uri-scheme)
 -   [SOCKS5 Address](#socks5-address)
 -   [SOCKS5 GSS-API Method Protection Level](#socks5-gss-api-method-protection-level)
 -   [SOCKS5 GSS-API Method Protection Levels](#socks5-gss-api-method-protection-levels)
@@ -291,22 +291,6 @@ PORT|PORT1-PORT2
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.server.Rule`
 
-## Scheme
-
-**Syntax:**
-
-```text
-socks5
-```
-
-**Description:** Specifies what SOCKS protocol is to be used to access the SOCKS server
-
-**Values:**
-
--   `socks5` : SOCKS protocol version 5
-
-**Class:** `com.github.jh3nd3rs0n.jargyle.client.Scheme`
-
 ## Selection Strategy
 
 **Syntax:**
@@ -486,12 +470,28 @@ TCP_NODELAY=true|false
 **Syntax:**
 
 ```text
-SCHEME://[USER_INFO@]HOST[:PORT]
+SOCKS_SERVER_URI_SCHEME://[USER_INFO@]HOST[:PORT]
 ```
 
 **Description:** The URI of the SOCKS server
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.client.SocksServerUri`
+
+## SOCKS Server URI Scheme
+
+**Syntax:**
+
+```text
+socks5
+```
+
+**Description:** Specifies what SOCKS protocol is to be used to access the SOCKS server
+
+**Values:**
+
+-   `socks5` : SOCKS protocol version 5
+
+**Class:** `com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme`
 
 ## SOCKS5 Address
 
@@ -522,21 +522,21 @@ NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF|SELECTIVE_INTEG_OR_CONF
 -   `REQUIRED_INTEG_AND_CONF` : Required per-message integrity and confidentiality
 -   `SELECTIVE_INTEG_OR_CONF` : Selective per-message integrity or confidentiality based on local client and server configurations
 
-**Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevel`
+**Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.ProtectionLevel`
 
 ## SOCKS5 GSS-API Method Protection Levels
 
 **Syntax:**
 
 ```text
-SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIMETHOD_PROTECTION_LEVEL2[...]]
+SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVEL2[...]]
 ```
 
 **Description:** A comma separated list of security context protection levels
 
 **Element Value Type:** [SOCKS5 GSS-API Method Protection Level](#socks5-gss-api-method-protection-level)
 
-**Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels`
+**Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.ProtectionLevels`
 
 ## SOCKS5 Method
 
@@ -599,7 +599,7 @@ TYPE_NAME:INITIALIZATION_STRING
 
 **Description:** 
 
-**Class:** `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository`
+**Class:** `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.UserRepository`
 
 ### SOCKS5 Username Password Method User Repositories
 

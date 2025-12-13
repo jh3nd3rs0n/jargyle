@@ -31,7 +31,9 @@ public class SocksServerUriTest {
         try {
             SocksServerUri socksServerUri = SocksServerUri.newInstance();
             Assert.assertNotNull(socksServerUri);
-            Assert.assertEquals(Scheme.SOCKS5, socksServerUri.getScheme());
+            Assert.assertEquals(
+                    SocksServerUriScheme.SOCKS5,
+                    socksServerUri.getSocksServerUriScheme());
             Assert.assertEquals(
                     UserInfo.newInstance("Aladdin:opensesame"),
                     socksServerUri.getUserInfo());
@@ -49,7 +51,9 @@ public class SocksServerUriTest {
         try {
             SocksServerUri socksServerUri = SocksServerUri.newInstance();
             Assert.assertNotNull(socksServerUri);
-            Assert.assertEquals(Scheme.SOCKS5, socksServerUri.getScheme());
+            Assert.assertEquals(
+                    SocksServerUriScheme.SOCKS5,
+                    socksServerUri.getSocksServerUriScheme());
             Assert.assertEquals(
                     Host.newInstance("127.0.0.1"),
                     socksServerUri.getHost());
@@ -67,7 +71,9 @@ public class SocksServerUriTest {
         try {
             SocksServerUri socksServerUri = SocksServerUri.newInstance();
             Assert.assertNotNull(socksServerUri);
-            Assert.assertEquals(Scheme.SOCKS5, socksServerUri.getScheme());
+            Assert.assertEquals(
+                    SocksServerUriScheme.SOCKS5,
+                    socksServerUri.getSocksServerUriScheme());
             Assert.assertEquals(
                     UserInfo.newInstance("Aladdin:opensesame"),
                     socksServerUri.getUserInfo());

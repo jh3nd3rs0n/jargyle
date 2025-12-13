@@ -2,15 +2,12 @@ package com.github.jh3nd3rs0n.jargyle.test.echo.server.performance;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.test.echo.AbstractSocksServer;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoDatagramClient;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoDatagramServer;
@@ -45,7 +42,7 @@ public class EchoDatagramServerBehindJargyleSocksServerIT {
 
     private static NetObjectFactory newSocks5NetObjectFactory(
             final String socksServerHostAddress, final int socksServerPort) {
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
                 .newSocksClient(Properties.of())
@@ -59,7 +56,7 @@ public class EchoDatagramServerBehindJargyleSocksServerIT {
                 GeneralSettingSpecConstants.PORT.newSetting(Port.valueOf(0)),
                 GeneralSettingSpecConstants.BACKLOG.newSetting(
                         NonNegativeInteger.valueOf(Server.BACKLOG)),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(DatagramServer.RECEIVE_BUFFER_SIZE)))));

@@ -71,18 +71,6 @@ public final class Socks5ConnectionHandlerContext {
         return this.socksConnectionHandlerContext.getSettings();
     }
 
-    public RuleContext newReplyRuleContext(final Reply rep) {
-        RuleContext replyRuleContext = new RuleContext(
-                this.getRuleContext());
-        replyRuleContext.putRuleArgValue(
-                Socks5RuleArgSpecConstants.SOCKS5_REPLY_SERVER_BOUND_ADDRESS,
-                rep.getServerBoundAddress().toString());
-        replyRuleContext.putRuleArgValue(
-                Socks5RuleArgSpecConstants.SOCKS5_REPLY_SERVER_BOUND_PORT,
-                rep.getServerBoundPort());
-        return replyRuleContext;
-    }
-
     public boolean sendReply(final Reply rep) {
         this.serverEventLogger.debug(ObjectLogMessageHelper.objectLogMessage(
                 this.getLogMessageSource(),

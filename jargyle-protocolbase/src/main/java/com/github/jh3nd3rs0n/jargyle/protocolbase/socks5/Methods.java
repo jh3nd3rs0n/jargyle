@@ -21,12 +21,6 @@ import java.util.stream.Collectors;
 public final class Methods {
 
     /**
-     * The default instance of {@code Methods}.
-     */
-    private static final Methods DEFAULT_INSTANCE = new Methods(
-            List.of(Method.NO_AUTHENTICATION_REQUIRED));
-
-    /**
      * The {@code List} of {@code Method}s.
      */
     private final List<Method> methods;
@@ -39,16 +33,6 @@ public final class Methods {
      */
     private Methods(final List<Method> meths) {
         this.methods = new ArrayList<>(meths);
-    }
-
-    /**
-     * Returns the default instance of {@code Methods}. The default instance
-     * contains only a {@code Method} of {@code NO_AUTHENTICATION_REQUIRED}.
-     *
-     * @return the default instance of {@code Methods}
-     */
-    public static Methods getDefault() {
-        return DEFAULT_INSTANCE;
     }
 
     /**

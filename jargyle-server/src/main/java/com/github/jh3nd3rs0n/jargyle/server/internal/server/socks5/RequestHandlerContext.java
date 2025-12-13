@@ -165,6 +165,14 @@ final class RequestHandlerContext {
     private boolean hasReplyRuleCondition() {
         Rule applicableRule = this.getApplicableRule();
         if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_REPLY_SERVER_BOUND_ADDRESS)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_REPLY_SERVER_BOUND_PORT)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
                 Socks5RuleConditionSpecConstants.SOCKS5_REPLY_SERVER_BOUND_ADDRESS)) {
             return true;
         }
@@ -173,7 +181,23 @@ final class RequestHandlerContext {
     }
 
     public RuleContext newReplyRuleContext(final Reply rep) {
-        return this.socks5ConnectionHandlerContext.newReplyRuleContext(rep);
+        RuleContext replyRuleContext = new RuleContext(
+                this.getRuleContext());
+        String replyServerBoundAddress = rep.getServerBoundAddress().toString();
+        Port replyServerBoundPort = rep.getServerBoundPort();
+        replyRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_REPLY_SERVER_BOUND_ADDRESS,
+                replyServerBoundAddress);
+        replyRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_REPLY_SERVER_BOUND_PORT,
+                replyServerBoundPort);
+        replyRuleContext.putRuleArgValue(
+                Socks5RuleArgSpecConstants.SOCKS5_REPLY_SERVER_BOUND_ADDRESS,
+                replyServerBoundAddress);
+        replyRuleContext.putRuleArgValue(
+                Socks5RuleArgSpecConstants.SOCKS5_REPLY_SERVER_BOUND_PORT,
+                replyServerBoundPort);
+        return replyRuleContext;
     }
 
     public boolean sendReply(final Reply rep) {

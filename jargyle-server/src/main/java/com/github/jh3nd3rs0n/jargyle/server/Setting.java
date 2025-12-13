@@ -9,9 +9,11 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 				GeneralSettingSpecConstants.class,
 				ChainingGeneralSettingSpecConstants.class,
 				ChainingDtlsSettingSpecConstants.class,
+				ChainingSocksSettingSpecConstants.class,
 				ChainingSocks5SettingSpecConstants.class,
 				ChainingSslSettingSpecConstants.class,
 				DtlsSettingSpecConstants.class,
+                SocksSettingSpecConstants.class,
 				Socks5SettingSpecConstants.class,
 				SslSettingSpecConstants.class
 		},

@@ -12,17 +12,17 @@ public final class TestResourceConstants {
 			TestResourceConstants.class,
             "com/github/jh3nd3rs0n/jargyle/server/empty_configuration.xml");
 	
-	public static final Resource JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_ADDED_USER_TO_USERS_FILE = new Resource(
+	public static final Resource JARGYLE_SERVER_SOCKS5_USERPASSAUTHMETHOD_ADDED_USER_TO_USERS_FILE = new Resource(
 			TestResourceConstants.class,
-            "com/github/jh3nd3rs0n/jargyle/server/socks5/userpassmethod/added_user_to_users");
+            "com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauthmethod/added_user_to_users");
 	
-	public static final Resource JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_EMPTY_USERS_FILE = new Resource(
+	public static final Resource JARGYLE_SERVER_SOCKS5_USERPASSAUTHMETHOD_EMPTY_USERS_FILE = new Resource(
 			TestResourceConstants.class,
-            "com/github/jh3nd3rs0n/jargyle/server/socks5/userpassmethod/empty_users");
+            "com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauthmethod/empty_users");
 	
-	public static final Resource JARGYLE_SERVER_SOCKS5_USERPASSMETHOD_USERS_FILE = new Resource(
+	public static final Resource JARGYLE_SERVER_SOCKS5_USERPASSAUTHMETHOD_USERS_FILE = new Resource(
 			TestResourceConstants.class,
-            "com/github/jh3nd3rs0n/jargyle/server/socks5/userpassmethod/users");
+            "com/github/jh3nd3rs0n/jargyle/server/socks5/userpassauthmethod/users");
 
 	private TestResourceConstants() { }
 	

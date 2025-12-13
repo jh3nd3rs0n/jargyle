@@ -1,7 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClientIOException;
 import com.github.jh3nd3rs0n.jargyle.common.net.HostAddress;
 import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
@@ -176,10 +174,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket datagramSock = this.datagramSocket;
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int port = datagramSock.getLocalPort();
-			Properties properties = 
-					this.socks5ClientAgent.getProperties();
-			if (properties.getValue(
-					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE).booleanValue()) {
+			if (Socks5ValueDerivationHelper.getSocks5Socks5DatagramSocketClientInfoUnavailableFrom(
+					this.socks5ClientAgent.getProperties())) {
 				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
 				port = 0;
 			}

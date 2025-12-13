@@ -160,18 +160,18 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 	}
 	
 	private Address getDesiredDestinationAddressRedirect() {
-		return this.context.getApplicableRule().getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS_REDIRECT);
+		return Socks5ValueDerivationHelper.getSocks5RequestDesiredDestinationAddressRedirectFrom(
+                this.context.getApplicableRule());
 	}
 	
 	private Port getDesiredDestinationPortRedirect() {
-		return this.context.getApplicableRule().getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT_REDIRECT);
+		return Socks5ValueDerivationHelper.getSocks5RequestDesiredDestinationPortRedirectFrom(
+                this.context.getApplicableRule());
 	}
 	
 	private LogAction getDesiredDestinationRedirectLogAction() {
-		return this.context.getApplicableRule().getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_REDIRECT_LOG_ACTION);
+		return Socks5ValueDerivationHelper.getSocks5RequestDesiredDestinationRedirectLogActionFrom(
+                this.context.getApplicableRule());
 	}
 	
 	private Routes getRequestRoutes() {
@@ -260,6 +260,26 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 
 	private boolean hasRequestRuleCondition() {
 		Rule applicableRule = this.context.getApplicableRule();
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_METHOD)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_USER)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_REQUEST_COMMAND)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_REQUEST_DESIRED_DESTINATION_ADDRESS)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_REQUEST_DESIRED_DESTINATION_PORT)) {
+            return true;
+        }
 		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_METHOD)) {
 			return true;
@@ -303,8 +323,8 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
                         "Received %s",
                         cmsm.toString()));
 		Method method = null;
-		Methods methods = this.context.getSettings().getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_METHODS);
+		Methods methods = Socks5ValueDerivationHelper.getSocks5MethodsFrom(
+                this.context.getSettings());
 		for (Method meth : methods.toList()) {
 			if (cmsm.getMethods().contains(meth)) {
 				method = meth;
@@ -376,21 +396,42 @@ public final class Socks5ConnectionHandler implements LogMessageSource {
 			final Request req) {
 		RuleContext requestRuleContext = new RuleContext(
 				this.context.getRuleContext());
+        String method = methSubNegotiationResults.getMethod().toString();
+        String user = methSubNegotiationResults.getUser();
+        String requestCommand = req.getCommand().toString();
+        String requestDesiredDestinationAddress = 
+                req.getDesiredDestinationAddress().toString();
+        Port requestDesiredDestinationPort = req.getDesiredDestinationPort();
+        requestRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_METHOD,
+                method);
+        requestRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_USER,
+                user);
+        requestRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_REQUEST_COMMAND,
+                requestCommand);
+        requestRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_REQUEST_DESIRED_DESTINATION_ADDRESS,
+                requestDesiredDestinationAddress);
+        requestRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_REQUEST_DESIRED_DESTINATION_PORT,
+                requestDesiredDestinationPort);
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_METHOD, 
-				methSubNegotiationResults.getMethod().toString());
+				method);
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_USER, 
-				methSubNegotiationResults.getUser());
+				user);
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_REQUEST_COMMAND,
-				req.getCommand().toString());
+				requestCommand);
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS,
-				req.getDesiredDestinationAddress().toString());
+				requestDesiredDestinationAddress);
 		requestRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT,
-				req.getDesiredDestinationPort());
+				requestDesiredDestinationPort);
 		return requestRuleContext;
 	}
 	

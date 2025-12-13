@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.test.echo;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
@@ -47,7 +47,7 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToChainedSocksServersIT {
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));
@@ -60,10 +60,10 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToChainedSocksServersIT {
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
                 ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-                        Scheme.SOCKS5.newSocksServerUri(
+                        SocksServerUriScheme.SOCKS5.newSocksServerUri(
                                 InetAddress.getLoopbackAddress().getHostAddress(),
                                 chainedSocksServerPort3)),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));
@@ -76,10 +76,10 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToChainedSocksServersIT {
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
                 ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_URI.newSetting(
-                        Scheme.SOCKS5.newSocksServerUri(
+                        SocksServerUriScheme.SOCKS5.newSocksServerUri(
                                 InetAddress.getLoopbackAddress().getHostAddress(),
                                 chainedSocksServerPort2)),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));
@@ -90,7 +90,7 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToChainedSocksServersIT {
     }
 
     private static NetObjectFactory newSocks5NetObjectFactorySetToChainedSocksServers() {
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
                         chainedSocksServerPort1)
                 .newSocksClient(Properties.of())

@@ -83,7 +83,7 @@ and APIs.
 jargyle start-server \
     --setting=port=8080 \
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
+    --setting=socks5.userpassauthmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
 ```
 
 ```bash

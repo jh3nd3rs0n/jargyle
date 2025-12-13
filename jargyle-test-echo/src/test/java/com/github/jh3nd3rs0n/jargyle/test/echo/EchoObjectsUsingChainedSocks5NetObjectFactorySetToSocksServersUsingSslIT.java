@@ -42,11 +42,11 @@ public class EchoObjectsUsingChainedSocks5NetObjectFactorySetToSocksServersUsing
             .build();
 
     private static NetObjectFactory newChainedSocks5NetObjectFactorySetToSocksServersUsingSsl() {
-        SocksClient client1 = Scheme.SOCKS5.newSocksServerUri(
+        SocksClient client1 = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
                         socksServerPort1UsingSsl)
                 .newSocksClient(Properties.of());
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
                         socksServerPort2UsingSsl)
                 .newSocksClient(Properties.of(
@@ -73,7 +73,7 @@ public class EchoObjectsUsingChainedSocks5NetObjectFactorySetToSocksServersUsing
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));
@@ -95,7 +95,7 @@ public class EchoObjectsUsingChainedSocks5NetObjectFactorySetToSocksServersUsing
                         Bytes.of(KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_FILE_1.getContentAsBytes())),
                 SslSettingSpecConstants.SSL_KEY_STORE_PASSWORD.newSettingWithParsedValue(
                         KeyStoreResourceConstants.JARGYLE_TEST_HELP_SECURITY_KEY_STORE_PASSWORD_FILE_1.getContentAsString()),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));

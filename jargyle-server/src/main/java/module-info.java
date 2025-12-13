@@ -10,5 +10,5 @@ module com.github.jh3nd3rs0n.jargyle.server {
 	requires org.slf4j;
     exports com.github.jh3nd3rs0n.jargyle.server;
 	opens com.github.jh3nd3rs0n.jargyle.server.internal.config.xml.bind to jakarta.xml.bind;
-	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod;
+	exports com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod;
 }

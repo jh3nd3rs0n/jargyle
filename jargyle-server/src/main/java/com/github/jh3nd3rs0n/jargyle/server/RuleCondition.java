@@ -7,6 +7,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 		name = "Rule Condition",
 		nameValuePairValueSpecs = {
 				GeneralRuleConditionSpecConstants.class,
+                SocksRuleConditionSpecConstants.class,
 				Socks5RuleConditionSpecConstants.class
 		},
 		syntax = "NAME=VALUE",

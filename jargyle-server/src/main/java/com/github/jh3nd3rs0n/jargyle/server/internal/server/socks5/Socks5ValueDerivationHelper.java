@@ -2,11 +2,12 @@ package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.server.Rule;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleActionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.internal.server.GeneralValueDerivationHelper;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.server.*;
+import com.github.jh3nd3rs0n.jargyle.server.internal.server.SocksValueDerivationHelper;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.UserRepository;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,57 @@ final class Socks5ValueDerivationHelper {
     private Socks5ValueDerivationHelper() {
     }
 
+    public static Boolean getSocks5GssapiAuthMethodNecReferenceImplFrom(
+            final Settings settings) {
+        Boolean b = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTHMETHOD_NEC_REFERENCE_IMPL);
+        if (b != null) {
+            return b;
+        }
+        return SocksValueDerivationHelper.getSocksGssapiAuthMethodNecReferenceImplFrom(settings);
+    }
+
+    public static ProtectionLevels getSocks5GssapiAuthMethodProtectionLevelsFrom(
+            final Settings settings) {
+        ProtectionLevels protectionLevels = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVELS);
+        if (protectionLevels != null) {
+            return protectionLevels;
+        }
+        return ProtectionLevels.newInstanceFrom(
+                SocksValueDerivationHelper.getSocksGssapiAuthMethodProtectionLevelsFrom(settings).toString());
+    }
+
+    public static Boolean getSocks5GssapiAuthMethodSuggestedConfFrom(
+            final Settings settings) {
+        Boolean b = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_CONF);
+        if (b != null) {
+            return b;
+        }
+        return SocksValueDerivationHelper.getSocksGssapiAuthMethodSuggestedConfFrom(settings);
+    }
+
+    public static Integer getSocks5GssapiAuthMethodSuggestedIntegFrom(
+            final Settings settings) {
+        Integer i = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_INTEG);
+        if (i != null) {
+            return i;
+        }
+        return SocksValueDerivationHelper.getSocksGssapiAuthMethodSuggestedIntegFrom(settings);
+    }
+
+    public static Methods getSocks5MethodsFrom(final Settings settings) {
+        Methods methods = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_METHODS);
+        if (!methods.toList().isEmpty()) {
+            return methods;
+        }
+        return Methods.newInstanceFrom(
+                SocksValueDerivationHelper.getSocksMethodsFrom(settings).toString());
+    }
+    
     private static SocketSettings getSocks5OnBindRequestInboundSocketSettingsFrom(
             final Rule rule) {
         SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
@@ -30,7 +82,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(rule);
     }
 
     private static SocketSettings getSocks5OnBindRequestInboundSocketSettingsFrom(
@@ -40,7 +92,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings);
     }
 
     public static SocketSettings getSocks5OnBindRequestInboundSocketSettingsFrom(
@@ -60,7 +112,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestExternalFacingBindHostFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(rule);
     }
 
     private static Host getSocks5OnBindRequestListenBindHostFrom(
@@ -70,7 +122,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestExternalFacingBindHostFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings);
     }
 
     public static Host getSocks5OnBindRequestListenBindHostFrom(
@@ -104,7 +156,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(rule);
     }
 
     private static HostAddressTypes getSocks5OnBindRequestListenBindHostAddressTypesFrom(
@@ -114,8 +166,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(
-                settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings);
     }
 
     private static HostAddressTypes getSocks5OnBindRequestListenBindHostAddressTypesFrom(
@@ -135,7 +186,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestExternalFacingBindTcpPortRangesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(rule);
     }
 
     private static PortRanges getSocks5OnBindRequestListenBindPortRangesFrom(
@@ -145,7 +196,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestExternalFacingBindTcpPortRangesFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings);
     }
 
     public static PortRanges getSocks5OnBindRequestListenBindPortRangesFrom(
@@ -165,7 +216,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestExternalFacingNetInterfaceFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(rule);
     }
 
     private static NetInterface getSocks5OnBindRequestListenNetInterfaceFrom(
@@ -175,7 +226,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestExternalFacingNetInterfaceFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings);
     }
 
     private static NetInterface getSocks5OnBindRequestListenNetInterfaceFrom(
@@ -196,7 +247,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(rule);
     }
 
     private static SocketSettings getSocks5OnBindRequestListenSocketSettingsFrom(
@@ -206,7 +257,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings);
     }
 
     public static SocketSettings getSocks5OnBindRequestListenSocketSettingsFrom(
@@ -226,7 +277,7 @@ final class Socks5ValueDerivationHelper {
         if (relayBufferSize != null) {
             return relayBufferSize;
         }
-        return getSocks5OnRequestRelayBufferSizeFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayBufferSizeFrom(rule);
     }
     
     private static PositiveInteger getSocks5OnBindRequestRelayBufferSizeFrom(
@@ -236,7 +287,7 @@ final class Socks5ValueDerivationHelper {
         if (relayBufferSize != null) {
             return relayBufferSize;
         }
-        return getSocks5OnRequestRelayBufferSizeFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayBufferSizeFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnBindRequestRelayBufferSizeFrom(
@@ -256,7 +307,7 @@ final class Socks5ValueDerivationHelper {
         if (relayIdleTimeout != null) {
             return relayIdleTimeout;
         }
-        return getSocks5OnRequestRelayIdleTimeoutFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayIdleTimeoutFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnBindRequestRelayIdleTimeoutFrom(
@@ -266,7 +317,7 @@ final class Socks5ValueDerivationHelper {
         if (relayIdleTimeout != null) {
             return relayIdleTimeout;
         }
-        return getSocks5OnRequestRelayIdleTimeoutFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayIdleTimeoutFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnBindRequestRelayIdleTimeoutFrom(
@@ -286,7 +337,7 @@ final class Socks5ValueDerivationHelper {
         if (relayInboundBandwidthLimit != null) {
             return relayInboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayInboundBandwidthLimitFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayInboundBandwidthLimitFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnBindRequestRelayInboundBandwidthLimitFrom(
@@ -296,7 +347,7 @@ final class Socks5ValueDerivationHelper {
         if (relayInboundBandwidthLimit != null) {
             return relayInboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayInboundBandwidthLimitFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayInboundBandwidthLimitFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnBindRequestRelayInboundBandwidthLimitFrom(
@@ -316,7 +367,7 @@ final class Socks5ValueDerivationHelper {
         if (relayOutboundBandwidthLimit != null) {
             return relayOutboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayOutboundBandwidthLimitFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayOutboundBandwidthLimitFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(
@@ -326,7 +377,7 @@ final class Socks5ValueDerivationHelper {
         if (relayOutboundBandwidthLimit != null) {
             return relayOutboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayOutboundBandwidthLimitFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRelayOutboundBandwidthLimitFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(
@@ -338,297 +389,34 @@ final class Socks5ValueDerivationHelper {
         }
         return getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(settings);
     }
-    
-    private static Host getSocks5OnRequestExternalFacingBindHostFrom(
+
+    private static Boolean getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
             final Rule rule) {
-        Host host = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
+        Boolean b = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
+        if (b != null) {
+            return b;
         }
-        return GeneralValueDerivationHelper.getExternalFacingBindHostFrom(rule);
-    }
-    
-    private static Host getSocks5OnRequestExternalFacingBindHostFrom(
-            final Settings settings) {
-        Host host = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingBindHostFrom(
-                settings);
-    }
-    
-    private static HostAddressTypes getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingBindHostAddressTypesFrom(
-                rule);
-    }
-    
-    private static HostAddressTypes getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingBindHostAddressTypesFrom(
-                settings);
-    }
-    
-    private static PortRanges getSocks5OnRequestExternalFacingBindTcpPortRangesFrom(
-            final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingTcpPortRangesFrom(
-                rule);
-    }
-    
-    private static PortRanges getSocks5OnRequestExternalFacingBindTcpPortRangesFrom(
-            final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingTcpPortRangesFrom(
-                settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(rule);
     }
 
-    private static PortRanges getSocks5OnRequestExternalFacingBindUdpPortRangesFrom(
-            final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingUdpPortRangesFrom(
-                rule);
-    }
-
-    private static PortRanges getSocks5OnRequestExternalFacingBindUdpPortRangesFrom(
+    private static Boolean getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
             final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
+        Boolean b = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
+        if (b != null) {
+            return b;
         }
-        return GeneralValueDerivationHelper.getExternalFacingUdpPortRangesFrom(
-                settings);
-    }
-    
-    private static NetInterface getSocks5OnRequestExternalFacingNetInterfaceFrom(
-            final Rule rule) {
-        NetInterface netInterface = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingNetInterfaceFrom(
-                rule);
-    }
-    
-    private static NetInterface getSocks5OnRequestExternalFacingNetInterfaceFrom(
-            final Settings settings) {
-        NetInterface netInterface = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingNetInterfaceFrom(
-                settings);
-    }
-    
-    private static SocketSettings getSocks5OnRequestExternalFacingSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingSocketSettingsFrom(
-                rule);
-    }
-    
-    private static SocketSettings getSocks5OnRequestExternalFacingSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return GeneralValueDerivationHelper.getExternalFacingSocketSettingsFrom(
-                settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(settings);
     }
 
-    private static Host getSocks5OnRequestInternalFacingBindHostFrom(
-            final Rule rule) {
-        Host host = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
+    public static Boolean getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
+            final Rule rule, final Settings settings) {
+        Boolean b = getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(rule);
+        if (b != null) {
+            return b;
         }
-        return GeneralValueDerivationHelper.getInternalFacingBindHostFrom(rule);
-    }
-
-    private static Host getSocks5OnRequestInternalFacingBindHostFrom(
-            final Settings settings) {
-        Host host = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingBindHostFrom(
-                settings);
-    }
-
-    private static HostAddressTypes getSocks5OnRequestInternalFacingBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingBindHostAddressTypesFrom(
-                rule);
-    }
-
-    private static HostAddressTypes getSocks5OnRequestInternalFacingBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingBindHostAddressTypesFrom(
-                settings);
-    }
-
-    private static PortRanges getSocks5OnRequestInternalFacingBindUdpPortRangesFrom(
-            final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingUdpPortRangesFrom(
-                rule);
-    }
-
-    private static PortRanges getSocks5OnRequestInternalFacingBindUdpPortRangesFrom(
-            final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingUdpPortRangesFrom(
-                settings);
-    }
-
-    private static NetInterface getSocks5OnRequestInternalFacingNetInterfaceFrom(
-            final Rule rule) {
-        NetInterface netInterface = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingNetInterfaceFrom(
-                rule);
-    }
-
-    private static NetInterface getSocks5OnRequestInternalFacingNetInterfaceFrom(
-            final Settings settings) {
-        NetInterface netInterface = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingNetInterfaceFrom(
-                settings);
-    }
-
-    private static SocketSettings getSocks5OnRequestInternalFacingSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingSocketSettingsFrom(
-                rule);
-    }
-
-    private static SocketSettings getSocks5OnRequestInternalFacingSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return GeneralValueDerivationHelper.getInternalFacingSocketSettingsFrom(
-                settings);
-    }
-    
-    private static PositiveInteger getSocks5OnRequestRelayBufferSizeFrom(
-            final Rule rule) {
-        return rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE);
-    }
-    
-    private static PositiveInteger getSocks5OnRequestRelayBufferSizeFrom(
-            final Settings settings) {
-        return settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE);
-    }
-    
-    private static PositiveInteger getSocks5OnRequestRelayIdleTimeoutFrom(
-            final Rule rule) {
-        return rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT);
-    }
-    
-    private static PositiveInteger getSocks5OnRequestRelayIdleTimeoutFrom(
-            final Settings settings) {
-        return settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT);
-    }
-    
-    private static PositiveInteger getSocks5OnRequestRelayInboundBandwidthLimitFrom(
-            final Rule rule) {
-        return rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
-    }
-    
-    private static PositiveInteger getSocks5OnRequestRelayInboundBandwidthLimitFrom(
-            final Settings settings) {
-        return settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT);
-    }
-
-    private static PositiveInteger getSocks5OnRequestRelayOutboundBandwidthLimitFrom(
-            final Rule rule) {
-        return rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
-    }
-
-    private static PositiveInteger getSocks5OnRequestRelayOutboundBandwidthLimitFrom(
-            final Settings settings) {
-        return settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT);
+        return getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(settings);
     }
 
     private static PositiveInteger getSocks5OnConnectRequestRelayBufferSizeFrom(
@@ -638,7 +426,7 @@ final class Socks5ValueDerivationHelper {
         if (relayBufferSize != null) {
             return relayBufferSize;
         }
-        return getSocks5OnRequestRelayBufferSizeFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayBufferSizeFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnConnectRequestRelayBufferSizeFrom(
@@ -648,7 +436,7 @@ final class Socks5ValueDerivationHelper {
         if (relayBufferSize != null) {
             return relayBufferSize;
         }
-        return getSocks5OnRequestRelayBufferSizeFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayBufferSizeFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnConnectRequestRelayBufferSizeFrom(
@@ -668,7 +456,7 @@ final class Socks5ValueDerivationHelper {
         if (relayIdleTimeout != null) {
             return relayIdleTimeout;
         }
-        return getSocks5OnRequestRelayIdleTimeoutFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayIdleTimeoutFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnConnectRequestRelayIdleTimeoutFrom(
@@ -678,7 +466,7 @@ final class Socks5ValueDerivationHelper {
         if (relayIdleTimeout != null) {
             return relayIdleTimeout;
         }
-        return getSocks5OnRequestRelayIdleTimeoutFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayIdleTimeoutFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnConnectRequestRelayIdleTimeoutFrom(
@@ -698,7 +486,7 @@ final class Socks5ValueDerivationHelper {
         if (relayInboundBandwidthLimit != null) {
             return relayInboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayInboundBandwidthLimitFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayInboundBandwidthLimitFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnConnectRequestRelayInboundBandwidthLimitFrom(
@@ -708,7 +496,7 @@ final class Socks5ValueDerivationHelper {
         if (relayInboundBandwidthLimit != null) {
             return relayInboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayInboundBandwidthLimitFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayInboundBandwidthLimitFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnConnectRequestRelayInboundBandwidthLimitFrom(
@@ -728,7 +516,7 @@ final class Socks5ValueDerivationHelper {
         if (relayOutboundBandwidthLimit != null) {
             return relayOutboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayOutboundBandwidthLimitFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayOutboundBandwidthLimitFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnConnectRequestRelayOutboundBandwidthLimitFrom(
@@ -738,7 +526,7 @@ final class Socks5ValueDerivationHelper {
         if (relayOutboundBandwidthLimit != null) {
             return relayOutboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayOutboundBandwidthLimitFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRelayOutboundBandwidthLimitFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnConnectRequestRelayOutboundBandwidthLimitFrom(
@@ -758,7 +546,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestExternalFacingBindHostFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(rule);
     }
 
     private static Host getSocks5OnConnectRequestTargetFacingBindHostFrom(
@@ -768,7 +556,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestExternalFacingBindHostFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings);
     }
 
     public static Host getSocks5OnConnectRequestTargetFacingBindHostFrom(
@@ -802,7 +590,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(rule);
     }
 
     private static HostAddressTypes getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(
@@ -812,8 +600,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(
-                settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings);
     }
 
     private static HostAddressTypes getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(
@@ -833,7 +620,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestExternalFacingBindTcpPortRangesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(rule);
     }
 
     private static PortRanges getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
@@ -843,7 +630,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestExternalFacingBindTcpPortRangesFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings);
     }
 
     public static PortRanges getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
@@ -856,6 +643,35 @@ final class Socks5ValueDerivationHelper {
         return getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(settings);
     }
 
+    private static PositiveInteger getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+            final Rule rule) {
+        PositiveInteger i = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
+        if (i != null) {
+            return i;
+        }
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(rule);
+    }
+
+    private static PositiveInteger getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+            final Settings settings) {
+        PositiveInteger i = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
+        if (i != null) {
+            return i;
+        }
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(settings);
+    }
+
+    public static PositiveInteger getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+            final Rule rule, final Settings settings) {
+        PositiveInteger i = getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(rule);
+        if (i != null) {
+            return i;
+        }
+        return getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(settings);
+    }
+
     private static NetInterface getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(
             final Rule rule) {
         NetInterface netInterface = rule.getLastRuleActionValue(
@@ -863,7 +679,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestExternalFacingNetInterfaceFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(rule);
     }
 
     private static NetInterface getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(
@@ -873,7 +689,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestExternalFacingNetInterfaceFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings);
     }
 
     private static NetInterface getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(
@@ -894,7 +710,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(rule);
     }
 
     private static SocketSettings getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(
@@ -904,7 +720,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings);
     }
 
     public static SocketSettings getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(
@@ -924,7 +740,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestInternalFacingBindHostFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(rule);
     }
 
     private static Host getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(
@@ -934,7 +750,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestInternalFacingBindHostFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings);
     }
 
     public static Host getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(
@@ -968,7 +784,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestInternalFacingBindHostAddressTypesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule);
     }
 
     private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(
@@ -978,8 +794,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestInternalFacingBindHostAddressTypesFrom(
-                settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings);
     }
 
     private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(
@@ -999,7 +814,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestInternalFacingBindUdpPortRangesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(rule);
     }
 
     private static PortRanges getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
@@ -1009,7 +824,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestInternalFacingBindUdpPortRangesFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings);
     }
 
     public static PortRanges getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
@@ -1029,7 +844,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestInternalFacingNetInterfaceFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(rule);
     }
 
     private static NetInterface getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(
@@ -1039,7 +854,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestInternalFacingNetInterfaceFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings);
     }
 
     private static NetInterface getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(
@@ -1060,7 +875,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestInternalFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(rule);
     }
 
     private static SocketSettings getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(
@@ -1070,7 +885,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestInternalFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings);
     }
 
     public static SocketSettings getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(
@@ -1090,7 +905,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestExternalFacingBindHostFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(rule);
     }
 
     private static Host getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(
@@ -1100,7 +915,7 @@ final class Socks5ValueDerivationHelper {
         if (host != null) {
             return host;
         }
-        return getSocks5OnRequestExternalFacingBindHostFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings);
     }
 
     public static Host getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(
@@ -1134,7 +949,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule);
     }
 
     private static HostAddressTypes getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(
@@ -1144,8 +959,7 @@ final class Socks5ValueDerivationHelper {
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
-        return getSocks5OnRequestExternalFacingBindHostAddressTypesFrom(
-                settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings);
     }
 
     private static HostAddressTypes getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(
@@ -1165,7 +979,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestExternalFacingBindUdpPortRangesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(rule);
     }
 
     private static PortRanges getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
@@ -1175,7 +989,7 @@ final class Socks5ValueDerivationHelper {
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnRequestExternalFacingBindUdpPortRangesFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings);
     }
 
     public static PortRanges getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
@@ -1195,7 +1009,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestExternalFacingNetInterfaceFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule);
     }
 
     private static NetInterface getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(
@@ -1205,7 +1019,7 @@ final class Socks5ValueDerivationHelper {
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnRequestExternalFacingNetInterfaceFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings);
     }
 
     private static NetInterface getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(
@@ -1226,7 +1040,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule);
     }
 
     private static SocketSettings getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(
@@ -1236,7 +1050,7 @@ final class Socks5ValueDerivationHelper {
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnRequestExternalFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings);
     }
 
     public static SocketSettings getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(
@@ -1256,7 +1070,7 @@ final class Socks5ValueDerivationHelper {
         if (relayBufferSize != null) {
             return relayBufferSize;
         }
-        return getSocks5OnRequestRelayBufferSizeFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayBufferSizeFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnUdpAssociateRequestRelayBufferSizeFrom(
@@ -1266,7 +1080,7 @@ final class Socks5ValueDerivationHelper {
         if (relayBufferSize != null) {
             return relayBufferSize;
         }
-        return getSocks5OnRequestRelayBufferSizeFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayBufferSizeFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnUdpAssociateRequestRelayBufferSizeFrom(
@@ -1286,7 +1100,7 @@ final class Socks5ValueDerivationHelper {
         if (relayIdleTimeout != null) {
             return relayIdleTimeout;
         }
-        return getSocks5OnRequestRelayIdleTimeoutFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayIdleTimeoutFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnUdpAssociateRequestRelayIdleTimeoutFrom(
@@ -1296,7 +1110,7 @@ final class Socks5ValueDerivationHelper {
         if (relayIdleTimeout != null) {
             return relayIdleTimeout;
         }
-        return getSocks5OnRequestRelayIdleTimeoutFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayIdleTimeoutFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnUdpAssociateRequestRelayIdleTimeoutFrom(
@@ -1316,7 +1130,7 @@ final class Socks5ValueDerivationHelper {
         if (relayInboundBandwidthLimit != null) {
             return relayInboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayInboundBandwidthLimitFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayInboundBandwidthLimitFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnUdpAssociateRequestRelayInboundBandwidthLimitFrom(
@@ -1326,7 +1140,7 @@ final class Socks5ValueDerivationHelper {
         if (relayInboundBandwidthLimit != null) {
             return relayInboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayInboundBandwidthLimitFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayInboundBandwidthLimitFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnUdpAssociateRequestRelayInboundBandwidthLimitFrom(
@@ -1346,7 +1160,7 @@ final class Socks5ValueDerivationHelper {
         if (relayOutboundBandwidthLimit != null) {
             return relayOutboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayOutboundBandwidthLimitFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(rule);
     }
 
     private static PositiveInteger getSocks5OnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(
@@ -1356,7 +1170,7 @@ final class Socks5ValueDerivationHelper {
         if (relayOutboundBandwidthLimit != null) {
             return relayOutboundBandwidthLimit;
         }
-        return getSocks5OnRequestRelayOutboundBandwidthLimitFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(settings);
     }
 
     public static PositiveInteger getSocks5OnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(
@@ -1368,5 +1182,50 @@ final class Socks5ValueDerivationHelper {
         }
         return getSocks5OnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(settings);
     }
-    
+
+    public static Address getSocks5RequestDesiredDestinationAddressRedirectFrom(
+            final Rule rule) {
+        Address address = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_ADDRESS_REDIRECT);
+        if (address != null) {
+            return address;
+        }
+        String string = SocksValueDerivationHelper.getSocksRequestDesiredDestinationAddressRedirectFrom(rule);
+        if (string != null) {
+            return Address.newInstanceFrom(string);
+        }
+        return null;
+    }
+
+    public static Port getSocks5RequestDesiredDestinationPortRedirectFrom(
+            final Rule rule) {
+        Port port = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_PORT_REDIRECT);
+        if (port != null) {
+            return port;
+        }
+        return SocksValueDerivationHelper.getSocksRequestDesiredDestinationPortRedirectFrom(rule);
+    }
+
+    public static LogAction getSocks5RequestDesiredDestinationRedirectLogActionFrom(
+            final Rule rule) {
+        LogAction logAction = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_REQUEST_DESIRED_DESTINATION_REDIRECT_LOG_ACTION);
+        if (logAction != null) {
+            return logAction;
+        }
+        return SocksValueDerivationHelper.getSocksRequestDesiredDestinationRedirectLogActionFrom(rule);
+    }
+
+    public static UserRepository getSocks5UserpassAuthMethodUserRepositoryFrom(
+            final Settings settings) {
+        UserRepository userRepository = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_USERPASSAUTHMETHOD_USER_REPOSITORY);
+        if (userRepository != null) {
+            return userRepository;
+        }
+        return UserRepository.newInstanceFrom(
+                SocksValueDerivationHelper.getSocksUserpassAuthMethodUserRepositoryFrom(settings));
+    }
+
 }

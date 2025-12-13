@@ -8,7 +8,7 @@ public final class Socks5ServerUri extends SocksServerUri {
 
 	public Socks5ServerUri(
 			final UserInfo usrInfo, final Host hst, final Port prt) {
-		super(Scheme.SOCKS5, usrInfo, hst, prt);
+		super(SocksServerUriScheme.SOCKS5, usrInfo, hst, prt);
 	}
 
 	@Override

@@ -15,10 +15,12 @@ final class RuleActionSpecConstants {
 		List<RuleActionSpec<Object>> values =
 				new ArrayList<RuleActionSpec<Object>>();
 		values.addAll(GeneralRuleActionSpecConstants.values());
+        values.addAll(SocksRuleActionSpecConstants.values());
 		values.addAll(Socks5RuleActionSpecConstants.values());
 		Map<String, RuleActionSpec<Object>> valuesMap =
 				new HashMap<String, RuleActionSpec<Object>>();
 		valuesMap.putAll(GeneralRuleActionSpecConstants.valuesMap());
+        valuesMap.putAll(SocksRuleActionSpecConstants.valuesMap());
 		valuesMap.putAll(Socks5RuleActionSpecConstants.valuesMap());
 		VALUES = values;
 		VALUES_MAP = valuesMap;

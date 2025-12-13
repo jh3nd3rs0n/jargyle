@@ -5,9 +5,9 @@ import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecsDoc;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Methods;
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod.ProtectionLevels;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.ProtectionLevels;
 import com.github.jh3nd3rs0n.jargyle.server.internal.settingspec.impl.*;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.UserRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -21,67 +21,62 @@ public final class Socks5SettingSpecConstants {
 	private static final SettingSpecs SETTING_SPECS = new SettingSpecs();
 	
 	@NameValuePairValueSpecDoc(
-			defaultValue = "false",
 			description = "The boolean value to indicate if the exchange of "
 					+ "the GSS-API protection level negotiation must be "
 					+ "unprotected according to the NEC reference "
 					+ "implementation",
-			name = "socks5.gssapimethod.necReferenceImpl",
-			syntax = "socks5.gssapimethod.necReferenceImpl=true|false",
+			name = "socks5.gssapiauthmethod.necReferenceImpl",
+			syntax = "socks5.gssapiauthmethod.necReferenceImpl=true|false",
 			valueType = Boolean.class
 	)
-	public static final SettingSpec<Boolean> SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL = 
+	public static final SettingSpec<Boolean> SOCKS5_GSSAPIAUTHMETHOD_NEC_REFERENCE_IMPL = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"socks5.gssapimethod.necReferenceImpl", 
-					Boolean.FALSE));
+					"socks5.gssapiauthmethod.necReferenceImpl", 
+					null));
 	
 	@NameValuePairValueSpecDoc(
-			defaultValue = "REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE",
 			description = "The comma separated list of acceptable protection "
 					+ "levels after GSS-API authentication (The first is "
 					+ "preferred if the client does not provide a protection "
 					+ "level that is acceptable.)",
-			name = "socks5.gssapimethod.protectionLevels",
-			syntax = "socks5.gssapimethod.protectionLevels=SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS",
+			name = "socks5.gssapiauthmethod.protectionLevels",
+			syntax = "socks5.gssapiauthmethod.protectionLevels=SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVELS",
 			valueType = ProtectionLevels.class
 	)
-	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS = 
-			SETTING_SPECS.addThenGet(new Socks5GssapiMethodProtectionLevelsSettingSpec(
-					"socks5.gssapimethod.protectionLevels", 
-					ProtectionLevels.getDefault()));
+	public static final SettingSpec<ProtectionLevels> SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVELS = 
+			SETTING_SPECS.addThenGet(new Socks5GssapiAuthMethodProtectionLevelsSettingSpec(
+					"socks5.gssapiauthmethod.protectionLevels", 
+					null));
 
 	@NameValuePairValueSpecDoc(
-			defaultValue = "true",
 			description = "The suggested privacy (i.e. confidentiality) state "
 					+ "for GSS-API messages sent after GSS-API authentication "
 					+ "(applicable if the negotiated protection level is "
 					+ "SELECTIVE_INTEG_OR_CONF)",
-			name = "socks5.gssapimethod.suggestedConf",
-			syntax = "socks5.gssapimethod.suggestedConf=true|false",
+			name = "socks5.gssapiauthmethod.suggestedConf",
+			syntax = "socks5.gssapiauthmethod.suggestedConf=true|false",
 			valueType = Boolean.class
 	)
-	public static final SettingSpec<Boolean> SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF =
+	public static final SettingSpec<Boolean> SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_CONF =
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"socks5.gssapimethod.suggestedConf",
-					Boolean.TRUE));
+					"socks5.gssapiauthmethod.suggestedConf",
+					null));
 
 	@NameValuePairValueSpecDoc(
-			defaultValue = "0",
 			description = "The suggested quality-of-protection (i.e. "
 					+ "integrity) value for GSS-API messages sent after "
 					+ "GSS-API authentication (applicable if the negotiated "
 					+ "protection level is SELECTIVE_INTEG_OR_CONF)",
-			name = "socks5.gssapimethod.suggestedInteg",
-			syntax = "socks5.gssapimethod.suggestedInteg=-2147483648-2147483647",
+			name = "socks5.gssapiauthmethod.suggestedInteg",
+			syntax = "socks5.gssapiauthmethod.suggestedInteg=-2147483648-2147483647",
 			valueType = Integer.class
 	)
-	public static final SettingSpec<Integer> SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG =
+	public static final SettingSpec<Integer> SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_INTEG =
 			SETTING_SPECS.addThenGet(new IntegerSettingSpec(
-					"socks5.gssapimethod.suggestedInteg",
-					Integer.valueOf(0)));
+					"socks5.gssapiauthmethod.suggestedInteg",
+					null));
 
 	@NameValuePairValueSpecDoc(
-			defaultValue = "NO_AUTHENTICATION_REQUIRED",
 			description = "The comma separated list of acceptable "
 					+ "authentication methods in order of preference",
 			name = "socks5.methods",
@@ -91,7 +86,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<Methods> SOCKS5_METHODS = 
 			SETTING_SPECS.addThenGet(new Socks5MethodsSettingSpec(
 					"socks5.methods", 
-					Methods.getDefault()));
+					Methods.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
@@ -214,7 +209,6 @@ public final class Socks5SettingSpecConstants {
 					null));
 
 	@NameValuePairValueSpecDoc(
-			defaultValue = "false",
 			description = "The boolean value to indicate if the target-facing "
 					+ "socket is to be prepared before connecting (involves "
 					+ "applying the specified socket settings, resolving the "
@@ -227,7 +221,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET = 
 			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
 					"socks5.onConnectRequest.prepareTargetFacingSocket", 
-					Boolean.FALSE));
+					null));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data",
@@ -312,7 +306,6 @@ public final class Socks5SettingSpecConstants {
 					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
-			defaultValue = "60000",
 			description = "The timeout in milliseconds on waiting for the "
 					+ "target-facing socket to connect",
 			name = "socks5.onConnectRequest.targetFacingConnectTimeout",
@@ -322,7 +315,7 @@ public final class Socks5SettingSpecConstants {
 	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onConnectRequest.targetFacingConnectTimeout", 
-					PositiveInteger.valueOf(60000)));
+					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The network interface that provides a binding "
@@ -347,186 +340,6 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socks5.onConnectRequest.targetFacingSocketSettings", 
 					SocketSettings.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for all "
-					+ "external-facing sockets",
-			name = "socks5.onRequest.externalFacingBindHost",
-			syntax = "socks5.onRequest.externalFacingBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onRequest.externalFacingBindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of acceptable binding "
-					+ "host address types for all external-facing sockets",
-			name = "socks5.onRequest.externalFacingBindHostAddressTypes",
-			syntax = "socks5.onRequest.externalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socks5.onRequest.externalFacingBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "all external-facing TCP sockets",
-			name = "socks5.onRequest.externalFacingBindTcpPortRanges",
-			syntax = "socks5.onRequest.externalFacingBindTcpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onRequest.externalFacingBindTcpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "all external-facing UDP sockets",
-			name = "socks5.onRequest.externalFacingBindUdpPortRanges",
-			syntax = "socks5.onRequest.externalFacingBindUdpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onRequest.externalFacingBindUdpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The network interface that provides a binding host "
-					+ "address for all external-facing sockets",
-			name = "socks5.onRequest.externalFacingNetInterface",
-			syntax = "socks5.onRequest.externalFacingNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> SOCKS5_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socks5.onRequest.externalFacingNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for all "
-					+ "external-facing sockets",
-			name = "socks5.onRequest.externalFacingSocketSettings",
-			syntax = "socks5.onRequest.externalFacingSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS =
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onRequest.externalFacingSocketSettings",
-					SocketSettings.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for all "
-					+ "internal-facing sockets",
-			name = "socks5.onRequest.internalFacingBindHost",
-			syntax = "socks5.onRequest.internalFacingBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onRequest.internalFacingBindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of acceptable binding "
-					+ "host address types for all internal-facing sockets",
-			name = "socks5.onRequest.internalFacingBindHostAddressTypes",
-			syntax = "socks5.onRequest.internalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socks5.onRequest.internalFacingBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "all internal-facing UDP sockets",
-			name = "socks5.onRequest.internalFacingBindUdpPortRanges",
-			syntax = "socks5.onRequest.internalFacingBindUdpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onRequest.internalFacingBindUdpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The network interface that provides a binding host "
-					+ "address for all internal-facing sockets",
-			name = "socks5.onRequest.internalFacingNetInterface",
-			syntax = "socks5.onRequest.internalFacingNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> SOCKS5_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socks5.onRequest.internalFacingNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for all "
-					+ "internal-facing sockets",
-			name = "socks5.onRequest.internalFacingSocketSettings",
-			syntax = "socks5.onRequest.internalFacingSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTINGS =
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onRequest.internalFacingSocketSettings",
-					SocketSettings.of()));
-
-	@NameValuePairValueSpecDoc(
-			defaultValue = "1024",
-			description = "The buffer size in bytes for relaying the data",
-			name = "socks5.onRequest.relayBufferSize",
-			syntax = "socks5.onRequest.relayBufferSize=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_BUFFER_SIZE =
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onRequest.relayBufferSize",
-					PositiveInteger.valueOf(1024)));
-
-	@NameValuePairValueSpecDoc(
-			defaultValue = "60000",
-			description = "The timeout in milliseconds on relaying no data",
-			name = "socks5.onRequest.relayIdleTimeout",
-			syntax = "socks5.onRequest.relayIdleTimeout=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT =
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onRequest.relayIdleTimeout",
-					PositiveInteger.valueOf(60000)));
-
-	@NameValuePairValueSpecDoc(
-			description = "The upper limit on bandwidth in bytes per second of "
-					+ "receiving inbound data to be relayed",
-			name = "socks5.onRequest.relayInboundBandwidthLimit",
-			syntax = "socks5.onRequest.relayInboundBandwidthLimit=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_INBOUND_BANDWIDTH_LIMIT =
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onRequest.relayInboundBandwidthLimit",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The upper limit on bandwidth in bytes per second of "
-					+ "receiving outbound data to be relayed",
-			name = "socks5.onRequest.relayOutboundBandwidthLimit",
-			syntax = "socks5.onRequest.relayOutboundBandwidthLimit=POSITIVE_INTEGER",
-			valueType = PositiveInteger.class
-	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT =
-			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onRequest.relayOutboundBandwidthLimit",
-					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the "
@@ -695,17 +508,16 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@NameValuePairValueSpecDoc(
-			defaultValue = "StringSourceUserRepository:",
 			description = "The user repository used for username password "
 					+ "authentication",
-			name = "socks5.userpassmethod.userRepository",
-			syntax = "socks5.userpassmethod.userRepository=SOCKS5_USERPASSMETHOD_USER_REPOSITORY",
+			name = "socks5.userpassauthmethod.userRepository",
+			syntax = "socks5.userpassauthmethod.userRepository=SOCKS5_USERPASSAUTHMETHOD_USER_REPOSITORY",
 			valueType = UserRepository.class
 	)	
-	public static final SettingSpec<UserRepository> SOCKS5_USERPASSMETHOD_USER_REPOSITORY = 
-			SETTING_SPECS.addThenGet(new Socks5UserpassMethodUserRepositorySettingSpec(
-					"socks5.userpassmethod.userRepository",
-					UserRepository.newInstance()));
+	public static final SettingSpec<UserRepository> SOCKS5_USERPASSAUTHMETHOD_USER_REPOSITORY = 
+			SETTING_SPECS.addThenGet(new Socks5UserpassAuthMethodUserRepositorySettingSpec(
+					"socks5.userpassauthmethod.userRepository",
+					null));
 	
 	public static List<SettingSpec<Object>> values() {
 		return SETTING_SPECS.toList();

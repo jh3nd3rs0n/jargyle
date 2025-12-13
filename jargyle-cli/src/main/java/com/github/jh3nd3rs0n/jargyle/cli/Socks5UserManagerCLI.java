@@ -15,10 +15,10 @@ import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.CLI;
 import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.OptionType;
 import com.github.jh3nd3rs0n.jargyle.argmatey.ArgMatey.TerminationRequestedException;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueSpecDoc;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.ExternalSourceUserRepositorySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.User;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.UserRepository;
-import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassmethod.Users;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.ExternalSourceUserRepositorySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.User;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.UserRepository;
+import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.Users;
 
 public final class Socks5UserManagerCLI extends CLI {
 	

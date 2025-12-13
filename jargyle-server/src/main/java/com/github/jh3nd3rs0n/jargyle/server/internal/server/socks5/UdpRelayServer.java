@@ -158,6 +158,22 @@ final class UdpRelayServer {
 		}
 
 		private boolean hasInboundRuleCondition(final Rule rule) {
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
+                return true;
+            }
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_INBOUND_DESIRED_DESTINATION_PORT)) {
+                return true;
+            }
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_INBOUND_SOURCE_ADDRESS)) {
+                return true;
+            }
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_INBOUND_SOURCE_PORT)) {
+                return true;
+            }
 			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;
@@ -205,6 +221,18 @@ final class UdpRelayServer {
 				final String clientAddr, 
 				final int clientPrt) {
 			RuleContext inboundRuleContext = new RuleContext(rlContext);
+            inboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS,
+                    clientAddr);
+            inboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_INBOUND_DESIRED_DESTINATION_PORT,
+                    Port.valueOf(clientPrt));
+            inboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_INBOUND_SOURCE_ADDRESS,
+                    peerAddr);
+            inboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_INBOUND_SOURCE_PORT,
+                    Port.valueOf(peerPrt));
 			inboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_INBOUND_DESIRED_DESTINATION_ADDRESS, 
 					clientAddr);
@@ -453,6 +481,22 @@ final class UdpRelayServer {
 		}
 		
 		private boolean hasOutboundRuleCondition(final Rule rule) {
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
+                return true;
+            }
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_OUTBOUND_DESIRED_DESTINATION_PORT)) {
+                return true;
+            }
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_OUTBOUND_SOURCE_ADDRESS)) {
+                return true;
+            }
+            if (rule.hasRuleCondition(
+                    SocksRuleConditionSpecConstants.SOCKS_UDP_OUTBOUND_SOURCE_PORT)) {
+                return true;
+            }
 			if (rule.hasRuleCondition(
 					Socks5RuleConditionSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS)) {
 				return true;
@@ -500,6 +544,18 @@ final class UdpRelayServer {
 				final String peerAddr, 
 				final int peerPrt) {
 			RuleContext outboundRuleContext = new RuleContext(rlContext);
+            outboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS,
+                    peerAddr);
+            outboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_OUTBOUND_DESIRED_DESTINATION_PORT,
+                    Port.valueOf(peerPrt));
+            outboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_OUTBOUND_SOURCE_ADDRESS,
+                    clientAddr);
+            outboundRuleContext.putRuleArgValue(
+                    SocksRuleArgSpecConstants.SOCKS_UDP_OUTBOUND_SOURCE_PORT,
+                    Port.valueOf(clientPrt));
 			outboundRuleContext.putRuleArgValue(
 					Socks5RuleArgSpecConstants.SOCKS5_UDP_OUTBOUND_DESIRED_DESTINATION_ADDRESS, 
 					peerAddr);

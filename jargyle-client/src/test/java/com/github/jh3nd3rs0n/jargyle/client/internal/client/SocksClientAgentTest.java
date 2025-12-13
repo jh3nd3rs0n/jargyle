@@ -8,7 +8,7 @@ public class SocksClientAgentTest {
 
     @Test
     public void testToSocksClientIOExceptionThrowable01() {
-        SocksClient socksClient = Scheme.SOCKS5
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(Properties.of());
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
@@ -19,10 +19,10 @@ public class SocksClientAgentTest {
 
     @Test
     public void testToSocksClientIOExceptionThrowable02() {
-        SocksClient socksClient1 = Scheme.SOCKS5
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1", 1080)
                 .newSocksClient(Properties.of());
-        SocksClient socksClient2 = Scheme.SOCKS5
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1", 2080)
                 .newSocksClient(Properties.of());
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient2);
@@ -37,7 +37,7 @@ public class SocksClientAgentTest {
 
     @Test
     public void testToSocksClientIOExceptionThrowable03() {
-        SocksClient socksClient = Scheme.SOCKS5
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(Properties.of());
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
@@ -50,7 +50,7 @@ public class SocksClientAgentTest {
 
     @Test
     public void testToSocksClientSocketExceptionThrowable01() {
-        SocksClient socksClient = Scheme.SOCKS5
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(Properties.of());
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
@@ -62,7 +62,7 @@ public class SocksClientAgentTest {
 
     @Test
     public void testToSocksClientSocketExceptionThrowable02() {
-        SocksClient socksClient = Scheme.SOCKS5
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(Properties.of());
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);

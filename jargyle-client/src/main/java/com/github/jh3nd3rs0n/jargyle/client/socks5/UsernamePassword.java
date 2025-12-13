@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod.Request;
+import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauthmethod.Request;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

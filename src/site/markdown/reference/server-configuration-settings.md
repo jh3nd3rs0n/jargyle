@@ -5,9 +5,11 @@
 -   [General Settings](#general-settings)
 -   [Chaining General Settings](#chaining-general-settings)
 -   [Chaining DTLS Settings](#chaining-dtls-settings)
+-   [Chaining SOCKS Settings](#chaining-socks-settings)
 -   [Chaining SOCKS5 Settings](#chaining-socks5-settings)
 -   [Chaining SSL/TLS Settings](#chaining-ssl-tls-settings)
 -   [DTLS Settings](#dtls-settings)
+-   [SOCKS Settings](#socks-settings)
 -   [SOCKS5 Settings](#socks5-settings)
 -   [SSL/TLS Settings](#ssl-tls-settings)
 -   [All Settings](#all-settings)
@@ -77,21 +79,38 @@
 <tr><td><a href="#chaining-dtls-wrappedreceivebuffersize"><code>chaining.dtls.wrappedReceiveBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the other SOCKS server</td></tr>
 </table>
 
+## Chaining SOCKS Settings
+
+<table>
+<tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-mechanismoid"><code>chaining.socks5.gssapiauthmethod.mechanismOid</code></a></td><td>Oid</td><td>The object ID for the GSS-API authentication mechanism to the other SOCKS server<br/><b>Default Value:</b> <code>1.2.840.113554.1.2.2</code></td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-necreferenceimpl"><code>chaining.socks5.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-protectionlevels"><code>chaining.socks5.gssapiauthmethod.protectionLevels</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)<br/><b>Default Value:</b> <code>REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE</code></td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-servicename"><code>chaining.socks5.gssapiauthmethod.serviceName</code></a></td><td>String</td><td>The GSS-API service name for the other SOCKS server</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-suggestedconf"><code>chaining.socks5.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>true</code></td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-suggestedinteg"><code>chaining.socks5.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
+<tr><td><a href="#chaining-socks5-methods"><code>chaining.socks5.methods</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable authentication methods to the other SOCKS server<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
+<tr><td><a href="#chaining-socks5-socks5datagramsocket-clientinfounavailable"><code>chaining.socks5.socks5DatagramSocket.clientInfoUnavailable</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead)<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#chaining-socks5-socks5hostresolver-resolvefromsocksserver"><code>chaining.socks5.socks5HostResolver.resolveFromSocksServer</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the other SOCKS server<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#chaining-socks5-userpassauthmethod-password"><code>chaining.socks5.userpassauthmethod.password</code></a></td><td>String</td><td>The password to be used to access the other SOCKS server</td></tr>
+<tr><td><a href="#chaining-socks5-userpassauthmethod-username"><code>chaining.socks5.userpassauthmethod.username</code></a></td><td>String</td><td>The username to be used to access the other SOCKS server</td></tr>
+</table>
+
 ## Chaining SOCKS5 Settings
 
 <table>
 <tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
-<tr><td><a href="#chaining-socks5-gssapimethod-mechanismoid"><code>chaining.socks5.gssapimethod.mechanismOid</code></a></td><td>Oid</td><td>The object ID for the GSS-API authentication mechanism to the other SOCKS5 server<br/><b>Default Value:</b> <code>1.2.840.113554.1.2.2</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapimethod-necreferenceimpl"><code>chaining.socks5.gssapimethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapimethod-protectionlevels"><code>chaining.socks5.gssapimethod.protectionLevels</code></a></td><td>SOCKS5 GSS-API Method Protection Levels</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)<br/><b>Default Value:</b> <code>REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapimethod-servicename"><code>chaining.socks5.gssapimethod.serviceName</code></a></td><td>String</td><td>The GSS-API service name for the other SOCKS5 server</td></tr>
-<tr><td><a href="#chaining-socks5-gssapimethod-suggestedconf"><code>chaining.socks5.gssapimethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>true</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapimethod-suggestedinteg"><code>chaining.socks5.gssapimethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
-<tr><td><a href="#chaining-socks5-methods"><code>chaining.socks5.methods</code></a></td><td>SOCKS5 Methods</td><td>The comma separated list of acceptable authentication methods to the other SOCKS5 server<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
-<tr><td><a href="#chaining-socks5-socks5datagramsocket-clientinfounavailable"><code>chaining.socks5.socks5DatagramSocket.clientInfoUnavailable</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS5 server (an address and port of all zeros is sent instead)<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#chaining-socks5-socks5hostresolver-resolvefromsocks5server"><code>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the other SOCKS5 server<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#chaining-socks5-userpassmethod-password"><code>chaining.socks5.userpassmethod.password</code></a></td><td>String</td><td>The password to be used to access the other SOCKS5 server</td></tr>
-<tr><td><a href="#chaining-socks5-userpassmethod-username"><code>chaining.socks5.userpassmethod.username</code></a></td><td>String</td><td>The username to be used to access the other SOCKS5 server</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-mechanismoid"><code>chaining.socks5.gssapiauthmethod.mechanismOid</code></a></td><td>Oid</td><td>The object ID for the GSS-API authentication mechanism to the other SOCKS5 server</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-necreferenceimpl"><code>chaining.socks5.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-protectionlevels"><code>chaining.socks5.gssapiauthmethod.protectionLevels</code></a></td><td>SOCKS5 GSS-API Method Protection Levels</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-servicename"><code>chaining.socks5.gssapiauthmethod.serviceName</code></a></td><td>String</td><td>The GSS-API service name for the other SOCKS5 server</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-suggestedconf"><code>chaining.socks5.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)</td></tr>
+<tr><td><a href="#chaining-socks5-gssapiauthmethod-suggestedinteg"><code>chaining.socks5.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)</td></tr>
+<tr><td><a href="#chaining-socks5-methods"><code>chaining.socks5.methods</code></a></td><td>SOCKS5 Methods</td><td>The comma separated list of acceptable authentication methods to the other SOCKS5 server</td></tr>
+<tr><td><a href="#chaining-socks5-socks5datagramsocket-clientinfounavailable"><code>chaining.socks5.socks5DatagramSocket.clientInfoUnavailable</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS5 server (an address and port of all zeros is sent instead)</td></tr>
+<tr><td><a href="#chaining-socks5-socks5hostresolver-resolvefromsocks5server"><code>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the other SOCKS5 server</td></tr>
+<tr><td><a href="#chaining-socks5-userpassauthmethod-password"><code>chaining.socks5.userpassauthmethod.password</code></a></td><td>String</td><td>The password to be used to access the other SOCKS5 server</td></tr>
+<tr><td><a href="#chaining-socks5-userpassauthmethod-username"><code>chaining.socks5.userpassauthmethod.username</code></a></td><td>String</td><td>The username to be used to access the other SOCKS5 server</td></tr>
 </table>
 
 ## Chaining SSL/TLS Settings
@@ -124,15 +143,77 @@
 <tr><td><a href="#dtls-wrappedreceivebuffersize"><code>dtls.wrappedReceiveBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the SOCKS server</td></tr>
 </table>
 
+## SOCKS Settings
+
+<table>
+<tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
+<tr><td><a href="#socks-gssapiauthmethod-necreferenceimpl"><code>socks.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#socks-gssapiauthmethod-protectionlevels"><code>socks.gssapiauthmethod.protectionLevels</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.)<br/><b>Default Value:</b> <code>REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE</code></td></tr>
+<tr><td><a href="#socks-gssapiauthmethod-suggestedconf"><code>socks.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>true</code></td></tr>
+<tr><td><a href="#socks-gssapiauthmethod-suggestedinteg"><code>socks.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
+<tr><td><a href="#socks-methods"><code>socks.methods</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable authentication methods in order of preference<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
+<tr><td><a href="#socks-onbindrequest-inboundsocketsettings"><code>socks.onBindRequest.inboundSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the inbound socket</td></tr>
+<tr><td><a href="#socks-onbindrequest-listenbindhost"><code>socks.onBindRequest.listenBindHost</code></a></td><td>Host</td><td>The binding host name or address for the listen socket if the provided host address is all zeros</td></tr>
+<tr><td><a href="#socks-onbindrequest-listenbindhostaddresstypes"><code>socks.onBindRequest.listenBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the listen socket if the provided host address is all zeros</td></tr>
+<tr><td><a href="#socks-onbindrequest-listenbindportranges"><code>socks.onBindRequest.listenBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the listen socket if the provided port is zero</td></tr>
+<tr><td><a href="#socks-onbindrequest-listennetinterface"><code>socks.onBindRequest.listenNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the listen socket if the provided host address is all zeros</td></tr>
+<tr><td><a href="#socks-onbindrequest-listensocketsettings"><code>socks.onBindRequest.listenSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the listen socket</td></tr>
+<tr><td><a href="#socks-onbindrequest-relaybuffersize"><code>socks.onBindRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onbindrequest-relayidletimeout"><code>socks.onBindRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onbindrequest-relayinboundbandwidthlimit"><code>socks.onBindRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onbindrequest-relayoutboundbandwidthlimit"><code>socks.onBindRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onconnectrequest-preparetargetfacingsocket"><code>socks.onConnectRequest.prepareTargetFacingSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#socks-onconnectrequest-relaybuffersize"><code>socks.onConnectRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relayidletimeout"><code>socks.onConnectRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relayinboundbandwidthlimit"><code>socks.onConnectRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onconnectrequest-relayoutboundbandwidthlimit"><code>socks.onConnectRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingbindhost"><code>socks.onConnectRequest.targetFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingbindhostaddresstypes"><code>socks.onConnectRequest.targetFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingbindportranges"><code>socks.onConnectRequest.targetFacingBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingconnecttimeout"><code>socks.onConnectRequest.targetFacingConnectTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on waiting for the target-facing socket to connect<br/><b>Default Value:</b> <code>60000</code></td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingnetinterface"><code>socks.onConnectRequest.targetFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onconnectrequest-targetfacingsocketsettings"><code>socks.onConnectRequest.targetFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the target-facing socket</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindhost"><code>socks.onRequest.externalFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for all external-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindhostaddresstypes"><code>socks.onRequest.externalFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for all external-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindtcpportranges"><code>socks.onRequest.externalFacingBindTcpPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for all external-facing TCP sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingbindudpportranges"><code>socks.onRequest.externalFacingBindUdpPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for all external-facing UDP sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingnetinterface"><code>socks.onRequest.externalFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for all external-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-externalfacingsocketsettings"><code>socks.onRequest.externalFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for all external-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingbindhost"><code>socks.onRequest.internalFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for all internal-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingbindhostaddresstypes"><code>socks.onRequest.internalFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for all internal-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingbindudpportranges"><code>socks.onRequest.internalFacingBindUdpPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for all internal-facing UDP sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingnetinterface"><code>socks.onRequest.internalFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for all internal-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-internalfacingsocketsettings"><code>socks.onRequest.internalFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for all internal-facing sockets</td></tr>
+<tr><td><a href="#socks-onrequest-relaybuffersize"><code>socks.onRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size in bytes for relaying the data<br/><b>Default Value:</b> <code>1024</code></td></tr>
+<tr><td><a href="#socks-onrequest-relayidletimeout"><code>socks.onRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data<br/><b>Default Value:</b> <code>60000</code></td></tr>
+<tr><td><a href="#socks-onrequest-relayinboundbandwidthlimit"><code>socks.onRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onrequest-relayoutboundbandwidthlimit"><code>socks.onRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingbindhost"><code>socks.onUdpAssociateRequest.clientFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingbindhostaddresstypes"><code>socks.onUdpAssociateRequest.clientFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingbindportranges"><code>socks.onUdpAssociateRequest.clientFacingBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingnetinterface"><code>socks.onUdpAssociateRequest.clientFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-clientfacingsocketsettings"><code>socks.onUdpAssociateRequest.clientFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the client-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingbindhost"><code>socks.onUdpAssociateRequest.peerFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingbindhostaddresstypes"><code>socks.onUdpAssociateRequest.peerFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingbindportranges"><code>socks.onUdpAssociateRequest.peerFacingBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingnetinterface"><code>socks.onUdpAssociateRequest.peerFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-peerfacingsocketsettings"><code>socks.onUdpAssociateRequest.peerFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the peer-facing UDP socket</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relaybuffersize"><code>socks.onUdpAssociateRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size in bytes for relaying the data</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relayidletimeout"><code>socks.onUdpAssociateRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relayinboundbandwidthlimit"><code>socks.onUdpAssociateRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
+<tr><td><a href="#socks-onudpassociaterequest-relayoutboundbandwidthlimit"><code>socks.onUdpAssociateRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
+<tr><td><a href="#socks-userpassauthmethod-userrepository"><code>socks.userpassauthmethod.userRepository</code></a></td><td>String</td><td>The user repository used for username password authentication<br/><b>Default Value:</b> <code>StringSourceUserRepository:</code></td></tr>
+</table>
+
 ## SOCKS5 Settings
 
 <table>
 <tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
-<tr><td><a href="#socks5-gssapimethod-necreferenceimpl"><code>socks5.gssapimethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#socks5-gssapimethod-protectionlevels"><code>socks5.gssapimethod.protectionLevels</code></a></td><td>SOCKS5 GSS-API Method Protection Levels</td><td>The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.)<br/><b>Default Value:</b> <code>REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE</code></td></tr>
-<tr><td><a href="#socks5-gssapimethod-suggestedconf"><code>socks5.gssapimethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>true</code></td></tr>
-<tr><td><a href="#socks5-gssapimethod-suggestedinteg"><code>socks5.gssapimethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
-<tr><td><a href="#socks5-methods"><code>socks5.methods</code></a></td><td>SOCKS5 Methods</td><td>The comma separated list of acceptable authentication methods in order of preference<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
+<tr><td><a href="#socks5-gssapiauthmethod-necreferenceimpl"><code>socks5.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation</td></tr>
+<tr><td><a href="#socks5-gssapiauthmethod-protectionlevels"><code>socks5.gssapiauthmethod.protectionLevels</code></a></td><td>SOCKS5 GSS-API Method Protection Levels</td><td>The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.)</td></tr>
+<tr><td><a href="#socks5-gssapiauthmethod-suggestedconf"><code>socks5.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)</td></tr>
+<tr><td><a href="#socks5-gssapiauthmethod-suggestedinteg"><code>socks5.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)</td></tr>
+<tr><td><a href="#socks5-methods"><code>socks5.methods</code></a></td><td>SOCKS5 Methods</td><td>The comma separated list of acceptable authentication methods in order of preference</td></tr>
 <tr><td><a href="#socks5-onbindrequest-inboundsocketsettings"><code>socks5.onBindRequest.inboundSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the inbound socket</td></tr>
 <tr><td><a href="#socks5-onbindrequest-listenbindhost"><code>socks5.onBindRequest.listenBindHost</code></a></td><td>Host</td><td>The binding host name or address for the listen socket if the provided host address is all zeros</td></tr>
 <tr><td><a href="#socks5-onbindrequest-listenbindhostaddresstypes"><code>socks5.onBindRequest.listenBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the listen socket if the provided host address is all zeros</td></tr>
@@ -143,7 +224,7 @@
 <tr><td><a href="#socks5-onbindrequest-relayidletimeout"><code>socks5.onBindRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data</td></tr>
 <tr><td><a href="#socks5-onbindrequest-relayinboundbandwidthlimit"><code>socks5.onBindRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
 <tr><td><a href="#socks5-onbindrequest-relayoutboundbandwidthlimit"><code>socks5.onBindRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
-<tr><td><a href="#socks5-onconnectrequest-preparetargetfacingsocket"><code>socks5.onConnectRequest.prepareTargetFacingSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#socks5-onconnectrequest-preparetargetfacingsocket"><code>socks5.onConnectRequest.prepareTargetFacingSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-relaybuffersize"><code>socks5.onConnectRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size in bytes for relaying the data</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-relayidletimeout"><code>socks5.onConnectRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-relayinboundbandwidthlimit"><code>socks5.onConnectRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
@@ -151,24 +232,9 @@
 <tr><td><a href="#socks5-onconnectrequest-targetfacingbindhost"><code>socks5.onConnectRequest.targetFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for the target-facing socket</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-targetfacingbindhostaddresstypes"><code>socks5.onConnectRequest.targetFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the target-facing socket</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-targetfacingbindportranges"><code>socks5.onConnectRequest.targetFacingBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the target-facing socket</td></tr>
-<tr><td><a href="#socks5-onconnectrequest-targetfacingconnecttimeout"><code>socks5.onConnectRequest.targetFacingConnectTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on waiting for the target-facing socket to connect<br/><b>Default Value:</b> <code>60000</code></td></tr>
+<tr><td><a href="#socks5-onconnectrequest-targetfacingconnecttimeout"><code>socks5.onConnectRequest.targetFacingConnectTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on waiting for the target-facing socket to connect</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-targetfacingnetinterface"><code>socks5.onConnectRequest.targetFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the target-facing socket</td></tr>
 <tr><td><a href="#socks5-onconnectrequest-targetfacingsocketsettings"><code>socks5.onConnectRequest.targetFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the target-facing socket</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindhost"><code>socks5.onRequest.externalFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for all external-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindhostaddresstypes"><code>socks5.onRequest.externalFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for all external-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindtcpportranges"><code>socks5.onRequest.externalFacingBindTcpPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for all external-facing TCP sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingbindudpportranges"><code>socks5.onRequest.externalFacingBindUdpPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for all external-facing UDP sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingnetinterface"><code>socks5.onRequest.externalFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for all external-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-externalfacingsocketsettings"><code>socks5.onRequest.externalFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for all external-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingbindhost"><code>socks5.onRequest.internalFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for all internal-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingbindhostaddresstypes"><code>socks5.onRequest.internalFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for all internal-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingbindudpportranges"><code>socks5.onRequest.internalFacingBindUdpPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for all internal-facing UDP sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingnetinterface"><code>socks5.onRequest.internalFacingNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for all internal-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-internalfacingsocketsettings"><code>socks5.onRequest.internalFacingSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for all internal-facing sockets</td></tr>
-<tr><td><a href="#socks5-onrequest-relaybuffersize"><code>socks5.onRequest.relayBufferSize</code></a></td><td>Positive Integer</td><td>The buffer size in bytes for relaying the data<br/><b>Default Value:</b> <code>1024</code></td></tr>
-<tr><td><a href="#socks5-onrequest-relayidletimeout"><code>socks5.onRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data<br/><b>Default Value:</b> <code>60000</code></td></tr>
-<tr><td><a href="#socks5-onrequest-relayinboundbandwidthlimit"><code>socks5.onRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
-<tr><td><a href="#socks5-onrequest-relayoutboundbandwidthlimit"><code>socks5.onRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-clientfacingbindhost"><code>socks5.onUdpAssociateRequest.clientFacingBindHost</code></a></td><td>Host</td><td>The binding host name or address for the client-facing UDP socket</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-clientfacingbindhostaddresstypes"><code>socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the client-facing UDP socket</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-clientfacingbindportranges"><code>socks5.onUdpAssociateRequest.clientFacingBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the client-facing UDP socket</td></tr>
@@ -183,7 +249,7 @@
 <tr><td><a href="#socks5-onudpassociaterequest-relayidletimeout"><code>socks5.onUdpAssociateRequest.relayIdleTimeout</code></a></td><td>Positive Integer</td><td>The timeout in milliseconds on relaying no data</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-relayinboundbandwidthlimit"><code>socks5.onUdpAssociateRequest.relayInboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed</td></tr>
 <tr><td><a href="#socks5-onudpassociaterequest-relayoutboundbandwidthlimit"><code>socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit</code></a></td><td>Positive Integer</td><td>The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed</td></tr>
-<tr><td><a href="#socks5-userpassmethod-userrepository"><code>socks5.userpassmethod.userRepository</code></a></td><td>SOCKS5 Username Password Method User Repository</td><td>The user repository used for username password authentication<br/><b>Default Value:</b> <code>StringSourceUserRepository:</code></td></tr>
+<tr><td><a href="#socks5-userpassauthmethod-userrepository"><code>socks5.userpassauthmethod.userRepository</code></a></td><td>SOCKS5 Username Password Method User Repository</td><td>The user repository used for username password authentication</td></tr>
 </table>
 
 ## SSL/TLS Settings
@@ -350,51 +416,95 @@
 
 **Value Type:** [String](value-types.md#string)
 
-### chaining.socks5.gssapimethod.mechanismOid
+### chaining.socks5.gssapiauthmethod.mechanismOid
 
-**Description:** The object ID for the GSS-API authentication mechanism to the other SOCKS5 server
+**Description:** The object ID for the GSS-API authentication mechanism to the other SOCKS server
 
 **Value Type:** [Oid](value-types.md#oid)
 
 **Default Value:** `1.2.840.113554.1.2.2`
 
-### chaining.socks5.gssapimethod.necReferenceImpl
+### chaining.socks5.gssapiauthmethod.mechanismOid
 
-**Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation
+**Description:** The object ID for the GSS-API authentication mechanism to the other SOCKS5 server
+
+**Value Type:** [Oid](value-types.md#oid)
+
+### chaining.socks5.gssapiauthmethod.necReferenceImpl
+
+**Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
 **Default Value:** `false`
 
-### chaining.socks5.gssapimethod.protectionLevels
+### chaining.socks5.gssapiauthmethod.necReferenceImpl
+
+**Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+### chaining.socks5.gssapiauthmethod.protectionLevels
+
+**Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
+
+**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
+
+**Default Value:** `REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE`
+
+### chaining.socks5.gssapiauthmethod.protectionLevels
 
 **Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
 
 **Value Type:** [SOCKS5 GSS-API Method Protection Levels](value-types.md#socks5-gss-api-method-protection-levels)
 
-**Default Value:** `REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE`
+### chaining.socks5.gssapiauthmethod.serviceName
 
-### chaining.socks5.gssapimethod.serviceName
+**Description:** The GSS-API service name for the other SOCKS server
+
+**Value Type:** [String](value-types.md#string)
+
+### chaining.socks5.gssapiauthmethod.serviceName
 
 **Description:** The GSS-API service name for the other SOCKS5 server
 
 **Value Type:** [String](value-types.md#string)
 
-### chaining.socks5.gssapimethod.suggestedConf
+### chaining.socks5.gssapiauthmethod.suggestedConf
 
-**Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+**Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
 **Default Value:** `true`
 
-### chaining.socks5.gssapimethod.suggestedInteg
+### chaining.socks5.gssapiauthmethod.suggestedConf
+
+**Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+### chaining.socks5.gssapiauthmethod.suggestedInteg
+
+**Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+
+**Value Type:** [Integer](value-types.md#integer)
+
+**Default Value:** `0`
+
+### chaining.socks5.gssapiauthmethod.suggestedInteg
 
 **Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
 **Value Type:** [Integer](value-types.md#integer)
 
-**Default Value:** `0`
+### chaining.socks5.methods
+
+**Description:** The comma separated list of acceptable authentication methods to the other SOCKS server
+
+**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
+
+**Default Value:** `NO_AUTHENTICATION_REQUIRED`
 
 ### chaining.socks5.methods
 
@@ -402,7 +512,13 @@
 
 **Value Type:** [SOCKS5 Methods](value-types.md#socks5-methods)
 
-**Default Value:** `NO_AUTHENTICATION_REQUIRED`
+### chaining.socks5.socks5DatagramSocket.clientInfoUnavailable
+
+**Description:** The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
 
 ### chaining.socks5.socks5DatagramSocket.clientInfoUnavailable
 
@@ -410,23 +526,39 @@
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
-**Default Value:** `false`
-
 ### chaining.socks5.socks5HostResolver.resolveFromSocks5Server
 
 **Description:** The boolean value to indicate if host names are to be resolved from the other SOCKS5 server
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
+### chaining.socks5.socks5HostResolver.resolveFromSocksServer
+
+**Description:** The boolean value to indicate if host names are to be resolved from the other SOCKS server
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
 **Default Value:** `false`
 
-### chaining.socks5.userpassmethod.password
+### chaining.socks5.userpassauthmethod.password
+
+**Description:** The password to be used to access the other SOCKS server
+
+**Value Type:** [String](value-types.md#string)
+
+### chaining.socks5.userpassauthmethod.password
 
 **Description:** The password to be used to access the other SOCKS5 server
 
 **Value Type:** [String](value-types.md#string)
 
-### chaining.socks5.userpassmethod.username
+### chaining.socks5.userpassauthmethod.username
+
+**Description:** The username to be used to access the other SOCKS server
+
+**Value Type:** [String](value-types.md#string)
+
+### chaining.socks5.userpassauthmethod.username
 
 **Description:** The username to be used to access the other SOCKS5 server
 
@@ -694,7 +826,7 @@
 
 **Value Type:** [Socket Settings](value-types.md#socket-settings)
 
-### socks5.gssapimethod.necReferenceImpl
+### socks.gssapiauthmethod.necReferenceImpl
 
 **Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation
 
@@ -702,15 +834,15 @@
 
 **Default Value:** `false`
 
-### socks5.gssapimethod.protectionLevels
+### socks.gssapiauthmethod.protectionLevels
 
 **Description:** The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.)
 
-**Value Type:** [SOCKS5 GSS-API Method Protection Levels](value-types.md#socks5-gss-api-method-protection-levels)
+**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
 
 **Default Value:** `REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE`
 
-### socks5.gssapimethod.suggestedConf
+### socks.gssapiauthmethod.suggestedConf
 
 **Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
@@ -718,7 +850,7 @@
 
 **Default Value:** `true`
 
-### socks5.gssapimethod.suggestedInteg
+### socks.gssapiauthmethod.suggestedInteg
 
 **Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
@@ -726,13 +858,359 @@
 
 **Default Value:** `0`
 
+### socks.methods
+
+**Description:** The comma separated list of acceptable authentication methods in order of preference
+
+**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
+
+**Default Value:** `NO_AUTHENTICATION_REQUIRED`
+
+### socks.onBindRequest.inboundSocketSettings
+
+**Description:** The comma separated list of socket settings for the inbound socket
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onBindRequest.listenBindHost
+
+**Description:** The binding host name or address for the listen socket if the provided host address is all zeros
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onBindRequest.listenBindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for the listen socket if the provided host address is all zeros
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+### socks.onBindRequest.listenBindPortRanges
+
+**Description:** The comma separated list of binding port ranges for the listen socket if the provided port is zero
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onBindRequest.listenNetInterface
+
+**Description:** The network interface that provides a binding host address for the listen socket if the provided host address is all zeros
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onBindRequest.listenSocketSettings
+
+**Description:** The comma separated list of socket settings for the listen socket
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onBindRequest.relayBufferSize
+
+**Description:** The buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onBindRequest.relayIdleTimeout
+
+**Description:** The timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onBindRequest.relayInboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onBindRequest.relayOutboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.prepareTargetFacingSocket
+
+**Description:** The boolean value to indicate if the target-facing socket is to be prepared before connecting (involves applying the specified socket settings, resolving the target host name, and setting the specified timeout on waiting to connect)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
+
+### socks.onConnectRequest.relayBufferSize
+
+**Description:** The buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.relayIdleTimeout
+
+**Description:** The timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.relayInboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.relayOutboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onConnectRequest.targetFacingBindHost
+
+**Description:** The binding host name or address for the target-facing socket
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onConnectRequest.targetFacingBindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for the target-facing socket
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+### socks.onConnectRequest.targetFacingBindPortRanges
+
+**Description:** The comma separated list of binding port ranges for the target-facing socket
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onConnectRequest.targetFacingConnectTimeout
+
+**Description:** The timeout in milliseconds on waiting for the target-facing socket to connect
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+**Default Value:** `60000`
+
+### socks.onConnectRequest.targetFacingNetInterface
+
+**Description:** The network interface that provides a binding host address for the target-facing socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onConnectRequest.targetFacingSocketSettings
+
+**Description:** The comma separated list of socket settings for the target-facing socket
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onRequest.externalFacingBindHost
+
+**Description:** The binding host name or address for all external-facing sockets
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onRequest.externalFacingBindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for all external-facing sockets
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+### socks.onRequest.externalFacingBindTcpPortRanges
+
+**Description:** The comma separated list of binding port ranges for all external-facing TCP sockets
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onRequest.externalFacingBindUdpPortRanges
+
+**Description:** The comma separated list of binding port ranges for all external-facing UDP sockets
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onRequest.externalFacingNetInterface
+
+**Description:** The network interface that provides a binding host address for all external-facing sockets
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onRequest.externalFacingSocketSettings
+
+**Description:** The comma separated list of socket settings for all external-facing sockets
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onRequest.internalFacingBindHost
+
+**Description:** The binding host name or address for all internal-facing sockets
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onRequest.internalFacingBindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for all internal-facing sockets
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+### socks.onRequest.internalFacingBindUdpPortRanges
+
+**Description:** The comma separated list of binding port ranges for all internal-facing UDP sockets
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onRequest.internalFacingNetInterface
+
+**Description:** The network interface that provides a binding host address for all internal-facing sockets
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onRequest.internalFacingSocketSettings
+
+**Description:** The comma separated list of socket settings for all internal-facing sockets
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onRequest.relayBufferSize
+
+**Description:** The buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+**Default Value:** `1024`
+
+### socks.onRequest.relayIdleTimeout
+
+**Description:** The timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+**Default Value:** `60000`
+
+### socks.onRequest.relayInboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onRequest.relayOutboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.clientFacingBindHost
+
+**Description:** The binding host name or address for the client-facing UDP socket
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onUdpAssociateRequest.clientFacingBindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for the client-facing UDP socket
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+### socks.onUdpAssociateRequest.clientFacingBindPortRanges
+
+**Description:** The comma separated list of binding port ranges for the client-facing UDP socket
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onUdpAssociateRequest.clientFacingNetInterface
+
+**Description:** The network interface that provides a binding host address for the client-facing UDP socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onUdpAssociateRequest.clientFacingSocketSettings
+
+**Description:** The comma separated list of socket settings for the client-facing UDP socket
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onUdpAssociateRequest.peerFacingBindHost
+
+**Description:** The binding host name or address for the peer-facing UDP socket
+
+**Value Type:** [Host](value-types.md#host)
+
+### socks.onUdpAssociateRequest.peerFacingBindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for the peer-facing UDP socket
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+### socks.onUdpAssociateRequest.peerFacingBindPortRanges
+
+**Description:** The comma separated list of binding port ranges for the peer-facing UDP socket
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+### socks.onUdpAssociateRequest.peerFacingNetInterface
+
+**Description:** The network interface that provides a binding host address for the peer-facing UDP socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+### socks.onUdpAssociateRequest.peerFacingSocketSettings
+
+**Description:** The comma separated list of socket settings for the peer-facing UDP socket
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+### socks.onUdpAssociateRequest.relayBufferSize
+
+**Description:** The buffer size in bytes for relaying the data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.relayIdleTimeout
+
+**Description:** The timeout in milliseconds on relaying no data
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.relayInboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.onUdpAssociateRequest.relayOutboundBandwidthLimit
+
+**Description:** The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
+
+**Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socks.userpassauthmethod.userRepository
+
+**Description:** The user repository used for username password authentication
+
+**Value Type:** [String](value-types.md#string)
+
+**Default Value:** `StringSourceUserRepository:`
+
+### socks5.gssapiauthmethod.necReferenceImpl
+
+**Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected according to the NEC reference implementation
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+### socks5.gssapiauthmethod.protectionLevels
+
+**Description:** The comma separated list of acceptable protection levels after GSS-API authentication (The first is preferred if the client does not provide a protection level that is acceptable.)
+
+**Value Type:** [SOCKS5 GSS-API Method Protection Levels](value-types.md#socks5-gss-api-method-protection-levels)
+
+### socks5.gssapiauthmethod.suggestedConf
+
+**Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+### socks5.gssapiauthmethod.suggestedInteg
+
+**Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+
+**Value Type:** [Integer](value-types.md#integer)
+
 ### socks5.methods
 
 **Description:** The comma separated list of acceptable authentication methods in order of preference
 
 **Value Type:** [SOCKS5 Methods](value-types.md#socks5-methods)
-
-**Default Value:** `NO_AUTHENTICATION_REQUIRED`
 
 ### socks5.onBindRequest.inboundSocketSettings
 
@@ -800,8 +1278,6 @@
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
-**Default Value:** `false`
-
 ### socks5.onConnectRequest.relayBufferSize
 
 **Description:** The buffer size in bytes for relaying the data
@@ -850,8 +1326,6 @@
 
 **Value Type:** [Positive Integer](value-types.md#positive-integer)
 
-**Default Value:** `60000`
-
 ### socks5.onConnectRequest.targetFacingNetInterface
 
 **Description:** The network interface that provides a binding host address for the target-facing socket
@@ -863,100 +1337,6 @@
 **Description:** The comma separated list of socket settings for the target-facing socket
 
 **Value Type:** [Socket Settings](value-types.md#socket-settings)
-
-### socks5.onRequest.externalFacingBindHost
-
-**Description:** The binding host name or address for all external-facing sockets
-
-**Value Type:** [Host](value-types.md#host)
-
-### socks5.onRequest.externalFacingBindHostAddressTypes
-
-**Description:** The comma separated list of acceptable binding host address types for all external-facing sockets
-
-**Value Type:** [Host Address Types](value-types.md#host-address-types)
-
-### socks5.onRequest.externalFacingBindTcpPortRanges
-
-**Description:** The comma separated list of binding port ranges for all external-facing TCP sockets
-
-**Value Type:** [Port Ranges](value-types.md#port-ranges)
-
-### socks5.onRequest.externalFacingBindUdpPortRanges
-
-**Description:** The comma separated list of binding port ranges for all external-facing UDP sockets
-
-**Value Type:** [Port Ranges](value-types.md#port-ranges)
-
-### socks5.onRequest.externalFacingNetInterface
-
-**Description:** The network interface that provides a binding host address for all external-facing sockets
-
-**Value Type:** [Network Interface](value-types.md#network-interface)
-
-### socks5.onRequest.externalFacingSocketSettings
-
-**Description:** The comma separated list of socket settings for all external-facing sockets
-
-**Value Type:** [Socket Settings](value-types.md#socket-settings)
-
-### socks5.onRequest.internalFacingBindHost
-
-**Description:** The binding host name or address for all internal-facing sockets
-
-**Value Type:** [Host](value-types.md#host)
-
-### socks5.onRequest.internalFacingBindHostAddressTypes
-
-**Description:** The comma separated list of acceptable binding host address types for all internal-facing sockets
-
-**Value Type:** [Host Address Types](value-types.md#host-address-types)
-
-### socks5.onRequest.internalFacingBindUdpPortRanges
-
-**Description:** The comma separated list of binding port ranges for all internal-facing UDP sockets
-
-**Value Type:** [Port Ranges](value-types.md#port-ranges)
-
-### socks5.onRequest.internalFacingNetInterface
-
-**Description:** The network interface that provides a binding host address for all internal-facing sockets
-
-**Value Type:** [Network Interface](value-types.md#network-interface)
-
-### socks5.onRequest.internalFacingSocketSettings
-
-**Description:** The comma separated list of socket settings for all internal-facing sockets
-
-**Value Type:** [Socket Settings](value-types.md#socket-settings)
-
-### socks5.onRequest.relayBufferSize
-
-**Description:** The buffer size in bytes for relaying the data
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
-
-**Default Value:** `1024`
-
-### socks5.onRequest.relayIdleTimeout
-
-**Description:** The timeout in milliseconds on relaying no data
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
-
-**Default Value:** `60000`
-
-### socks5.onRequest.relayInboundBandwidthLimit
-
-**Description:** The upper limit on bandwidth in bytes per second of receiving inbound data to be relayed
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
-
-### socks5.onRequest.relayOutboundBandwidthLimit
-
-**Description:** The upper limit on bandwidth in bytes per second of receiving outbound data to be relayed
-
-**Value Type:** [Positive Integer](value-types.md#positive-integer)
 
 ### socks5.onUdpAssociateRequest.clientFacingBindHost
 
@@ -1042,13 +1422,11 @@
 
 **Value Type:** [Positive Integer](value-types.md#positive-integer)
 
-### socks5.userpassmethod.userRepository
+### socks5.userpassauthmethod.userRepository
 
 **Description:** The user repository used for username password authentication
 
 **Value Type:** [SOCKS5 Username Password Method User Repository](value-types.md#socks5-username-password-method-user-repository)
-
-**Default Value:** `StringSourceUserRepository:`
 
 ### socksServerBindHost
 

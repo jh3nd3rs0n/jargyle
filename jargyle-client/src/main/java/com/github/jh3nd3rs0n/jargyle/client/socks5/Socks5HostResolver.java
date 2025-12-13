@@ -1,7 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.HostName;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
@@ -33,8 +32,8 @@ public final class Socks5HostResolver extends HostResolver {
 		if (!(Host.newInstance(host) instanceof HostName)) {
 			return InetAddress.getByName(host);
 		}
-		if (!this.socks5ClientAgent.getProperties().getValue(
-				Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER)) {
+		if (!Socks5ValueDerivationHelper.getSocks5Socks5HostResolverResolveFromSocks5ServerFrom(
+				this.socks5ClientAgent.getProperties())) {
 			return InetAddress.getByName(host);
 		}
 		InetAddress inetAddress;

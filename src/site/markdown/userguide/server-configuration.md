@@ -437,7 +437,7 @@ public class ServerApp {
 
 To use username password authentication, you will need to have the setting 
 `socks5.methods` to have `USERNAME_PASSWORD` included. You will also need 
-to have the setting `socks5.userpassmethod.userRepository` to specify the 
+to have the setting `socks5.userpassauthmethod.userRepository` to specify the 
 type name of the user repository along with an initialization string value.
 
 The following are two type names you can use:
@@ -459,7 +459,7 @@ Command line example:
 ```bash
 jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassmethod.userRepository=FileSourceUserRepository:users
+    --setting=socks5.userpassauthmethod.userRepository=FileSourceUserRepository:users
 ```
 
 Server configuration file example:
@@ -475,11 +475,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>socks5.userpassmethod.userRepository</name>
-            <socks5.userpassmethod.userRepository>
+            <name>socks5.userpassauthmethod.userRepository</name>
+            <socks5.userpassauthmethod.userRepository>
                 <typeName>FileSourceUserRepository</typeName>
                 <initializationString>users</initializationString>
-            </socks5.userpassmethod.userRepository>
+            </socks5.userpassauthmethod.userRepository>
         </setting>
     </settings>
 </configuration>
@@ -503,7 +503,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
-                "socks5.userpassmethod.userRepository", 
+                "socks5.userpassauthmethod.userRepository", 
                 "FileSourceUserRepository:users")
         ))).start();
     }
@@ -538,7 +538,7 @@ Command line example:
 ```bash
 jargyle start-server \
     --setting=socks5.methods=USERNAME_PASSWORD \
-    --setting=socks5.userpassmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible
+    --setting=socks5.userpassauthmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible
 ```
 
 Server configuration file example:
@@ -554,11 +554,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>socks5.userpassmethod.userRepository</name>
-            <socks5.userpassmethod.userRepository>
+            <name>socks5.userpassauthmethod.userRepository</name>
+            <socks5.userpassauthmethod.userRepository>
                 <typeName>StringSourceUserRepository</typeName>
                 <initializationString>Aladdin:opensesame,Jasmine:mission%3Aimpossible</initializationString>
-            </socks5.userpassmethod.userRepository>
+            </socks5.userpassauthmethod.userRepository>
         </setting>
     </settings>
 </configuration>
@@ -582,7 +582,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
-                "socks5.userpassmethod.userRepository",
+                "socks5.userpassauthmethod.userRepository",
                 "StringSourceUserRepository:Aladdin:opensesame,Jasmine:mission%3Aimpossible")
         ))).start();
     }
@@ -1212,8 +1212,8 @@ public class ServerApp {
 To chain to the other SOCKS server using username password authentication, you 
 will need to have the setting `chaining.socks5.methods` to have 
 `USERNAME_PASSWORD` included. You will also need to have the settings 
-`chaining.socks5.userpassmethod.username` and 
-`chaining.socks5.userpassmethod.password` to specify the username and password 
+`chaining.socks5.userpassauthmethod.username` and 
+`chaining.socks5.userpassauthmethod.password` to specify the username and password 
 for the other SOCKS5 server.
 
 Command line example:
@@ -1222,8 +1222,8 @@ Command line example:
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --setting=chaining.socks5.userpassmethod.password=opensesame
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassauthmethod.password=opensesame
 ```
 
 Server configuration file example:
@@ -1243,11 +1243,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassmethod.username</name>
+            <name>chaining.socks5.userpassauthmethod.username</name>
             <value>Aladdin</value>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassmethod.password</name>
+            <name>chaining.socks5.userpassauthmethod.password</name>
             <value>opensesame</value>
             <doc>If this configuration file was created by new-server-config-file, the password would be encrypted</doc>
         </setting>
@@ -1276,10 +1276,10 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.username",
+                "chaining.socks5.userpassauthmethod.username",
                 "Aladdin"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.password",
+                "chaining.socks5.userpassauthmethod.password",
                 "opensesame")
         ))).start();
     }
@@ -1288,7 +1288,7 @@ public class ServerApp {
 
 If you do not want to have the password appear in any script or in any part of 
 the command line history for security reasons, you can use the command line 
-option `--enter-chaining-socks5-userpassmethod-pass` instead. It will 
+option `--enter-chaining-socks5-userpassauthmethod-pass` instead. It will 
 provide an interactive prompt for you to enter the password.
 
 Command line example:
@@ -1297,12 +1297,12 @@ Command line example:
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --enter-chaining-socks5-userpassmethod-pass
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --enter-chaining-socks5-userpassauthmethod-pass
 ```
 
-Instead of using the settings `chaining.socks5.userpassmethod.username` and 
-`chaining.socks5.userpassmethod.password` to specify the username and password 
+Instead of using the settings `chaining.socks5.userpassauthmethod.username` and 
+`chaining.socks5.userpassauthmethod.password` to specify the username and password 
 for the other SOCKS5 server, you can supply the username and password for the 
 other SOCKS5 server as a username and password pair in the user information 
 component of the SOCKS server URI.
@@ -1375,7 +1375,7 @@ recommended to use the approaches mentioned earlier since they hide the
 password either by encrypting it in the server configuration file created by 
 `new-server-config-file` or by obtaining the password from the interactive 
 prompt from the command line option 
-`--enter-chaining-socks5-userpassmethod-pass`. 
+`--enter-chaining-socks5-userpassauthmethod-pass`. 
 
 #### Chaining to the Other SOCKS Server Using GSS-API Authentication
 
@@ -1395,7 +1395,7 @@ export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.secu
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
     --setting=chaining.socks5.methods=GSSAPI \
-    --setting=chaining.socks5.gssapimethod.serviceName=rcmd/alpha-alpha.net 
+    --setting=chaining.socks5.gssapiauthmethod.serviceName=rcmd/alpha-alpha.net 
 ```
 
 Server configuration file example:
@@ -1419,7 +1419,7 @@ export JARGYLE_OPTS="-Djavax.security.auth.useSubjectCredsOnly=false -Djava.secu
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.gssapimethod.serviceName</name>
+            <name>chaining.socks5.gssapiauthmethod.serviceName</name>
             <value>rcmd/alpha-alpha.net</value>
         </setting>
     </settings>
@@ -1452,7 +1452,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "GSSAPI"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.gssapimethod.serviceName",
+                "chaining.socks5.gssapiauthmethod.serviceName",
                 "rcmd/alpha-alpha.net")
         ))).start();
     }
@@ -1509,7 +1509,7 @@ Kerberos Key Distribution Center (KDC) for authentication.
 In `krb5.conf`, a KDC is defined as running at `alpha-alpha.net` on port 
 `12345` with its realm as `ALPHA-ALPHA.NET`.
 
-The setting `chaining.socks5.gssapimethod.serviceName` with the value 
+The setting `chaining.socks5.gssapiauthmethod.serviceName` with the value 
 `rcmd/alpha-alpha.net` is the GSS-API service name (or the Kerberos service 
 principal) for the other SOCKS server residing at `alpha-alpha.net`.
 
@@ -1716,11 +1716,11 @@ Command line example:
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
     --setting=chaining.socks5.methods=GSSAPI \
-    --setting=chaining.socks5.gssapimethod.serviceName=rcmd/alpha-alpha.net \
+    --setting=chaining.socks5.gssapiauthmethod.serviceName=rcmd/alpha-alpha.net \
     --setting=chaining.socksServerUri=socks5://beta-alpha.net:22221 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassauthmethod.password=opensesame \
     --setting=chaining.socksServerUri=socks5://gamma-alpha.net:33331 \
     --setting=chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true
 ```
@@ -1742,7 +1742,7 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.gssapimethod.serviceName</name>
+            <name>chaining.socks5.gssapiauthmethod.serviceName</name>
             <value>rcmd/alpha-alpha.net</value>
         </setting>
         <setting>
@@ -1756,11 +1756,11 @@ Server configuration file example:
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassmethod.username</name>
+            <name>chaining.socks5.userpassauthmethod.username</name>
             <value>Aladdin</value>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassmethod.password</name>
+            <name>chaining.socks5.userpassauthmethod.password</name>
             <value>opensesame</value>
             <doc>If this configuration file was created by new-server-config-file, the password would be encrypted</doc>
         </setting>
@@ -1797,7 +1797,7 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "GSSAPI"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.gssapimethod.serviceName",
+                "chaining.socks5.gssapiauthmethod.serviceName",
                 "rcmd/alpha-alpha.net"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
@@ -1805,10 +1805,10 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.username",
+                "chaining.socks5.userpassauthmethod.username",
                 "Aladdin"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.userpassmethod.password",
+                "chaining.socks5.userpassauthmethod.password",
                 "opensesame"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
@@ -2621,8 +2621,8 @@ Command line example:
 # Deny the CONNECT request for any server on any other port.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationPort=80,socks5.request.desiredDestinationPort=443,firewallAction=ALLOW \
-    --setting=rule=socks5.request.command=CONNECT,firewallAction=DENY \
+    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationPort=80,socks.request.desiredDestinationPort=443,firewallAction=ALLOW \
+    --setting=rule=socks.request.command=CONNECT,firewallAction=DENY \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2637,15 +2637,15 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.request.desiredDestinationPort</name>
+                        <name>socks.request.desiredDestinationPort</name>
                         <value>80</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.request.desiredDestinationPort</name>
+                        <name>socks.request.desiredDestinationPort</name>
                         <value>443</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -2663,7 +2663,7 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -2714,9 +2714,9 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationPort=80,"
-                + "socks5.request.desiredDestinationPort=443,"
+                "socks.request.command=CONNECT,"
+                + "socks.request.desiredDestinationPort=80,"
+                + "socks.request.desiredDestinationPort=443,"
                 + "firewallAction=ALLOW"),
             /*
              * Deny the CONNECT request for any server on any 
@@ -2724,7 +2724,7 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.request.command=CONNECT,firewallAction=DENY"),
+                "socks.request.command=CONNECT,firewallAction=DENY"),
             /*
              * Allow anything else.
              */
@@ -2810,7 +2810,7 @@ authentication was used and the user is either 'guest' or 'specialuser':
 Partial command line and API example:
 
 ```text
-socks5.method=USERNAME_PASSWORD,socks5.user=guest,socks5.user=specialuser
+socks.method=USERNAME_PASSWORD,socks.user=guest,socks.user=specialuser
 ```
 
 Partial server configuration file example:
@@ -2818,15 +2818,15 @@ Partial server configuration file example:
 ```xml
 <ruleConditions>
     <ruleCondition>
-        <name>socks5.method</name>
+        <name>socks.method</name>
         <value>USERNAME_PASSWORD</value>
     </ruleCondition>
     <ruleCondition>
-        <name>socks5.user</name>
+        <name>socks.user</name>
         <value>guest</value>
     </ruleCondition>
     <ruleCondition>
-        <name>socks5.user</name>
+        <name>socks.user</name>
         <value>specialuser</value>
     </ruleCondition>    
 </ruleConditions>
@@ -2906,23 +2906,23 @@ The value given to the rule action must be either of the following values:
 This rule action can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method`
--   `socks5.reply.serverBoundAddress`
--   `socks5.reply.serverBoundPort`
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.secondReply.serverBoundAddress`
--   `socks5.secondReply.serverBoundPort`
--   `socks5.udp.inbound.desiredDestinationAddress`
--   `socks5.udp.inbound.desiredDestinationPort`
--   `socks5.udp.inbound.sourceAddress`
--   `socks5.udp.inbound.sourcePort`
--   `socks5.udp.outbound.desiredDestinationAddress`
--   `socks5.udp.outbound.desiredDestinationPort`
--   `socks5.udp.outbound.sourceAddress`
--   `socks5.udp.outbound.sourcePort`
--   `socks5.user`
+-   `socks.method`
+-   `socks.reply.serverBoundAddress`
+-   `socks.reply.serverBoundPort`
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.secondReply.serverBoundAddress`
+-   `socks.secondReply.serverBoundPort`
+-   `socks.udp.inbound.desiredDestinationAddress`
+-   `socks.udp.inbound.desiredDestinationPort`
+-   `socks.udp.inbound.sourceAddress`
+-   `socks.udp.inbound.sourcePort`
+-   `socks.udp.outbound.desiredDestinationAddress`
+-   `socks.udp.outbound.desiredDestinationPort`
+-   `socks.udp.outbound.sourceAddress`
+-   `socks.udp.outbound.sourcePort`
+-   `socks.user`
 -   `socksServerAddress`
 
 **Note**: for any other rule actions to be applied, the rule action 
@@ -2942,7 +2942,7 @@ Command line example:
 # denial.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.request.command=BIND,socks5.request.command=UDP_ASSOCIATE,firewallAction=DENY,firewallActionLogAction=LOG_AS_WARNING \
+    --setting=rule=socks.request.command=BIND,socks.request.command=UDP_ASSOCIATE,firewallAction=DENY,firewallActionLogAction=LOG_AS_WARNING \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -2957,11 +2957,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>BIND</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>UDP_ASSOCIATE</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3016,8 +3016,8 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule",
-                 "socks5.request.command=BIND,"
-                 + "socks5.request.command=UDP_ASSOCIATE,"
+                 "socks.request.command=BIND,"
+                 + "socks.request.command=UDP_ASSOCIATE,"
                  + "firewallAction=DENY,"
                  + "firewallActionLogAction=LOG_AS_WARNING"),
             /*
@@ -3043,15 +3043,15 @@ The value given to the rule action must be an integer between 0 (inclusive) and
 This rule action can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method`
--   `socks5.reply.serverBoundAddress`
--   `socks5.reply.serverBoundPort`
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.secondReply.serverBoundAddress`
--   `socks5.secondReply.serverBoundPort`
--   `socks5.user`
+-   `socks.method`
+-   `socks.reply.serverBoundAddress`
+-   `socks.reply.serverBoundPort`
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.secondReply.serverBoundAddress`
+-   `socks.secondReply.serverBoundPort`
+-   `socks.user`
 -   `socksServerAddress`
 
 You can also specify the logging action to take if the limit on the number of 
@@ -3070,7 +3070,7 @@ Command line example:
 # reached.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.method=USERNAME_PASSWORD,socks5.user=guest,firewallAction=ALLOW,firewallActionAllowLimit=50,firewallActionAllowLimitReachedLogAction=LOG_AS_INFO \
+    --setting=rule=socks.method=USERNAME_PASSWORD,socks.user=guest,firewallAction=ALLOW,firewallActionAllowLimit=50,firewallActionAllowLimitReachedLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3085,11 +3085,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.method</name>
+                        <name>socks.method</name>
                         <value>USERNAME_PASSWORD</value>
                     </ruleCondition>
                     <ruleCondition>
-                        <name>socks5.user</name>
+                        <name>socks.user</name>
                         <value>guest</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3150,8 +3150,8 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.method=USERNAME_PASSWORD,"
-                + "socks5.user=guest,"
+                "socks.method=USERNAME_PASSWORD,"
+                + "socks.user=guest,"
                 + "firewallAction=ALLOW,"
                 + "firewallActionAllowLimit=50,"
                 + "firewallActionAllowLimitReachedLogAction=LOG_AS_INFO"),
@@ -3184,11 +3184,11 @@ and `lastRouteId` are selectable.)
 These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method` 
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.user`
+-   `socks.method` 
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.user`
 -   `socksServerAddress`
 
 You can also specify the logging action to take if a route is selected by adding 
@@ -3220,7 +3220,7 @@ jargyle start-server \
     --setting=chaining.socksServerUri=socks5://gamma-beta.net:33332 \
     --setting=chaining.socksServerUri=socks5://gamma-gamma.net:33333 \
     --setting=lastRouteId=omega \
-    --setting=rule=socks5.request.command=CONNECT,firewallAction=ALLOW,routeSelectionStrategy=RANDOM,selectableRouteId=alpha,selectableRouteId=beta,routeSelectionLogAction=LOG_AS_INFO \
+    --setting=rule=socks.request.command=CONNECT,firewallAction=ALLOW,routeSelectionStrategy=RANDOM,selectableRouteId=alpha,selectableRouteId=beta,routeSelectionLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW,selectableRouteId=omega
 ```
 
@@ -3283,7 +3283,7 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3388,7 +3388,7 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule",
-                "socks5.request.command=CONNECT,"
+                "socks.request.command=CONNECT,"
                 + "firewallAction=ALLOW,"
                 + "routeSelectionStrategy=RANDOM,"
                 + "selectableRouteId=alpha,"
@@ -3412,27 +3412,27 @@ public class ServerApp {
 To redirect the desired destination, you will need either or both of the 
 following rule actions:
 
--   `socks5.request.desiredDestinationAddressRedirect`: Specifies the desired 
+-   `socks.request.desiredDestinationAddressRedirect`: Specifies the desired 
 destination address redirect
--   `socks5.request.desiredDestinationPortRedirect`: Specifies the desired 
+-   `socks.request.desiredDestinationPortRedirect`: Specifies the desired 
 destination port redirect
 
 These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method` 
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.user`
+-   `socks.method` 
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.user`
 -   `socksServerAddress`
 
 You can also specify the logging action to take if the desired destination is 
 redirected by adding the following rule action:
 
--   `socks5.request.desiredDestinationRedirectLogAction`
+-   `socks.request.desiredDestinationRedirectLogAction`
 
-The rule action `socks5.request.desiredDestinationRedirectLogAction` is optional.
+The rule action `socks.request.desiredDestinationRedirectLogAction` is optional.
 
 Command line example:
 
@@ -3441,7 +3441,7 @@ Command line example:
 # and log as an informational message the redirection.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.request.desiredDestinationAddress=discontinued-server.net,firewallAction=ALLOW,socks5.request.desiredDestinationAddressRedirect=new-server.net,socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO \
+    --setting=rule=socks.request.desiredDestinationAddress=discontinued-server.net,firewallAction=ALLOW,socks.request.desiredDestinationAddressRedirect=new-server.net,socks.request.desiredDestinationRedirectLogAction=LOG_AS_INFO \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3456,7 +3456,7 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.desiredDestinationAddress</name>
+                        <name>socks.request.desiredDestinationAddress</name>
                         <value>discontinued-server.net</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3466,11 +3466,11 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks5.request.desiredDestinationAddressRedirect</name>
+                        <name>socks.request.desiredDestinationAddressRedirect</name>
                         <value>new-server.net</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks5.request.desiredDestinationRedirectLogAction</name>
+                        <name>socks.request.desiredDestinationRedirectLogAction</name>
                         <value>LOG_AS_INFO</value>
                     </ruleAction>
                 </ruleActions>
@@ -3516,10 +3516,10 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.request.desiredDestinationAddress=discontinued-server.net,"
+                "socks.request.desiredDestinationAddress=discontinued-server.net,"
                 + "firewallAction=ALLOW,"
-                + "socks5.request.desiredDestinationAddressRedirect=new-server.net,"
-                + "socks5.request.desiredDestinationRedirectLogAction=LOG_AS_INFO"),
+                + "socks.request.desiredDestinationAddressRedirect=new-server.net,"
+                + "socks.request.desiredDestinationRedirectLogAction=LOG_AS_INFO"),
             /*
              * Allow anything else.
              */
@@ -3586,123 +3586,123 @@ host address for all sockets
 -   `socketSetting`: Specifies a socket setting for all sockets (This rule 
 action can be specified multiple times with each rule action specifying another 
 socket setting)
--   `socks5.onBindRequest.inboundSocketSetting`: Specifies a socket setting for 
+-   `socks.onBindRequest.inboundSocketSetting`: Specifies a socket setting for 
 the inbound socket (This rule action can be specified multiple times with each 
 rule action specifying another socket setting)
--   `socks5.onBindRequest.listenBindHost`: Specifies the binding host name or 
+-   `socks.onBindRequest.listenBindHost`: Specifies the binding host name or 
 address for the listen socket if the provided host address is all zeros
--   `socks5.onBindRequest.listenBindHostAddressType`: Specifies an acceptable 
+-   `socks.onBindRequest.listenBindHostAddressType`: Specifies an acceptable 
 binding host address type for the listen socket (This rule action can be 
 specified multiple times with each rule action specifying another host address 
 type) 
--   `socks5.onBindRequest.listenBindPortRange`: Specifies a binding 
+-   `socks.onBindRequest.listenBindPortRange`: Specifies a binding 
 port range for the listen socket if the provided port is zero (This rule 
 action can be specified multiple times with each rule action specifying another 
 port range)
--   `socks5.onBindRequest.listenNetInterface`: Specifies the network interface 
+-   `socks.onBindRequest.listenNetInterface`: Specifies the network interface 
 that provides a binding host address for the listen socket
--   `socks5.onBindRequest.listenSocketSetting`: Specifies a socket setting for 
+-   `socks.onBindRequest.listenSocketSetting`: Specifies a socket setting for 
 the listen socket (This rule action can be specified multiple times with each 
 rule action specifying another socket setting)
--   `socks5.onConnectRequest.prepareTargetFacingSocket`: Specifies the boolean 
+-   `socks.onConnectRequest.prepareTargetFacingSocket`: Specifies the boolean 
 value to indicate if the target-facing socket is to be prepared before 
 connecting (involves applying the specified socket settings, resolving the 
 target host name, and setting the specified timeout on waiting to connect)
--   `socks5.onConnectRequest.targetFacingBindHost`: Specifies the binding host 
+-   `socks.onConnectRequest.targetFacingBindHost`: Specifies the binding host 
 name or address for the target-facing socket
--   `socks5.onConnectRequest.targetFacingBindHostAddressType`: Specifies an 
+-   `socks.onConnectRequest.targetFacingBindHostAddressType`: Specifies an 
 acceptable binding host address type for the target-facing socket (This rule 
 action can be specified multiple times with each rule action specifying 
 another host address type)
--   `socks5.onConnectRequest.targetFacingBindPortRange`: Specifies a binding 
+-   `socks.onConnectRequest.targetFacingBindPortRange`: Specifies a binding 
 port range for the target-facing socket (This rule action can be specified 
 multiple times with each rule action specifying another port range)
--   `socks5.onConnectRequest.targetFacingConnectTimeout`: Specifies the timeout 
+-   `socks.onConnectRequest.targetFacingConnectTimeout`: Specifies the timeout 
 in milliseconds on waiting for the target-facing socket to connect (Value must 
 be an integer between 1 (inclusive) and 2147483647 (inclusive))
--   `socks5.onConnectRequest.targetFacingNetInterface`: Specifies the network
+-   `socks.onConnectRequest.targetFacingNetInterface`: Specifies the network
 interface that provides a binding host address for the target-facing socket
--   `socks5.onConnectRequest.targetFacingSocketSetting`: Specifies a socket 
+-   `socks.onConnectRequest.targetFacingSocketSetting`: Specifies a socket 
 setting for the target-facing socket (This rule action can be specified multiple 
 times with each rule action specifying another socket setting)
--   `socks5.onRequest.externalFacingBindHost`: Specifies the binding host
+-   `socks.onRequest.externalFacingBindHost`: Specifies the binding host
 name or address for all external-facing sockets
--   `socks5.onRequest.externalFacingBindHostAddressType`: Specifies an 
+-   `socks.onRequest.externalFacingBindHostAddressType`: Specifies an 
 acceptable binding host address type for all external-facing sockets (This 
 rule action can be specified multiple times with each rule action specifying 
 another host address type) 
--   `socks5.onRequest.externalFacingBindTcpPortRange`: Specifies a
+-   `socks.onRequest.externalFacingBindTcpPortRange`: Specifies a
 binding port range for all external-facing TCP sockets (This rule action can be
 specified multiple times with each rule action specifying another port range)
--   `socks5.onRequest.externalFacingBindUdpPortRange`: Specifies a
+-   `socks.onRequest.externalFacingBindUdpPortRange`: Specifies a
 binding port range for all external-facing UDP sockets (This rule action can be
 specified multiple times with each rule action specifying another port range)
--   `socks5.onRequest.externalFacingNetInterface`: Specifies the network 
+-   `socks.onRequest.externalFacingNetInterface`: Specifies the network 
 interface that provides a binding host address for all external-facing sockets
--   `socks5.onRequest.externalFacingSocketSetting`: Specifies a socket
+-   `socks.onRequest.externalFacingSocketSetting`: Specifies a socket
 setting for all external-facing sockets (This rule action can be specified
 multiple times with each rule action specifying another socket setting)
--   `socks5.onRequest.internalFacingBindHost`: Specifies the binding
+-   `socks.onRequest.internalFacingBindHost`: Specifies the binding
 host name or address for all internal-facing sockets
--   `socks5.onRequest.internalFacingBindHostAddressType`: Specifies an 
+-   `socks.onRequest.internalFacingBindHostAddressType`: Specifies an 
 acceptable binding host address type for all internal-facing sockets (This 
 rule action can be specified multiple times with each rule action specifying 
 another host address type)
--   `socks5.onRequest.internalFacingBindUdpPortRange`: Specifies a
+-   `socks.onRequest.internalFacingBindUdpPortRange`: Specifies a
 binding port range for all internal-facing UDP sockets (This rule action can be
 specified multiple times with each rule action specifying another port range)
--   `socks5.onRequest.internalFacingNetInterface`: Specifies the network
+-   `socks.onRequest.internalFacingNetInterface`: Specifies the network
 interface that provides a binding host address for all internal-facing sockets
--   `socks5.onRequest.internalFacingSocketSetting`: Specifies a socket
+-   `socks.onRequest.internalFacingSocketSetting`: Specifies a socket
 setting for all internal-facing sockets (This rule action can be specified
 multiple times with each rule action specifying another socket setting)
--   `socks5.onUdpAssociateRequest.clientFacingBindHost`: Specifies the binding 
+-   `socks.onUdpAssociateRequest.clientFacingBindHost`: Specifies the binding 
 host name or address for the client-facing UDP socket
--   `socks5.onUdpAssociateRequest.clientFacingBindHostAddressType`: Specifies 
+-   `socks.onUdpAssociateRequest.clientFacingBindHostAddressType`: Specifies 
 an acceptable binding host address type for the client-facing UDP socket (This 
 rule action can be specified multiple times with each rule action specifying 
 another host address type)
--   `socks5.onUdpAssociateRequest.clientFacingBindPortRange`: Specifies a 
+-   `socks.onUdpAssociateRequest.clientFacingBindPortRange`: Specifies a 
 binding port range for the client-facing UDP socket (This rule action can be 
 specified multiple times with each rule action specifying another port range)
--   `socks5.onUdpAssociateRequest.clientFacingNetInterface`: Specifies a 
+-   `socks.onUdpAssociateRequest.clientFacingNetInterface`: Specifies a 
 network interface that provides a binding host address for the client-facing 
 UDP socket
--   `socks5.onUdpAssociateRequest.clientFacingSocketSetting`: Specifies a 
+-   `socks.onUdpAssociateRequest.clientFacingSocketSetting`: Specifies a 
 socket setting for the client-facing UDP socket (This rule action can be 
 specified multiple times with each rule action specifying another socket 
 setting)
--   `socks5.onUdpAssociateRequest.peerFacingBindHost`: Specifies the binding 
+-   `socks.onUdpAssociateRequest.peerFacingBindHost`: Specifies the binding 
 host name or address for the peer-facing UDP socket
--   `socks5.onUdpAssociateRequest.peerFacingBindHostAdddressType`: Specifies 
+-   `socks.onUdpAssociateRequest.peerFacingBindHostAdddressType`: Specifies 
 an acceptable binding host address type for the peer-facing UDP socket (This 
 rule action can be specified multiple times with each rule action specifying 
 another host address type)
--   `socks5.onUdpAssociateRequest.peerFacingBindPortRange`: Specifies a 
+-   `socks.onUdpAssociateRequest.peerFacingBindPortRange`: Specifies a 
 binding port range for the peer-facing UDP socket (This rule action can be 
 specified multiple times with each rule action specifying another port range)
--   `socks5.onUdpAssociateRequest.peerFacingNetInterface`: Specifies the 
+-   `socks.onUdpAssociateRequest.peerFacingNetInterface`: Specifies the 
 network interface that provides a binding host address for the peer-facing UDP 
 socket
--   `socks5.onUdpAssociateRequest.peerFacingSocketSetting`: Specifies a socket 
+-   `socks.onUdpAssociateRequest.peerFacingSocketSetting`: Specifies a socket 
 setting for the peer-facing UDP socket (This rule action can be specified 
 multiple times with each rule action specifying another socket setting)
 
 These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method` 
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.user`
+-   `socks.method` 
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.user`
 -   `socksServerAddress`
 
-The rule action `socks5.onBindRequest.inboundSocketSetting` can also be used with 
+The rule action `socks.onBindRequest.inboundSocketSetting` can also be used with 
 the following rule conditions:
 
--   `socks5.reply.serverBoundAddress`
--   `socks5.reply.serverBoundPort`
+-   `socks.reply.serverBoundAddress`
+-   `socks.reply.serverBoundPort`
 
 Command line example:
 
@@ -3711,7 +3711,7 @@ Command line example:
 # the target-facing socket.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks5.onConnectRequest.prepareTargetFacingSocket=true,socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
+    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks.onConnectRequest.prepareTargetFacingSocket=true,socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3726,11 +3726,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>            
                     <ruleCondition>
-                        <name>socks5.request.desiredDestinationAddress</name>
+                        <name>socks.request.desiredDestinationAddress</name>
                         <value>special-server.net</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3740,18 +3740,18 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks5.onConnectRequest.prepareTargetFacingSocket</name>
+                        <name>socks.onConnectRequest.prepareTargetFacingSocket</name>
                         <value>true</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks5.onConnectRequest.targetFacingSocketSetting</name>
+                        <name>socks.onConnectRequest.targetFacingSocketSetting</name>
                         <socketSetting>
                             <name>SO_RCVBUF</name>
                             <value>256</value>
                         </socketSetting>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks5.onConnectRequest.targetFacingSocketSetting</name>
+                        <name>socks.onConnectRequest.targetFacingSocketSetting</name>
                         <socketSetting>
                             <name>SO_SNDBUF</name>
                             <value>256</value>
@@ -3800,12 +3800,12 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationAddress=special-server.net,"
+                "socks.request.command=CONNECT,"
+                + "socks.request.desiredDestinationAddress=special-server.net,"
                 + "firewallAction=ALLOW,"
-                + "socks5.onConnectRequest.prepareTargetFacingSocket=true,"
-                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
-                + "socks5.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
+                + "socks.onConnectRequest.prepareTargetFacingSocket=true,"
+                + "socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
+                + "socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
             /*
              * Allow anything else.
              */
@@ -3820,43 +3820,43 @@ public class ServerApp {
 
 To configure the relay settings, you will need any of the following rule actions:
 
--   `socks5.onBindRequest.relayBufferSize`: Specifies the buffer size in bytes 
+-   `socks.onBindRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onBindRequest.relayIdleTimeout`: Specifies the timeout in 
+-   `socks.onBindRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
--   `socks5.onConnectRequest.relayBufferSize`: Specifies the buffer size in bytes 
+-   `socks.onConnectRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onConnectRequest.relayIdleTimeout`: Specifies the timeout in 
+-   `socks.onConnectRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
--   `socks5.onRequest.relayBufferSize`: Specifies the buffer size in bytes
+-   `socks.onRequest.relayBufferSize`: Specifies the buffer size in bytes
 for relaying the data (Value must be an integer between 1 (inclusive) and
 2147483647 (inclusive))
--   `socks5.onRequest.relayIdleTimeout`: Specifies the timeout in
+-   `socks.onRequest.relayIdleTimeout`: Specifies the timeout in
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive)
 and 2147483647 (inclusive))
--   `socks5.onUdpAssociateRequest.relayBufferSize`: Specifies the buffer size in 
+-   `socks.onUdpAssociateRequest.relayBufferSize`: Specifies the buffer size in 
 bytes for relaying the data (Value must be an integer between 1 (inclusive) and 
 2147483647 (inclusive))
--   `socks5.onUdpAssociateRequest.relayIdleTimeout`: Specifies the timeout in 
+-   `socks.onUdpAssociateRequest.relayIdleTimeout`: Specifies the timeout in 
 milliseconds on relaying no data (Value must be an integer between 1 (inclusive) 
 and 2147483647 (inclusive))
 
 These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method`
--   `socks5.reply.serverBoundAddress`
--   `socks5.reply.serverBoundPort`
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.secondReply.serverBoundAddress`
--   `socks5.secondReply.serverBoundPort`
--   `socks5.user`
+-   `socks.method`
+-   `socks.reply.serverBoundAddress`
+-   `socks.reply.serverBoundPort`
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.secondReply.serverBoundAddress`
+-   `socks.secondReply.serverBoundPort`
+-   `socks.user`
 -   `socksServerAddress`
 
 Command line example:
@@ -3866,7 +3866,7 @@ Command line example:
 # with a relay idle timeout of 1024000 milliseconds (1024 seconds).
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=intermittent-idling-server.net,firewallAction=ALLOW,socks5.onConnectRequest.relayIdleTimeout=1024000 \
+    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=intermittent-idling-server.net,firewallAction=ALLOW,socks.onConnectRequest.relayIdleTimeout=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3881,11 +3881,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>            
                     <ruleCondition>
-                        <name>socks5.request.desiredDestinationAddress</name>
+                        <name>socks.request.desiredDestinationAddress</name>
                         <value>intermittent-idling-server.net</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -3895,7 +3895,7 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks5.onConnectRequest.relayIdleTimeout</name>
+                        <name>socks.onConnectRequest.relayIdleTimeout</name>
                         <value>1024000</value>
                     </ruleAction>
                 </ruleActions>
@@ -3941,10 +3941,10 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationAddress=intermittent-idling-server.net,"
+                "socks.request.command=CONNECT,"
+                + "socks.request.desiredDestinationAddress=intermittent-idling-server.net,"
                 + "firewallAction=ALLOW,"
-                + "socks5.onConnectRequest.relayIdleTimeout=1024000"),
+                + "socks.onConnectRequest.relayIdleTimeout=1024000"),
             /*
              * Allow anything else.
              */
@@ -3959,22 +3959,22 @@ public class ServerApp {
 
 To limit the relay bandwidth, you will need any of the following rule actions:
 
--   `socks5.onBindRequest.relayInboundBandwidthLimit`: Specifies the upper 
+-   `socks.onBindRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onBindRequest.relayOutboundBandwidthLimit`: Specifies the upper 
+-   `socks.onBindRequest.relayOutboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onConnectRequest.relayInboundBandwidthLimit`: Specifies the upper 
+-   `socks.onConnectRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onConnectRequest.relayOutboundBandwidthLimit`: Specifies the upper 
+-   `socks.onConnectRequest.relayOutboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onRequest.relayInboundBandwidthLimit`: Specifies the upper
+-   `socks.onRequest.relayInboundBandwidthLimit`: Specifies the upper
 limit on bandwidth in bytes per second of receiving inbound data to be relayed
--   `socks5.onRequest.relayOutboundBandwidthLimit`: Specifies the upper
+-   `socks.onRequest.relayOutboundBandwidthLimit`: Specifies the upper
 limit on bandwidth in bytes per second of receiving outbound data to be relayed
--   `socks5.onUdpAssociateRequest.relayInboundBandwidthLimit`: Specifies the 
+-   `socks.onUdpAssociateRequest.relayInboundBandwidthLimit`: Specifies the 
 upper limit on bandwidth in bytes per second of receiving inbound data to be 
 relayed
--   `socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit`: Specifies the 
+-   `socks.onUdpAssociateRequest.relayOutboundBandwidthLimit`: Specifies the 
 upper limit on bandwidth in bytes per second of receiving outbound data to be 
 relayed
 
@@ -3984,15 +3984,15 @@ The value given to any of the rule actions must be an integer between 1
 These rule actions can be used with the following rule conditions:
 
 -   `clientAddress`
--   `socks5.method` 
--   `socks5.reply.serverBoundAddress`
--   `socks5.reply.serverBoundPort`
--   `socks5.request.command`
--   `socks5.request.desiredDestinationAddress`
--   `socks5.request.desiredDestinationPort`
--   `socks5.secondReply.serverBoundAddress`
--   `socks5.secondReply.serverBoundPort`
--   `socks5.user`
+-   `socks.method` 
+-   `socks.reply.serverBoundAddress`
+-   `socks.reply.serverBoundPort`
+-   `socks.request.command`
+-   `socks.request.desiredDestinationAddress`
+-   `socks.request.desiredDestinationPort`
+-   `socks.secondReply.serverBoundAddress`
+-   `socks.secondReply.serverBoundPort`
+-   `socks.user`
 -   `socksServerAddress`
 
 Command line example:
@@ -4003,7 +4003,7 @@ Command line example:
 # second.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks5.request.command=CONNECT,socks5.request.desiredDestinationAddress=streaming-server.net,firewallAction=ALLOW,socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000 \
+    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=streaming-server.net,firewallAction=ALLOW,socks.onConnectRequest.relayInboundBandwidthLimit=1024000,socks.onConnectRequest.relayOutboundBandwidthLimit=1024000 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -4018,11 +4018,11 @@ Server configuration file example:
             <rule>
                 <ruleConditions>
                     <ruleCondition>
-                        <name>socks5.request.command</name>
+                        <name>socks.request.command</name>
                         <value>CONNECT</value>
                     </ruleCondition>            
                     <ruleCondition>
-                        <name>socks5.request.desiredDestinationAddress</name>
+                        <name>socks.request.desiredDestinationAddress</name>
                         <value>streaming-server.net</value>
                     </ruleCondition>
                 </ruleConditions>
@@ -4032,11 +4032,11 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleAction>
                     <ruleAction>
-                         <name>socks5.onConnectRequest.relayInboundBandwidthLimit</name>
+                         <name>socks.onConnectRequest.relayInboundBandwidthLimit</name>
                         <value>1024000</value>
                     </ruleAction>
                     <ruleAction>
-                         <name>socks5.onConnectRequest.relayOutboundBandwidthLimit</name>
+                         <name>socks.onConnectRequest.relayOutboundBandwidthLimit</name>
                         <value>1024000</value>
                     </ruleAction>                
                 </ruleActions>
@@ -4083,11 +4083,11 @@ public class ServerApp {
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
-                "socks5.request.command=CONNECT,"
-                + "socks5.request.desiredDestinationAddress=streaming-server.net,"
+                "socks.request.command=CONNECT,"
+                + "socks.request.desiredDestinationAddress=streaming-server.net,"
                 + "firewallAction=ALLOW,"
-                + "socks5.onConnectRequest.relayInboundBandwidthLimit=1024000,"
-                + "socks5.onConnectRequest.relayOutboundBandwidthLimit=1024000"),
+                + "socks.onConnectRequest.relayInboundBandwidthLimit=1024000,"
+                + "socks.onConnectRequest.relayOutboundBandwidthLimit=1024000"),
             /*
              * Allow anything else.
              */

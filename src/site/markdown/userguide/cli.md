@@ -591,8 +591,8 @@ Command line example:
 jargyle new-server-config-file \
     --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassauthmethod.password=opensesame \
     local_configuration.xml
 ```
 
@@ -613,11 +613,11 @@ jargyle new-server-config-file \
             </socks5.methods>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassmethod.username</name>
+            <name>chaining.socks5.userpassauthmethod.username</name>
             <value>Aladdin</value>
         </setting>
         <setting>
-            <name>chaining.socks5.userpassmethod.password</name>
+            <name>chaining.socks5.userpassauthmethod.password</name>
             <encryptedPassword>
                 <typeName>AesCfbPkcs5PaddingEncryptedPassword</typeName>
                 <encryptedPasswordValue>gO14zGu9U8usCtkEwgs6sQ==,4KGFoYUP9YVA0f/UbFCDAQ==,eWgdqYYZNT8=</encryptedPasswordValue>
@@ -650,8 +650,8 @@ export JARGYLE_OPTS=-Dcom.github.jh3nd3rs0n.jargyle.common.security.partialEncry
 jargyle new-server-config-file \
     --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassauthmethod.password=opensesame \
     local_configuration.xml
 jargyle start-server local_configuration.xml
 ```
@@ -679,8 +679,8 @@ jargyle new-server-config-file \
     --partial-encryption-pass=donkeyhorsefruitcakepunch \
     --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --setting=chaining.socks5.userpassmethod.password=opensesame \
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassauthmethod.password=opensesame \
     local_configuration.xml
 jargyle start-server \
     --partial-encryption-pass=donkeyhorsefruitcakepunch \
@@ -698,8 +698,8 @@ jargyle new-server-config-file \
     --enter-partial-encryption-pass \
     --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
-    --setting=chaining.socks5.userpassmethod.username=Aladdin \
-    --enter-chaining-socks5-userpassmethod-pass \
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --enter-chaining-socks5-userpassauthmethod-pass \
     local_configuration.xml
 Please enter the partial password to be used for encryption/decryption: 
 Please enter the password to be used to access the other SOCKS server: 

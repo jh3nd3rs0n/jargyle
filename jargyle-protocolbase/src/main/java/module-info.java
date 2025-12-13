@@ -9,6 +9,6 @@ module com.github.jh3nd3rs0n.jargyle.protocolbase {
 	exports com.github.jh3nd3rs0n.jargyle.protocolbase;
 	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5;
 	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl;
-	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod;
-	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod;
+	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod;
+	exports com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauthmethod;
 }

@@ -2,7 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.test.echo.server.performance;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.test.echo.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.test.echo.NettySocksServer;
@@ -33,7 +33,7 @@ public class EchoServerBehindNettySocksServerIT {
 
     private static NetObjectFactory newSocks5NetObjectFactory(
             final String socksServerHostAddress, final int socksServerPort) {
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
                 .newSocksClient(Properties.of())

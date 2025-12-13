@@ -229,6 +229,14 @@ final class BindRequestHandler extends RequestHandler {
 	private boolean hasSecondReplyRuleCondition() {
 		Rule applicableRule =
                 this.context.getApplicableRule();
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_PORT)) {
+            return true;
+        }
 		if (applicableRule.hasRuleCondition(
 				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
 			return true;
@@ -510,12 +518,20 @@ final class BindRequestHandler extends RequestHandler {
 			final Reply secondRep) {
 		RuleContext secondReplyRuleContext = new RuleContext(
 				this.context.getRuleContext());
+        String secondReplyServerBoundAddress = secondRep.getServerBoundAddress().toString();
+        Port secondReplyServerBoundPort = secondRep.getServerBoundPort();
+        secondReplyRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_ADDRESS,
+                secondReplyServerBoundAddress);
+        secondReplyRuleContext.putRuleArgValue(
+                SocksRuleArgSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_PORT,
+                secondReplyServerBoundPort);
 		secondReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS,
-				secondRep.getServerBoundAddress().toString());
+				secondReplyServerBoundAddress);
 		secondReplyRuleContext.putRuleArgValue(
 				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT,
-				secondRep.getServerBoundPort());		
+				secondReplyServerBoundPort);
 		return secondReplyRuleContext;
 	}
 	

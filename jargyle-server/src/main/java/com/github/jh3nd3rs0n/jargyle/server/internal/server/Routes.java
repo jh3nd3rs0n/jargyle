@@ -7,25 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.jh3nd3rs0n.jargyle.client.DtlsPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Property;
-import com.github.jh3nd3rs0n.jargyle.client.PropertySpec;
-import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
-import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
-import com.github.jh3nd3rs0n.jargyle.client.SslPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ChainingDtlsSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ChainingGeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ChainingSocks5SettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.ChainingSslSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Setting;
-import com.github.jh3nd3rs0n.jargyle.server.SettingSpec;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.client.*;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 
 public final class Routes {
 	
@@ -135,29 +118,73 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_MECHANISM_OID, 
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_MECHANISM_OID,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_MECHANISM_OID));
+						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_MECHANISM_OID));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL, 
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_NEC_REFERENCE_IMPL,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_NEC_REFERENCE_IMPL));
+						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_NEC_REFERENCE_IMPL));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS, 
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_PROTECTION_LEVELS,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_PROTECTION_LEVELS));
+						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_PROTECTION_LEVELS));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_SERVICE_NAME, 
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_SERVICE_NAME,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SERVICE_NAME));
+						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_SERVICE_NAME));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF,
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_SUGGESTED_CONF,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_CONF));
+						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_SUGGESTED_CONF));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG,
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_SUGGESTED_INTEG,
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_GSSAPIMETHOD_SUGGESTED_INTEG));
+						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_SUGGESTED_INTEG));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_METHODS,
+				new SettingToPropertyConverter(
+						SocksPropertySpecConstants.SOCKS_METHODS));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_SOCKS_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE,
+				new SettingToPropertyConverter(
+						SocksPropertySpecConstants.SOCKS_SOCKS_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER,
+				new SettingToPropertyConverter(
+						SocksPropertySpecConstants.SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_USERPASSAUTHMETHOD_PASSWORD,
+				new SettingToPropertyConverter(
+						SocksPropertySpecConstants.SOCKS_USERPASSAUTHMETHOD_PASSWORD));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_USERPASSAUTHMETHOD_USERNAME,
+				new SettingToPropertyConverter(
+						SocksPropertySpecConstants.SOCKS_USERPASSAUTHMETHOD_USERNAME));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTHMETHOD_MECHANISM_OID, 
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTHMETHOD_MECHANISM_OID));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTHMETHOD_NEC_REFERENCE_IMPL, 
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTHMETHOD_NEC_REFERENCE_IMPL));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVELS, 
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVELS));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTHMETHOD_SERVICE_NAME, 
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTHMETHOD_SERVICE_NAME));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_CONF,
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_CONF));
+		SETTING_CONVERTER_MAP.put(
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_INTEG,
+				new SettingToPropertyConverter(
+						Socks5PropertySpecConstants.SOCKS5_GSSAPIAUTHMETHOD_SUGGESTED_INTEG));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_METHODS, 
 				new SettingToPropertyConverter(
@@ -171,13 +198,13 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_PASSWORD, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTHMETHOD_PASSWORD, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_PASSWORD));
+						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTHMETHOD_PASSWORD));
 		SETTING_CONVERTER_MAP.put(
-				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSMETHOD_USERNAME, 
+				ChainingSocks5SettingSpecConstants.CHAINING_SOCKS5_USERPASSAUTHMETHOD_USERNAME, 
 				new SettingToPropertyConverter(
-						Socks5PropertySpecConstants.SOCKS5_USERPASSMETHOD_USERNAME));
+						Socks5PropertySpecConstants.SOCKS5_USERPASSAUTHMETHOD_USERNAME));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSslSettingSpecConstants.CHAINING_SSL_ENABLED, 
 				new SettingToPropertyConverter(

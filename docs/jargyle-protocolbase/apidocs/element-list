@@ -2,5 +2,5 @@ module:com.github.jh3nd3rs0n.jargyle.protocolbase
 com.github.jh3nd3rs0n.jargyle.protocolbase
 com.github.jh3nd3rs0n.jargyle.protocolbase.socks5
 com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.address.impl
-com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapimethod
-com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassmethod
+com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod
+com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.userpassauthmethod

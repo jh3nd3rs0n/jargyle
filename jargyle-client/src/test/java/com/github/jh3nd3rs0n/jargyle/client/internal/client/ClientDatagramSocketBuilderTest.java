@@ -12,7 +12,7 @@ public class ClientDatagramSocketBuilderTest {
 
     @Test
     public void getConnectedClientDatagramSocketDatagramSocketInetAddressInt01() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost");
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
@@ -39,7 +39,7 @@ public class ClientDatagramSocketBuilderTest {
 
     @Test
     public void getConnectedClientDatagramSocketDatagramSocketInetAddressInt02() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost");
         Properties properties = Properties.of(
                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(true));

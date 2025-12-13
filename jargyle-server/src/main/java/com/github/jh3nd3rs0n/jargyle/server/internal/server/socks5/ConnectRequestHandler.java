@@ -10,8 +10,6 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Reply;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.ReplyCode;
 import com.github.jh3nd3rs0n.jargyle.server.Rule;
 import com.github.jh3nd3rs0n.jargyle.server.RuleContext;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5RuleActionSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
 import com.github.jh3nd3rs0n.jargyle.server.internal.logging.ObjectLogMessageHelper;
 import com.github.jh3nd3rs0n.jargyle.server.internal.net.BandwidthLimitedSocket;
 import com.github.jh3nd3rs0n.jargyle.server.internal.server.Relay;
@@ -33,13 +31,9 @@ final class ConnectRequestHandler extends RequestHandler {
 	}
 	
 	private boolean canPrepareTargetFacingSocket() {
-		Boolean b = this.context.getApplicableRule().getLastRuleActionValue(
-				Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
-		if (b != null) {
-			return b;
-		}
-		return this.context.getSettings().getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
+        return Socks5ValueDerivationHelper.getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings());
 	}
 
 	private boolean configureTargetFacingSocket(
@@ -107,15 +101,10 @@ final class ConnectRequestHandler extends RequestHandler {
 	}
 	
 	private int getTargetFacingConnectTimeout() {
-		PositiveInteger connectTimeout =
-                this.context.getApplicableRule().getLastRuleActionValue(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
-		if (connectTimeout != null) {
-			return connectTimeout.intValue();
-		}
-		connectTimeout = this.context.getSettings().getLastValue(
-				Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
-		return connectTimeout.intValue();
+        return Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings())
+                .intValue();
 	}
 	
 	private SocketSettings getTargetFacingSocketSettings() {

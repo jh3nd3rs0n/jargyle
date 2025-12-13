@@ -13,6 +13,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
         nameValuePairValueSpecs = {
                 GeneralPropertySpecConstants.class,
                 DtlsPropertySpecConstants.class,
+                SocksPropertySpecConstants.class,
                 Socks5PropertySpecConstants.class,
                 SslPropertySpecConstants.class
         },

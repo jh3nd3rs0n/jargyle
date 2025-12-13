@@ -235,8 +235,8 @@ public class ClientApp {
 To access the SOCKS server using username password authentication, you 
 will need to have the property `socksClient.socks5.methods` to have 
 `USERNAME_PASSWORD` included. You will also need to have the properties 
-`socksClient.socks5.userpassmethod.username` and 
-`socksClient.socks5.userpassmethod.password` to specify the username and 
+`socksClient.socks5.userpassauthmethod.username` and 
+`socksClient.socks5.userpassauthmethod.password` to specify the username and 
 password for the SOCKS5 server.
 
 API example:
@@ -261,10 +261,10 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socks5.methods", "USERNAME_PASSWORD");
         System.setProperty(
-            "socksClient.socks5.userpassmethod.username", 
+            "socksClient.socks5.userpassauthmethod.username", 
             "Aladdin");
         System.setProperty(
-            "socksClient.socks5.userpassmethod.password",
+            "socksClient.socks5.userpassauthmethod.password",
             "opensesame");
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
@@ -272,8 +272,8 @@ public class ClientApp {
 }
 ```
 
-Instead of using the properties `socksClient.socks5.userpassmethod.username` 
-and `socksClient.socks5.userpassmethod.password` to specify the username and 
+Instead of using the properties `socksClient.socks5.userpassauthmethod.username` 
+and `socksClient.socks5.userpassauthmethod.password` to specify the username and 
 password for the SOCKS5 server, you can supply the username and password for 
 the SOCKS5 server as a username and password pair in the user information 
 component of the SOCKS server URI.
@@ -360,7 +360,7 @@ public class ClientApp {
             "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty("socksClient.socks5.methods", "GSSAPI");
         System.setProperty(
-            "socksClient.socks5.gssapimethod.serviceName",
+            "socksClient.socks5.gssapiauthmethod.serviceName",
             "rcmd/jargyle.net");
         NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
@@ -418,7 +418,7 @@ Kerberos Key Distribution Center (KDC) for authentication.
 In `krb5.conf`, a KDC is defined as running at `jargyle.net` on port `12345` 
 with its realm as `JARGYLE.NET`.
 
-The property `socksClient.socks5.gssapimethod.serviceName` with the value 
+The property `socksClient.socks5.gssapiauthmethod.serviceName` with the value 
 `rcmd/jargyle.net` is the GSS-API service name (or the Kerberos service 
 principal) for the SOCKS server residing at `jargyle.net`.
 
@@ -506,8 +506,8 @@ package com.example;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 
 import java.io.IOException;
 
@@ -518,13 +518,13 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        SocksClient socksClient1 = Scheme.SOCKS5
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("alpha-alpha.net", 11111)
             .newSocksClient(Properties.of());
-        SocksClient socksClient2 = Scheme.SOCKS5
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("beta-alpha.net", 22221)
             .newSocksClient(Properties.of(), socksClient1);
-        SocksClient socksClient3 = Scheme.SOCKS5
+        SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("gamma-alpha.net", 33331)
             .newSocksClient(Properties.of(), socksClient2);
         NetObjectFactory netObjectFactory = 

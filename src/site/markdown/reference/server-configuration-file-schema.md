@@ -27,9 +27,9 @@
         <xs:element name="portRanges" type="portRanges"/>
         <xs:element name="rule" type="rule"/>
         <xs:element name="socketSettings" type="socketSettings"/>
-        <xs:element name="socks5.gssapimethod.protectionLevels" type="socks5.gssapimethod.protectionLevels"/>
+        <xs:element name="socks5.gssapiauthmethod.protectionLevels" type="socks5.gssapiauthmethod.protectionLevels"/>
         <xs:element name="socks5.methods" type="socks5.methods"/>
-        <xs:element name="socks5.userpassmethod.userRepository" type="socks5.userpassmethod.userRepository"/>
+        <xs:element name="socks5.userpassauthmethod.userRepository" type="socks5.userpassauthmethod.userRepository"/>
         <xs:element name="value" type="xs:string"/>
         <xs:element name="values" type="values"/>
       </xs:choice>
@@ -134,11 +134,11 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="socks5.gssapimethod.protectionLevels">
+  <xs:complexType name="socks5.gssapiauthmethod.protectionLevels">
     <xs:complexContent>
       <xs:extension base="value">
         <xs:sequence>
-          <xs:element name="socks5.gssapimethod.protectionLevel" type="xs:string" maxOccurs="unbounded"/>
+          <xs:element name="socks5.gssapiauthmethod.protectionLevel" type="xs:string" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -154,7 +154,7 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="socks5.userpassmethod.userRepository">
+  <xs:complexType name="socks5.userpassauthmethod.userRepository">
     <xs:complexContent>
       <xs:extension base="value">
         <xs:all>

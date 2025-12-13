@@ -1,6 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.cli;
 
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.client.UserInfo;
 import com.github.jh3nd3rs0n.jargyle.internal.annotation.*;
 import com.github.jh3nd3rs0n.jargyle.server.RuleAction;
@@ -36,7 +36,7 @@ final class SettingsHelpPrinter {
                         .nameValuePairValueSpecs()));
         classes.add(RuleAction.class);
         classes.add(RuleCondition.class);
-        classes.add(Scheme.class);
+        classes.add(SocksServerUriScheme.class);
         classes.add(UserInfo.class);
         AllDocAnnotatedClassesSortedBySyntaxNameFactory factory =
                 new AllDocAnnotatedClassesSortedBySyntaxNameFactory();

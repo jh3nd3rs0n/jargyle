@@ -42,7 +42,7 @@ public class ClientSocketBuilderIT {
 
     @Test
     public void testNewBoundConnectedClientSocket01() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
@@ -61,7 +61,7 @@ public class ClientSocketBuilderIT {
 
     @Test
     public void testNewBoundConnectedClientSocket02() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
                 GeneralPropertySpecConstants.CLIENT_BIND_HOST.newPropertyWithParsedValue(
@@ -89,7 +89,7 @@ public class ClientSocketBuilderIT {
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS);
         HostAddress hostAddress = netInterface.getHostAddresses(hostAddressTypes).get(0);
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
                 GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.newProperty(
@@ -114,7 +114,7 @@ public class ClientSocketBuilderIT {
 
     @Test
     public void testNewBoundConnectedClientSocket04() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
                 SslPropertySpecConstants.SSL_ENABLED.newProperty(true));
@@ -134,7 +134,7 @@ public class ClientSocketBuilderIT {
 
     @Test(expected = IOException.class)
     public void testNewBoundConnectedClientSocketForIOException01() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
                 GeneralPropertySpecConstants.CLIENT_BIND_HOST.newPropertyWithParsedValue(
@@ -150,7 +150,7 @@ public class ClientSocketBuilderIT {
 
     @Test
     public void testNewBoundConnectedClientSocketInetAddressInt01() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
@@ -172,7 +172,7 @@ public class ClientSocketBuilderIT {
 
     @Test
     public void testNewBoundConnectedClientSocketInetAddressInt02() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
                 SslPropertySpecConstants.SSL_ENABLED.newProperty(true));
@@ -195,7 +195,7 @@ public class ClientSocketBuilderIT {
 
     @Test(expected = IOException.class)
     public void testNewBoundConnectedClientSocketInetAddressIntForIOException01() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
@@ -208,7 +208,7 @@ public class ClientSocketBuilderIT {
 
     @Test
     public void testNewClientSocket() throws IOException {
-        SocksServerUri socksServerUri = Scheme.SOCKS5.newSocksServerUri(
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);

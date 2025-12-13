@@ -2,14 +2,11 @@ package com.github.jh3nd3rs0n.jargyle.test.echo;
 
 import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.Scheme;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.GeneralSettingSpecConstants;
-import com.github.jh3nd3rs0n.jargyle.server.Settings;
-import com.github.jh3nd3rs0n.jargyle.server.Socks5SettingSpecConstants;
+import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
 import org.junit.AfterClass;
@@ -50,7 +47,7 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToSocksServerIT {
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
-                Socks5SettingSpecConstants.SOCKS5_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         PositiveInteger.valueOf(500)),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));
@@ -67,7 +64,7 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToSocksServerIT {
     }
 
     private static NetObjectFactory newSocks5NetObjectFactorySetToBogusSocksServer() {
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
                         BOGUS_SOCKS_SERVER_PORT)
                 .newSocksClient(Properties.of())
@@ -75,7 +72,7 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToSocksServerIT {
     }
 
     private static NetObjectFactory newSocks5NetObjectFactorySetToJargyleSocksServer() {
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
                         jargyleSocksServerPort)
                 .newSocksClient(Properties.of())
@@ -83,7 +80,7 @@ public class EchoObjectsUsingSocks5NetObjectFactorySetToSocksServerIT {
     }
 
     private static NetObjectFactory newSocks5NetObjectFactorySetToNettySocksServer() {
-        return Scheme.SOCKS5.newSocksServerUri(
+        return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
                         nettySocksServerPort)
                 .newSocksClient(Properties.of())

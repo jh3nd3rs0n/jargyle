@@ -22,11 +22,13 @@ final class PropertySpecConstants {
         List<PropertySpec<Object>> values = new ArrayList<>();
         values.addAll(DtlsPropertySpecConstants.values());
         values.addAll(GeneralPropertySpecConstants.values());
+        values.addAll(SocksPropertySpecConstants.values());
         values.addAll(Socks5PropertySpecConstants.values());
         values.addAll(SslPropertySpecConstants.values());
         Map<String, PropertySpec<Object>> valuesMap = new HashMap<>();
         valuesMap.putAll(DtlsPropertySpecConstants.valuesMap());
         valuesMap.putAll(GeneralPropertySpecConstants.valuesMap());
+        valuesMap.putAll(SocksPropertySpecConstants.valuesMap());
         valuesMap.putAll(Socks5PropertySpecConstants.valuesMap());
         valuesMap.putAll(SslPropertySpecConstants.valuesMap());
         VALUES = values;

@@ -59,7 +59,7 @@
 <tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
 <tr><td><a href="#socksclient-socks5-gssapiauthmethod-mechanismoid"><code>socksClient.socks5.gssapiauthmethod.mechanismOid</code></a></td><td>Oid</td><td>The object ID for the GSS-API authentication mechanism to the SOCKS5 server</td></tr>
 <tr><td><a href="#socksclient-socks5-gssapiauthmethod-necreferenceimpl"><code>socksClient.socks5.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the SOCKS5 server use the NEC reference implementation</td></tr>
-<tr><td><a href="#socksclient-socks5-gssapiauthmethod-protectionlevels"><code>socksClient.socks5.gssapiauthmethod.protectionLevels</code></a></td><td>SOCKS5 GSS-API Method Protection Levels</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)</td></tr>
+<tr><td><a href="#socksclient-socks5-gssapiauthmethod-protectionlevels"><code>socksClient.socks5.gssapiauthmethod.protectionLevels</code></a></td><td>SOCKS5 GSS-API Authentication Method Protection Levels</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)</td></tr>
 <tr><td><a href="#socksclient-socks5-gssapiauthmethod-servicename"><code>socksClient.socks5.gssapiauthmethod.serviceName</code></a></td><td>String</td><td>The GSS-API service name for the SOCKS5 server</td></tr>
 <tr><td><a href="#socksclient-socks5-gssapiauthmethod-suggestedconf"><code>socksClient.socks5.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)</td></tr>
 <tr><td><a href="#socksclient-socks5-gssapiauthmethod-suggestedinteg"><code>socksClient.socks5.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)</td></tr>
@@ -284,7 +284,7 @@
 
 **Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
 
-**Value Type:** [SOCKS5 GSS-API Method Protection Levels](value-types.md#socks5-gss-api-method-protection-levels)
+**Value Type:** [SOCKS5 GSS-API Authentication Method Protection Levels](value-types.md#socks5-gss-api-authentication-method-protection-levels)
 
 ### socksClient.socks5.gssapiauthmethod.serviceName
 

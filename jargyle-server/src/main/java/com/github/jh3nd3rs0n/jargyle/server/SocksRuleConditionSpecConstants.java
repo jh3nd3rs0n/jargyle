@@ -50,9 +50,7 @@ public final class SocksRuleConditionSpecConstants {
             SocksRuleArgSpecConstants.SOCKS_REPLY_SERVER_BOUND_PORT));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies the command of the request. (Please "
-                    + "see specific SOCKS protocol versions of this rule "
-                    + "condition for acceptable values.)",
+            description = "Specifies the command of the request",
             name = "socks.request.command",
             syntax = "socks.request.command=SOCKS_REQUEST_COMMAND",
             valueType = String.class

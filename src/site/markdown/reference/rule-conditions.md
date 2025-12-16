@@ -22,7 +22,7 @@
 <tr><td><a href="#socks-method"><code>socks.method</code></a></td><td>String</td><td>Specifies the negotiated method.</td></tr>
 <tr><td><a href="#socks-reply-serverboundaddress"><code>socks.reply.serverBoundAddress</code></a></td><td>Address Range</td><td>Specifies the server bound address of the reply</td></tr>
 <tr><td><a href="#socks-reply-serverboundport"><code>socks.reply.serverBoundPort</code></a></td><td>Port Range</td><td>Specifies the server bound port of the reply</td></tr>
-<tr><td><a href="#socks-request-command"><code>socks.request.command</code></a></td><td>String</td><td>Specifies the command of the request. (Please see specific SOCKS protocol versions of this rule condition for acceptable values.)</td></tr>
+<tr><td><a href="#socks-request-command"><code>socks.request.command</code></a></td><td>String</td><td>Specifies the command of the request</td></tr>
 <tr><td><a href="#socks-request-desireddestinationaddress"><code>socks.request.desiredDestinationAddress</code></a></td><td>Address Range</td><td>Specifies the desired destination address of the request</td></tr>
 <tr><td><a href="#socks-request-desireddestinationport"><code>socks.request.desiredDestinationPort</code></a></td><td>Port Range</td><td>Specifies the desired destination port of the request</td></tr>
 <tr><td><a href="#socks-secondreply-serverboundaddress"><code>socks.secondReply.serverBoundAddress</code></a></td><td>Address Range</td><td>Specifies the server bound address of the second reply (for the BIND request)</td></tr>
@@ -89,7 +89,7 @@
 
 ### socks.request.command
 
-**Description:** Specifies the command of the request. (Please see specific SOCKS protocol versions of this rule condition for acceptable values.)
+**Description:** Specifies the command of the request
 
 **Value Type:** [String](value-types.md#string)
 

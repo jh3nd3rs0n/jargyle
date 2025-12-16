@@ -6,7 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.internal.annotation.NameValuePairValueTypeD
 
 @NameValuePairValueTypeDoc(
 		description = "",
-		name = "SOCKS5 Username Password Method User Repository",
+		name = "SOCKS5 Username Password Authentication Method User Repository",
 		nameValuePairValueSpecs = {
 				UserRepositorySpecConstants.class
 		},

@@ -39,13 +39,13 @@
 -   [SOCKS Server URI](#socks-server-uri)
 -   [SOCKS Server URI Scheme](#socks-server-uri-scheme)
 -   [SOCKS5 Address](#socks5-address)
--   [SOCKS5 GSS-API Method Protection Level](#socks5-gss-api-method-protection-level)
--   [SOCKS5 GSS-API Method Protection Levels](#socks5-gss-api-method-protection-levels)
+-   [SOCKS5 GSS-API Authentication Method Protection Level](#socks5-gss-api-authentication-method-protection-level)
+-   [SOCKS5 GSS-API Authentication Method Protection Levels](#socks5-gss-api-authentication-method-protection-levels)
 -   [SOCKS5 Method](#socks5-method)
 -   [SOCKS5 Methods](#socks5-methods)
 -   [SOCKS5 Request Command](#socks5-request-command)
--   [SOCKS5 Username Password Method User Repository](#socks5-username-password-method-user-repository)
-    -   [SOCKS5 Username Password Method User Repositories](#socks5-username-password-method-user-repositories)
+-   [SOCKS5 Username Password Authentication Method User Repository](#socks5-username-password-authentication-method-user-repository)
+    -   [SOCKS5 Username Password Authentication Method User Repositories](#socks5-username-password-authentication-method-user-repositories)
         -   [FileSourceUserRepository](#filesourceuserrepository)
         -   [StringSourceUserRepository](#stringsourceuserrepository)
 -   [String](#string)
@@ -505,7 +505,7 @@ DOMAIN_NAME|IPV4_ADDRESS|IPV6_ADDRESS
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address`
 
-## SOCKS5 GSS-API Method Protection Level
+## SOCKS5 GSS-API Authentication Method Protection Level
 
 **Syntax:**
 
@@ -524,7 +524,7 @@ NONE|REQUIRED_INTEG|REQUIRED_INTEG_AND_CONF|SELECTIVE_INTEG_OR_CONF
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.ProtectionLevel`
 
-## SOCKS5 GSS-API Method Protection Levels
+## SOCKS5 GSS-API Authentication Method Protection Levels
 
 **Syntax:**
 
@@ -534,7 +534,7 @@ SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LE
 
 **Description:** A comma separated list of security context protection levels
 
-**Element Value Type:** [SOCKS5 GSS-API Method Protection Level](#socks5-gss-api-method-protection-level)
+**Element Value Type:** [SOCKS5 GSS-API Authentication Method Protection Level](#socks5-gss-api-authentication-method-protection-level)
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.ProtectionLevels`
 
@@ -589,7 +589,7 @@ CONNECT|BIND|UDP_ASSOCIATE|RESOLVE
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command`
 
-## SOCKS5 Username Password Method User Repository
+## SOCKS5 Username Password Authentication Method User Repository
 
 **Syntax:**
 
@@ -601,7 +601,7 @@ TYPE_NAME:INITIALIZATION_STRING
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.UserRepository`
 
-### SOCKS5 Username Password Method User Repositories
+### SOCKS5 Username Password Authentication Method User Repositories
 
 **Description:** 
 

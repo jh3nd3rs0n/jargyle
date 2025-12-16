@@ -11,7 +11,7 @@ import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.internal.u
 
 @NameValuePairValueSpecsDoc(
 		description = "",
-		name = "SOCKS5 Username Password Method External Source User Repositories"
+		name = "SOCKS5 Username Password Authentication Method External Source User Repositories"
 )
 public final class ExternalSourceUserRepositorySpecConstants {
 

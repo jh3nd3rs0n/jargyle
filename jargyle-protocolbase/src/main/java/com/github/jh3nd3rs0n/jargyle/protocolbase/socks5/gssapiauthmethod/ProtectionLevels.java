@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @ValuesValueTypeDoc(
         description = "A comma separated list of security context protection levels",
         elementValueType = ProtectionLevel.class,
-        name = "SOCKS5 GSS-API Method Protection Levels",
+        name = "SOCKS5 GSS-API Authentication Method Protection Levels",
         syntax = "SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVEL1[,SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVEL2[...]]",
         syntaxName = "SOCKS5_GSSAPIAUTHMETHOD_PROTECTION_LEVELS"
 )

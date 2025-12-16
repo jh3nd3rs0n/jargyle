@@ -1174,7 +1174,7 @@ VALUE TYPES:
           Specifies the server bound port of the reply
 
       socks.request.command=SOCKS_REQUEST_COMMAND
-          Specifies the command of the request. (Please see specific SOCKS protocol versions of this rule condition for acceptable values.)
+          Specifies the command of the request
 
       socks.request.desiredDestinationAddress=ADDRESS_RANGE
           Specifies the desired destination address of the request
@@ -1358,7 +1358,7 @@ VALUE TYPES:
 
   SOCKS5_USERPASSAUTHMETHOD_USER_REPOSITORY: TYPE_NAME:INITIALIZATION_STRING
 
-    SOCKS5 USERNAME PASSWORD METHOD USER REPOSITORIES:
+    SOCKS5 USERNAME PASSWORD AUTHENTICATION METHOD USER REPOSITORIES:
 
       FileSourceUserRepository:FILE
           User repository that handles the storage of the users from a provided file of a list of URL encoded username and hashed password pairs (If the file does not exist, it will be created and used.)

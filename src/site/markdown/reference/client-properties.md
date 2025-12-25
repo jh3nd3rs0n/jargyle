@@ -48,7 +48,7 @@
 <tr><td><a href="#socksclient-socks-gssapiauthmethod-suggestedinteg"><code>socksClient.socks.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
 <tr><td><a href="#socksclient-socks-methods"><code>socksClient.socks.methods</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable authentication methods to the SOCKS server<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
 <tr><td><a href="#socksclient-socks-socksdatagramsocket-clientinfounavailable"><code>socksClient.socks.socksDatagramSocket.clientInfoUnavailable</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the SOCKS server (an address and port of all zeros is sent instead)<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#socksclient-socks-sockshostresolver-resolvefromsocks5server"><code>socksClient.socks.socksHostResolver.resolveFromSocks5Server</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the SOCKS server<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#socksclient-socks-sockshostresolver-resolvefromsocksserver"><code>socksClient.socks.socksHostResolver.resolveFromSocksServer</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the SOCKS server<br/><b>Default Value:</b> <code>false</code></td></tr>
 <tr><td><a href="#socksclient-socks-userpassauthmethod-password"><code>socksClient.socks.userpassauthmethod.password</code></a></td><td>String</td><td>The password to be used to access the SOCKS server</td></tr>
 <tr><td><a href="#socksclient-socks-userpassauthmethod-username"><code>socksClient.socks.userpassauthmethod.username</code></a></td><td>String</td><td>The username to be used to access the SOCKS server</td></tr>
 </table>
@@ -248,7 +248,7 @@
 
 **Default Value:** `false`
 
-### socksClient.socks.socksHostResolver.resolveFromSocks5Server
+### socksClient.socks.socksHostResolver.resolveFromSocksServer
 
 **Description:** The boolean value to indicate if host names are to be resolved from the SOCKS server
 

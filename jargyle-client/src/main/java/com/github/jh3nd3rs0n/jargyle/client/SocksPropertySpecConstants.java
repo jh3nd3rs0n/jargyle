@@ -202,7 +202,7 @@ public final class SocksPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.socks.socksHostResolver.resolveFromSocks5Server}:
+     * {@code socksClient.socks.socksHostResolver.resolveFromSocksServer}:
      * the {@code Boolean} value to indicate if host names are to be
      * resolved from the SOCKS server (default value is {@code false}).
      */
@@ -210,13 +210,13 @@ public final class SocksPropertySpecConstants {
             defaultValue = "false",
             description = "The boolean value to indicate if host names "
                     + "are to be resolved from the SOCKS server",
-            name = "socksClient.socks.socksHostResolver.resolveFromSocks5Server",
-            syntax = "socksClient.socks.socksHostResolver.resolveFromSocks5Server=true|false",
+            name = "socksClient.socks.socksHostResolver.resolveFromSocksServer",
+            syntax = "socksClient.socks.socksHostResolver.resolveFromSocksServer=true|false",
             valueType = Boolean.class
     )
     public static final PropertySpec<Boolean> SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER =
             PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-                    "socksClient.socks.socksHostResolver.resolveFromSocks5Server",
+                    "socksClient.socks.socksHostResolver.resolveFromSocksServer",
                     Boolean.FALSE));
 
     /**

@@ -291,37 +291,37 @@ SETTINGS:
 
   CHAINING SOCKS SETTINGS:
 
-    chaining.socks5.gssapiauthmethod.mechanismOid=OID
+    chaining.socks.gssapiauthmethod.mechanismOid=OID
         The object ID for the GSS-API authentication mechanism to the other SOCKS server (default value is 1.2.840.113554.1.2.2)
 
-    chaining.socks5.gssapiauthmethod.necReferenceImpl=true|false
+    chaining.socks.gssapiauthmethod.necReferenceImpl=true|false
         The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation (default value is false)
 
-    chaining.socks5.gssapiauthmethod.protectionLevels=SOCKS_GSSAPIAUTHMETHOD_PROTECTION_LEVELS
+    chaining.socks.gssapiauthmethod.protectionLevels=SOCKS_GSSAPIAUTHMETHOD_PROTECTION_LEVELS
         The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.) (default value is REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE)
 
-    chaining.socks5.gssapiauthmethod.serviceName=SERVICE_NAME
+    chaining.socks.gssapiauthmethod.serviceName=SERVICE_NAME
         The GSS-API service name for the other SOCKS server
 
-    chaining.socks5.gssapiauthmethod.suggestedConf=true|false
+    chaining.socks.gssapiauthmethod.suggestedConf=true|false
         The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default value is true)
 
-    chaining.socks5.gssapiauthmethod.suggestedInteg=-2147483648-2147483647
+    chaining.socks.gssapiauthmethod.suggestedInteg=-2147483648-2147483647
         The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF) (default value is 0)
 
-    chaining.socks5.methods=SOCKS_METHODS
+    chaining.socks.methods=SOCKS_METHODS
         The comma separated list of acceptable authentication methods to the other SOCKS server (default value is NO_AUTHENTICATION_REQUIRED)
 
-    chaining.socks5.socks5DatagramSocket.clientInfoUnavailable=true|false
+    chaining.socks.socksDatagramSocket.clientInfoUnavailable=true|false
         The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead) (default value is false)
 
-    chaining.socks5.socks5HostResolver.resolveFromSocksServer=true|false
+    chaining.socks.socksHostResolver.resolveFromSocksServer=true|false
         The boolean value to indicate if host names are to be resolved from the other SOCKS server (default value is false)
 
-    chaining.socks5.userpassauthmethod.password=PASSWORD
+    chaining.socks.userpassauthmethod.password=PASSWORD
         The password to be used to access the other SOCKS server
 
-    chaining.socks5.userpassauthmethod.username=USERNAME
+    chaining.socks.userpassauthmethod.username=USERNAME
         The username to be used to access the other SOCKS server
 
   CHAINING SOCKS5 SETTINGS:

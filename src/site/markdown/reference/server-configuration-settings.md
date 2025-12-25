@@ -83,17 +83,17 @@
 
 <table>
 <tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
-<tr><td><a href="#chaining-socks5-gssapiauthmethod-mechanismoid"><code>chaining.socks5.gssapiauthmethod.mechanismOid</code></a></td><td>Oid</td><td>The object ID for the GSS-API authentication mechanism to the other SOCKS server<br/><b>Default Value:</b> <code>1.2.840.113554.1.2.2</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapiauthmethod-necreferenceimpl"><code>chaining.socks5.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapiauthmethod-protectionlevels"><code>chaining.socks5.gssapiauthmethod.protectionLevels</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)<br/><b>Default Value:</b> <code>REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapiauthmethod-servicename"><code>chaining.socks5.gssapiauthmethod.serviceName</code></a></td><td>String</td><td>The GSS-API service name for the other SOCKS server</td></tr>
-<tr><td><a href="#chaining-socks5-gssapiauthmethod-suggestedconf"><code>chaining.socks5.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>true</code></td></tr>
-<tr><td><a href="#chaining-socks5-gssapiauthmethod-suggestedinteg"><code>chaining.socks5.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
-<tr><td><a href="#chaining-socks5-methods"><code>chaining.socks5.methods</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable authentication methods to the other SOCKS server<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
-<tr><td><a href="#chaining-socks5-socks5datagramsocket-clientinfounavailable"><code>chaining.socks5.socks5DatagramSocket.clientInfoUnavailable</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead)<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#chaining-socks5-socks5hostresolver-resolvefromsocksserver"><code>chaining.socks5.socks5HostResolver.resolveFromSocksServer</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the other SOCKS server<br/><b>Default Value:</b> <code>false</code></td></tr>
-<tr><td><a href="#chaining-socks5-userpassauthmethod-password"><code>chaining.socks5.userpassauthmethod.password</code></a></td><td>String</td><td>The password to be used to access the other SOCKS server</td></tr>
-<tr><td><a href="#chaining-socks5-userpassauthmethod-username"><code>chaining.socks5.userpassauthmethod.username</code></a></td><td>String</td><td>The username to be used to access the other SOCKS server</td></tr>
+<tr><td><a href="#chaining-socks-gssapiauthmethod-mechanismoid"><code>chaining.socks.gssapiauthmethod.mechanismOid</code></a></td><td>Oid</td><td>The object ID for the GSS-API authentication mechanism to the other SOCKS server<br/><b>Default Value:</b> <code>1.2.840.113554.1.2.2</code></td></tr>
+<tr><td><a href="#chaining-socks-gssapiauthmethod-necreferenceimpl"><code>chaining.socks.gssapiauthmethod.necReferenceImpl</code></a></td><td>Boolean</td><td>The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#chaining-socks-gssapiauthmethod-protectionlevels"><code>chaining.socks.gssapiauthmethod.protectionLevels</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)<br/><b>Default Value:</b> <code>REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE</code></td></tr>
+<tr><td><a href="#chaining-socks-gssapiauthmethod-servicename"><code>chaining.socks.gssapiauthmethod.serviceName</code></a></td><td>String</td><td>The GSS-API service name for the other SOCKS server</td></tr>
+<tr><td><a href="#chaining-socks-gssapiauthmethod-suggestedconf"><code>chaining.socks.gssapiauthmethod.suggestedConf</code></a></td><td>Boolean</td><td>The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>true</code></td></tr>
+<tr><td><a href="#chaining-socks-gssapiauthmethod-suggestedinteg"><code>chaining.socks.gssapiauthmethod.suggestedInteg</code></a></td><td>Integer</td><td>The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)<br/><b>Default Value:</b> <code>0</code></td></tr>
+<tr><td><a href="#chaining-socks-methods"><code>chaining.socks.methods</code></a></td><td>Comma Separated Values</td><td>The comma separated list of acceptable authentication methods to the other SOCKS server<br/><b>Default Value:</b> <code>NO_AUTHENTICATION_REQUIRED</code></td></tr>
+<tr><td><a href="#chaining-socks-socksdatagramsocket-clientinfounavailable"><code>chaining.socks.socksDatagramSocket.clientInfoUnavailable</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead)<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#chaining-socks-sockshostresolver-resolvefromsocksserver"><code>chaining.socks.socksHostResolver.resolveFromSocksServer</code></a></td><td>Boolean</td><td>The boolean value to indicate if host names are to be resolved from the other SOCKS server<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#chaining-socks-userpassauthmethod-password"><code>chaining.socks.userpassauthmethod.password</code></a></td><td>String</td><td>The password to be used to access the other SOCKS server</td></tr>
+<tr><td><a href="#chaining-socks-userpassauthmethod-username"><code>chaining.socks.userpassauthmethod.username</code></a></td><td>String</td><td>The username to be used to access the other SOCKS server</td></tr>
 </table>
 
 ## Chaining SOCKS5 Settings
@@ -416,13 +416,87 @@
 
 **Value Type:** [String](value-types.md#string)
 
-### chaining.socks5.gssapiauthmethod.mechanismOid
+### chaining.socks.gssapiauthmethod.mechanismOid
 
 **Description:** The object ID for the GSS-API authentication mechanism to the other SOCKS server
 
 **Value Type:** [Oid](value-types.md#oid)
 
 **Default Value:** `1.2.840.113554.1.2.2`
+
+### chaining.socks.gssapiauthmethod.necReferenceImpl
+
+**Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
+
+### chaining.socks.gssapiauthmethod.protectionLevels
+
+**Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
+
+**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
+
+**Default Value:** `REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE`
+
+### chaining.socks.gssapiauthmethod.serviceName
+
+**Description:** The GSS-API service name for the other SOCKS server
+
+**Value Type:** [String](value-types.md#string)
+
+### chaining.socks.gssapiauthmethod.suggestedConf
+
+**Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `true`
+
+### chaining.socks.gssapiauthmethod.suggestedInteg
+
+**Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
+
+**Value Type:** [Integer](value-types.md#integer)
+
+**Default Value:** `0`
+
+### chaining.socks.methods
+
+**Description:** The comma separated list of acceptable authentication methods to the other SOCKS server
+
+**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
+
+**Default Value:** `NO_AUTHENTICATION_REQUIRED`
+
+### chaining.socks.socksDatagramSocket.clientInfoUnavailable
+
+**Description:** The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
+
+### chaining.socks.socksHostResolver.resolveFromSocksServer
+
+**Description:** The boolean value to indicate if host names are to be resolved from the other SOCKS server
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
+
+### chaining.socks.userpassauthmethod.password
+
+**Description:** The password to be used to access the other SOCKS server
+
+**Value Type:** [String](value-types.md#string)
+
+### chaining.socks.userpassauthmethod.username
+
+**Description:** The username to be used to access the other SOCKS server
+
+**Value Type:** [String](value-types.md#string)
 
 ### chaining.socks5.gssapiauthmethod.mechanismOid
 
@@ -432,25 +506,9 @@
 
 ### chaining.socks5.gssapiauthmethod.necReferenceImpl
 
-**Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS server use the NEC reference implementation
-
-**Value Type:** [Boolean](value-types.md#boolean)
-
-**Default Value:** `false`
-
-### chaining.socks5.gssapiauthmethod.necReferenceImpl
-
 **Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the other SOCKS5 server use the NEC reference implementation
 
 **Value Type:** [Boolean](value-types.md#boolean)
-
-### chaining.socks5.gssapiauthmethod.protectionLevels
-
-**Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the other SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
-
-**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
-
-**Default Value:** `REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE`
 
 ### chaining.socks5.gssapiauthmethod.protectionLevels
 
@@ -460,23 +518,9 @@
 
 ### chaining.socks5.gssapiauthmethod.serviceName
 
-**Description:** The GSS-API service name for the other SOCKS server
-
-**Value Type:** [String](value-types.md#string)
-
-### chaining.socks5.gssapiauthmethod.serviceName
-
 **Description:** The GSS-API service name for the other SOCKS5 server
 
 **Value Type:** [String](value-types.md#string)
-
-### chaining.socks5.gssapiauthmethod.suggestedConf
-
-**Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
-
-**Value Type:** [Boolean](value-types.md#boolean)
-
-**Default Value:** `true`
 
 ### chaining.socks5.gssapiauthmethod.suggestedConf
 
@@ -486,39 +530,15 @@
 
 ### chaining.socks5.gssapiauthmethod.suggestedInteg
 
-**Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
-
-**Value Type:** [Integer](value-types.md#integer)
-
-**Default Value:** `0`
-
-### chaining.socks5.gssapiauthmethod.suggestedInteg
-
 **Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the other SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
 **Value Type:** [Integer](value-types.md#integer)
 
 ### chaining.socks5.methods
 
-**Description:** The comma separated list of acceptable authentication methods to the other SOCKS server
-
-**Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
-
-**Default Value:** `NO_AUTHENTICATION_REQUIRED`
-
-### chaining.socks5.methods
-
 **Description:** The comma separated list of acceptable authentication methods to the other SOCKS5 server
 
 **Value Type:** [SOCKS5 Methods](value-types.md#socks5-methods)
-
-### chaining.socks5.socks5DatagramSocket.clientInfoUnavailable
-
-**Description:** The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead)
-
-**Value Type:** [Boolean](value-types.md#boolean)
-
-**Default Value:** `false`
 
 ### chaining.socks5.socks5DatagramSocket.clientInfoUnavailable
 
@@ -532,29 +552,9 @@
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
-### chaining.socks5.socks5HostResolver.resolveFromSocksServer
-
-**Description:** The boolean value to indicate if host names are to be resolved from the other SOCKS server
-
-**Value Type:** [Boolean](value-types.md#boolean)
-
-**Default Value:** `false`
-
-### chaining.socks5.userpassauthmethod.password
-
-**Description:** The password to be used to access the other SOCKS server
-
-**Value Type:** [String](value-types.md#string)
-
 ### chaining.socks5.userpassauthmethod.password
 
 **Description:** The password to be used to access the other SOCKS5 server
-
-**Value Type:** [String](value-types.md#string)
-
-### chaining.socks5.userpassauthmethod.username
-
-**Description:** The username to be used to access the other SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 

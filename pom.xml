@@ -39,7 +39,7 @@
 		<junit.version>4.13.2</junit.version>
 		<slf4j.version>2.0.12</slf4j.version>
 		<maven.javadoc.skippedModules>
-			jargyle-test-help,jargyle-test-netty-example-socksproxy,jargyle-test-echo,jargyle-test-echo-server-performance,jargyle-argmatey,jargyle-cli
+			jargyle-test-help,jargyle-test-netty-example-socksproxy,jargyle-test-socks-server,jargyle-test-echo-endpoints,jargyle-test-echo-endpoints-load,jargyle-argmatey,jargyle-cli
 		</maven.javadoc.skippedModules>
 		<docsDirectory>${project.basedir}${file.separator}docs</docsDirectory>
 		<loggingConfigFile>${project.basedir}${file.separator}logging.properties</loggingConfigFile>
@@ -280,11 +280,12 @@
 		<module>jargyle-client</module>
 		<module>jargyle-server</module>
 		<module>jargyle-test-netty-example-socksproxy</module>
-		<module>jargyle-test-echo</module>
-		<module>jargyle-test-echo-server-performance</module>
+		<module>jargyle-test-socks-server</module>
+		<module>jargyle-test-echo-endpoints</module>
+		<module>jargyle-test-echo-endpoints-load</module>
 		<module>jargyle-argmatey</module>
 		<module>jargyle-cli</module>
 		<module>jargyle-report-aggregate</module>
 		<module>jargyle-distributions</module>
-    </modules>
+	</modules>
 </project>

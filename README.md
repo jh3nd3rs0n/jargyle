@@ -62,20 +62,22 @@ The following is a simple overview of the directory.
 
 -   `jargyle-server/`: Maven module for the SOCKS server API
 
--   `jargyle-test-echo/`: Maven module for clients and servers that 
-    send/receive data and receive/send back the same data. The clients and one 
-    of the servers use the SOCKS client API. When testing the clients and one 
-    of the servers, the SOCKS client API and the SOCKS server API are also 
-    tested.
+-   `jargyle-test-echo-endpoints/`: Maven module for clients and servers that
+    implement the Echo protocol described in RFC 862. The clients and one of 
+    the servers use the SOCKS client API. When testing the clients and one of 
+    the servers, the SOCKS client API and the SOCKS server API are also tested.
 
--   `jargyle-test-echo-server-performance/`: Maven module for performance 
-    testing of servers that receive data and send back the same data. It 
-    includes performance testing of the SOCKS server API.
+-   `jargyle-test-echo-endpoints-load/`: Maven module for load testing of servers 
+    that implement the Echo protocol described in RFC 862. It includes load 
+    testing of the SOCKS server API.
 
 -   `jargyle-test-help/`: Maven module for the API for help with testing
 
 -   `jargyle-test-netty-example-socksproxy/`: Maven module for the modified 
     version of the Netty example SOCKS proxy. It is used for testing.
+-   
+-   `jargyle-test-socks-server/`: Maven module for a SOCKS server to be used 
+    for testing.
 
 -   `src/site/`: Contains files used to generate `docs/`
 
@@ -165,16 +167,16 @@ These commands are to be executed at the top directory of Jargyle.
     The option `-Pcoverage` can be removed if you do not want the aggregated 
     test coverage reports produced.
     
--   `mvn clean verify --projects=\!jargyle-test-echo-server-performance,\!jargyle-distributions -Pcoverage`: 
+-   `mvn clean verify --projects=\!jargyle-test-echo-endpoints-load,\!jargyle-distributions -Pcoverage`: 
     Performs a clean build, executes all tests except the ones from the 
-    project `jargyle-test-echo-server-performance`, skips building the binary 
+    project `jargyle-test-echo-endpoints-load`, skips building the binary 
     and source distributions, and produces the aggregated test coverage 
     reports.
     
-    The argument `\!jargyle-test-echo-server-performance,` from the option 
-    `--projects` can be removed if you want the performance tests to be 
-    executed. If the performance tests are executed, the results can be found 
-    in `jargyle-test-echo-server-performance/target/performance-results/`.
+    The argument `\!jargyle-test-echo-endpoints-load,` from the option 
+    `--projects` can be removed if you want the load tests to be executed. If 
+    the load tests are executed, the results can be found in 
+    `jargyle-test-echo-endpoints-load/target/load-test-results/`.
     
     The aggregated test coverage reports can be found in 
     `jargyle-report-aggregate/target/`. 

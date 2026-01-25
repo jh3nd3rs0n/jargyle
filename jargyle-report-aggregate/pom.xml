@@ -53,7 +53,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-test-echo</artifactId>
+			<artifactId>jargyle-test-echo-endpoints</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

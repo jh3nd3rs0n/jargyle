@@ -128,19 +128,7 @@ public final class ChainingSocks5SettingSpecConstants {
 					"chaining.socks5.socks5DatagramSocket.clientInfoUnavailable",
 					Socks5PropertySpecConstants.SOCKS5_SOCKS5_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE.getDefaultProperty().getValue()));
 
-	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate if host names "
-					+ "are to be resolved from the other SOCKS5 server",
-			name = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",
-			syntax = "chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true|false",
-			valueType = Boolean.class
-	)	
-	public static final SettingSpec<Boolean> CHAINING_SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER =
-			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
-					Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER.getDefaultProperty().getValue()));
-
-	@NameValuePairValueSpecDoc(
+    @NameValuePairValueSpecDoc(
 			description = "The password to be used to access the other SOCKS5 "
 					+ "server",
 			name = "chaining.socks5.userpassauthmethod.password",

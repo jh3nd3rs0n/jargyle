@@ -20,11 +20,6 @@ public class CommandTest {
         Assert.assertEquals(Command.UDP_ASSOCIATE, Command.valueOfByte((byte) 0x03));
     }
 
-    @Test
-    public void testValueOfByteByte04() {
-        Assert.assertEquals(Command.RESOLVE, Command.valueOfByte((byte) 0x04));
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void testValueOfByteByteForIllegalArgumentException01() {
         Command.valueOfByte((byte) 0x00);
@@ -48,11 +43,6 @@ public class CommandTest {
     @Test
     public void testValueOfStringString03() {
         Assert.assertEquals(Command.UDP_ASSOCIATE, Command.valueOfString("UDP_ASSOCIATE"));
-    }
-
-    @Test
-    public void testValueOfStringString04() {
-        Assert.assertEquals(Command.RESOLVE, Command.valueOfString("RESOLVE"));
     }
 
     @Test(expected = IllegalArgumentException.class)

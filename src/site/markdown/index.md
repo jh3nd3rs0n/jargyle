@@ -41,6 +41,8 @@ existing documentation will be updated to reflect these changes.
 
 -   **Proxy Chaining**: Route traffic through multiple SOCKS servers.
 
+-   **Host Resolution**: Resolve hostnames locally or through a SOCKS5 server.
+
 -   **Rule-Based Traffic Management (for the SOCKS server and the SOCKS server 
     API)**:
   

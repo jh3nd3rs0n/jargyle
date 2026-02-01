@@ -241,6 +241,28 @@ public class Socks5ValueDerivationHelperTest {
     }
 
     @Test
+    public void testGetSocks5Socks5HostResolverResolveFromSocks5ServerFromProperties01() {
+        Properties properties = Properties.of();
+        Assert.assertFalse(Socks5ValueDerivationHelper.getSocks5Socks5HostResolverResolveFromSocks5ServerFrom(properties));
+    }
+
+    @Test
+    public void testGetSocks5Socks5HostResolverResolveFromSocks5ServerFromProperties02() {
+        Properties properties = Properties.of(
+                SocksPropertySpecConstants.SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER.newProperty(
+                        true));
+        Assert.assertTrue(Socks5ValueDerivationHelper.getSocks5Socks5HostResolverResolveFromSocks5ServerFrom(properties));
+    }
+
+    @Test
+    public void testGetSocks5Socks5HostResolverResolveFromSocks5ServerFromProperties03() {
+        Properties properties = Properties.of(
+                Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER.newProperty(
+                        true));
+        Assert.assertTrue(Socks5ValueDerivationHelper.getSocks5Socks5HostResolverResolveFromSocks5ServerFrom(properties));
+    }
+
+    @Test
     public void testGetSocks5UserpassAuthMethodPasswordFromProperties01() {
         Properties properties = Properties.of();
         Assert.assertArrayEquals(

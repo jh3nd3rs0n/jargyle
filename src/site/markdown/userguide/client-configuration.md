@@ -9,6 +9,7 @@
     -   [Accessing the SOCKS Server Using No Authentication](#accessing-the-socks-server-using-no-authentication)
     -   [Accessing the SOCKS Server Using Username Password Authentication](#accessing-the-socks-server-using-username-password-authentication)
     -   [Accessing the SOCKS Server Using GSS-API Authentication](#accessing-the-socks-server-using-gss-api-authentication)
+-   [Resolving Host Names From the SOCKS5 Server](#resolving-host-names-from-the-socks5-server)
 -   [Routing Traffic Through a Specified Chain of SOCKS Servers](#routing-traffic-through-a-specified-chain-of-socks-servers)
 
 ## Overview
@@ -420,6 +421,76 @@ with its realm as `JARGYLE.NET`.
 The property `socksClient.socks5.gssapiauthmethod.serviceName` with the value 
 `rcmd/jargyle.net` is the GSS-API service name (or the Kerberos service 
 principal) for the SOCKS server residing at `jargyle.net`.
+
+## Resolving Host Names From the SOCKS5 Server
+
+By default, host name resolution from the SOCKS5 server occurs only when a 
+`Socket` is created with a host name and port number.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        Socket socket = netObjectFactory.newSocket("google.com", 443);
+        // ...
+    }
+}
+```
+
+The client API comes with a `HostResolver` object to resolve host names. By 
+default, the `HostResolver` object resolves host names through the local 
+system. To enable the `HostResolver` object to have the host names resolved 
+from the SOCKS5 server instead, you would need to set the property 
+`socksClient.socks5.socks5HostResolver.resolveFromSocks5Server` set to 
+`true`. This property can only be used if the SOCKS5 server supports handling 
+the SOCKS5 RESOLVE request.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        System.setProperty(
+            "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+            "true");
+        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
+        HostResolver hostResolver = netObjectFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("google.com");
+        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        // ...
+    }
+}
+```
 
 ## Routing Traffic Through a Specified Chain of SOCKS Servers
 

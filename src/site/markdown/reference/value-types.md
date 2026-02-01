@@ -585,6 +585,7 @@ CONNECT|BIND|UDP_ASSOCIATE|RESOLVE
 -   `CONNECT` : A request to the SOCKS server to connect to another server
 -   `BIND` : A request to the SOCKS server to bind to another address and port in order to receive an inbound connection
 -   `UDP_ASSOCIATE` : A request to the SOCKS server to establish an association within the UDP relay process to handle UDP datagrams
+-   `RESOLVE` : A request to the SOCKS server to resolve a host name
 
 **Class:** `com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Command`
 

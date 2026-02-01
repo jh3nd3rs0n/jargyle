@@ -64,6 +64,12 @@ public final class SocksValueDerivationHelper {
                 SocksPropertySpecConstants.SOCKS_SOCKS_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE);
     }
 
+    public static boolean getSocksSocksHostResolverResolveFromSocksServerFrom(
+            final Properties properties) {
+        return properties.getValue(
+                SocksPropertySpecConstants.SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER);
+    }
+
     public static EncryptedPassword getSocksUserpassAuthMethodPasswordFrom(
             final Properties properties) {
         return properties.getValue(

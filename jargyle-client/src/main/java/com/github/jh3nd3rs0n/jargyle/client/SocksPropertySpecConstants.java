@@ -202,6 +202,25 @@ public final class SocksPropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
+     * {@code socksClient.socks.socksHostResolver.resolveFromSocksServer}:
+     * the {@code Boolean} value to indicate if host names are to be
+     * resolved from the SOCKS server (default value is {@code false}).
+     */
+    @NameValuePairValueSpecDoc(
+            defaultValue = "false",
+            description = "The boolean value to indicate if host names "
+                    + "are to be resolved from the SOCKS server",
+            name = "socksClient.socks.socksHostResolver.resolveFromSocksServer",
+            syntax = "socksClient.socks.socksHostResolver.resolveFromSocksServer=true|false",
+            valueType = Boolean.class
+    )
+    public static final PropertySpec<Boolean> SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER =
+            PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
+                    "socksClient.socks.socksHostResolver.resolveFromSocksServer",
+                    Boolean.FALSE));
+
+    /**
+     * {@code PropertySpec} constant for
      * {@code socksClient.socks.userpassauthmethod.password}: the
      * {@code EncryptedPassword} for the password to be used to access the
      * SOCKS server.

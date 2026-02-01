@@ -315,6 +315,9 @@ SETTINGS:
     chaining.socks.socksDatagramSocket.clientInfoUnavailable=true|false
         The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS server (an address and port of all zeros is sent instead) (default value is false)
 
+    chaining.socks.socksHostResolver.resolveFromSocksServer=true|false
+        The boolean value to indicate if host names are to be resolved from the other SOCKS server (default value is false)
+
     chaining.socks.userpassauthmethod.password=PASSWORD
         The password to be used to access the other SOCKS server
 
@@ -346,6 +349,9 @@ SETTINGS:
 
     chaining.socks5.socks5DatagramSocket.clientInfoUnavailable=true|false
         The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the other SOCKS5 server (an address and port of all zeros is sent instead)
+
+    chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true|false
+        The boolean value to indicate if host names are to be resolved from the other SOCKS5 server
 
     chaining.socks5.userpassauthmethod.password=PASSWORD
         The password to be used to access the other SOCKS5 server
@@ -1346,6 +1352,9 @@ VALUE TYPES:
 
     UDP_ASSOCIATE
         A request to the SOCKS server to establish an association within the UDP relay process to handle UDP datagrams
+
+    RESOLVE
+        A request to the SOCKS server to resolve a host name
 
   SOCKS5_USERPASSAUTHMETHOD_USER_REPOSITORY: TYPE_NAME:INITIALIZATION_STRING
 

@@ -135,6 +135,19 @@ public final class ChainingSocksSettingSpecConstants {
                     SocksPropertySpecConstants.SOCKS_SOCKS_DATAGRAM_SOCKET_CLIENT_INFO_UNAVAILABLE.getDefaultProperty().getValue()));
 
     @NameValuePairValueSpecDoc(
+            defaultValue = "false",
+            description = "The boolean value to indicate if host names "
+                    + "are to be resolved from the other SOCKS server",
+            name = "chaining.socks.socksHostResolver.resolveFromSocksServer",
+            syntax = "chaining.socks.socksHostResolver.resolveFromSocksServer=true|false",
+            valueType = Boolean.class
+    )
+    public static final SettingSpec<Boolean> CHAINING_SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER =
+            SETTING_SPECS.addThenGet(new BooleanSettingSpec(
+                    "chaining.socks.socksHostResolver.resolveFromSocksServer",
+                    SocksPropertySpecConstants.SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER.getDefaultProperty().getValue()));
+
+    @NameValuePairValueSpecDoc(
             description = "The password to be used to access the other SOCKS "
                     + "server",
             name = "chaining.socks.userpassauthmethod.password",

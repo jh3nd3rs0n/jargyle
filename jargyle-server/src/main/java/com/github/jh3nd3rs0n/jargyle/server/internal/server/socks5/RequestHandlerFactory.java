@@ -48,6 +48,7 @@ abstract class RequestHandlerFactory {
             }
             put(new BindRequestHandlerFactory());
             put(new ConnectRequestHandlerFactory());
+            put(new ResolveRequestHandlerFactory());
             put(new UdpAssociateRequestHandlerFactory());
             initialized = true;
         } finally {

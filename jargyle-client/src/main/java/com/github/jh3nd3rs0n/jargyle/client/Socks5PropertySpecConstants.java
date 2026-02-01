@@ -189,6 +189,24 @@ public final class Socks5PropertySpecConstants {
 
     /**
      * {@code PropertySpec} constant for
+     * {@code socksClient.socks5.socks5HostResolver.resolveFromSocks5Server}:
+     * the {@code Boolean} value to indicate if host names are to be
+     * resolved from the SOCKS5 server.
+     */
+    @NameValuePairValueSpecDoc(
+            description = "The boolean value to indicate if host names "
+                    + "are to be resolved from the SOCKS5 server",
+            name = "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+            syntax = "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server=true|false",
+            valueType = Boolean.class
+    )
+    public static final PropertySpec<Boolean> SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER =
+            PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
+                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    null));
+
+    /**
+     * {@code PropertySpec} constant for
      * {@code socksClient.socks5.userpassauthmethod.password}: the
      * {@code EncryptedPassword} for the password to be used to access the
      * SOCKS5 server.

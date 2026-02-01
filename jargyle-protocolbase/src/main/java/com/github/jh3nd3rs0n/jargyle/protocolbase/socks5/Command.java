@@ -50,7 +50,17 @@ public enum Command {
                     + "UDP datagrams",
             value = "UDP_ASSOCIATE"
     )
-    UDP_ASSOCIATE((byte) 0x03);
+    UDP_ASSOCIATE((byte) 0x03),
+
+    /**
+     * A request to the SOCKS server to resolve a host name.
+     */
+    @EnumValueDoc(
+            description = "A request to the SOCKS server to resolve a host "
+                    + "name",
+            value = "RESOLVE"
+    )
+    RESOLVE((byte) 0x04);
 
     /**
      * The {@code byte} value associated with this {@code Command}.

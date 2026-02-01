@@ -106,6 +106,17 @@ final class Socks5ValueDerivationHelper {
                 properties);
     }
 
+    public static boolean getSocks5Socks5HostResolverResolveFromSocks5ServerFrom(
+            final Properties properties) {
+        Boolean resolveFromSocks5Server = properties.getValue(
+                Socks5PropertySpecConstants.SOCKS5_SOCKS5_HOST_RESOLVER_RESOLVE_FROM_SOCKS5_SERVER);
+        if (resolveFromSocks5Server != null) {
+            return resolveFromSocks5Server;
+        }
+        return SocksValueDerivationHelper.getSocksSocksHostResolverResolveFromSocksServerFrom(
+                properties);
+    }
+
     public static EncryptedPassword getSocks5UserpassAuthMethodPasswordFrom(
             final Properties properties) {
         EncryptedPassword password = properties.getValue(

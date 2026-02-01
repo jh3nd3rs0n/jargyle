@@ -52,7 +52,7 @@ public final class Socks5NetObjectFactory extends SocksNetObjectFactory {
 	
 	@Override
 	public HostResolver newHostResolver() {
-		return new HostResolver();
+		return new Socks5HostResolver(this.socks5ClientAgent);
 	}
 
 	@Override

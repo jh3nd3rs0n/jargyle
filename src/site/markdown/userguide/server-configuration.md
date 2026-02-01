@@ -1723,7 +1723,8 @@ jargyle start-server \
     --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
     --setting=chaining.socks5.userpassauthmethod.password=opensesame \
     --setting=chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true \
-    --setting=chaining.socksServerUri=socks5://gamma-alpha.net:33331
+    --setting=chaining.socksServerUri=socks5://gamma-alpha.net:33331 \
+    --setting=chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true
 ```
 
 Server configuration file example:
@@ -1749,7 +1750,7 @@ Server configuration file example:
         <setting>
             <name>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</name>
             <value>true</value>
-            <doc>The SOCKS5-enabled host resolver is used for resolving the host name 'beta-alpha.net'</doc>
+            <doc>The SOCKS5-enabled host resolver will resolve from alpha-alpha.net:11111 the host name of the next SOCKS server in the chain: beta-alpha.net</doc>
         </setting>
         <setting>
             <name>chaining.socksServerUri</name>
@@ -1773,12 +1774,17 @@ Server configuration file example:
         <setting>
             <name>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</name>
             <value>true</value>
-            <doc>The SOCKS5-enabled host resolver is used for resolving the host name 'gamma-alpha.net'</doc>
+            <doc>The SOCKS5-enabled host resolver will resolve from beta-alpha.net:22221 the host name of the next SOCKS server in the chain: gamma-alpha.net</doc>
         </setting>
         <setting>
             <name>chaining.socksServerUri</name>
             <value>socks5://gamma-alpha.net:33331</value>
-        </setting>        
+        </setting>
+        <setting>
+            <name>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</name>
+            <value>true</value>
+            <doc>The SOCKS5-enabled host resolver will resolve from gamma-alpha.net:33331 other host names</doc>
+        </setting>
     </settings>
 </configuration>
 ```
@@ -1807,8 +1813,9 @@ public class ServerApp {
                 "chaining.socks5.gssapiauthmethod.serviceName",
                 "rcmd/alpha-alpha.net"),
             /*
-             * The SOCKS5-enabled host resolver is used for resolving the host 
-             * name 'beta-alpha.net'
+             * The SOCKS5-enabled host resolver will resolve from 
+             * alpha-alpha.net:11111 the host name of the next SOCKS server in 
+             * the chain: beta-alpha.net
              */
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",
@@ -1825,15 +1832,23 @@ public class ServerApp {
                 "chaining.socks5.userpassauthmethod.password",
                 "opensesame"),
             /*
-             * The SOCKS5-enabled host resolver is used for resolving the host
-             * name 'gamma-alpha.net'
+             * The SOCKS5-enabled host resolver will resolve from 
+             * beta-alpha.net:22221 the host name of the next SOCKS server in 
+             * the chain: gamma-alpha.net
              */
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",
                 "true"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socksServerUri", 
-                "socks5://gamma-alpha.net:33331")
+                "socks5://gamma-alpha.net:33331"),
+            /*
+             * The SOCKS5-enabled host resolver will resolve from 
+             * gamma-alpha.net:33331 other host names
+             */
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server",
+                "true")    
         ))).start();
     }
 }

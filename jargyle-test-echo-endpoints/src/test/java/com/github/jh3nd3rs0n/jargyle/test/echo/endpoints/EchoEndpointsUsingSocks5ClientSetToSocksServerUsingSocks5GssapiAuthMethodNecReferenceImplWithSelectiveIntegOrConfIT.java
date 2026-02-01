@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
@@ -14,8 +14,6 @@ import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.gssapiauthmethod.Protec
 import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.AbstractSocksServer;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.JargyleSocksServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -28,15 +26,15 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfIT {
+public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfIT {
 
     private static EchoDatagramServer echoDatagramServer;
     private static int echoDatagramServerPort;
     private static EchoServer echoServer;
     private static int echoServerPort;
 
-    private static AbstractSocksServer socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection;
-    private static int socksServerPortUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection;
+    private static AbstractSocksServer socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf;
+    private static int socksServerPortUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf;
 
     @Rule
     public Timeout globalTimeout = Timeout.builder()
@@ -44,7 +42,7 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
             .withLookingForStuckThread(true)
             .build();
 
-    private static AbstractSocksServer newSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection() throws IOException {
+    private static AbstractSocksServer newSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf() throws IOException {
         AbstractSocksServer socksServer = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
@@ -65,12 +63,12 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE.newSetting(
                         PositiveInteger.valueOf(EchoDatagramServer.RECEIVE_BUFFER_SIZE)))));
         socksServer.start();
-        socksServerPortUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection =
+        socksServerPortUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf =
                 socksServer.getPort();
         return socksServer;
     }
 
-    private static NetObjectFactory newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection() {
+    private static SocksClient newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf() {
         Properties properties = Properties.of(
                 Socks5PropertySpecConstants.SOCKS5_METHODS.newProperty(
                         Methods.of(Method.GSSAPI)),
@@ -88,29 +86,28 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
                         Boolean.TRUE));
         return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         InetAddress.getLoopbackAddress().getHostAddress(),
-                        socksServerPortUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection)
-                .newSocksClient(properties)
-                .newSocksNetObjectFactory();
+                        socksServerPortUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf)
+                .newSocksClient(properties);
     }
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
         GssEnvironment.setUpBeforeClass(
-                EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfIT.class);
+                EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfIT.class);
         echoDatagramServer = EchoDatagramServer.newInstance(0);
         echoDatagramServer.start();
         echoDatagramServerPort = echoDatagramServer.getPort();
         echoServer = EchoServer.newInstance(0);
         echoServer.start();
         echoServerPort = echoServer.getPort();
-        socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection =
-                newSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection();
+        socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf =
+                newSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf();
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws IOException {
         GssEnvironment.tearDownAfterClass(
-                EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfIT.class);
+                EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfIT.class);
         if (echoDatagramServer != null
                 && !echoDatagramServer.getState().equals(EchoDatagramServer.State.STOPPED)) {
             echoDatagramServer.stop();
@@ -119,108 +116,108 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
                 && !echoServer.getState().equals(EchoServer.State.STOPPED)) {
             echoServer.stop();
         }
-        if (socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection != null
-                && !socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection.getState().equals(
+        if (socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf != null
+                && !socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf.getState().equals(
                         AbstractSocksServer.State.STOPPED)) {
-            socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection.stop();
+            socksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf.stop();
         }
         ThreadHelper.interruptibleSleepForThreeSeconds();
     }
 
     @Test
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf01() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf01() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_01;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf02() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf02() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_02;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf03() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf03() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_03;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf04() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf04() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_04;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf05() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf05() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_05;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf01() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf01() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_01;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf02() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf02() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_02;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf03() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf03() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_03;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf04() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf04() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_04;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf05() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf05() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection()));
+                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_05;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
     }
 
     @Test
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf01() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf01() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection())
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_01;
         String returningString = echServer.startThenEchoThenStop(
@@ -229,9 +226,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf02() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf02() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection())
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_02;
         String returningString = echServer.startThenEchoThenStop(
@@ -240,9 +237,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf03() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf03() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection())
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_03;
         String returningString = echServer.startThenEchoThenStop(
@@ -251,9 +248,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf04() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf04() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection())
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_04;
         String returningString = echServer.startThenEchoThenStop(
@@ -262,9 +259,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf05() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf05() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConfProtection())
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodNecReferenceImplWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_05;
         String returningString = echServer.startThenEchoThenStop(

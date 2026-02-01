@@ -12,8 +12,6 @@ import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.AbstractSocksServer;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.JargyleSocksServer;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -38,7 +36,7 @@ public class EchoDatagramServerBehindJargyleSocksServerUsingSslIT {
                 className + ".txt", "Class " + className);
     }
 
-    private static NetObjectFactory newSocks5NetObjectFactoryUsingSsl(
+    private static SocksClient newSocks5ClientUsingSsl(
             final String socksServerHostAddress, final int socksServerPort) {
         Properties properties = Properties.of(
                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(
@@ -56,8 +54,7 @@ public class EchoDatagramServerBehindJargyleSocksServerUsingSslIT {
         return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
-                .newSocksClient(properties)
-                .newSocksNetObjectFactory();
+                .newSocksClient(properties);
     }
 
     private static AbstractSocksServer newJargyleSocksServerUsingSsl() {
@@ -136,8 +133,8 @@ public class EchoDatagramServerBehindJargyleSocksServerUsingSslIT {
         @Override
         public void run() {
             EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                    new NetObjectFactoryToDatagramSocketFactoryAdapter(
-                            newSocks5NetObjectFactoryUsingSsl(
+                    new SocksDatagramSocketFactory(
+                            newSocks5ClientUsingSsl(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));
             try {

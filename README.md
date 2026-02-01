@@ -75,9 +75,6 @@ The following is a simple overview of the directory.
 
 -   `jargyle-test-netty-example-socksproxy/`: Maven module for the modified 
     version of the Netty example SOCKS proxy. It is used for testing.
--   
--   `jargyle-test-socks-server/`: Maven module for a SOCKS server to be used 
-    for testing.
 
 -   `src/site/`: Contains files used to generate `docs/`
 

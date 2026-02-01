@@ -1,33 +1,26 @@
-package com.github.jh3nd3rs0n.jargyle.test.socks.server;
+package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints;
 
-import com.github.jh3nd3rs0n.jargyle.server.Configuration;
-import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+import com.github.jh3nd3rs0n.jargyle.test.netty.example.socksproxy.SocksServer;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-public final class JargyleSocksServer extends AbstractSocksServer {
+public final class NettySocksServer extends AbstractSocksServer {
 
     private final SocksServer socksServer;
 
-    public JargyleSocksServer(final Configuration configuration) {
-        this.socksServer = new SocksServer(configuration);
+    public NettySocksServer() {
+        this.socksServer = new SocksServer();
     }
 
     @Override
     public InetAddress getInetAddress() {
-        try {
-            return this.socksServer.getHost().toInetAddress();
-        } catch (UnknownHostException e) {
-            throw new UncheckedIOException(e);
-        }
+        return this.socksServer.getInetAddress();
     }
 
     @Override
     public int getPort() {
-        return this.socksServer.getPort().intValue();
+        return this.socksServer.getPort();
     }
 
     @Override

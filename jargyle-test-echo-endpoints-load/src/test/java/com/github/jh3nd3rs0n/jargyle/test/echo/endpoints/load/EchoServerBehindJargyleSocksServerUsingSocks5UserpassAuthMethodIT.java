@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.load;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
@@ -17,8 +17,6 @@ import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.*;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.AbstractSocksServer;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.JargyleSocksServer;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +41,7 @@ public class EchoServerBehindJargyleSocksServerUsingSocks5UserpassAuthMethodIT {
                 className + ".txt", "Class " + className);
     }
 
-    private static NetObjectFactory newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+    private static SocksClient newSocks5ClientUsingSocks5UserpassAuthMethod(
             final String socksServerHostAddress,
             final int socksServerPort) {
         Properties properties = Properties.of(
@@ -56,8 +54,7 @@ public class EchoServerBehindJargyleSocksServerUsingSocks5UserpassAuthMethodIT {
         return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
-                .newSocksClient(properties)
-                .newSocksNetObjectFactory();
+                .newSocksClient(properties);
     }
 
     private static AbstractSocksServer newJargyleSocksServerUsingSocks5UserpassAuthMethod() {
@@ -131,8 +128,8 @@ public class EchoServerBehindJargyleSocksServerUsingSocks5UserpassAuthMethodIT {
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    new NetObjectFactoryToSocketFactoryAdapter(
-                            newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                    new SocksSocketFactory(
+                            newSocks5ClientUsingSocks5UserpassAuthMethod(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));
             try {

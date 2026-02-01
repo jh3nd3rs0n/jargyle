@@ -1,13 +1,13 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.load;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.EchoServer;
-import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.NetObjectFactoryToSocketFactoryAdapter;
+import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.NettySocksServer;
+import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.SocksSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.NettySocksServer;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,13 +32,12 @@ public class EchoServerBehindNettySocksServerIT {
                 className + ".txt", "Class " + className);
     }
 
-    private static NetObjectFactory newSocks5NetObjectFactory(
+    private static SocksClient newSocks5Client(
             final String socksServerHostAddress, final int socksServerPort) {
         return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
-                .newSocksClient(Properties.of())
-                .newSocksNetObjectFactory();
+                .newSocksClient(Properties.of());
     }
 
     @Test
@@ -94,8 +93,8 @@ public class EchoServerBehindNettySocksServerIT {
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    new NetObjectFactoryToSocketFactoryAdapter(
-                            newSocks5NetObjectFactory(
+                    new SocksSocketFactory(
+                            newSocks5Client(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));
             try {

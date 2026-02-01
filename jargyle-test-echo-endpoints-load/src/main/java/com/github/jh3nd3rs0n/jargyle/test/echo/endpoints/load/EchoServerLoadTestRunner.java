@@ -1,8 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.load;
 
+import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.AbstractSocksServer;
 import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.concurrent.ExecutorsHelper;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.AbstractSocksServer;
 
 import java.io.IOException;
 import java.net.InetAddress;

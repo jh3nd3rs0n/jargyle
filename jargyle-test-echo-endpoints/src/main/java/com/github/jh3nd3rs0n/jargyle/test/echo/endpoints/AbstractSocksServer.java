@@ -1,4 +1,4 @@
-package com.github.jh3nd3rs0n.jargyle.test.socks.server;
+package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints;
 
 import java.io.IOException;
 import java.net.InetAddress;

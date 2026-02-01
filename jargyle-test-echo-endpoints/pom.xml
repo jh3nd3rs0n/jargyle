@@ -43,7 +43,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.jh3nd3rs0n</groupId>
-			<artifactId>jargyle-test-socks-server</artifactId>
+			<artifactId>jargyle-test-netty-example-socksproxy</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
@@ -74,7 +74,7 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>**/EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5GssapiAuthMethod*IT</exclude>
+						<exclude>**/EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod*IT</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

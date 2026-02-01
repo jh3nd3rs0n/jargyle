@@ -16,8 +16,6 @@ import com.github.jh3nd3rs0n.jargyle.test.help.net.DatagramServer;
 import com.github.jh3nd3rs0n.jargyle.test.help.net.Server;
 import com.github.jh3nd3rs0n.jargyle.test.help.security.KeyStoreResourceConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.AbstractSocksServer;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.JargyleSocksServer;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,7 +40,7 @@ public class EchoServerBehindJargyleSocksServerUsingSslAndSocks5UserpassAuthMeth
                 className + ".txt", "Class " + className);
     }
 
-    private static NetObjectFactory newSocks5NetObjectFactoryUsingSslAndSocks5UserpassAuthMethod(
+    private static SocksClient newSocks5ClientUsingSslAndSocks5UserpassAuthMethod(
             final String socksServerHostAddress,
             final int socksServerPort) {
         Properties properties = Properties.of(
@@ -67,8 +65,7 @@ public class EchoServerBehindJargyleSocksServerUsingSslAndSocks5UserpassAuthMeth
         return SocksServerUriScheme.SOCKS5.newSocksServerUri(
                         socksServerHostAddress,
                         socksServerPort)
-                .newSocksClient(properties)
-                .newSocksNetObjectFactory();
+                .newSocksClient(properties);
     }
 
     private static AbstractSocksServer newJargyleSocksServerUsingSslAndSocks5UserpassAuthMethod() {
@@ -152,8 +149,8 @@ public class EchoServerBehindJargyleSocksServerUsingSslAndSocks5UserpassAuthMeth
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    new NetObjectFactoryToSocketFactoryAdapter(
-                            newSocks5NetObjectFactoryUsingSslAndSocks5UserpassAuthMethod(
+                    new SocksSocketFactory(
+                            newSocks5ClientUsingSslAndSocks5UserpassAuthMethod(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));
             try {

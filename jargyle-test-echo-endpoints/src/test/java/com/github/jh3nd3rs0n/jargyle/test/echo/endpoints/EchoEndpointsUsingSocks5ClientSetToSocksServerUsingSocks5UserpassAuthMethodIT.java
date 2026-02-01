@@ -1,9 +1,9 @@
 package com.github.jh3nd3rs0n.jargyle.test.echo.endpoints;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.client.Socks5PropertySpecConstants;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.common.net.Host;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
@@ -14,8 +14,6 @@ import com.github.jh3nd3rs0n.jargyle.server.*;
 import com.github.jh3nd3rs0n.jargyle.server.socks5.userpassauthmethod.UserRepositorySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import com.github.jh3nd3rs0n.jargyle.test.help.thread.ThreadHelper;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.AbstractSocksServer;
-import com.github.jh3nd3rs0n.jargyle.test.socks.server.JargyleSocksServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -30,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodIT {
+public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodIT {
 
 	private static EchoDatagramServer echoDatagramServer;
 	private static int echoDatagramServerPort;
@@ -70,7 +68,7 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 		return socksServer;
 	}
 	
-	private static NetObjectFactory newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+	private static SocksClient newSocks5ClientUsingSocks5UserpassAuthMethod(
 			final String username, 
 			final char[] password) {
 		Properties properties = Properties.of(
@@ -83,11 +81,10 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 		return SocksServerUriScheme.SOCKS5.newSocksServerUri(
 				InetAddress.getLoopbackAddress().getHostAddress(), 
 				socksServerPortUsingSocks5UserpassAuthMethod)
-				.newSocksClient(properties)
-                .newSocksNetObjectFactory();		
+				.newSocksClient(properties);
 	}
 
-	private static NetObjectFactory newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+	private static SocksClient newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 			final String username,
 			final char[] password) {
 		String usrname;
@@ -106,8 +103,7 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 				usrname + ":" + psswrd,
 				InetAddress.getLoopbackAddress().getHostAddress(),
 				socksServerPortUsingSocks5UserpassAuthMethod)
-				.newSocksClient(Properties.of())
-                .newSocksNetObjectFactory();
+				.newSocksClient(Properties.of());
 	}
 	
 	@BeforeClass
@@ -141,9 +137,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
     @Test(expected = IOException.class)
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
                         "Bogus",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_01;
@@ -152,9 +148,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test(expected = IOException.class)
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
                         "Aladdin",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_02;
@@ -163,9 +159,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Aladdin", 
 						"opensesame".toCharArray()))); 
 		String string = StringConstants.STRING_01;
@@ -174,9 +170,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jasmine", 
 						"mission:impossible".toCharArray()))); 
 		String string = StringConstants.STRING_02;
@@ -185,9 +181,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 	
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Abu", 
 						"safeDriversSave40%".toCharArray()))); 
 		String string = StringConstants.STRING_03;
@@ -196,9 +192,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_04;
@@ -207,9 +203,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_05;
@@ -218,9 +214,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
     @Test(expected = IOException.class)
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
                         "Bogus",
                         "12345678".toCharArray())), 0);
         String string = StringConstants.STRING_01;
@@ -230,9 +226,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test(expected = IOException.class)
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
                         "Aladdin",
                         "12345678".toCharArray())), 0);
         String string = StringConstants.STRING_02;
@@ -242,9 +238,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Aladdin", 
 						"opensesame".toCharArray())), 0); 
 		String string = StringConstants.STRING_01;
@@ -254,9 +250,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jasmine", 
 						"mission:impossible".toCharArray())), 0); 
 		String string = StringConstants.STRING_02;
@@ -266,9 +262,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 	
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Abu", 
 						"safeDriversSave40%".toCharArray())), 0); 
 		String string = StringConstants.STRING_03;
@@ -278,9 +274,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jafar",
 						"opensesame".toCharArray())), 0);
 		String string = StringConstants.STRING_04;
@@ -290,9 +286,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jafar",
 						"opensesame".toCharArray())), 0);
 		String string = StringConstants.STRING_05;
@@ -302,9 +298,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
                         "Bogus",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_01;
@@ -313,9 +309,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+                new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
                         "Aladdin",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_02;
@@ -324,9 +320,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Aladdin", 
 						"opensesame".toCharArray()))); 
 		String string = StringConstants.STRING_01;
@@ -335,9 +331,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jasmine", 
 						"mission:impossible".toCharArray()))); 
 		String string = StringConstants.STRING_02;
@@ -346,9 +342,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 	
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Abu", 
 						"safeDriversSave40%".toCharArray()))); 
 		String string = StringConstants.STRING_03;
@@ -357,9 +353,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_04;
@@ -368,9 +364,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethod(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethod(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_05;
@@ -379,9 +375,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
     @Test(expected = IOException.class)
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException01() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException01() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
                         "Bogus",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_01;
@@ -390,9 +386,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test(expected = IOException.class)
-    public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException02() throws IOException {
+    public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException02() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
                         "Aladdin",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_02;
@@ -401,9 +397,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly01() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly01() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Aladdin",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_01;
@@ -412,9 +408,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly02() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly02() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jasmine",
 						"mission:impossible".toCharArray())));
 		String string = StringConstants.STRING_02;
@@ -423,9 +419,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly03() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly03() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Abu",
 						"safeDriversSave40%".toCharArray())));
 		String string = StringConstants.STRING_03;
@@ -434,9 +430,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly04() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly04() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_04;
@@ -445,9 +441,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoDatagramClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly05() throws IOException {
+	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly05() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new NetObjectFactoryToDatagramSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_05;
@@ -456,9 +452,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
     @Test(expected = IOException.class)
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException01() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException01() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
                         "Bogus",
                         "12345678".toCharArray())), 0);
         String string = StringConstants.STRING_01;
@@ -468,9 +464,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test(expected = IOException.class)
-    public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException02() throws IOException {
+    public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException02() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+                new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
                         "Aladdin",
                         "12345678".toCharArray())), 0);
         String string = StringConstants.STRING_02;
@@ -480,9 +476,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly01() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly01() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Aladdin",
 						"opensesame".toCharArray())), 0);
 		String string = StringConstants.STRING_01;
@@ -492,9 +488,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly02() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly02() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jasmine",
 						"mission:impossible".toCharArray())), 0);
 		String string = StringConstants.STRING_02;
@@ -504,9 +500,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly03() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly03() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Abu",
 						"safeDriversSave40%".toCharArray())), 0);
 		String string = StringConstants.STRING_03;
@@ -516,9 +512,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly04() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly04() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jafar",
 						"opensesame".toCharArray())), 0);
 		String string = StringConstants.STRING_04;
@@ -528,9 +524,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoServerUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly05() throws IOException {
+	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly05() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new NetObjectFactoryToServerSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksServerSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jafar",
 						"opensesame".toCharArray())), 0);
 		String string = StringConstants.STRING_05;
@@ -540,9 +536,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException01() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException01() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+                new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
                         "Bogus",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_01;
@@ -551,9 +547,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException02() throws IOException {
+    public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitlyForIOException02() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+                new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
                         "Aladdin",
                         "12345678".toCharArray())));
         String string = StringConstants.STRING_02;
@@ -562,9 +558,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
     }
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly01() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly01() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Aladdin",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_01;
@@ -573,9 +569,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly02() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly02() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jasmine",
 						"mission:impossible".toCharArray())));
 		String string = StringConstants.STRING_02;
@@ -584,9 +580,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly03() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly03() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Abu",
 						"safeDriversSave40%".toCharArray())));
 		String string = StringConstants.STRING_03;
@@ -595,9 +591,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly04() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly04() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_04;
@@ -606,9 +602,9 @@ public class EchoEndpointsUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5
 	}
 
 	@Test
-	public void testEchoClientUsingSocks5NetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodImplicitly05() throws IOException {
+	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5UserpassAuthMethodImplicitly05() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new NetObjectFactoryToSocketFactoryAdapter(newSocks5NetObjectFactoryUsingSocks5UserpassAuthMethodImplicitly(
+				new SocksSocketFactory(newSocks5ClientUsingSocks5UserpassAuthMethodImplicitly(
 						"Jafar",
 						"opensesame".toCharArray())));
 		String string = StringConstants.STRING_05;

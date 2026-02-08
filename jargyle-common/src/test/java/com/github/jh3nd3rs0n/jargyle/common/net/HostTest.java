@@ -22,7 +22,7 @@ public class HostTest {
 
     @Test
     public void testNewInstanceString04() {
-        Assert.assertNotNull(Host.newInstance("google.com"));
+        Assert.assertNotNull(Host.newInstance("example.com"));
     }
 
     @Test

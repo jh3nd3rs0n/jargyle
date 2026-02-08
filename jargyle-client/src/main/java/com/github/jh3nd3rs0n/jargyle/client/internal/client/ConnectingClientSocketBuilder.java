@@ -24,21 +24,22 @@ public final class ConnectingClientSocketBuilder {
     private final Socket clientSocket;
 
     /**
-     * The {@code NetObjectFactory} for this
+     * The {@code HostResolverFactory} for this 
      * {@code ConnectingClientSocketBuilder}.
      */
-    private final NetObjectFactory netObjectFactory;
+    private final HostResolverFactory hostResolverFactory;
 
     /**
-     * The {@code Properties} for this {@code ConnectingClientSocketBuilder}.
-     */
-    private final Properties properties;
-
-    /**
-     * The {@code SocksServerUri} for this
+     * The {@code SocketFactory} for this 
      * {@code ConnectingClientSocketBuilder}.
      */
-    private final SocksServerUri socksServerUri;
+    private final SocketFactory socketFactory;
+
+    /**
+     * The {@code SocksClientAgent} for this 
+     * {@code ConnectingClientSocketBuilder}.
+     */
+    private final SocksClientAgent socksClientAgent;
 
     /**
      * The {@code SslSocketFactory} for this
@@ -60,28 +61,28 @@ public final class ConnectingClientSocketBuilder {
 
     /**
      * Constructs a {@code ConnectingClientSocketBuilder} with the provided
-     * client socket, the provided {@code SocksServerUri}, the provided
-     * {@code Properties}, the provided {@code NetObjectFactory}, and the
+     * client socket, the provided {@code SocksClientAgent}, the provided
+     * {@code HostResolverFactory}, the provided {@code SocketFactory}, and the
      * provided {@code SslSocketFactory}.
      *
-     * @param clientSock     the provided client socket
-     * @param serverUri      the provided {@code SocksServerUri}
-     * @param props          the provided {@code Properties}
-     * @param netObjFactory  the provided {@code NetObjectFactory}
-     * @param sslSockFactory the provided {@code SslSocketFactory}
+     * @param clientSock          the provided client socket
+     * @param agent               the provided {@code SocksClientAgent}
+     * @param hstResolverFactory  the provided {@code HostResolverFactory}
+     * @param sockFactory         the provided {@code SocketFactory}
+     * @param sslSockFactory      the provided {@code SslSocketFactory}
      */
     ConnectingClientSocketBuilder(
             final Socket clientSock,
-            final SocksServerUri serverUri,
-            final Properties props,
-            final NetObjectFactory netObjFactory,
+            final SocksClientAgent agent,
+            final HostResolverFactory hstResolverFactory,
+            final SocketFactory sockFactory,
             final SslSocketFactory sslSockFactory) {
         this.clientSocket = clientSock;
-        this.connectTimeout = props.getValue(
+        this.connectTimeout = agent.getProperties().getValue(
                 GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
-        this.netObjectFactory = netObjFactory;
-        this.properties = props;
-        this.socksServerUri = serverUri;
+        this.hostResolverFactory = hstResolverFactory;
+        this.socketFactory = sockFactory;
+        this.socksClientAgent = agent;
         this.sslSocketFactory = sslSockFactory;
         this.toBind = false;
     }
@@ -112,10 +113,11 @@ public final class ConnectingClientSocketBuilder {
             final Socket clientSock,
             final InetAddress socksServerHostInetAddress,
             final int socksServerPort) throws IOException {
+        Properties properties = this.socksClientAgent.getProperties();
         InetAddress localAddress =
                 GeneralValueDerivationHelper.getClientBindHostFrom(
-                        this.properties).toInetAddress();
-        PortRanges localPortRanges = this.properties.getValue(
+                        properties).toInetAddress();
+        PortRanges localPortRanges = properties.getValue(
                 GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
         Socket clientSck = clientSock;
         boolean clientSockBound = false;
@@ -133,7 +135,7 @@ public final class ConnectingClientSocketBuilder {
                     SocketSettings socketSettings =
                             SocketSettings.extractFrom(clientSck);
                     clientSck.close();
-                    clientSck = this.netObjectFactory.newSocket();
+                    clientSck = this.socketFactory.newSocket();
                     socketSettings.applyTo(clientSck);
                     continue;
                 }
@@ -148,7 +150,7 @@ public final class ConnectingClientSocketBuilder {
                         SocketSettings socketSettings =
                                 SocketSettings.extractFrom(clientSck);
                         clientSck.close();
-                        clientSck = this.netObjectFactory.newSocket();
+                        clientSck = this.socketFactory.newSocket();
                         socketSettings.applyTo(clientSck);
                         continue;
                     }
@@ -184,10 +186,11 @@ public final class ConnectingClientSocketBuilder {
      *                     client socket
      */
     public Socket getConnectedClientSocket() throws IOException {
-        String socksServerUriHost = this.socksServerUri.getHost().toString();
-        int socksServerUriPort =
-                this.socksServerUri.getPortOrDefault().intValue();
-        HostResolver hostResolver = this.netObjectFactory.newHostResolver();
+        SocksServerUri socksServerUri =
+                this.socksClientAgent.getSocksServerUri();
+        String socksServerUriHost = socksServerUri.getHost().toString();
+        int socksServerUriPort = socksServerUri.getPortOrDefault().intValue();
+        HostResolver hostResolver = this.hostResolverFactory.newHostResolver();
         InetAddress socksServerUriHostInetAddress = hostResolver.resolve(
                 socksServerUriHost);
         Socket clientSock = this.clientSocket;

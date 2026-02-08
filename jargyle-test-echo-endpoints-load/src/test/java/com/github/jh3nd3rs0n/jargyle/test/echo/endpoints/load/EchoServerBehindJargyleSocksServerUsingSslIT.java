@@ -133,7 +133,7 @@ public class EchoServerBehindJargyleSocksServerUsingSslIT {
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    new SocksSocketFactory(
+                    new SocksClientToSocketFactoryAdapter(
                             newSocks5ClientUsingSsl(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));

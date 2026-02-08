@@ -1,35 +1,33 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.*;
 
-public final class Route {
+public abstract class Route {
 
 	private final String id;
-	private final NetObjectFactory netObjectFactory;
-	
-	public Route(final String id, final NetObjectFactory netObjFactory) {
+
+	public Route(final String id) {
 		this.id = id;
-		this.netObjectFactory = netObjFactory;
 	}
 
-	public NetObjectFactory getNetObjectFactory() {
-		return this.netObjectFactory;
-	}
-	
-	public String getId() {
+	public abstract DatagramSocketFactory getDatagramSocketFactory();
+
+	public abstract HostResolverFactory getHostResolverFactory();
+
+	public final String getId() {
 		return this.id;
 	}
 
+	public abstract ServerSocketFactory getServerSocketFactory();
+
+	public abstract SocketFactory getSocketFactory();
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [id=")
-			.append(this.id)
-			.append(", netObjectFactory=")
-			.append(this.netObjectFactory)
-			.append("]");
-		return builder.toString();
+        return this.getClass().getSimpleName() +
+                " [id=" +
+                this.id +
+                "]";
 	}
 	
 }

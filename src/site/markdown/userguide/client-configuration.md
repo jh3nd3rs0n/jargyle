@@ -40,8 +40,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -57,7 +60,6 @@ public class ClientApp {
         System.setProperty("socksClient.ssl.enabled", "true");
         System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
         System.setProperty("socksClient.ssl.trustStorePassword", "password");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -75,8 +77,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -94,7 +99,6 @@ public class ClientApp {
         System.setProperty("socksClient.ssl.keyStorePassword", "drowssap");
         System.setProperty("socksClient.ssl.trustStoreFile", "jargyle.jks");
         System.setProperty("socksClient.ssl.trustStorePassword", "password");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -123,8 +127,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -140,7 +147,6 @@ public class ClientApp {
         System.setProperty("socksClient.dtls.enabled", "true");
         System.setProperty("socksClient.dtls.trustStoreFile", "jargyle.jks");
         System.setProperty("socksClient.dtls.trustStorePassword", "password");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -164,8 +170,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -181,7 +190,6 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socks5.methods", 
             "NO_AUTHENTICATION_REQUIRED,GSSAPI");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -206,8 +214,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -223,7 +234,6 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socks5.methods", 
             "NO_AUTHENTICATION_REQUIRED,GSSAPI,USERNAME_PASSWORD");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -244,8 +254,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -266,7 +279,6 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socks5.userpassauthmethod.password",
             "opensesame");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -298,8 +310,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -313,7 +328,6 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socksServerUri", 
             "socks5://Jasmine:mission%3Aimpossible@jargyle.net:1234");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -339,8 +353,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -362,7 +379,6 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socks5.gssapiauthmethod.serviceName",
             "rcmd/jargyle.net");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
         // ...
     }
 }
@@ -432,8 +448,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -446,8 +465,8 @@ public class ClientApp {
     public static void main(String[] args) throws IOException {
         System.setProperty(
             "socksClient.socksServerUri", "socks5://jargyle.net:1234");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        Socket socket = netObjectFactory.newSocket("google.com", 443);
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        Socket socket = socketFactory.newSocket("example.com", 443);
         // ...
     }
 }
@@ -466,8 +485,11 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -483,10 +505,12 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
             "true");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        HostResolver hostResolver = netObjectFactory.newHostResolver();
-        InetAddress inetAddress = hostResolver.resolve("google.com");
-        Socket socket = netObjectFactory.newSocket(inetAddress, 443);
+        HostResolverFactory hostResolverFactory = 
+            HostResolverFactory.getInstance();
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        HostResolver hostResolver = hostResolverFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("example.com");
+        Socket socket = socketFactory.newSocket(inetAddress, 443);
         // ...
     }
 }
@@ -503,10 +527,14 @@ API example:
 ```java
 package com.example;
 
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
 import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 
 import java.io.IOException;
@@ -527,8 +555,8 @@ public class ClientApp {
         SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("gamma-alpha.net", 33331)
             .newSocksClient(Properties.of(), socksClient2);
-        NetObjectFactory netObjectFactory = 
-            socksClient3.newSocksNetObjectFactory();
+        SocketFactory socketFactory = 
+            socksClient3.getSocksSocketFactory();
         // ...
     }
 }

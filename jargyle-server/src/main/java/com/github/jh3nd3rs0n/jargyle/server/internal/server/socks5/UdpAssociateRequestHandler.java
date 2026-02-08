@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
@@ -217,9 +218,9 @@ final class UdpAssociateRequestHandler extends RequestHandler {
                     clientFacingDatagramSock,
                     peerFacingDatagramSock);
             builder.bufferSize(this.getRelayBufferSize());
-            NetObjectFactory netObjectFactory =
-                    this.context.getSelectedRoute().getNetObjectFactory();
-            builder.hostResolver(netObjectFactory.newHostResolver());
+			HostResolverFactory hostResolverFactory =
+					this.context.getSelectedRoute().getHostResolverFactory();
+            builder.hostResolver(hostResolverFactory.newHostResolver());
             builder.idleTimeout(this.getRelayIdleTimeout());
             builder.ruleContext(this.context.getRuleContext());
             builder.rules(this.context.getRules());
@@ -449,12 +450,12 @@ final class UdpAssociateRequestHandler extends RequestHandler {
 	private DatagramSocket newPeerFacingDatagramSocket(
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
-		NetObjectFactory netObjectFactory = 
-				this.context.getSelectedRoute().getNetObjectFactory();
+		DatagramSocketFactory peerFacingDatagramSocketFactory =
+				this.context.getSelectedRoute().getDatagramSocketFactory();
 		DatagramSocket peerFacingDatagramSock;
 		try {
 			peerFacingDatagramSock =
-					netObjectFactory.newDatagramSocket(null);
+					peerFacingDatagramSocketFactory.newDatagramSocket(null);
 		} catch (SocketException e) {
 			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(

@@ -1,14 +1,10 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.github.jh3nd3rs0n.jargyle.client.*;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
 import com.github.jh3nd3rs0n.jargyle.server.*;
+
+import java.util.*;
 
 public final class Routes {
 	
@@ -284,9 +280,8 @@ public final class Routes {
 							chainedSocksClient);
 					properties.clear();
 					if (routeId != null) {
-						routes.add(new Route(
-								routeId,
-								chainedSocksClient.newSocksNetObjectFactory()));
+						routes.add(new ChainRoute(
+								routeId, chainedSocksClient));
 						chainedSocksClient = null;
 						routeId = null;
 					}
@@ -303,18 +298,15 @@ public final class Routes {
 		String lastRouteId = settings.getLastValue(
 				GeneralSettingSpecConstants.LAST_ROUTE_ID);
 		if (socksServerUri == null) {
-			routes.add(new Route(lastRouteId, NetObjectFactory.getInstance()));
+			routes.add(new DirectRoute(lastRouteId));
 		} else {
 			SocksClient socksClient = socksServerUri.newSocksClient(
 					Properties.of(properties), chainedSocksClient);
 			if (routeId == null) {
-				routes.add(new Route(
-						lastRouteId, socksClient.newSocksNetObjectFactory()));
+				routes.add(new ChainRoute(lastRouteId, socksClient));
 			} else {
-				routes.add(new Route(
-						routeId, socksClient.newSocksNetObjectFactory()));
-				routes.add(new Route(
-						lastRouteId, NetObjectFactory.getInstance()));				
+				routes.add(new ChainRoute(routeId, socksClient));
+				routes.add(new DirectRoute(lastRouteId));
 			}
 		}
 		return of(routes);

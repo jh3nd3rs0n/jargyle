@@ -1,9 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
 
 import java.net.Socket;
@@ -20,21 +19,22 @@ public final class ConfiguringClientSocketBuilder {
     private final Socket clientSocket;
 
     /**
-     * The {@code NetObjectFactory} for this
+     * The {@code HostResolverFactory} for this
      * {@code ConfiguringClientSocketBuilder}.
      */
-    private final NetObjectFactory netObjectFactory;
+    private final HostResolverFactory hostResolverFactory;
 
     /**
-     * The {@code Properties} for this {@code ConfiguringClientSocketBuilder}.
-     */
-    private final Properties properties;
-
-    /**
-     * The {@code SocksServerUri} for this
+     * The {@code SocketFactory} for this
      * {@code ConfiguringClientSocketBuilder}.
      */
-    private final SocksServerUri socksServerUri;
+    private final SocketFactory socketFactory;
+
+    /**
+     * The {@code SocksClientAgent} for this
+     * {@code ConfiguringClientSocketBuilder}.
+     */
+    private final SocksClientAgent socksClientAgent;
 
     /**
      * The {@code SslSocketFactory} for this
@@ -44,26 +44,26 @@ public final class ConfiguringClientSocketBuilder {
 
     /**
      * Constructs a {@code ConfiguringClientSocketBuilder} with the provided
-     * client socket, the provided {@code SocksServerUri}, the provided
-     * {@code Properties}, the provided {@code NetObjectFactory}, and the
+     * client socket, the provided {@code SocksClientAgent}, the provided
+     * {@code HostResolverFactory}, the provided {@code SocketFactory}, and the
      * provided {@code SslSocketFactory}.
      *
-     * @param clientSock     the provided client socket
-     * @param serverUri      the provided {@code SocksServerUri}
-     * @param props          the provided {@code Properties}
-     * @param netObjFactory  the provided {@code NetObjectFactory}
-     * @param sslSockFactory the provided {@code SslSocketFactory}
+     * @param clientSock         the provided client socket
+     * @param agent              the provided {@code SocksClientAgent}
+     * @param hstResolverFactory the provided {@code HostResolverFactory}
+     * @param sockFactory        the provided {@code SocketFactory}
+     * @param sslSockFactory     the provided {@code SslSocketFactory}
      */
     ConfiguringClientSocketBuilder(
             final Socket clientSock,
-            final SocksServerUri serverUri,
-            final Properties props,
-            final NetObjectFactory netObjFactory,
+            final SocksClientAgent agent,
+            final HostResolverFactory hstResolverFactory,
+            final SocketFactory sockFactory,
             final SslSocketFactory sslSockFactory) {
         this.clientSocket = clientSock;
-        this.netObjectFactory = netObjFactory;
-        this.properties = props;
-        this.socksServerUri = serverUri;
+        this.hostResolverFactory = hstResolverFactory;
+        this.socketFactory = sockFactory;
+        this.socksClientAgent = agent;
         this.sslSocketFactory = sslSockFactory;
     }
 
@@ -76,7 +76,7 @@ public final class ConfiguringClientSocketBuilder {
      *                         socket
      */
     public ConfiguringClientSocketBuilder configure() throws SocketException {
-        this.properties.getValue(
+        this.socksClientAgent.getProperties().getValue(
                 GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS).applyTo(
                 this.clientSocket);
         return this;
@@ -93,9 +93,9 @@ public final class ConfiguringClientSocketBuilder {
     public ConnectingClientSocketBuilder proceedToConnect() {
         return new ConnectingClientSocketBuilder(
                 this.clientSocket,
-                this.socksServerUri,
-                this.properties,
-                this.netObjectFactory,
+                this.socksClientAgent,
+                this.hostResolverFactory,
+                this.socketFactory,
                 this.sslSocketFactory);
     }
 

@@ -114,6 +114,27 @@ public abstract class SocksClient {
     }
 
     /**
+     * Returns a {@code SocksDatagramSocketFactory}.
+     *
+     * @return a {@code SocksDatagramSocketFactory}
+     */
+    public abstract SocksDatagramSocketFactory getSocksDatagramSocketFactory();
+
+    /**
+     * Returns a {@code SocksHostResolverFactory}.
+     *
+     * @return a {@code SocksHostResolverFactory}
+     */
+    public abstract SocksHostResolverFactory getSocksHostResolverFactory();
+
+    /**
+     * Returns a {@code SocksServerSocketFactory}.
+     *
+     * @return a {@code SocksServerSocketFactory}
+     */
+    public abstract SocksServerSocketFactory getSocksServerSocketFactory();
+
+    /**
      * Returns the {@code SocksServerUri} of this {@code SocksClient}.
      *
      * @return the {@code SocksServerUri} of this {@code SocksClient}
@@ -123,11 +144,11 @@ public abstract class SocksClient {
     }
 
     /**
-     * Returns a new {@code SocksNetObjectFactory}.
+     * Returns a {@code SocksSocketFactory}.
      *
-     * @return a new {@code SocksNetObjectFactory}
+     * @return a {@code SocksSocketFactory}
      */
-    public abstract SocksNetObjectFactory newSocksNetObjectFactory();
+    public abstract SocksSocketFactory getSocksSocketFactory();
 
     /**
      * Returns the {@code String} representation of this {@code SocksClient}.

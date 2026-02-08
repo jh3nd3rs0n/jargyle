@@ -1,7 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
@@ -199,11 +200,11 @@ final class ConnectRequestHandler extends RequestHandler {
 	private Socket newExtemporaneousTargetFacingSocket(
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
-		NetObjectFactory netObjectFactory =
-				this.context.getSelectedRoute().getNetObjectFactory();
+		SocketFactory targetFacingSocketFactory =
+				this.context.getSelectedRoute().getSocketFactory();
 		Socket targetFacingSocket;
 		try {
-			targetFacingSocket = netObjectFactory.newSocket(
+			targetFacingSocket = targetFacingSocketFactory.newSocket(
 					this.context.getDesiredDestinationAddress().toString(),
 					this.context.getDesiredDestinationPort().intValue(),
 					bindInetAddress, 
@@ -310,11 +311,11 @@ final class ConnectRequestHandler extends RequestHandler {
 		if (desiredDestinationInetAddress == null) {
 			return null;
 		}
-		NetObjectFactory netObjectFactory = 
-				this.context.getSelectedRoute().getNetObjectFactory();
+		SocketFactory targetFacingSocketFactory =
+				this.context.getSelectedRoute().getSocketFactory();
 		Socket targetFacingSocket;
 		int connectTimeout = this.getTargetFacingConnectTimeout();		
-		targetFacingSocket = netObjectFactory.newSocket();
+		targetFacingSocket = targetFacingSocketFactory.newSocket();
 		if (!this.configureTargetFacingSocket(targetFacingSocket)) {
 			try {
 				targetFacingSocket.close();
@@ -476,9 +477,9 @@ final class ConnectRequestHandler extends RequestHandler {
 	
 	private InetAddress resolveDesiredDestinationAddress(
 			final String desiredDestinationAddress) {
-		NetObjectFactory netObjectFactory =
-				this.context.getSelectedRoute().getNetObjectFactory();
-		HostResolver hostResolver =	netObjectFactory.newHostResolver();
+		HostResolverFactory hostResolverFactory =
+				this.context.getSelectedRoute().getHostResolverFactory();
+		HostResolver hostResolver =	hostResolverFactory.newHostResolver();
 		InetAddress desiredDestinationInetAddress;
 		try {
 			desiredDestinationInetAddress = hostResolver.resolve(

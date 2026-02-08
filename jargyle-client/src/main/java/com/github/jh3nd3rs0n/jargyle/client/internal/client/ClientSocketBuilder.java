@@ -1,9 +1,6 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
-import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
-import com.github.jh3nd3rs0n.jargyle.client.Properties;
-import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.*;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRange;
 import com.github.jh3nd3rs0n.jargyle.common.net.PortRanges;
@@ -22,19 +19,19 @@ import java.util.Iterator;
 public final class ClientSocketBuilder {
 
     /**
-     * The {@code NetObjectFactory} for this {@code ClientSocketBuilder}.
+     * The {@code HostResolverFactory} for this {@code ClientSocketBuilder}.
      */
-    private final NetObjectFactory netObjectFactory;
+    private final HostResolverFactory hostResolverFactory;
 
     /**
-     * The {@code Properties} for this {@code ClientSocketBuilder}.
+     * The {@code SocketFactory} for this {@code ClientSocketBuilder}.
      */
-    private final Properties properties;
+    private final SocketFactory socketFactory;
 
     /**
-     * The {@code SocksServerUri} for this {@code ClientSocketBuilder}.
+     * The {@code SocksClientAgent} for this {@code ClientSocketBuilder}.
      */
-    private final SocksServerUri socksServerUri;
+    private final SocksClientAgent socksClientAgent;
 
     /**
      * The {@code SslSocketFactory} for this {@code ClientSocketBuilder}.
@@ -43,22 +40,23 @@ public final class ClientSocketBuilder {
 
     /**
      * Constructs a {@code ClientSocketBuilder} with the provided
-     * {@code SocksServerUri}, the provided {@code Properties}, the provided
-     * {@code NetObjectFactory}, and the provided {@code SslSocketFactory}.
+     * {@code SocksClientAgent}, the provided {@code HostResolverFactory}, the
+     * provided {@code SocketFactory}, and the provided
+     * {@code SslSocketFactory}.
      *
-     * @param serverUri      the provided {@code SocksServerUri}
-     * @param props          the provided {@code Properties}
-     * @param netObjFactory  the provided {@code NetObjectFactory}
-     * @param sslSockFactory the provided {@code SslSocketFactory}
+     * @param agent              the provided {@code SocksClientAgent}
+     * @param hstResolverFactory the provided {@code HostResolverFactory}
+     * @param sockFactory        the provided {@code SocketFactory}
+     * @param sslSockFactory     the provided {@code SslSocketFactory}
      */
     ClientSocketBuilder(
-            final SocksServerUri serverUri,
-            final Properties props,
-            final NetObjectFactory netObjFactory,
+            final SocksClientAgent agent,
+            final HostResolverFactory hstResolverFactory,
+            final SocketFactory sockFactory,
             final SslSocketFactory sslSockFactory) {
-        this.netObjectFactory = netObjFactory;
-        this.properties = props;
-        this.socksServerUri = serverUri;
+        this.hostResolverFactory = hstResolverFactory;
+        this.socketFactory = sockFactory;
+        this.socksClientAgent = agent;
         this.sslSocketFactory = sslSockFactory;
     }
 
@@ -79,10 +77,11 @@ public final class ClientSocketBuilder {
      * @throws IOException if an I/O error occurs in creating the client socket
      */
     public Socket newBoundConnectedClientSocket() throws IOException {
+        Properties properties = this.socksClientAgent.getProperties();
         InetAddress localAddr =
                 GeneralValueDerivationHelper.getClientBindHostFrom(
-                        this.properties).toInetAddress();
-        PortRanges localPortRanges = this.properties.getValue(
+                        properties).toInetAddress();
+        PortRanges localPortRanges = properties.getValue(
                 GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
         Socket clientSocket = null;
         boolean clientSocketBound = false;
@@ -131,10 +130,12 @@ public final class ClientSocketBuilder {
     public Socket newBoundConnectedClientSocket(
             final InetAddress localAddr,
             final int localPort) throws IOException {
-        String socksServerUriHost = this.socksServerUri.getHost().toString();
+        SocksServerUri socksServerUri =
+                this.socksClientAgent.getSocksServerUri();
+        String socksServerUriHost = socksServerUri.getHost().toString();
         int socksServerUriPort =
-                this.socksServerUri.getPortOrDefault().intValue();
-        Socket clientSocket = this.netObjectFactory.newSocket(
+                socksServerUri.getPortOrDefault().intValue();
+        Socket clientSocket = this.socketFactory.newSocket(
                 socksServerUriHost,
                 socksServerUriPort,
                 localAddr,
@@ -152,7 +153,7 @@ public final class ClientSocketBuilder {
      * @return a new unbound and unconnected client socket
      */
     public Socket newClientSocket() {
-        return this.netObjectFactory.newSocket();
+        return this.socketFactory.newSocket();
     }
 
     /**
@@ -168,9 +169,9 @@ public final class ClientSocketBuilder {
             final Socket clientSocket) {
         return new ConfiguringClientSocketBuilder(
                 clientSocket,
-                this.socksServerUri,
-                this.properties,
-                this.netObjectFactory,
+                this.socksClientAgent,
+                this.hostResolverFactory,
+                this.socketFactory,
                 this.sslSocketFactory);
     }
 

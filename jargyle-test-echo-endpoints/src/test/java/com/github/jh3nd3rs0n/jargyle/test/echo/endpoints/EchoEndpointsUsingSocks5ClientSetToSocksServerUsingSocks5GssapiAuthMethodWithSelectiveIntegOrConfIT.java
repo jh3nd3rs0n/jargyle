@@ -123,7 +123,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf01() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_01;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -132,7 +132,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf02() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_02;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -141,7 +141,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf03() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_03;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -150,7 +150,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf04() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_04;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -159,7 +159,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf05() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_05;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -168,7 +168,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf01() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_01;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -177,7 +177,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf02() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_02;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -186,7 +186,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf03() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_03;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -195,7 +195,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf04() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_04;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -204,7 +204,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf05() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
+                new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf()));
         String string = StringConstants.STRING_05;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -213,7 +213,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf01() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
+                new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_01;
         String returningString = echServer.startThenEchoThenStop(
@@ -224,7 +224,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf02() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
+                new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_02;
         String returningString = echServer.startThenEchoThenStop(
@@ -235,7 +235,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf03() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
+                new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_03;
         String returningString = echServer.startThenEchoThenStop(
@@ -246,7 +246,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf04() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
+                new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_04;
         String returningString = echServer.startThenEchoThenStop(
@@ -257,7 +257,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
     @Test
     public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf05() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
+                new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethodWithSelectiveIntegOrConf())
                         , 0);
         String string = StringConstants.STRING_05;
         String returningString = echServer.startThenEchoThenStop(

@@ -186,7 +186,7 @@ public class RequestTest {
 	public void testToByteArray02() throws IOException {
 		Request request1 = Request.newInstance(
 				Command.BIND, 
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(1234));
 		Request request2 = Request.newInstanceFrom(
 				new ByteArrayInputStream(request1.toByteArray()));

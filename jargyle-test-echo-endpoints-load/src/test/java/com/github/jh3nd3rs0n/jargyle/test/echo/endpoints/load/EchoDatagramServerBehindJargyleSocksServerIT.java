@@ -111,7 +111,7 @@ public class EchoDatagramServerBehindJargyleSocksServerIT {
         @Override
         public void run() {
             EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                    new SocksDatagramSocketFactory(
+                    new SocksClientToDatagramSocketFactoryAdapter(
                             newSocks5Client(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));

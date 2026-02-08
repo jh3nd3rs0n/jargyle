@@ -116,7 +116,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSsl01() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSsl())); 
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_01;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
@@ -125,7 +125,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSsl02() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSsl())); 
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_02;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
@@ -134,7 +134,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSsl03() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSsl())); 
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_03;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
@@ -143,7 +143,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSsl04() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSsl()));
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_04;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
@@ -152,7 +152,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSsl05() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSsl()));
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_05;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
 		assertEquals(string, returningString);
@@ -161,7 +161,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSsl01() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSsl())); 
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_01;
 		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
@@ -170,7 +170,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSsl02() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSsl())); 
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_02;
 		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);		
@@ -179,7 +179,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSsl03() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSsl())); 
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_03;
 		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);		
@@ -188,7 +188,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSsl04() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSsl()));
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_04;
 		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
@@ -197,7 +197,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSsl05() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSsl()));
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSsl()));
 		String string = StringConstants.STRING_05;
 		String returningString = echoClient.echo(string, echoServerPort);
 		assertEquals(string, returningString);
@@ -206,7 +206,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSsl01() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSsl()), 0); 
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSsl()), 0);
 		String string = StringConstants.STRING_01;
 		String returningString = echServer.startThenEchoThenStop(
 				new EchoClient(), string);
@@ -216,7 +216,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSsl02() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSsl()), 0); 
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSsl()), 0);
 		String string = StringConstants.STRING_02;
 		String returningString = echServer.startThenEchoThenStop(
 				new EchoClient(), string);
@@ -226,7 +226,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSsl03() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSsl()), 0); 
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSsl()), 0);
 		String string = StringConstants.STRING_03;
 		String returningString = echServer.startThenEchoThenStop(
 				new EchoClient(), string);
@@ -236,7 +236,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSsl04() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSsl()), 0);
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSsl()), 0);
 		String string = StringConstants.STRING_04;
 		String returningString = echServer.startThenEchoThenStop(
 				new EchoClient(), string);
@@ -246,7 +246,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSslIT {
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSsl05() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSsl()), 0);
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSsl()), 0);
 		String string = StringConstants.STRING_05;
 		String returningString = echServer.startThenEchoThenStop(
 				new EchoClient(), string);

@@ -37,17 +37,17 @@ public class AddressRangeTest {
 
 	@Test
 	public void testContains07() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("google.com").covers("google.com"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("example.com").covers("example.com"));
 	}
 
 	@Test
 	public void testContains08() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*google\\.com\\z").covers("google.com"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*example\\.com\\z").covers("example.com"));
 	}
 
 	@Test
 	public void testContains09() {
-		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*google\\.com\\z").covers("anothergoogle.com"));
+		Assert.assertTrue(AddressRange.newInstanceFrom("regex:.*example\\.com\\z").covers("anotherexample.com"));
 	}
 
 }

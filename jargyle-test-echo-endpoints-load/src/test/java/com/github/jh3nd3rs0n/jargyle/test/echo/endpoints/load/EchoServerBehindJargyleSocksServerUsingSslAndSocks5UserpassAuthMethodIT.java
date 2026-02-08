@@ -149,7 +149,7 @@ public class EchoServerBehindJargyleSocksServerUsingSslAndSocks5UserpassAuthMeth
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    new SocksSocketFactory(
+                    new SocksClientToSocketFactoryAdapter(
                             newSocks5ClientUsingSslAndSocks5UserpassAuthMethod(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));

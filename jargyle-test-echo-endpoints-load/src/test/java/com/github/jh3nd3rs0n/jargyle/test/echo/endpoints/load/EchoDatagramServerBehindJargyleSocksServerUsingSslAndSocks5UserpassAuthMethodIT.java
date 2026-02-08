@@ -149,7 +149,7 @@ public class EchoDatagramServerBehindJargyleSocksServerUsingSslAndSocks5Userpass
         @Override
         public void run() {
             EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                    new SocksDatagramSocketFactory(
+                    new SocksClientToDatagramSocketFactoryAdapter(
                             newSocks5ClientUsingSslAndSocks5UserpassAuthMethod(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));

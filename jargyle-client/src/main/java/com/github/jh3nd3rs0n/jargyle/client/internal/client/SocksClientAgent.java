@@ -18,15 +18,20 @@ public class SocksClientAgent {
     private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 
     /**
-     * The {@code NetObjectFactory} for the new {@code ClientSocketBuilder}.
+     * The {@code HostResolverFactory} for the new {@code ClientSocketBuilder}.
      */
-    private final NetObjectFactory netObjectFactory;
+    private final HostResolverFactory hostResolverFactory;
 
     /**
      * The {@code Properties} of the {@code SocksClient} of this
      * {@code SocksClientAgent}.
      */
     private final Properties properties;
+
+    /**
+     * The {@code SocketFactory} for the new {@code ClientSocketBuilder}.
+     */
+    private final SocketFactory socketFactory;
 
     /**
      * The {@code SocksClient} of this {@code SocksClientAgent}.
@@ -56,10 +61,13 @@ public class SocksClientAgent {
         Properties props = c.getProperties();
         this.dtlsDatagramSocketFactory =
                 ConfiguredDtlsDatagramSocketFactory.newInstance(props);
-        this.netObjectFactory = (chainedClient != null) ?
-                chainedClient.newSocksNetObjectFactory()
-                : NetObjectFactory.getDefault();
+        this.hostResolverFactory = (chainedClient != null) ?
+                chainedClient.getSocksHostResolverFactory()
+                : HostResolverFactory.getDefault();
         this.properties = props;
+        this.socketFactory = (chainedClient != null) ?
+                chainedClient.getSocksSocketFactory()
+                : SocketFactory.getDefault();
         this.socksClient = c;
         this.socksServerUri = c.getSocksServerUri();
         this.sslSocketFactory = ConfiguredSslSocketFactory.newInstance(props);
@@ -112,9 +120,9 @@ public class SocksClientAgent {
      */
     public final ClientSocketBuilder newClientSocketBuilder() {
         return new ClientSocketBuilder(
-                this.socksServerUri,
-                this.properties,
-                this.netObjectFactory,
+                this,
+                this.hostResolverFactory,
+                this.socketFactory,
                 this.sslSocketFactory);
     }
 

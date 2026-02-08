@@ -1,6 +1,7 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
 import com.github.jh3nd3rs0n.jargyle.protocolbase.socks5.Address;
@@ -28,8 +29,9 @@ final class ResolveRequestHandler extends RequestHandler {
 
     @Override
     public void handleRequest() {
-        HostResolver hostResolver =
-                this.context.getSelectedRoute().getNetObjectFactory().newHostResolver();
+        HostResolverFactory hostResolverFactory =
+                this.context.getSelectedRoute().getHostResolverFactory();
+        HostResolver hostResolver = hostResolverFactory.newHostResolver();
         InetAddress inetAddress;
         Reply rep;
         try {

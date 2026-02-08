@@ -77,7 +77,7 @@ public class ReplyTest {
 	@Test
 	public void testNewSuccessInstanceAddressPort01() {
 		Reply reply = Reply.newSuccessInstance(
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Assert.assertEquals(ReplyCode.SUCCEEDED, reply.getReplyCode());
 	}
@@ -140,11 +140,11 @@ public class ReplyTest {
 	public void testEqualsObject06() {
 		Reply reply1 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Reply reply2 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(80));
 		Assert.assertNotEquals(reply1, reply2);
 	}
@@ -153,11 +153,11 @@ public class ReplyTest {
 	public void testEqualsObject07() {
 		Reply reply1 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Reply reply2 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Assert.assertEquals(reply1, reply2);
 	}
@@ -192,11 +192,11 @@ public class ReplyTest {
 	public void testHashCode03() {
 		Reply reply1 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Reply reply2 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(80));
 		Assert.assertNotEquals(reply1.hashCode(), reply2.hashCode());
 	}
@@ -205,11 +205,11 @@ public class ReplyTest {
 	public void testHashCode04() {
 		Reply reply1 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Reply reply2 = Reply.newInstance(
 				ReplyCode.SUCCEEDED,
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(443));
 		Assert.assertEquals(reply1.hashCode(), reply2.hashCode());
 	}
@@ -227,7 +227,7 @@ public class ReplyTest {
 	@Test
 	public void testToByteArray02() throws IOException {
 		Reply reply1 = Reply.newSuccessInstance(
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(1234));
 		Reply reply2 = Reply.newInstanceFrom(
 				new ByteArrayInputStream(reply1.toByteArray()));

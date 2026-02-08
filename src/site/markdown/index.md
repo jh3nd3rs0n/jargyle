@@ -124,7 +124,7 @@ public class ServerApp {
 
 package com.example;
 
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 
 import java.io.IOException;
 
@@ -133,8 +133,8 @@ import java.net.Socket;
 public class ClientApp {
     public static void main(String[] args) throws IOException {
         System.setProperty("socksClient.socksServerUri", "socks5://127.0.0.1:1080");
-        NetObjectFactory netObjectFactory = NetObjectFactory.newInstance();
-        Socket socket = netObjectFactory.newSocket("google.com", 80);
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        Socket socket = socketFactory.newSocket("example.com", 80);
         // ...
     }
 }

@@ -1,7 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.server.internal.server.socks5;
 
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
-import com.github.jh3nd3rs0n.jargyle.client.NetObjectFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
 import com.github.jh3nd3rs0n.jargyle.common.number.PositiveInteger;
 import com.github.jh3nd3rs0n.jargyle.internal.throwable.ThrowableHelper;
@@ -453,11 +454,11 @@ final class BindRequestHandler extends RequestHandler {
 	private ServerSocket newListenSocket(
 			final InetAddress bindInetAddress,
 			final Port bindPort) throws BindException {
-		NetObjectFactory netObjectFactory =
-				this.context.getSelectedRoute().getNetObjectFactory();
+		ServerSocketFactory listenSocketFactory =
+				this.context.getSelectedRoute().getServerSocketFactory();
 		ServerSocket listenSocket;
 		try {
-			listenSocket = netObjectFactory.newServerSocket();
+			listenSocket = listenSocketFactory.newServerSocket();
 		} catch (IOException e) {
 			this.serverEventLogger.warn(
 					ObjectLogMessageHelper.objectLogMessage(
@@ -537,9 +538,9 @@ final class BindRequestHandler extends RequestHandler {
 	
 	private InetAddress resolveDesiredDestinationAddress(
 			final String desiredDestinationAddress) {
-		NetObjectFactory netObjectFactory =
-				this.context.getSelectedRoute().getNetObjectFactory();
-		HostResolver hostResolver =	netObjectFactory.newHostResolver();
+		HostResolverFactory hostResolverFactory =
+				this.context.getSelectedRoute().getHostResolverFactory();
+		HostResolver hostResolver =	hostResolverFactory.newHostResolver();
 		InetAddress desiredDestinationInetAddress;
 		try {
 			desiredDestinationInetAddress = hostResolver.resolve(

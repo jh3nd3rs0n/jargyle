@@ -175,7 +175,7 @@ public class AddressTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testNewInstanceFromStringStringForIllegalArgumentException04() {
-        Address.newInstanceFrom("2google.");
+        Address.newInstanceFrom("2example.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -304,7 +304,7 @@ public class AddressTest {
 
     @Test
     public void testToByteArray05() throws IOException {
-        Address address1 = Address.newInstanceFrom("google.com");
+        Address address1 = Address.newInstanceFrom("example.com");
         Address address2 = Address.newInstanceFrom(
                 new ByteArrayInputStream(address1.toByteArray()));
         Assert.assertEquals(address1, address2);
@@ -312,7 +312,7 @@ public class AddressTest {
 
     @Test
     public void testToByteArray06() throws IOException {
-        Address address1 = Address.newInstanceFrom("news.google.com");
+        Address address1 = Address.newInstanceFrom("api.example.com");
         Address address2 = Address.newInstanceFrom(
                 new ByteArrayInputStream(address1.toByteArray()));
         Assert.assertEquals(address1, address2);

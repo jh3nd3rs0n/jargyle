@@ -6,7 +6,7 @@ import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
 import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.EchoClient;
 import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.EchoServer;
 import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.NettySocksServer;
-import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.SocksSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.test.echo.endpoints.SocksClientToSocketFactoryAdapter;
 import com.github.jh3nd3rs0n.jargyle.test.help.string.StringConstants;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -93,7 +93,7 @@ public class EchoServerBehindNettySocksServerIT {
         @Override
         public void run() {
             EchoClient echoClient = new EchoClient(
-                    new SocksSocketFactory(
+                    new SocksClientToSocketFactoryAdapter(
                             newSocks5Client(
                                     this.socksServerInetAddress.getHostAddress(),
                                     this.socksServerPort)));

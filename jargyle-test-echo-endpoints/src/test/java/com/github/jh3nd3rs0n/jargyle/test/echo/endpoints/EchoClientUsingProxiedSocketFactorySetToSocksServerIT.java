@@ -96,7 +96,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingProxiedNetObjectFactorySetToBogusSocksServerForIOException() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToBogusSocksServerForIOException() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(new Proxy(
                         Proxy.Type.SOCKS,
@@ -107,7 +107,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToJargyleSocksServer01() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToJargyleSocksServer01() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(jargyleProxy));
         String string = StringConstants.STRING_01;
@@ -116,7 +116,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToJargyleSocksServer02() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToJargyleSocksServer02() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(jargyleProxy));
         String string = StringConstants.STRING_02;
@@ -125,7 +125,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToJargyleSocksServer03() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToJargyleSocksServer03() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(jargyleProxy));
         String string = StringConstants.STRING_03;
@@ -134,7 +134,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToJargyleSocksServer04() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToJargyleSocksServer04() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(jargyleProxy));
         String string = StringConstants.STRING_04;
@@ -143,7 +143,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToJargyleSocksServer05() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToJargyleSocksServer05() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(jargyleProxy));
         String string = StringConstants.STRING_05;
@@ -152,7 +152,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToNettySocksServer01() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToNettySocksServer01() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(nettyProxy));
         String string = StringConstants.STRING_01;
@@ -161,7 +161,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToNettySocksServer02() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToNettySocksServer02() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(nettyProxy));
         String string = StringConstants.STRING_02;
@@ -170,7 +170,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToNettySocksServer03() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToNettySocksServer03() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(nettyProxy));
         String string = StringConstants.STRING_03;
@@ -179,7 +179,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToNettySocksServer04() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToNettySocksServer04() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(nettyProxy));
         String string = StringConstants.STRING_04;
@@ -188,7 +188,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerIT {
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToNettySocksServer05() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToNettySocksServer05() throws IOException {
         EchoClient echoClient = new EchoClient(
                 new ProxiedSocketFactory(nettyProxy));
         String string = StringConstants.STRING_05;

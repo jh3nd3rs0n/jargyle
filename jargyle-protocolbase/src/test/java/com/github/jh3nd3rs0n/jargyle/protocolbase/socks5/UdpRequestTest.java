@@ -233,7 +233,7 @@ public class UdpRequestTest {
 	public void testToByteArray02() {
 		UdpRequest udpDatagram1 = UdpRequest.newInstance(
 				UnsignedByte.valueOf(1),
-				Address.newInstanceFrom("google.com"),
+				Address.newInstanceFrom("example.com"),
 				Port.valueOf(1234),
 				StringConstants.STRING_03.getBytes());
 		UdpRequest udpDatagram2 = UdpRequest.newInstanceFrom(

@@ -30,7 +30,7 @@ public class HostNameTest {
     @Test
     public void testEqualsObject04() {
         HostName hostName1 = HostName.newHostName("localhost");
-        HostName hostName2 = HostName.newHostName("google.com");
+        HostName hostName2 = HostName.newHostName("example.com");
         Assert.assertNotEquals(hostName1, hostName2);
     }
 
@@ -51,7 +51,7 @@ public class HostNameTest {
     @Test
     public void testHashCode02() {
         HostName hostName1 = HostName.newHostName("localhost");
-        HostName hostName2 = HostName.newHostName("google.com");
+        HostName hostName2 = HostName.newHostName("example.com");
         Assert.assertNotEquals(hostName1.hashCode(), hostName2.hashCode());
     }
 
@@ -62,7 +62,7 @@ public class HostNameTest {
 
     @Test
     public void testNewHostNameString02() {
-        Assert.assertNotNull(HostName.newHostName("google.com"));
+        Assert.assertNotNull(HostName.newHostName("example.com"));
     }
 
     @Test

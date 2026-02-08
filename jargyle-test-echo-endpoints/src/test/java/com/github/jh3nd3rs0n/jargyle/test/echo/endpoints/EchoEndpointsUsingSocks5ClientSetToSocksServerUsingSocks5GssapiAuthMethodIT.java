@@ -112,7 +112,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod01() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_01;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
@@ -122,7 +122,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod02() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_02;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
@@ -132,7 +132,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod03() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_03;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
@@ -142,7 +142,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod04() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_04;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
@@ -152,7 +152,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod05() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_05;
 		String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
@@ -162,7 +162,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf01() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)))); 
 		String string = StringConstants.STRING_01;
@@ -173,7 +173,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf02() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)))); 
 		String string = StringConstants.STRING_02;
@@ -184,7 +184,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf03() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)))); 
 		String string = StringConstants.STRING_03;
@@ -195,7 +195,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf04() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))));
 		String string = StringConstants.STRING_04;
@@ -206,7 +206,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf05() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))));
 		String string = StringConstants.STRING_05;
@@ -217,7 +217,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg01() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)))); 
 		String string = StringConstants.STRING_01;
@@ -228,7 +228,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg02() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)))); 
 		String string = StringConstants.STRING_02;
@@ -239,7 +239,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg03() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)))); 
 		String string = StringConstants.STRING_03;
@@ -250,7 +250,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg04() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))));
 		String string = StringConstants.STRING_04;
@@ -261,7 +261,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoDatagramClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg05() throws IOException {
 		EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-				new SocksDatagramSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToDatagramSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))));
 		String string = StringConstants.STRING_05;
@@ -272,7 +272,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod01() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_01;
 		String returningString = echoClient.echo(string, echoServerPort);
@@ -282,7 +282,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod02() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_02;
 		String returningString = echoClient.echo(string, echoServerPort);
@@ -292,7 +292,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod03() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_03;
 		String returningString = echoClient.echo(string, echoServerPort);
@@ -302,7 +302,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod04() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_04;
 		String returningString = echoClient.echo(string, echoServerPort);
@@ -312,7 +312,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod05() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))));
 		String string = StringConstants.STRING_05;
 		String returningString = echoClient.echo(string, echoServerPort);
@@ -322,7 +322,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf01() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)))); 
 		String string = StringConstants.STRING_01;
@@ -333,7 +333,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf02() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)))); 
 		String string = StringConstants.STRING_02;
@@ -344,7 +344,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf03() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF)))); 
 		String string = StringConstants.STRING_03;
@@ -355,7 +355,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf04() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))));
 		String string = StringConstants.STRING_04;
@@ -366,7 +366,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf05() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))));
 		String string = StringConstants.STRING_05;
@@ -377,7 +377,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg01() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)))); 
 		String string = StringConstants.STRING_01;
@@ -388,7 +388,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg02() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)))); 
 		String string = StringConstants.STRING_02;
@@ -399,7 +399,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg03() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG)))); 
 		String string = StringConstants.STRING_03;
@@ -410,7 +410,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg04() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))));
 		String string = StringConstants.STRING_04;
@@ -421,7 +421,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoClientUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg05() throws IOException {
 		EchoClient echoClient = new EchoClient(
-				new SocksSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))));
 		String string = StringConstants.STRING_05;
@@ -432,7 +432,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod01() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))), 0);
 		String string = StringConstants.STRING_01;
 		String returningString = echServer.startThenEchoThenStop(
@@ -443,7 +443,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod02() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))), 0);
 		String string = StringConstants.STRING_02;
 		String returningString = echServer.startThenEchoThenStop(
@@ -454,7 +454,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod03() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))), 0);
 		String string = StringConstants.STRING_03;
 		String returningString = echServer.startThenEchoThenStop(
@@ -465,7 +465,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod04() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))), 0);
 		String string = StringConstants.STRING_04;
 		String returningString = echServer.startThenEchoThenStop(
@@ -476,7 +476,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethod05() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(ProtectionLevel.NONE))), 0);
 		String string = StringConstants.STRING_05;
 		String returningString = echServer.startThenEchoThenStop(
@@ -487,7 +487,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf01() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))), 0); 
 		String string = StringConstants.STRING_01;
@@ -499,7 +499,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf02() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))), 0); 
 		String string = StringConstants.STRING_02;
@@ -511,7 +511,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf03() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))), 0); 
 		String string = StringConstants.STRING_03;
@@ -523,7 +523,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf04() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))), 0);
 		String string = StringConstants.STRING_04;
@@ -535,7 +535,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithIntegAndConf05() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG_AND_CONF))), 0);
 		String string = StringConstants.STRING_05;
@@ -547,7 +547,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg01() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))), 0); 
 		String string = StringConstants.STRING_01;
@@ -558,7 +558,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg02() throws IOException {
-		EchoServer echServer = EchoServer.newInstance(new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+		EchoServer echServer = EchoServer.newInstance(new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 				ProtectionLevels.of(
 						ProtectionLevel.REQUIRED_INTEG))), 0); 
 		String string = StringConstants.STRING_02;
@@ -570,7 +570,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg03() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))), 0); 
 		String string = StringConstants.STRING_03;
@@ -582,7 +582,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg04() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))), 0);
 		String string = StringConstants.STRING_04;
@@ -594,7 +594,7 @@ public class EchoEndpointsUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuth
 	@Test
 	public void testEchoServerUsingSocks5ClientSetToSocksServerUsingSocks5GssapiAuthMethodWithInteg05() throws IOException {
 		EchoServer echServer = EchoServer.newInstance(
-				new SocksServerSocketFactory(newSocks5ClientUsingSocks5GssapiAuthMethod(
+				new SocksClientToServerSocketFactoryAdapter(newSocks5ClientUsingSocks5GssapiAuthMethod(
 						ProtectionLevels.of(
 								ProtectionLevel.REQUIRED_INTEG))), 0);
 		String string = StringConstants.STRING_05;

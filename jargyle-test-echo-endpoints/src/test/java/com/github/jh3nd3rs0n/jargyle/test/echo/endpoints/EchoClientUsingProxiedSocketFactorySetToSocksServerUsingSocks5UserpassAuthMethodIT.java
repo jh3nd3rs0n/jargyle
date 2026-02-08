@@ -90,7 +90,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException01() throws IOException {
         Authenticator.setDefault(new AuthenticatorForBogusUser01());
         try {
             EchoClient echoClient = new EchoClient(
@@ -104,7 +104,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test(expected = IOException.class)
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethodForIOException02() throws IOException {
         Authenticator.setDefault(new AuthenticatorForBogusUser02());
         try {
             EchoClient echoClient = new EchoClient(
@@ -118,7 +118,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethod01() throws IOException {
         Authenticator.setDefault(new AuthenticatorForUser01());
         try {
             EchoClient echoClient = new EchoClient(
@@ -132,7 +132,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethod02() throws IOException {
         Authenticator.setDefault(new AuthenticatorForUser02());
         try {
             EchoClient echoClient = new EchoClient(
@@ -146,7 +146,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethod03() throws IOException {
         Authenticator.setDefault(new AuthenticatorForUser03());
         try {
             EchoClient echoClient = new EchoClient(
@@ -160,7 +160,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethod04() throws IOException {
         Authenticator.setDefault(new AuthenticatorForUser04());
         try {
             EchoClient echoClient = new EchoClient(
@@ -174,7 +174,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
     }
 
     @Test
-    public void testEchoClientUsingProxiedNetObjectFactorySetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
+    public void testEchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5UserpassAuthMethod05() throws IOException {
         Authenticator.setDefault(new AuthenticatorForUser04());
         try {
             EchoClient echoClient = new EchoClient(

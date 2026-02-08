@@ -130,7 +130,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoDatagramClientUsingChainedSocks5ClientSetToSocksServers01() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToDatagramSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_01;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -139,7 +139,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoDatagramClientUsingChainedSocks5ClientSetToSocksServers02() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToDatagramSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_02;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -148,7 +148,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoDatagramClientUsingChainedSocks5ClientSetToSocksServers03() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToDatagramSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_03;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -157,7 +157,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoDatagramClientUsingChainedSocks5ClientSetToSocksServers04() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToDatagramSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_04;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -166,7 +166,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoDatagramClientUsingChainedSocks5ClientSetToSocksServers05() throws IOException {
         EchoDatagramClient echoDatagramClient = new EchoDatagramClient(
-                new SocksDatagramSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToDatagramSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_05;
         String returningString = echoDatagramClient.echo(string, echoDatagramServerPort);
         assertEquals(string, returningString);
@@ -175,7 +175,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoClientUsingChainedSocks5ClientSetToSocksServers01() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_01;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -184,7 +184,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoClientUsingChainedSocks5ClientSetToSocksServers02() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_02;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -193,7 +193,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoClientUsingChainedSocks5ClientSetToSocksServers03() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_03;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -202,7 +202,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoClientUsingChainedSocks5ClientSetToSocksServers04() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_04;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -211,7 +211,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoClientUsingChainedSocks5ClientSetToSocksServers05() throws IOException {
         EchoClient echoClient = new EchoClient(
-                new SocksSocketFactory(newChainedSocks5ClientSetToSocksServers()));
+                new SocksClientToSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()));
         String string = StringConstants.STRING_05;
         String returningString = echoClient.echo(string, echoServerPort);
         assertEquals(string, returningString);
@@ -220,7 +220,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoServerUsingChainedSocks5ClientSetToSocksServers01() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newChainedSocks5ClientSetToSocksServers()), 0);
+                new SocksClientToServerSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()), 0);
         String string = StringConstants.STRING_01;
         String returningString = echServer.startThenEchoThenStop(
                 new EchoClient(), string);
@@ -230,7 +230,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoServerUsingChainedSocks5ClientSetToSocksServers02() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newChainedSocks5ClientSetToSocksServers()), 0);
+                new SocksClientToServerSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()), 0);
         String string = StringConstants.STRING_02;
         String returningString = echServer.startThenEchoThenStop(
                 new EchoClient(), string);
@@ -240,7 +240,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoServerUsingChainedSocks5ClientSetToSocksServers03() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newChainedSocks5ClientSetToSocksServers()), 0);
+                new SocksClientToServerSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()), 0);
         String string = StringConstants.STRING_03;
         String returningString = echServer.startThenEchoThenStop(
                 new EchoClient(), string);
@@ -250,7 +250,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoServerUsingChainedSocks5ClientSetToSocksServers04() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newChainedSocks5ClientSetToSocksServers()), 0);
+                new SocksClientToServerSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()), 0);
         String string = StringConstants.STRING_04;
         String returningString = echServer.startThenEchoThenStop(
                 new EchoClient(), string);
@@ -260,7 +260,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersIT {
     @Test
     public void testEchoServerUsingChainedSocks5ClientSetToSocksServers05() throws IOException {
         EchoServer echServer = EchoServer.newInstance(
-                new SocksServerSocketFactory(newChainedSocks5ClientSetToSocksServers()), 0);
+                new SocksClientToServerSocketFactoryAdapter(newChainedSocks5ClientSetToSocksServers()), 0);
         String string = StringConstants.STRING_05;
         String returningString = echServer.startThenEchoThenStop(
                 new EchoClient(), string);

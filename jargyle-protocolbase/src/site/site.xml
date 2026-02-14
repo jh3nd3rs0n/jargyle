@@ -5,8 +5,8 @@
 		<version>2.0.0-M8</version>
 	</skin>
 	<body>
-		<menu name="Overview">
-			<item name="Introduction" href="index.html" />
+		<menu>
+			<item name="About Jargyle Protocolbase" href="index.html" />
 			<item name="Licenses" href="licenses.html" />
 		</menu>
 		<menu name="API Documentation">

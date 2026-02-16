@@ -1,9 +1,12 @@
-<site>
+<site name="Jargyle Client">
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>2.0.0-M8</version>
 	</skin>
+	<bannerLeft name="Jargyle Client">
+	</bannerLeft>
+	<publishDate position="left"/>
 	<body>
 		<menu>
 			<item name="About Jargyle Client" href="index.html" />

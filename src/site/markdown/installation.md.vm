@@ -1,0 +1,70 @@
+# Installation
+
+#[[##]]# Contents
+
+-   [Overview](#overview)
+-   [Installation of the Command Line Interface](#installation-of-the-command-line-interface)
+    -    [Prerequisites for the Command Line Interface](#prerequisites-for-the-command-line-interface)
+    -    [Installing the Command Line Interface](#installing-the-command-line-interface)
+
+#[[##]]# Overview
+
+This document discusses how to install Jargyle's command line interface.
+
+#[[##]]# Installation of the Command Line Interface
+
+The command line interface is installed manually by downloading the archive, 
+extracting the archive, and adding its `bin` directory to your `PATH` 
+environment variable.
+
+#[[###]]# Prerequisites for the Command Line Interface
+
+You need a Java Development Kit (JDK) installed. Either set the `JAVA_HOME` 
+environment variable to the path of your JDK installation or add the path of 
+the `java` executable to the `PATH` environment variable.
+
+The command line interface requires JDK 9 or higher. It is recommended to use 
+JDK 21 or higher to take advantage of using virtual threads instead of 
+platform threads. 
+
+#[[###]]# Installing the Command Line Interface
+
+To install the command line interface, download the archive, extract the
+archive, and add its `bin` directory to the `PATH` environment variable.
+
+Here are the following detailed steps:
+
+1.   Download the
+     [binary distribution archive](./downloads.html#binary-distribution).
+
+2.   Extract the archive in any directory. Use one of the following commands
+     depending on the archive:
+     
+     ```bash
+     tar xvf ${distributionName}-bin.tar.bz2
+     ```
+     
+     ```bash
+     tar xzvf ${distributionName}-bin.tar.gz
+     ```
+     
+     ```bash
+     unzip ${distributionName}-bin.zip
+     ```
+     
+3.   Add the `bin` directory of the created directory `${distributionName}` to
+     the `PATH` environment variable.
+
+4.   In a new shell, enter the following command to confirm installation:
+
+     ```bash
+     jargyle -V
+     ```
+
+     The result should look similar to the following:
+     
+     ```text
+     Jargyle CLI ${project.version}
+     ```
+
+     The result confirms that the command line interface is now installed.

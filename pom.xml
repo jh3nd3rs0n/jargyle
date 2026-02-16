@@ -49,6 +49,7 @@
 		<sonar.coverage.jacoco.xmlReportPaths>
 			target/site/jacoco-aggregate/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
+		<distributionName>${project.artifactId}-${project.version}</distributionName>
 	</properties>
 	<distributionManagement>
 		<site>

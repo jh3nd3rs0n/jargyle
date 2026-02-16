@@ -229,8 +229,8 @@ public final class JargyleCLI extends CLI {
 		Package pkg = this.getClass().getPackage();
 		System.out.printf(
 				"%s %s%n", 
-				pkg.getSpecificationTitle(), 
-				pkg.getSpecificationVersion());
+				pkg.getImplementationTitle(),
+				pkg.getImplementationVersion());
 		throw new TerminationRequestedException(0);
 	}
 	

@@ -1,0 +1,92 @@
+# Downloading Jargyle
+
+#[[##]]# Contents
+
+-   [Overview](#overview)
+-   [Prerequisites](#prerequisites)
+-   [Distributions](#distributions)
+    -   [Binary Distribution](#binary-distribution)
+    -   [Source Distribution](#source-distribution)
+-   [Build System Dependencies](#build-system-dependencies)
+
+#[[##]]# Overview
+
+This document discusses the types of downloads for Jargyle.
+
+#[[##]]# Prerequisites
+
+Jargyle requires JDK 9 or higher. It is recommended to use JDK 21 or higher
+to take advantage of using virtual threads instead of platform threads.
+
+Please note that while it is encouraged to try Jargyle and report any issues,
+Jargyle is still a **work in progress** and is **not yet production-ready**.
+
+#[[##]]# Distributions
+
+Jargyle is distributed in two distribution archive types: binary and source.
+Each type of distribution archive comes in multiple archive formats for you to
+choose.
+
+#[[###]]# Binary Distribution
+
+Select a binary distribution archive and follow the
+[installation instructions](./installation.html).
+
+<table>
+<tr>
+<th></th>
+<th>Link</th>
+<th>Checksum</th>
+</tr>
+<tr>
+<td>Binary tar.bz2 archive</td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-bin.tar.bz2">${distributionName}-bin.tar.bz2</a></td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-bin.tar.bz2.sha512">${distributionName}-bin.tar.bz2.sha512</a></td>
+</tr>
+<tr>
+<td>Binary tar.gz archive</td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-bin.tar.gz">${distributionName}-bin.tar.gz</a></td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-bin.tar.gz.sha512">${distributionName}-bin.tar.gz.sha512</a></td>
+</tr>
+<tr>
+<td>Binary zip archive</td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-bin.zip">${distributionName}-bin.zip</a></td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-bin.zip.sha512">${distributionName}-bin.zip.sha512</a></td>
+</tr>
+</table>
+
+#[[###]]# Source Distribution
+
+Select a source distribution archive if you intend to build Jargyle yourself.
+
+<table>
+<tr>
+<th></th>
+<th>Link</th>
+<th>Checksum</th>
+</tr>
+<tr>
+<td>Source tar.bz2 archive</td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-src.tar.bz2">${distributionName}-src.tar.bz2</a></td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-src.tar.bz2.sha512">${distributionName}-src.tar.bz2.sha512</a></td>
+</tr>
+<tr>
+<td>Source tar.gz archive</td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-src.tar.gz">${distributionName}-src.tar.gz</a></td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-src.tar.gz.sha512">${distributionName}-src.tar.gz.sha512</a></td>
+</tr>
+<tr>
+<td>Source zip archive</td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-src.zip">${distributionName}-src.zip</a></td>
+<td><a href="https://github.com/jh3nd3rs0n/jargyle/releases/download/v${project.version}/${distributionName}-src.zip.sha512">${distributionName}-src.zip.sha512</a></td>
+</tr>
+</table>
+
+#[[##]]# Build System Dependencies
+
+Add either of the following APIs as a dependency to your build system:
+
+-   [Client API](./jargyle-client/dependency-info.html)
+-   [Server API](./jargyle-server/dependency-info.html)
+
+**Note**: The build system dependencies are only available on GitHub for now.

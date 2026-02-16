@@ -143,7 +143,7 @@ public class ClientApp {
 ## Get Started
 
 1.   **Download**: Download the latest release of Jargyle from 
-     [Downloads](downloads.md).
+     [Downloads](./downloads.html).
 
 2.   **Explore**:
      

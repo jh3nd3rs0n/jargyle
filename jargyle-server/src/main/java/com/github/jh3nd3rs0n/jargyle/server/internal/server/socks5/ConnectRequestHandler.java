@@ -259,6 +259,14 @@ final class ConnectRequestHandler extends RequestHandler {
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
 			return null;
 		}
+		if (!this.configureTargetFacingSocket(targetFacingSocket)) {
+			try {
+				targetFacingSocket.close();
+			} catch (IOException e) {
+				throw new AssertionError(e);
+			}
+			return null;
+		}
 		return targetFacingSocket;
 	}
 	

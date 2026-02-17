@@ -3703,7 +3703,7 @@ Command line example:
 # the target-facing socket.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks.onConnectRequest.prepareTargetFacingSocket=true,socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
+    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3730,10 +3730,6 @@ Server configuration file example:
                     <ruleAction>
                         <name>firewallAction</name>
                         <value>ALLOW</value>
-                    </ruleAction>
-                    <ruleAction>
-                        <name>socks.onConnectRequest.prepareTargetFacingSocket</name>
-                        <value>true</value>
                     </ruleAction>
                     <ruleAction>
                         <name>socks.onConnectRequest.targetFacingSocketSetting</name>
@@ -3795,7 +3791,6 @@ public class ServerApp {
                 "socks.request.command=CONNECT,"
                 + "socks.request.desiredDestinationAddress=special-server.net,"
                 + "firewallAction=ALLOW,"
-                + "socks.onConnectRequest.prepareTargetFacingSocket=true,"
                 + "socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
                 + "socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
             /*

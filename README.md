@@ -5,7 +5,6 @@
 ## Contents
 
 -   [Overview](#overview)
--   [Contributing Guidelines](#contributing-guidelines) 
 -   [Directory Overview](#directory-overview) 
 -   [Build Requirements](#build-requirements)
 -   [Frequently Used Maven Commands](#frequently-used-maven-commands)
@@ -22,14 +21,10 @@ Jargyle is licensed under the
 [MIT license](https://opensource.org/licenses/MIT).
 Its license can be found [here](LICENSE).
 
-This README file discusses how to get started in contributing and building 
-Jargyle. For detailed examples and usage instructions including how to use 
+This README file discusses how to get started in building Jargyle. For 
+detailed examples and usage instructions including how to use 
 Jargyle, please refer to the 
 [project website](https://jh3nd3rs0n.github.io/jargyle).
-
-## Contributing Guidelines
-
-The contributing guidelines can be found [here](CONTRIBUTING.md).
 
 ## Directory Overview
 
@@ -80,10 +75,6 @@ The following is a simple overview of the directory.
 
 -   `.gitignore`: List of directories and files for Git to ignore such as
     Eclipse and IntelliJ IDEA project directories and files
-
--   `CODE_OF_CONDUCT.md`: Code of conduct for contributing to this project
-
--   `CONTRIBUTING.md`: Contributing guidelines
 
 -   `LICENSE`: The license for this project
 

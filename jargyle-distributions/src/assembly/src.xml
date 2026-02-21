@@ -19,8 +19,6 @@
                 <include>jargyle-*/**</include>
                 <include>src/**</include>
                 <include>.gitignore</include>
-                <include>CODE_OF_CONDUCT.md</include>
-                <include>CONTRIBUTING.md</include>
                 <include>LICENSE</include>
                 <include>pom.xml</include>
                 <include>README.md</include>

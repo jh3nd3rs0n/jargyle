@@ -115,8 +115,7 @@ public final class ConnectingClientSocketBuilder {
             final int socksServerPort) throws IOException {
         Properties properties = this.socksClientAgent.getProperties();
         InetAddress localAddress =
-                GeneralValueDerivationHelper.getClientBindHostFrom(
-                        properties).toInetAddress();
+                this.socksClientAgent.getClientBindHost().toInetAddress();
         PortRanges localPortRanges = properties.getValue(
                 GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
         Socket clientSck = clientSock;

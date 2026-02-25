@@ -53,16 +53,14 @@ final class GssapiAuthMethodSubNegotiator
     private ProtectionLevel negotiateProtectionLevel(
             final Socket socket,
             final GSSContext context,
-            final Socks5Client socks5Client)
+            final Socks5ClientAgent socks5ClientAgent)
             throws IOException, GSSException {
         InputStream inStream = socket.getInputStream();
         OutputStream outStream = socket.getOutputStream();
         boolean necReferenceImpl =
-                Socks5ValueDerivationHelper.getSocks5GssapiAuthMethodNecReferenceImplFrom(
-                        socks5Client.getProperties());
-        ProtectionLevels protectionLevels =
-                Socks5ValueDerivationHelper.getSocks5GssapiAuthMethodProtectionLevelsFrom(
-                        socks5Client.getProperties());
+                socks5ClientAgent.getGssapiAuthMethodNecReferenceImpl();
+        ProtectionLevels protectionLevels = ProtectionLevels.newInstanceFrom(
+                socks5ClientAgent.getGssapiAuthMethodProtectionLevels().toString());
         byte[] token = new byte[]{protectionLevels.getFirst().byteValue()};
         if (!necReferenceImpl) {
             token = context.wrap(token, 0, token.length,
@@ -98,15 +96,11 @@ final class GssapiAuthMethodSubNegotiator
     }
 
     private GSSContext newContext(
-            final Socks5Client socks5Client) throws GSSException {
+            final Socks5ClientAgent socks5ClientAgent) throws GSSException {
         GSSManager manager = GSSManager.getInstance();
-        String server =
-                Socks5ValueDerivationHelper.getSocks5GssapiAuthMethodServiceNameFrom(
-                        socks5Client.getProperties());
+        String server = socks5ClientAgent.getGssapiAuthMethodServiceName();
         GSSName serverName = manager.createName(server, null);
-        Oid mechanismOid =
-                Socks5ValueDerivationHelper.getSocks5GssapiAuthMethodMechanismOidFrom(
-                        socks5Client.getProperties());
+        Oid mechanismOid = socks5ClientAgent.getGssapiAuthMethodMechanismOid();
         GSSContext context = manager.createContext(
                 serverName,
                 mechanismOid,
@@ -121,14 +115,14 @@ final class GssapiAuthMethodSubNegotiator
     @Override
     public MethodEncapsulation subNegotiate(
             final Socket socket,
-            final Socks5Client socks5Client) throws IOException {
+            final Socks5ClientAgent socks5ClientAgent) throws IOException {
         GSSContext context = null;
         ProtectionLevel protectionLevelSelection = null;
         try {
-            context = this.newContext(socks5Client);
+            context = this.newContext(socks5ClientAgent);
             this.establishContext(socket, context);
             protectionLevelSelection = this.negotiateProtectionLevel(
-                    socket, context, socks5Client);
+                    socket, context, socks5ClientAgent);
         } catch (IOException e) {
             if (context != null) {
                 try {
@@ -151,10 +145,8 @@ final class GssapiAuthMethodSubNegotiator
             throw new MethodSubNegotiationException(this.getMethod(), e);
         }
         MessageProp msgProp = protectionLevelSelection.newMessageProp(
-                Socks5ValueDerivationHelper.getSocks5GssapiAuthMethodSuggestedIntegFrom(
-                        socks5Client.getProperties()),
-                Socks5ValueDerivationHelper.getSocks5GssapiAuthMethodSuggestedConfFrom(
-                        socks5Client.getProperties()));
+                socks5ClientAgent.getGssapiAuthMethodSuggestedInteg(),
+                socks5ClientAgent.getGssapiAuthMethodSuggestedConf());
         return new GssapiAuthMethodEncapsulation(socket, context, msgProp);
     }
 

@@ -32,8 +32,7 @@ public final class Socks5HostResolver extends HostResolver {
 		if (!(Host.newInstance(host) instanceof HostName)) {
 			return InetAddress.getByName(host);
 		}
-		if (!Socks5ValueDerivationHelper.getSocks5Socks5HostResolverResolveFromSocks5ServerFrom(
-				this.socks5ClientAgent.getProperties())) {
+		if (!this.socks5ClientAgent.canSocks5HostResolverResolveFromSocks5Server()) {
 			return InetAddress.getByName(host);
 		}
 		InetAddress inetAddress;

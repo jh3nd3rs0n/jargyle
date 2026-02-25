@@ -21,13 +21,11 @@ final class UsernamePasswordAuthMethodSubNegotiator
     }
 
     private UsernamePassword getUsernamePassword(
-            final Socks5Client socks5Client) {
+            final Socks5ClientAgent socks5ClientAgent) {
         UsernamePassword usernamePassword = UsernamePassword.newInstance(
-                Socks5ValueDerivationHelper.getSocks5UserpassAuthMethodUsernameFrom(
-                        socks5Client.getProperties()),
-                Socks5ValueDerivationHelper.getSocks5UserpassAuthMethodPasswordFrom(
-                        socks5Client.getProperties()).getPassword());
-        UserInfo userInfo = socks5Client.getSocksServerUri().getUserInfo();
+                socks5ClientAgent.getUserpassAuthMethodUsername(),
+                socks5ClientAgent.getUserpassAuthMethodPassword().getPassword());
+        UserInfo userInfo = socks5ClientAgent.getSocksServerUri().getUserInfo();
         if (userInfo == null) {
             return usernamePassword;
         }
@@ -42,11 +40,11 @@ final class UsernamePasswordAuthMethodSubNegotiator
     @Override
     public MethodEncapsulation subNegotiate(
             final Socket socket,
-            final Socks5Client socks5Client) throws IOException {
+            final Socks5ClientAgent socks5ClientAgent) throws IOException {
         InputStream inputStream = socket.getInputStream();
         OutputStream outputStream = socket.getOutputStream();
         UsernamePassword usernamePassword = this.getUsernamePassword(
-                socks5Client);
+                socks5ClientAgent);
         Request request = Request.newInstance(
                 usernamePassword.getUsername(),
                 usernamePassword.getPassword());

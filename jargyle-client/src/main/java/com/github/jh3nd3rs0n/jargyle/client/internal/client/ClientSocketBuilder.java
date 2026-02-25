@@ -79,8 +79,7 @@ public final class ClientSocketBuilder {
     public Socket newBoundConnectedClientSocket() throws IOException {
         Properties properties = this.socksClientAgent.getProperties();
         InetAddress localAddr =
-                GeneralValueDerivationHelper.getClientBindHostFrom(
-                        properties).toInetAddress();
+                this.socksClientAgent.getClientBindHost().toInetAddress();
         PortRanges localPortRanges = properties.getValue(
                 GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
         Socket clientSocket = null;

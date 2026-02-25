@@ -17,7 +17,7 @@ final class NoAcceptableMethodsMethodSubNegotiator
     @Override
     public MethodEncapsulation subNegotiate(
             final Socket Socket,
-            final Socks5Client socks5Client) throws IOException {
+            final Socks5ClientAgent socks5ClientAgent) throws IOException {
         throw new MethodSubNegotiationException(
                 this.getMethod(), "no acceptable methods");
     }

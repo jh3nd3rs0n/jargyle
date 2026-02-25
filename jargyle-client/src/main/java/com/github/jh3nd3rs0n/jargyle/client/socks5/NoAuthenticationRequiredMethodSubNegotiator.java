@@ -16,7 +16,7 @@ final class NoAuthenticationRequiredMethodSubNegotiator
     @Override
     public MethodEncapsulation subNegotiate(
             final Socket socket,
-            final Socks5Client socks5Client) throws IOException {
+            final Socks5ClientAgent socks5ClientAgent) throws IOException {
         return MethodEncapsulation.newNullInstance(socket);
     }
 

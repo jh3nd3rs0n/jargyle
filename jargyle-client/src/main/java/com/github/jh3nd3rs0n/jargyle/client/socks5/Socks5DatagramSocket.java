@@ -174,8 +174,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			DatagramSocket datagramSock = this.datagramSocket;
 			String address = datagramSock.getLocalAddress().getHostAddress();
 			int port = datagramSock.getLocalPort();
-			if (Socks5ValueDerivationHelper.getSocks5Socks5DatagramSocketClientInfoUnavailableFrom(
-					this.socks5ClientAgent.getProperties())) {
+			if (this.socks5ClientAgent.isSocks5DatagramSocketClientInfoUnavailable()) {
 				address = HostIpv4Address.ALL_ZEROS_IPV4_ADDRESS;
 				port = 0;
 			}

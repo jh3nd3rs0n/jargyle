@@ -1,6 +1,5 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
-import com.github.jh3nd3rs0n.jargyle.client.GeneralPropertySpecConstants;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.SslSocketFactory;
@@ -76,8 +75,7 @@ public final class ConfiguringClientSocketBuilder {
      *                         socket
      */
     public ConfiguringClientSocketBuilder configure() throws SocketException {
-        this.socksClientAgent.getProperties().getValue(
-                GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS).applyTo(
+        this.socksClientAgent.getClientSocketSettings().applyTo(
                 this.clientSocket);
         return this;
     }

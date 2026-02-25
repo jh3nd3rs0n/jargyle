@@ -1,10 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.*;
-import com.github.jh3nd3rs0n.jargyle.common.net.Host;
-import com.github.jh3nd3rs0n.jargyle.common.net.HostAddressTypes;
-import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
-import com.github.jh3nd3rs0n.jargyle.common.net.NetInterface;
+import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import com.github.jh3nd3rs0n.jargyle.internal.net.ssl.DtlsDatagramSocketFactory;
@@ -137,6 +135,33 @@ public class SocksClientAgent {
     }
 
     /**
+     * Returns the {@code PortRanges} value for the property defined by the
+     * {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#CLIENT_BIND_PORT_RANGES}.
+     *
+     * @return the {@code PortRanges} value for the property defined by the
+     * {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#CLIENT_BIND_PORT_RANGES}
+     */
+    public final PortRanges getClientBindPortRanges() {
+        return this.properties.getValue(
+                GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+    }
+
+    /**
+     * Returns the {@code NonNegativeInteger} value for the property defined
+     * by the {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#CLIENT_CONNECT_TIMEOUT}.
+     *
+     * @return the {@code NonNegativeInteger} value for the property defined
+     * by the {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#CLIENT_CONNECT_TIMEOUT}
+     */
+    public final NonNegativeInteger getClientConnectTimeout() {
+        return this.properties.getValue(GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
+    }
+
+    /**
      * Returns the {@code NetInterface} value from the property defined by the
      * {@code PropertySpec} constant
      * {@link GeneralPropertySpecConstants#CLIENT_NET_INTERFACE}.
@@ -148,6 +173,20 @@ public class SocksClientAgent {
     private NetInterface getClientNetInterface() {
         return this.properties.getValue(
                 GeneralPropertySpecConstants.CLIENT_NET_INTERFACE);
+    }
+
+    /**
+     * Returns the {@code SocketSettings} value for the property defined by
+     * the {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#CLIENT_SOCKET_SETTINGS}.
+     *
+     * @return the {@code SocketSettings} value for the property defined by
+     * the {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#CLIENT_SOCKET_SETTINGS}
+     */
+    public final SocketSettings getClientSocketSettings() {
+        return this.properties.getValue(
+                GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
     }
 
     /**

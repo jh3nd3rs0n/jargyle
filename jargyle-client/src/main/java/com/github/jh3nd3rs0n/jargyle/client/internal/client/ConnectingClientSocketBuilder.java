@@ -78,8 +78,7 @@ public final class ConnectingClientSocketBuilder {
             final SocketFactory sockFactory,
             final SslSocketFactory sslSockFactory) {
         this.clientSocket = clientSock;
-        this.connectTimeout = agent.getProperties().getValue(
-                GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
+        this.connectTimeout = agent.getClientConnectTimeout();
         this.hostResolverFactory = hstResolverFactory;
         this.socketFactory = sockFactory;
         this.socksClientAgent = agent;
@@ -113,11 +112,10 @@ public final class ConnectingClientSocketBuilder {
             final Socket clientSock,
             final InetAddress socksServerHostInetAddress,
             final int socksServerPort) throws IOException {
-        Properties properties = this.socksClientAgent.getProperties();
         InetAddress localAddress =
                 this.socksClientAgent.getClientBindHost().toInetAddress();
-        PortRanges localPortRanges = properties.getValue(
-                GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+        PortRanges localPortRanges =
+                this.socksClientAgent.getClientBindPortRanges();
         Socket clientSck = clientSock;
         boolean clientSockBound = false;
         for (Iterator<PortRange> iterator = localPortRanges.toList().iterator();

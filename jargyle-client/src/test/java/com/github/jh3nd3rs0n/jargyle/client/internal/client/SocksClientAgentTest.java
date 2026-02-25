@@ -2,6 +2,7 @@ package com.github.jh3nd3rs0n.jargyle.client.internal.client;
 
 import com.github.jh3nd3rs0n.jargyle.client.*;
 import com.github.jh3nd3rs0n.jargyle.common.net.*;
+import com.github.jh3nd3rs0n.jargyle.common.number.NonNegativeInteger;
 import com.github.jh3nd3rs0n.jargyle.common.security.EncryptedPassword;
 import com.github.jh3nd3rs0n.jargyle.common.string.CommaSeparatedValues;
 import org.ietf.jgss.GSSException;
@@ -81,6 +82,91 @@ public class SocksClientAgentTest {
         Assert.assertEquals(
                 host,
                 socksClientAgent.getClientBindHost());
+    }
+
+    @Test
+    public void testGetClientBindPortRanges01() {
+        Properties properties = Properties.of();
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertEquals(
+                PortRanges.getDefault(),
+                socksClientAgent.getClientBindPortRanges());
+    }
+
+    @Test
+    public void testGetClientBindPortRanges02() {
+        PortRanges portRanges = PortRanges.of(PortRange.of(
+                Port.valueOf(0),
+                Port.valueOf(65535)));
+        Properties properties = Properties.of(
+                GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES.newProperty(
+                        portRanges));
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertEquals(
+                portRanges,
+                socksClientAgent.getClientBindPortRanges());
+    }
+
+    @Test
+    public void testGetClientConnectTimeout01() {
+        Properties properties = Properties.of();
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertEquals(
+                NonNegativeInteger.valueOf(60000),
+                socksClientAgent.getClientConnectTimeout());
+    }
+
+    @Test
+    public void testGetClientConnectTimeout02() {
+        NonNegativeInteger connectTimeout = NonNegativeInteger.valueOf(0);
+        Properties properties = Properties.of(
+                GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT.newProperty(
+                        connectTimeout));
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertEquals(
+                connectTimeout,
+                socksClientAgent.getClientConnectTimeout());
+    }
+
+    @Test
+    public void testGetClientSocketSettings01() {
+        Properties properties = Properties.of();
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertEquals(
+                SocketSettings.of(),
+                socksClientAgent.getClientSocketSettings());
+    }
+
+    @Test
+    public void testGetClientSocketSettings02() {
+        SocketSettings socketSettings = SocketSettings.of(
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(60000)));
+        Properties properties = Properties.of(
+                GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS.newProperty(
+                        socketSettings));
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertEquals(
+                socketSettings,
+                socksClientAgent.getClientSocketSettings());
     }
 
     @Test

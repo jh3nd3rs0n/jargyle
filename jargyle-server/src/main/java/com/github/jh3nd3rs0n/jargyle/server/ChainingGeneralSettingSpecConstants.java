@@ -102,6 +102,23 @@ public final class ChainingGeneralSettingSpecConstants {
 					GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS.getDefaultProperty().getValue()));
 
 	@NameValuePairValueSpecDoc(
+			defaultValue = "false",
+			description = "The boolean value to indicate if the client "
+					+ "socket that is used to connect to the other SOCKS "
+					+ "server is to be prepared before connecting (involves "
+					+ "applying the specified socket settings, resolving the "
+					+ "other SOCKS server host name, and setting the "
+					+ "specified timeout on waiting to connect)",
+			name = "chaining.prepareClientSocket",
+			syntax = "chaining.prepareClientSocket=true|false",
+			valueType = Boolean.class
+	)
+	public static final SettingSpec<Boolean> CHAINING_PREPARE_CLIENT_SOCKET =
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
+					"chaining.prepareClientSocket",
+					GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET.getDefaultProperty().getValue()));
+
+	@NameValuePairValueSpecDoc(
 			description = "The ID for a route through a chain of other SOCKS "
 					+ "servers. This setting also marks the current other "
 					+ "SOCKS server as the last SOCKS server in the chain of "

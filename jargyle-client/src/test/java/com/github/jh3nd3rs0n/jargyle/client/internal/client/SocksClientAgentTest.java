@@ -17,6 +17,28 @@ import java.net.UnknownHostException;
 public class SocksClientAgentTest {
 
     @Test
+    public void testCanPrepareClientSocket01() {
+        Properties properties = Properties.of();
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertFalse(socksClientAgent.canPrepareClientSocket());
+    }
+
+    @Test
+    public void testCanPrepareClientSocket02() {
+        Properties properties = Properties.of(
+                GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET.newProperty(
+                        true));
+        SocksClient socksClient = SocksServerUriScheme.SOCKS5
+                .newSocksServerUri("127.0.0.1")
+                .newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertTrue(socksClientAgent.canPrepareClientSocket());
+    }
+
+    @Test
     public void testCanSocksHostResolverResolveFromSocksServer01() {
         Properties properties = Properties.of();
         SocksClient socksClient = SocksServerUriScheme.SOCKS5

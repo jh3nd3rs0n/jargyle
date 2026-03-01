@@ -19,6 +19,7 @@
 <tr><td><a href="#socksclient-clientconnecttimeout"><code>socksClient.clientConnectTimeout</code></a></td><td>Non-negative Integer</td><td>The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (a timeout of 0 is interpreted as an infinite timeout)<br/><b>Default Value:</b> <code>60000</code></td></tr>
 <tr><td><a href="#socksclient-clientnetinterface"><code>socksClient.clientNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the client socket that is used to connect to the SOCKS server</td></tr>
 <tr><td><a href="#socksclient-clientsocketsettings"><code>socksClient.clientSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server</td></tr>
+<tr><td><a href="#socksclient-prepareclientsocket"><code>socksClient.prepareClientSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client socket that is used to connect to the SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the SOCKS server host name, and setting the specified timeout on waiting to connect)<br/><b>Default Value:</b> <code>false</code></td></tr>
 <tr><td><a href="#socksclient-socksserveruri"><code>socksClient.socksServerUri</code></a></td><td>SOCKS Server URI</td><td>The URI of the SOCKS server</td></tr>
 </table>
 
@@ -185,6 +186,14 @@
 **Description:** The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the SOCKS server
 
 **Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### socksClient.prepareClientSocket
+
+**Description:** The boolean value to indicate if the client socket that is used to connect to the SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the SOCKS server host name, and setting the specified timeout on waiting to connect)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
 
 ### socksClient.socks.gssapiauthmethod.mechanismOid
 

@@ -161,12 +161,21 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void socks5UdpAssociate() throws IOException {
-			Socket sock = this.socks5ClientAgent.newClientSocketBuilder()
-					.proceedToConfigure(this.socket)
-					.configure()
-					.proceedToConnect()
-					.setToBind(true)
-					.getConnectedClientSocket();
+			Socket sock;
+			if (!this.socks5ClientAgent.canPrepareClientSocket()) {
+				sock = this.socks5ClientAgent.newClientSocketBuilder()
+						.newBoundConnectedClientSocket();
+				this.socks5ClientAgent.newClientSocketBuilder()
+						.proceedToConfigure(sock)
+						.configure();
+			} else {
+				sock = this.socks5ClientAgent.newClientSocketBuilder()
+						.proceedToConfigure(this.socket)
+						.configure()
+						.proceedToConnect()
+						.setToBind(true)
+						.getConnectedClientSocket();
+			}
 			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5ClientAgent.doMethodSubNegotiation(method, sock);

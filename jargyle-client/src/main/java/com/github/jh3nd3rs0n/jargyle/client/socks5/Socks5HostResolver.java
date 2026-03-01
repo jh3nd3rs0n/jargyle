@@ -50,13 +50,23 @@ public final class Socks5HostResolver extends HostResolver {
 		Socket sck = null;
 		Reply rep;
 		try {
-			socket = this.socks5ClientAgent.newClientSocketBuilder().newClientSocket();
-			sock = this.socks5ClientAgent.newClientSocketBuilder()
-					.proceedToConfigure(socket)
-					.configure()
-					.proceedToConnect()
-					.setToBind(true)
-					.getConnectedClientSocket();
+			if (!this.socks5ClientAgent.canPrepareClientSocket()) {
+				socket = this.socks5ClientAgent.newClientSocketBuilder()
+						.newBoundConnectedClientSocket();
+				this.socks5ClientAgent.newClientSocketBuilder()
+						.proceedToConfigure(socket)
+						.configure();
+				sock = socket;
+			} else {
+				socket = this.socks5ClientAgent.newClientSocketBuilder()
+						.newClientSocket();
+				sock = this.socks5ClientAgent.newClientSocketBuilder()
+						.proceedToConfigure(socket)
+						.configure()
+						.proceedToConnect()
+						.setToBind(true)
+						.getConnectedClientSocket();
+			}
 			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation =
 					this.socks5ClientAgent.doMethodSubNegotiation(method, sock);

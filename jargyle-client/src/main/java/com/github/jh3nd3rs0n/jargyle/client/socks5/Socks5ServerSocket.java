@@ -408,11 +408,18 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
-			Socket sock = this.socks5ClientAgent.newClientSocketBuilder()
-					.proceedToConfigure(this.socket)
-					.proceedToConnect()
-					.setToBind(true)
-					.getConnectedClientSocket();
+			Socket sock;
+			if (!this.socks5ClientAgent.canPrepareClientSocket()) {
+				sock = this.socks5ClientAgent.newClientSocketBuilder()
+						.newBoundConnectedClientSocket();
+				this.socketSettings.applyTo(sock);
+			} else {
+				sock = this.socks5ClientAgent.newClientSocketBuilder()
+						.proceedToConfigure(this.socket)
+						.proceedToConnect()
+						.setToBind(true)
+						.getConnectedClientSocket();
+			}
 			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
 					this.socks5ClientAgent.doMethodSubNegotiation(method, sock);

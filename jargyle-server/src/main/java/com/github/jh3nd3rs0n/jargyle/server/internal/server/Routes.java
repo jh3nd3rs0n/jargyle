@@ -114,6 +114,10 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS));
 		SETTING_CONVERTER_MAP.put(
+				ChainingGeneralSettingSpecConstants.CHAINING_PREPARE_CLIENT_SOCKET,
+				new SettingToPropertyConverter(
+						GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET));
+		SETTING_CONVERTER_MAP.put(
 				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_MECHANISM_OID,
 				new SettingToPropertyConverter(
 						SocksPropertySpecConstants.SOCKS_GSSAPIAUTHMETHOD_MECHANISM_OID));

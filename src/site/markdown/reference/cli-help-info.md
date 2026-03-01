@@ -257,6 +257,9 @@ SETTINGS:
     chaining.clientSocketSettings=SOCKET_SETTINGS
         The comma separated list of socket settings for the client socket that is used to connect to the other SOCKS server
 
+    chaining.prepareClientSocket=true|false
+        The boolean value to indicate if the client socket that is used to connect to the other SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the other SOCKS server host name, and setting the specified timeout on waiting to connect) (default value is false)
+
     chaining.routeId=ROUTE_ID
         The ID for a route through a chain of other SOCKS servers. This setting also marks the current other SOCKS server as the last SOCKS server in the chain of other SOCKS servers
 

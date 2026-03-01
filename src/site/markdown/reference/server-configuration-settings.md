@@ -61,6 +61,7 @@
 <tr><td><a href="#chaining-clientconnecttimeout"><code>chaining.clientConnectTimeout</code></a></td><td>Non-negative Integer</td><td>The timeout in milliseconds on waiting for the client socket to connect to the other SOCKS server (a timeout of 0 is interpreted as an infinite timeout)<br/><b>Default Value:</b> <code>60000</code></td></tr>
 <tr><td><a href="#chaining-clientnetinterface"><code>chaining.clientNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the client socket that is used to connect to the other SOCKS server</td></tr>
 <tr><td><a href="#chaining-clientsocketsettings"><code>chaining.clientSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the client socket that is used to connect to the other SOCKS server</td></tr>
+<tr><td><a href="#chaining-prepareclientsocket"><code>chaining.prepareClientSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client socket that is used to connect to the other SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the other SOCKS server host name, and setting the specified timeout on waiting to connect)<br/><b>Default Value:</b> <code>false</code></td></tr>
 <tr><td><a href="#chaining-routeid"><code>chaining.routeId</code></a></td><td>String</td><td>The ID for a route through a chain of other SOCKS servers. This setting also marks the current other SOCKS server as the last SOCKS server in the chain of other SOCKS servers</td></tr>
 <tr><td><a href="#chaining-socksserveruri"><code>chaining.socksServerUri</code></a></td><td>SOCKS Server URI</td><td>The URI of the other SOCKS server</td></tr>
 </table>
@@ -409,6 +410,14 @@
 **Description:** The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the other SOCKS server
 
 **Value Type:** [Positive Integer](value-types.md#positive-integer)
+
+### chaining.prepareClientSocket
+
+**Description:** The boolean value to indicate if the client socket that is used to connect to the other SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the other SOCKS server host name, and setting the specified timeout on waiting to connect)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
 
 ### chaining.routeId
 

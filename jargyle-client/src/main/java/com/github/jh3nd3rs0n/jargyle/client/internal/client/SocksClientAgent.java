@@ -81,6 +81,20 @@ public class SocksClientAgent {
     /**
      * Returns the {@code boolean} value from the property defined by the
      * {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#PREPARE_CLIENT_SOCKET}.
+     *
+     * @return the {@code boolean} value from the property defined by the
+     * {@code PropertySpec} constant
+     * {@link GeneralPropertySpecConstants#PREPARE_CLIENT_SOCKET}
+     */
+    public final boolean canPrepareClientSocket() {
+        return this.properties.getValue(
+                GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET);
+    }
+
+    /**
+     * Returns the {@code boolean} value from the property defined by the
+     * {@code PropertySpec} constant
      * {@link SocksPropertySpecConstants#SOCKS_SOCKS_HOST_RESOLVER_RESOLVE_FROM_SOCKS_SERVER}.
      *
      * @return the {@code boolean} value from the property defined by the

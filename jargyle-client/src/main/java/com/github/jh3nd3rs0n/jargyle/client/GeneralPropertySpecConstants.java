@@ -143,6 +143,32 @@ public final class GeneralPropertySpecConstants {
                     SocketSettings.of()));
 
     /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.prepareClientSocket}: the {@code Boolean} value to
+     * indicate if the client socket that is used to connect to the SOCKS
+     * server is to be prepared before connecting (involves apply the
+     * specified socket settings, resolving the SOCKS server host name, and
+     * setting the specified timeout on waiting to connect) (default value is
+     * {@code false}).
+     */
+    @NameValuePairValueSpecDoc(
+            defaultValue = "false",
+            description = "The boolean value to indicate if the client "
+                    + "socket that is used to connect to the SOCKS server is "
+                    + "to be prepared before connecting (involves applying "
+                    + "the specified socket settings, resolving the SOCKS "
+                    + "server host name, and setting the specified timeout "
+                    + "on waiting to connect)",
+            name = "socksClient.prepareClientSocket",
+            syntax = "socksClient.prepareClientSocket=true|false",
+            valueType = Boolean.class
+    )
+    public static final PropertySpec<Boolean> PREPARE_CLIENT_SOCKET =
+            PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
+                    "socksClient.prepareClientSocket",
+                    Boolean.FALSE));
+
+    /**
      * {@code PropertySpec} constant for {@code socksClient.socksServerUri}:
      * the {@code SocksServerUri} for the URI of the SOCKS server.
      */

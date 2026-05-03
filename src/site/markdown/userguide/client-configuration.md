@@ -441,7 +441,7 @@ principal) for the SOCKS server residing at `jargyle.net`.
 ## Resolving Host Names From the SOCKS5 Server
 
 By default, host name resolution from the SOCKS5 server occurs only when a 
-`Socket` is created with a host name and port number.
+`Socket` is created with a provided `String` for the target host name.
 
 API example:
 
@@ -478,7 +478,7 @@ system. To enable the `HostResolver` object to have the host names resolved
 from the SOCKS5 server instead, you would need to set the property 
 `socksClient.socks5.socks5HostResolver.resolveFromSocks5Server` set to 
 `true`. This property can only be used if the SOCKS5 server supports handling 
-the SOCKS5 RESOLVE request.
+the RESOLVE request.
 
 API example:
 
@@ -566,3 +566,192 @@ The known limitations of routing traffic through a specified chain of SOCKS
 servers include the following:
 
 -   Only TCP traffic can be routed through the chain.
+
+**Note**: When connecting a `Socket` to a target host through a chain of 
+specified SOCKS servers with one or more of the SOCKS servers from the 2nd to 
+the *n*th specified with a host name, how the host names of the SOCKS servers 
+are resolved depends on how the `Socket` will be connecting to the target 
+host. If the `Socket` is created with the provided target host (a `String` or 
+a `java.net.InetAddress` for the target host), the specified host name for 
+each SOCKS server from the 2nd to the *n*th is resolved by the previous. If 
+the `Socket` is created unconnected and is later connected by its `connect()` 
+method, the specified host name for each SOCKS server from the 2nd to the 
+*n*th is resolved by the local system.
+
+API example of creating a connected `Socket`:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("alpha-alpha.net", 11111)
+            .newSocksClient(Properties.of());
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("beta-alpha.net", 22221)
+            .newSocksClient(Properties.of(), socksClient1);
+        SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("gamma-alpha.net", 33331)
+            .newSocksClient(Properties.of(), socksClient2);
+        SocketFactory socketFactory = 
+            socksClient3.getSocksSocketFactory();
+        Socket socket = socketFactory.newSocket("example.com", 443);
+        /*
+         * The host name 'alpha-alpha.net' is resolved by the local system.
+         * 
+         * The host name 'beta-alpha.net' is resolved by the previous SOCKS 
+         * server with the host name 'alpha-alpha.net'.
+         * 
+         * The host name 'gamma-gamma.net' is resolved by the previous SOCKS 
+         * server with the host name 'beta-alpha.net'.
+         * 
+         * The host name 'example.com' is resolved by the last SOCKS server 
+         * with the host name 'gamma-gamma.net'.
+         */
+        // ...
+    }
+}
+```
+
+API example of creating an unconnected `Socket` to be connected:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("alpha-alpha.net", 11111)
+            .newSocksClient(Properties.of());
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("beta-alpha.net", 22221)
+            .newSocksClient(Properties.of(), socksClient1);
+        SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("gamma-alpha.net", 33331)
+            .newSocksClient(Properties.of(), socksClient2);
+        SocketFactory socketFactory = 
+            socksClient3.getSocksSocketFactory();
+        Socket socket = socketFactory.newSocket();
+        // ...
+        socket.connect(new java.net.InetSocketAddress("example.com", 443));
+        /*
+         * The host name 'alpha-alpha.net' is resolved by the local system.
+         * 
+         * The host name 'beta-alpha.net' is resolved by the local system.
+         * 
+         * The host name 'gamma-gamma.net' is resolved by the local system.
+         * 
+         * The host name 'example.com' is resolved by the local system.
+         */
+        // ...
+    }
+}
+```
+
+If you would like to create an unconnected `Socket` to be connected and have 
+each of the SOCKS servers resolve the specified host name of the next SOCKS 
+server, you will need to set the property
+`socksClient.socks5.socks5HostResolver.resolveFromSocks5Server` set to `true` 
+for each server. Again, this property can only be used if each SOCKS server 
+supports handling the RESOLVE request.
+
+API example of creating an unconnected `Socket` to be connected:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("alpha-alpha.net", 11111)
+            .newSocksClient(Properties.of(Property.newInstanceFromParsedValue(
+                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    "true"
+            )));
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("beta-alpha.net", 22221)
+            .newSocksClient(Properties.of(Property.newInstanceFromParsedValue(
+                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    "true"
+            )), socksClient1);
+        SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("gamma-alpha.net", 33331)
+            .newSocksClient(Properties.of(Property.newInstanceFromParsedValue(
+                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    "true"
+            )), socksClient2);
+        SocketFactory socketFactory = 
+            socksClient3.getSocksSocketFactory();
+        Socket socket = socketFactory.newSocket();
+        // ...
+        HostResolver hostResolver = hostResolverFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("example.com");        
+        socket.connect(new java.net.InetSocketAddress(inetAddress, 443));
+        /*
+         * The host name 'alpha-alpha.net' is resolved by the local system.
+         *
+         * The host name 'beta-alpha.net' is resolved by the previous SOCKS
+         * server with the host name 'alpha-alpha.net'.
+         *
+         * The host name 'gamma-gamma.net' is resolved by the previous SOCKS
+         * server with the host name 'beta-alpha.net'.
+         *
+         * The host name 'example.com' is resolved by the last SOCKS server
+         * with the host name 'gamma-gamma.net'.
+         */
+        // ...
+    }
+}
+```

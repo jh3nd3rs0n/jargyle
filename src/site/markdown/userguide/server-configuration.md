@@ -1550,21 +1550,25 @@ performed but has the following limitations:
 Default host name resolution from the other SOCKS5 server OCCURS ONLY...
 
 -   ...under the CONNECT request when the target-facing socket makes an 
-extemporaneous outbound connection. Preparation is omitted for the target-facing 
-socket. Such preparation includes applying the specified socket settings for the 
-target-facing socket, resolving the target host name before connecting, and 
-setting the specified timeout in milliseconds on waiting for the target-facing 
-socket to connect. The host resolver is not used in resolving the target host 
-name. When the target-facing socket is SOCKS5-enabled, the target host name is 
-resolved by the other SOCKS5 server and not through the local system.
+extemporaneous outbound connection. No preparation before connecting is made. 
+Such preparation includes applying the specified socket settings for the 
+target-facing socket, resolving the target host name, and setting the 
+specified timeout in milliseconds on waiting for the target-facing socket to 
+connect. The host resolver is not used in resolving the target host name. When 
+the target-facing socket is SOCKS5-enabled, the target host name is resolved 
+by the other SOCKS5 server and not through the local system.
 
 Default host name resolution from the other SOCKS5 server DOES NOT OCCUR...
 
--   ...under the CONNECT request when the target-facing socket makes a prepared 
-outbound connection. Preparation for the target-facing socket includes resolving 
-the target host name before connecting. The host resolver is used in resolving 
-the target host name. Because of its default functionality, the host resolver 
-resolves the target host name through the local system.
+-   ...under the CONNECT request when the target-facing socket makes a 
+prepared outbound connection. Preparation before connecting is enabled by 
+setting the setting `socks5.onConnectRequest.prepareTargetFacingSocket` to 
+`true`. Such preparation includes applying the specified socket settings for 
+the target-facing socket, resolving the target host name, and setting the 
+specified timeout in milliseconds on waiting for the target-facing socket to 
+connect. The host resolver is used in resolving the target host name. Because 
+of its default functionality, the host resolver resolves the target host name 
+through the local system.
 -   ...under the BIND request when resolving the binding host name for the 
 listen socket. The host resolver is used in resolving the binding host name for 
 the listen socket. Because of its default functionality, the host resolver 

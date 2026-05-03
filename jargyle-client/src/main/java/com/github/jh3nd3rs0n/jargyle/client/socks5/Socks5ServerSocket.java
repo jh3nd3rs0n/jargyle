@@ -1,5 +1,8 @@
 package com.github.jh3nd3rs0n.jargyle.client.socks5;
 
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.PerformancePreferences;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.SocketOptionValueGetterSetters;
+import com.github.jh3nd3rs0n.jargyle.client.internal.client.StandardSocketOptionValueGetterSetterConstants;
 import com.github.jh3nd3rs0n.jargyle.common.net.HostIpv4Address;
 import com.github.jh3nd3rs0n.jargyle.common.net.Port;
 import com.github.jh3nd3rs0n.jargyle.common.net.SocketSettings;
@@ -109,153 +112,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		}
 		
 	}
-	
-	private static abstract class ServerSocketOptionHelper<T> {
-		
-		private static final class ServerSocketOptionHelpers {
-			
-			private final Map<SocketOption<?>, ServerSocketOptionHelper<?>> serverSocketOptionHelpersMap;
-			private final Set<SocketOption<?>> supportedSocketOptions;
-			
-			public ServerSocketOptionHelpers() {
-				this.serverSocketOptionHelpersMap = 
-						new HashMap<SocketOption<?>, ServerSocketOptionHelper<?>>();
-				this.supportedSocketOptions = new HashSet<SocketOption<?>>();
-			}
-			
-			public void add(final ServerSocketOptionHelper<?> value) {
-				SocketOption<?> valueSocketOption = value.getSocketOption();
-				this.serverSocketOptionHelpersMap.put(
-						valueSocketOption, value);
-				this.supportedSocketOptions.add(valueSocketOption);
-			}
-			
-			public Set<SocketOption<?>> getSupportedSocketOptions() {
-				return Collections.unmodifiableSet(this.supportedSocketOptions);
-			}
-			
-			public Map<SocketOption<?>, ServerSocketOptionHelper<?>> toMap() {
-				return Collections.unmodifiableMap(
-						this.serverSocketOptionHelpersMap);
-			}
-		}
-		
-		private static final class SoRcvbufServerSocketOptionHelper 
-			extends ServerSocketOptionHelper<Integer> {
-			
-			public SoRcvbufServerSocketOptionHelper() {
-				super(StandardSocketOptions.SO_RCVBUF);
-			}
-			
-			@Override
-			public Integer getOption(
-					final ServerSocket serverSocket) throws IOException {
-				return Integer.valueOf(serverSocket.getReceiveBufferSize());
-			}
 
-			@Override
-			public ServerSocket setOption(
-					final Integer value,
-					final ServerSocket serverSocket) throws IOException {
-				serverSocket.setReceiveBufferSize(value.intValue());
-				return serverSocket;
-			}
-			
-		}
-		
-		private static final class SoReuseaddrServerSocketOptionHelper 
-			extends ServerSocketOptionHelper<Boolean> {
-			
-			public SoReuseaddrServerSocketOptionHelper() {
-				super(StandardSocketOptions.SO_REUSEADDR);
-			}
-			
-			@Override
-			public Boolean getOption(
-					final ServerSocket serverSocket) throws IOException {
-				return Boolean.valueOf(serverSocket.getReuseAddress());
-			}
-
-			@Override
-			public ServerSocket setOption(
-					final Boolean value,
-					final ServerSocket serverSocket) throws IOException {
-				serverSocket.setReuseAddress(value.booleanValue());
-				return serverSocket;
-			}
-			
-		}
-		
-		private static final Map<SocketOption<?>, ServerSocketOptionHelper<?>> SERVER_SOCKET_OPTION_HELPERS_MAP;
-		
-		private static final Set<SocketOption<?>> SUPPORTED_SOCKET_OPTIONS;
-		
-		static {
-			ServerSocketOptionHelpers serverSocketOptionHelpers = 
-					new ServerSocketOptionHelpers(); 
-			serverSocketOptionHelpers.add(
-					new SoRcvbufServerSocketOptionHelper());
-			serverSocketOptionHelpers.add(
-					new SoReuseaddrServerSocketOptionHelper());
-			SERVER_SOCKET_OPTION_HELPERS_MAP = serverSocketOptionHelpers.toMap();
-			SUPPORTED_SOCKET_OPTIONS = 
-					serverSocketOptionHelpers.getSupportedSocketOptions();
-		}
-		
-		public static <T> T getSocketOption(
-				final SocketOption<T> name,
-				final ServerSocket serverSocket) throws IOException {
-			Objects.requireNonNull(name);
-			ServerSocketOptionHelper<?> serverSocketOptionHelper =
-					SERVER_SOCKET_OPTION_HELPERS_MAP.get(name);
-			if (serverSocketOptionHelper == null) {
-				throw new UnsupportedOperationException();
-			}
-			@SuppressWarnings("unchecked")
-			ServerSocketOptionHelper<T> serverSockOptionHelper = 
-					(ServerSocketOptionHelper<T>) serverSocketOptionHelper;
-			return serverSockOptionHelper.getOption(serverSocket);
-		}
-		
-		public static <T> ServerSocket setSocketOption(
-				final SocketOption<T> name,
-				final T value,
-				final ServerSocket serverSocket) throws IOException {
-			Objects.requireNonNull(name);
-			ServerSocketOptionHelper<?> serverSocketOptionHelper =
-					SERVER_SOCKET_OPTION_HELPERS_MAP.get(name);
-			if (serverSocketOptionHelper == null) {
-				throw new UnsupportedOperationException();
-			}
-			@SuppressWarnings("unchecked")
-			ServerSocketOptionHelper<T> serverSockOptionHelper = 
-					(ServerSocketOptionHelper<T>) serverSocketOptionHelper;
-			return serverSockOptionHelper.setOption(value, serverSocket);
-		}
-		
-		public static Set<SocketOption<?>> supportedSocketOptions() {
-			return Collections.unmodifiableSet(SUPPORTED_SOCKET_OPTIONS);
-		}
-		
-		private final SocketOption<T> socketOption;
-		
-		private ServerSocketOptionHelper(final SocketOption<T> sockOption) {
-			this.socketOption = sockOption;
-		}
-		
-		public abstract T getOption(
-				final ServerSocket serverSocket) throws IOException;
-		
-		public SocketOption<T> getSocketOption() {
-			return this.socketOption;
-		}
-		
-		public abstract ServerSocket setOption(
-				final T value,
-				final ServerSocket serverSocket) throws IOException;
-		
-	}
-	
 	private static final class Socks5ServerSocketImpl {
 		
 		private static final int DEFAULT_BACKLOG = 50;
@@ -265,6 +122,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		private InetAddress localInetAddress;
 		private int localPort;
 		private SocketAddress localSocketAddress;
+		private PerformancePreferences performancePreferences;
 		private Socket socket;
 		private final SocketSettings socketSettings;
 		private final Socks5ClientAgent socks5ClientAgent;
@@ -322,6 +180,9 @@ public final class Socks5ServerSocket extends ServerSocket {
 				Socket newSocket = 
 						this.socks5ClientAgent.newClientSocketBuilder()
 								.newClientSocket();
+				if (this.performancePreferences != null) {
+					this.performancePreferences.applyTo(newSocket);
+				}
 				this.socketSettings.applyTo(newSocket);
 				this.socket = newSocket;
 			} finally {
@@ -381,6 +242,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 				int connectionTime, int latency, int bandwidth) {
 			if (!this.bound) {
 				this.socket.setPerformancePreferences(
+						connectionTime, latency, bandwidth);
+				this.performancePreferences = new PerformancePreferences(
 						connectionTime, latency, bandwidth);
 			}
 		}
@@ -461,7 +324,11 @@ public final class Socks5ServerSocket extends ServerSocket {
 		}
 
 	}
-	
+
+	private final SocketOptionValueGetterSetters socketOptionValueGetterSetters =
+			new SocketOptionValueGetterSetters(
+					StandardSocketOptionValueGetterSetterConstants.SO_RCVBUF,
+					StandardSocketOptionValueGetterSetterConstants.SO_REUSEADDR);
 	private final Socks5ClientAgent socks5ClientAgent;
 	private final Socks5ServerSocketImpl socks5ServerSocketImpl;
 	
@@ -557,7 +424,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 	@Override
 	public <T> T getOption(SocketOption<T> name) throws IOException {
 		try {
-			return ServerSocketOptionHelper.getSocketOption(name, this);			
+			return this.socketOptionValueGetterSetters.getSocketOptionValue(name, this);
 		} catch (IOException e) {
 			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
@@ -608,7 +475,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 	public <T> ServerSocket setOption(
 			SocketOption<T> name, T value) throws IOException {
 		try {
-			return ServerSocketOptionHelper.setSocketOption(name, value, this);			
+			return this.socketOptionValueGetterSetters.setSocketOptionValue(name, value, this);
 		} catch (IOException e) {
 			throw this.socks5ClientAgent.toSocksClientIOException(e);
 		}
@@ -651,7 +518,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	@Override
 	public Set<SocketOption<?>> supportedOptions() {
-		return ServerSocketOptionHelper.supportedSocketOptions();
+		return this.socketOptionValueGetterSetters.getSupportedSocketOptions();
 	}
 
 	@Override

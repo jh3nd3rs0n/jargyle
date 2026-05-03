@@ -270,11 +270,14 @@ public final class Socks5Socket extends Socket {
 			final Socks5ClientAgent clientAgent,
 			final InetAddress address, 
 			final int port) throws IOException {
-		Socks5SocketImpl impl = new Socks5SocketImpl(
-				clientAgent,
-				clientAgent.newClientSocketBuilder().newClientSocket());
+		Socks5SocketImpl impl;
 		try {
-			impl.socks5Connect(address, port, 0);
+			Socket connectedClientSocket =
+					clientAgent.newClientSocketBuilder()
+							.newBoundConnectedClientSocket();
+			impl = new Socks5SocketImpl(clientAgent, connectedClientSocket);
+			impl.socks5Connect(
+					connectedClientSocket, address.getHostAddress(), port);
 		} catch (IOException e) {
 			throw clientAgent.toSocksClientIOException(e);
 		}
@@ -288,12 +291,14 @@ public final class Socks5Socket extends Socket {
 			final int port, 
 			final InetAddress localAddr, 
 			final int localPort) throws IOException {
-		Socks5SocketImpl impl = new Socks5SocketImpl(
-				clientAgent,
-				clientAgent.newClientSocketBuilder().newClientSocket());
+		Socks5SocketImpl impl;
 		try {
-			impl.socket.bind(new InetSocketAddress(localAddr, localPort));
-			impl.socks5Connect(address, port, 0);
+			Socket connectedClientSocket = clientAgent
+					.newClientSocketBuilder()
+					.newBoundConnectedClientSocket(localAddr, localPort);
+			impl = new Socks5SocketImpl(clientAgent, connectedClientSocket);
+			impl.socks5Connect(
+					connectedClientSocket, address.getHostAddress(), port);
 		} catch (IOException e) {
 			throw clientAgent.toSocksClientIOException(e);
 		}
@@ -554,11 +559,9 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public void sendUrgentData(int data) throws IOException {
-		try {
-			this.socks5SocketImpl.socket.sendUrgentData(data);
-		} catch (IOException e) {
-			throw this.socks5ClientAgent.toSocksClientIOException(e);
-		}
+		throw new UnsupportedEncodingException(String.format(
+				"sendUrgentData is not supported on %s",
+				this.getClass().getName()));
 	}
 
 	@Override
@@ -572,11 +575,9 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public void setOOBInline(boolean on) throws SocketException {
-		try {
-			this.socks5SocketImpl.socket.setOOBInline(on);			
-		} catch (SocketException e) {
-			throw this.socks5ClientAgent.toSocksClientSocketException(e);
-		}
+		throw new UnsupportedOperationException(String.format(
+				"setOOBInline is not supported on %s",
+				this.getClass().getName()));
 	}
 
 	@Override

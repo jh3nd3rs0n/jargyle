@@ -16,7 +16,7 @@
         -   [Chaining to the Other SOCKS Server Using No Authentication](#chaining-to-the-other-socks-server-using-no-authentication)
         -   [Chaining to the Other SOCKS Server Using Username Password Authentication](#chaining-to-the-other-socks-server-using-username-password-authentication)
         -   [Chaining to the Other SOCKS Server Using GSS-API Authentication](#chaining-to-the-other-socks-server-using-gss-api-authentication)
-    -   [Resolving Host Names From the Other SOCKS5 Server](#resolving-host-names-from-the-other-socks5-server)
+    -   [Resolving Host Names From the Other SOCKS Server](#resolving-host-names-from-the-other-socks-server)
 -   [Chaining to a Specified Chain of Other SOCKS Servers](#chaining-to-a-specified-chain-of-other-socks-servers)
 -   [Chaining to Specified Chains of Other SOCKS Servers](#chaining-to-specified-chains-of-other-socks-servers)
 -   [Using Rules to Manage Traffic](#using-rules-to-manage-traffic)
@@ -1513,9 +1513,9 @@ The setting `chaining.socks5.gssapiauthmethod.serviceName` with the value
 `rcmd/alpha-alpha.net` is the GSS-API service name (or the Kerberos service 
 principal) for the other SOCKS server residing at `alpha-alpha.net`.
 
-### Resolving Host Names From the Other SOCKS5 Server
+### Resolving Host Names From the Other SOCKS Server
 
-Before discussing host name resolution from the other SOCKS5 server, a brief 
+Before discussing host name resolution from the other SOCKS server, a brief 
 explanation of the server's internals:
 
 The server uses sockets to interact with the external world.
@@ -1530,24 +1530,24 @@ receives datagram packets to and from peer UDP sockets. In this documentation,
 this UDP socket is called the peer-facing UDP socket.
 
 The server also uses a host resolver to resolve host names for the 
-aforementioned sockets and for 
-[the RESOLVE request](../reference/socks5-resolve-request.md).
+aforementioned sockets and for the 
+[RESOLVE request](../reference/socks5-resolve-request.md).
 
-When the server is chained to another SOCKS5 server, the aforementioned sockets 
-that the server uses become SOCKS5-enabled, meaning that their traffic is routed 
-through the other SOCKS5 server.
+When the server is chained to another SOCKS server, the aforementioned sockets 
+that the server uses become SOCKS-enabled, meaning that their traffic is routed 
+through the other SOCKS server.
 
 It is similar for the host resolver. When the server is chained to another 
-SOCKS5 server, the host resolver that the server uses becomes SOCKS5-enabled, 
-meaning that it can use the other SOCKS5 server to resolve host names provided 
-that the other SOCKS5 server supports handling the SOCKS5 RESOLVE request. 
-However, this functionality for the host resolver is disabled by default 
-making the host resolver resolve host names through the local system.
+SOCKS server, the host resolver that the server uses becomes SOCKS-enabled, 
+meaning that it can use the other SOCKS server to resolve host names provided 
+that the other SOCKS server supports handling the RESOLVE request. However, 
+this functionality for the host resolver is disabled by default making the 
+host resolver resolve host names through the local system.
 
-Therefore, default host name resolution from the other SOCKS5 server is 
+Therefore, default host name resolution from the other SOCKS server is 
 performed but has the following limitations:
 
-Default host name resolution from the other SOCKS5 server OCCURS ONLY...
+Default host name resolution from the other SOCKS server OCCURS ONLY...
 
 -   ...under the CONNECT request when the target-facing socket makes an 
 extemporaneous outbound connection. No preparation before connecting is made. 
@@ -1555,14 +1555,14 @@ Such preparation includes applying the specified socket settings for the
 target-facing socket, resolving the target host name, and setting the 
 specified timeout in milliseconds on waiting for the target-facing socket to 
 connect. The host resolver is not used in resolving the target host name. When 
-the target-facing socket is SOCKS5-enabled, the target host name is resolved 
-by the other SOCKS5 server and not through the local system.
+the target-facing socket is SOCKS-enabled, the target host name is resolved 
+by the other SOCKS server and not through the local system.
 
-Default host name resolution from the other SOCKS5 server DOES NOT OCCUR...
+Default host name resolution from the other SOCKS server DOES NOT OCCUR...
 
 -   ...under the CONNECT request when the target-facing socket makes a 
 prepared outbound connection. Preparation before connecting is enabled by 
-setting the setting `socks5.onConnectRequest.prepareTargetFacingSocket` to 
+setting the setting `socks.onConnectRequest.prepareTargetFacingSocket` to 
 `true`. Such preparation includes applying the specified socket settings for 
 the target-facing socket, resolving the target host name, and setting the 
 specified timeout in milliseconds on waiting for the target-facing socket to 
@@ -1583,11 +1583,11 @@ resolver is used in resolving the provided host name. Because of its default
 functionality, the host resolver resolves the provided host name through the 
 local system.
 
-If you prefer to have host name resolution from the other SOCKS5 server without 
+If you prefer to have host name resolution from the other SOCKS server without 
 the aforementioned limitations, you would need to set the setting 
-`chaining.socks5.socks5HostResolver.resolveFromSocks5Server` to `true`. This 
-setting enables the host resolver to resolve host names from the other SOCKS5 
-server. This setting can only be used if the other SOCKS5 server supports 
+`chaining.socks.socksHostResolver.resolveFromSocksServer` to `true`. This 
+setting enables the host resolver to resolve host names from the other SOCKS 
+server. This setting can only be used if the other SOCKS server supports 
 handling the RESOLVE request.
 
 Command line example:
@@ -1595,7 +1595,7 @@ Command line example:
 ```bash
 jargyle start-server \
     --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
-    --setting=chaining.socks5.socks5HostResolver.resolveFromSocks5Server=true
+    --setting=chaining.socks.socksHostResolver.resolveFromSocksServer=true
 ```
 
 Server configuration file example:
@@ -1609,7 +1609,7 @@ Server configuration file example:
             <value>socks5://alpha-alpha.net:11111</value>
         </setting>
         <setting>
-            <name>chaining.socks5.socks5HostResolver.resolveFromSocks5Server</name>
+            <name>chaining.socks.socksHostResolver.resolveFromSocksServer</name>
             <value>true</value>
         </setting>
     </settings>
@@ -1635,7 +1635,7 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://alpha-alpha.net:11111"),
             Setting.newInstanceWithParsedValue(
-                "chaining.socks5.socks5HostResolver.resolveFromSocks5Server", 
+                "chaining.socks.socksHostResolver.resolveFromSocksServer", 
                 "true")
         ))).start();
     }

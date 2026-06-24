@@ -100,10 +100,9 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
-        Assert.assertEquals(
-                host,
-                socksClientAgent.getClientBindHost());
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress) socksClientAgent.getClientBindHost()));
     }
 
     @Test

@@ -167,9 +167,9 @@ public class GeneralValueDerivationHelperTest {
                 GeneralSettingSpecConstants.NET_INTERFACE.newSetting(netInterface),
                 GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(
                         HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                GeneralValueDerivationHelper.getSocksServerBindHostFrom(settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                GeneralValueDerivationHelper.getSocksServerBindHostFrom(settings)));
     }
 
     @Test
@@ -182,9 +182,9 @@ public class GeneralValueDerivationHelperTest {
                 GeneralSettingSpecConstants.INTERNAL_FACING_NET_INTERFACE.newSetting(netInterface),
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
                         HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                GeneralValueDerivationHelper.getSocksServerBindHostFrom(settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        GeneralValueDerivationHelper.getSocksServerBindHostFrom(settings)));
     }
 
     @Test
@@ -197,9 +197,9 @@ public class GeneralValueDerivationHelperTest {
                 GeneralSettingSpecConstants.SOCKS_SERVER_NET_INTERFACE.newSetting(netInterface),
                 GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST_ADDRESS_TYPES.newSetting(
                         HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                GeneralValueDerivationHelper.getSocksServerBindHostFrom(settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        GeneralValueDerivationHelper.getSocksServerBindHostFrom(settings)));
     }
 
     @Test

@@ -9,7 +9,7 @@
     -   [Accessing the SOCKS Server Using No Authentication](#accessing-the-socks-server-using-no-authentication)
     -   [Accessing the SOCKS Server Using Username Password Authentication](#accessing-the-socks-server-using-username-password-authentication)
     -   [Accessing the SOCKS Server Using GSS-API Authentication](#accessing-the-socks-server-using-gss-api-authentication)
--   [Resolving Host Names From the SOCKS5 Server](#resolving-host-names-from-the-socks5-server)
+-   [Resolving Host Names From the SOCKS Server](#resolving-host-names-from-the-socks-server)
 -   [Routing Traffic Through a Specified Chain of SOCKS Servers](#routing-traffic-through-a-specified-chain-of-socks-servers)
 
 ## Overview
@@ -438,9 +438,9 @@ The property `socksClient.socks5.gssapiauthmethod.serviceName` with the value
 `rcmd/jargyle.net` is the GSS-API service name (or the Kerberos service 
 principal) for the SOCKS server residing at `jargyle.net`.
 
-## Resolving Host Names From the SOCKS5 Server
+## Resolving Host Names From the SOCKS Server
 
-By default, host name resolution from the SOCKS5 server occurs only when a 
+By default, host name resolution from the SOCKS server occurs only when a 
 `Socket` is created with a provided `String` for the target host name.
 
 API example:
@@ -475,10 +475,10 @@ public class ClientApp {
 The client API comes with a `HostResolver` object to resolve host names. By 
 default, the `HostResolver` object resolves host names through the local 
 system. To enable the `HostResolver` object to have the host names resolved 
-from the SOCKS5 server instead, you would need to set the property 
-`socksClient.socks5.socks5HostResolver.resolveFromSocks5Server` set to 
-`true`. This property can only be used if the SOCKS5 server supports handling 
-the RESOLVE request.
+from the SOCKS server instead, you would need to set the property 
+`socksClient.socks.socksHostResolver.resolveFromSocksServer` set to `true`. 
+This property can only be used if the SOCKS server supports handling the 
+[RESOLVE request](../reference/socks5-resolve-request.md).
 
 API example:
 
@@ -503,7 +503,7 @@ public class ClientApp {
         System.setProperty(
             "socksClient.socksServerUri", "socks5://jargyle.net:1234");
         System.setProperty(
-            "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+            "socksClient.socks.socksHostResolver.resolveFromSocksServer",
             "true");
         HostResolverFactory hostResolverFactory = 
             HostResolverFactory.getInstance();
@@ -552,6 +552,64 @@ public class ClientApp {
         SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("beta-alpha.net", 22221)
             .newSocksClient(Properties.of(), socksClient1);
+        SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("gamma-alpha.net", 33331)
+            .newSocksClient(Properties.of(), socksClient2);
+        SocketFactory socketFactory = 
+            socksClient3.getSocksSocketFactory();
+        // ...
+    }
+}
+```
+
+To specify the properties regarding a SOCKS server in the chain, the 
+`Properties` object for the properties regarding a SOCKS server will need to 
+be set for the `SocksClient` object specifying the SOCKS server.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("alpha-alpha.net", 11111)
+            .newSocksClient(Properties.of(
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.socks5.methods", "GSSAPI"),
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.socks5.gssapiauthmethod.serviceName",
+                     "rcmd/alpha-alpha.net")));
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("beta-alpha.net", 22221)
+            .newSocksClient(Properties.of(
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.socks5.methods", "USERNAME_PASSWORD"),
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.socks5.userpassauthmethod.username",
+                     "Aladdin"), 
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.socks5.userpassauthmethod.password",
+                     "opensesame")
+            ), socksClient1);
         SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("gamma-alpha.net", 33331)
             .newSocksClient(Properties.of(), socksClient2);
@@ -686,9 +744,10 @@ public class ClientApp {
 If you would like to create an unconnected `Socket` to be connected and have 
 each of the SOCKS servers resolve the specified host name of the next SOCKS 
 server, you will need to set the property
-`socksClient.socks5.socks5HostResolver.resolveFromSocks5Server` set to `true` 
+`socksClient.socks.socksHostResolver.resolveFromSocksServer` set to `true` 
 for each server. Again, this property can only be used if each SOCKS server 
-supports handling the RESOLVE request.
+supports handling the 
+[RESOLVE request](../reference/socks5-resolve-request.md).
 
 API example of creating an unconnected `Socket` to be connected:
 
@@ -717,19 +776,19 @@ public class ClientApp {
         SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("alpha-alpha.net", 11111)
             .newSocksClient(Properties.of(Property.newInstanceFromParsedValue(
-                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    "socksClient.socks.socksHostResolver.resolveFromSocksServer",
                     "true"
             )));
         SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("beta-alpha.net", 22221)
             .newSocksClient(Properties.of(Property.newInstanceFromParsedValue(
-                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    "socksClient.socks.socksHostResolver.resolveFromSocksServer",
                     "true"
             )), socksClient1);
         SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("gamma-alpha.net", 33331)
             .newSocksClient(Properties.of(Property.newInstanceFromParsedValue(
-                    "socksClient.socks5.socks5HostResolver.resolveFromSocks5Server",
+                    "socksClient.socks.socksHostResolver.resolveFromSocksServer",
                     "true"
             )), socksClient2);
         SocketFactory socketFactory = 

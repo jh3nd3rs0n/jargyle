@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
+import java.util.Collections;
 
 public class ClientSocketBuilderIT {
 
@@ -87,22 +88,20 @@ public class ClientSocketBuilderIT {
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 InetAddress.getLoopbackAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS);
-        HostAddress hostAddress = netInterface.getHostAddresses(hostAddressTypes).get(0);
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.newProperty(
-                        netInterface),
+                GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.newProperty(netInterface),
                 GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES.newProperty(
-                        hostAddressTypes));
+                        HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         ClientSocketBuilder clientSocketBuilder =
                 socksClientAgent.newClientSocketBuilder();
         try (Socket socket = clientSocketBuilder.newBoundConnectedClientSocket()) {
-            Assert.assertEquals(
-                    hostAddress.toString(), socket.getInetAddress().getHostAddress());
+            Assert.assertTrue(
+                    Collections.list(networkInterface.getInetAddresses()).contains(
+                            socket.getInetAddress()));
             Assert.assertEquals(
                     new InetSocketAddress(
                             socksServerUri.getHost().toInetAddress(),

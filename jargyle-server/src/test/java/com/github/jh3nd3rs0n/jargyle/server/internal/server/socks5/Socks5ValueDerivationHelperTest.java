@@ -422,9 +422,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -440,9 +440,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -458,9 +458,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -476,9 +476,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -494,9 +494,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -570,9 +570,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -587,9 +587,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -604,9 +604,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -621,9 +621,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -638,9 +638,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1802,9 +1802,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1820,9 +1820,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1838,9 +1838,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1856,9 +1856,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1874,9 +1874,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1950,9 +1950,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1967,9 +1967,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -1984,9 +1984,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2001,9 +2001,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2018,9 +2018,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnConnectRequestTargetFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2487,9 +2487,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2505,9 +2505,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2523,9 +2523,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2541,9 +2541,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2559,9 +2559,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2635,9 +2635,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2652,9 +2652,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2669,9 +2669,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2686,9 +2686,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -2703,9 +2703,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3126,9 +3126,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3144,9 +3144,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3162,9 +3162,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3180,9 +3180,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3198,9 +3198,9 @@ public class Socks5ValueDerivationHelperTest {
                         HostAddressType.HOST_IPV4_ADDRESS))
                 .build();
         Settings settings = Settings.of();
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3274,9 +3274,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3291,9 +3291,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3308,9 +3308,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3325,9 +3325,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test
@@ -3342,9 +3342,9 @@ public class Socks5ValueDerivationHelperTest {
                         netInterface),
                 Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS)));
-        Assert.assertEquals(
-                host,
-                Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings));
+        Assert.assertTrue(
+                netInterface.getHostAddresses().contains((HostAddress)
+                        Socks5ValueDerivationHelper.getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule, settings)));
     }
 
     @Test

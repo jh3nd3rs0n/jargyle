@@ -14,7 +14,8 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        java: [ '11', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26' ]
+        # There is no Java version 16 available for Mac OS
+        java: [ '11', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26' ]
     name: Java ${{ matrix.java }}
     steps:
       - uses: actions/checkout@v4

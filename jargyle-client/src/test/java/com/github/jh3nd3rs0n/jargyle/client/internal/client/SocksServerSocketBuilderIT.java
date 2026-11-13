@@ -17,7 +17,7 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 import java.util.Collections;
 
-public class ConnectingClientSocketBuilderIT {
+public class SocksServerSocketBuilderIT {
 
     private static Server server;
     private static int serverPort;
@@ -42,18 +42,15 @@ public class ConnectingClientSocketBuilderIT {
     }
 
     @Test
-    public void testGetConnectedClientSocket01() throws IOException {
+    public void testNewBoundConnectedSocksServerSocket01() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = clientSocketBuilder.proceedToConfigure(
-                new Socket())
-                .proceedToConnect()
-                .getConnectedClientSocket()) {
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newBoundConnectedSocksServerSocket()) {
             Assert.assertEquals(
                     new InetSocketAddress(
                             socksServerUri.getHost().toInetAddress(),
@@ -64,21 +61,17 @@ public class ConnectingClientSocketBuilderIT {
     }
 
     @Test
-    public void testGetConnectedClientSocket02() throws IOException {
+    public void testNewBoundConnectedSocksServerSocket02() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST.newPropertyWithParsedValue(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST.newPropertyWithParsedValue(
                         InetAddress.getLoopbackAddress().getHostAddress()));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = clientSocketBuilder.proceedToConfigure(
-                        new Socket())
-                .proceedToConnect()
-                .setToBind(true)
-                .getConnectedClientSocket()) {
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newBoundConnectedSocksServerSocket()) {
             Assert.assertEquals(
                     InetAddress.getLoopbackAddress(), socket.getInetAddress());
             Assert.assertEquals(
@@ -91,25 +84,21 @@ public class ConnectingClientSocketBuilderIT {
     }
 
     @Test
-    public void testGetConnectedClientSocket03() throws IOException {
+    public void testNewBoundConnectedSocksServerSocket03() throws IOException {
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 InetAddress.getLoopbackAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.newProperty(netInterface),
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_NET_INTERFACE.newProperty(netInterface),
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES.newProperty(
                         HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = clientSocketBuilder.proceedToConfigure(
-                        new Socket())
-                .proceedToConnect()
-                .setToBind(true)
-                .getConnectedClientSocket()) {
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newBoundConnectedSocksServerSocket()) {
             Assert.assertTrue(
                     Collections.list(networkInterface.getInetAddresses()).contains(
                             socket.getInetAddress()));
@@ -123,19 +112,16 @@ public class ConnectingClientSocketBuilderIT {
     }
 
     @Test
-    public void testGetConnectedClientSocket04() throws IOException {
+    public void testNewBoundConnectedSocksServerSocket04() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
                 SslPropertySpecConstants.SSL_ENABLED.newProperty(true));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = clientSocketBuilder.proceedToConfigure(
-                        new Socket())
-                .proceedToConnect()
-                .getConnectedClientSocket()) {
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newBoundConnectedSocksServerSocket()) {
             Assert.assertEquals(
                     new InetSocketAddress(
                             socksServerUri.getHost().toInetAddress(),
@@ -146,76 +132,91 @@ public class ConnectingClientSocketBuilderIT {
     }
 
     @Test(expected = IOException.class)
-    public void testGetConnectedClientSocketForIOException01() throws IOException {
-        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
-                "localhost", 1);
-        Properties properties = Properties.of();
-        SocksClient socksClient = socksServerUri.newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = new Socket()) {
-            clientSocketBuilder.proceedToConfigure(socket)
-                    .proceedToConnect()
-                    .setConnectTimeout(1)
-                    .getConnectedClientSocket();
-        }
-    }
-
-    @Test(expected = IOException.class)
-    public void testGetConnectedClientSocketForIOException02() throws IOException {
+    public void testNewBoundConnectedSocksServerSocketForIOException01() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST.newPropertyWithParsedValue(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST.newPropertyWithParsedValue(
                         InetAddress.getLoopbackAddress().getHostAddress()),
-                GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_PORT_RANGES.newProperty(
                         PortRanges.of(PortRange.of(Port.valueOf(serverPort)))));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = new Socket()) {
-            clientSocketBuilder.proceedToConfigure(socket)
-                    .proceedToConnect()
-                    .setToBind(true)
-                    .getConnectedClientSocket();
-        }
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        socksServerSocketBuilder.newBoundConnectedSocksServerSocket();
     }
 
-    @Test(expected = IOException.class)
-    public void testGetConnectedClientSocketForIOException03() throws IOException {
-        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
-                "localhost", 1);
-        Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST.newPropertyWithParsedValue(
-                        InetAddress.getLoopbackAddress().getHostAddress()));
-        SocksClient socksClient = socksServerUri.newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = new Socket()) {
-            clientSocketBuilder.proceedToConfigure(socket)
-                    .proceedToConnect()
-                    .setConnectTimeout(1)
-                    .setToBind(true)
-                    .getConnectedClientSocket();
-        }
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetConnectTimeoutIntForIllegalArgumentException01() throws IOException {
+    @Test
+    public void testNewBoundConnectedSocksServerSocketInetAddressInt01() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost", serverPort);
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
-        try (Socket socket = new Socket()) {
-            clientSocketBuilder.proceedToConfigure(socket)
-                    .proceedToConnect()
-                    .setConnectTimeout(-1);
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newBoundConnectedSocksServerSocket(
+                InetAddress.getLoopbackAddress(), 0)) {
+            Assert.assertEquals(
+                    InetAddress.getLoopbackAddress(), socket.getInetAddress());
+            Assert.assertEquals(
+                    new InetSocketAddress(
+                            socksServerUri.getHost().toInetAddress(),
+                            socksServerUri.getPort().intValue()),
+                    socket.getRemoteSocketAddress());
+            Assert.assertEquals(Socket.class, socket.getClass());
+        }
+    }
+
+    @Test
+    public void testNewBoundConnectedSocksServerSocketInetAddressInt02() throws IOException {
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
+                "localhost", serverPort);
+        Properties properties = Properties.of(
+                SslPropertySpecConstants.SSL_ENABLED.newProperty(true));
+        SocksClient socksClient = socksServerUri.newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newBoundConnectedSocksServerSocket(
+                InetAddress.getLoopbackAddress(), 0)) {
+            Assert.assertEquals(
+                    InetAddress.getLoopbackAddress(), socket.getInetAddress());
+            Assert.assertEquals(
+                    new InetSocketAddress(
+                            socksServerUri.getHost().toInetAddress(),
+                            socksServerUri.getPort().intValue()),
+                    socket.getRemoteSocketAddress());
+            Assert.assertTrue(socket instanceof SSLSocket);
+        }
+    }
+
+    @Test(expected = IOException.class)
+    public void testNewBoundConnectedSocksServerSocketInetAddressIntForIOException01() throws IOException {
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
+                "localhost", serverPort);
+        Properties properties = Properties.of();
+        SocksClient socksClient = socksServerUri.newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        socksServerSocketBuilder.newBoundConnectedSocksServerSocket(
+                InetAddress.getLoopbackAddress(), serverPort);
+    }
+
+    @Test
+    public void testNewSocksServerSocket() throws IOException {
+        SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
+                "localhost", serverPort);
+        Properties properties = Properties.of();
+        SocksClient socksClient = socksServerUri.newSocksClient(properties);
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
+        try (Socket socket = socksServerSocketBuilder.newSocksServerSocket()) {
+            Assert.assertFalse(socket.isBound());
+            Assert.assertFalse(socket.isConnected());
         }
     }
 

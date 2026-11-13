@@ -19,7 +19,7 @@ public final class GeneralRuleActionSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for all "
-					+ "sockets",
+					+ "endpoints",
 			name = "bindHost",
 			syntax = "bindHost=HOST",
 			valueType = Host.class
@@ -29,7 +29,7 @@ public final class GeneralRuleActionSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies an acceptable binding host address type "
-					+ "for all sockets (can be specified multiple times with "
+					+ "for all endpoints (can be specified multiple times with "
 					+ "each rule action specifying another host address type)",
 			name = "bindHostAddressType",
 			syntax = "bindHostAddressType=HOST_ADDRESS_TYPE",
@@ -39,7 +39,7 @@ public final class GeneralRuleActionSpecConstants {
 			"bindHostAddressType"));
 
 	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all TCP sockets "
+			description = "Specifies a binding port range for all TCP endpoints "
 					+ "(can be specified multiple times with each rule action "
 					+ "specifying another port range)",
 			name = "bindTcpPortRange",
@@ -50,7 +50,7 @@ public final class GeneralRuleActionSpecConstants {
 			"bindTcpPortRange"));
 	
 	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all UDP sockets "
+			description = "Specifies a binding port range for all UDP endpoints "
 					+ "(can be specified multiple times with each rule action "
 					+ "specifying another port ranges)",
 			name = "bindUdpPortRange",
@@ -59,84 +59,72 @@ public final class GeneralRuleActionSpecConstants {
 	)
 	public static final RuleActionSpec<PortRange> BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
 			"bindUdpPortRange"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a socket setting for the client socket "
-					+ "(can be specified multiple times with each rule action "
-					+ "specifying another socket setting)",
-			name = "clientSocketSetting",
-			syntax = "clientSocketSetting=SOCKET_SETTING",
-			valueType = SocketSetting.class
-	)	
-	public static final RuleActionSpec<SocketSetting<Object>> CLIENT_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-			"clientSocketSetting"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the binding host name or address for all "
-					+ "external-facing sockets",
-			name = "externalFacingBindHost",
-			syntax = "externalFacingBindHost=HOST",
+					+ "client endpoints",
+			name = "clientEndpoints.bindHost",
+			syntax = "clientEndpoints.bindHost=HOST",
 			valueType = Host.class
 	)
-	public static final RuleActionSpec<Host> EXTERNAL_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-			"externalFacingBindHost"));
+	public static final RuleActionSpec<Host> CLIENT_ENDPOINTS_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+			"clientEndpoints.bindHost"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies an acceptable binding host address type "
-					+ "for all external-facing sockets (can be specified "
+					+ "for all client endpoints (can be specified "
 					+ "multiple times with each rule action specifying "
 					+ "another host address type)",
-			name = "externalFacingBindHostAddressType",
-			syntax = "externalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+			name = "clientEndpoints.bindHostAddressType",
+			syntax = "clientEndpoints.bindHostAddressType=HOST_ADDRESS_TYPE",
 			valueType = HostAddressType.class
 	)
-	public static final RuleActionSpec<HostAddressType> EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-			"externalFacingBindHostAddressType"));
+	public static final RuleActionSpec<HostAddressType> CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"clientEndpoints.bindHostAddressType"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies a binding port range for all "
-					+ "external-facing TCP sockets (can be specified multiple "
+					+ "client UDP endpoints (can be specified multiple "
 					+ "times with each rule action specifying another port "
 					+ "range)",
-			name = "externalFacingBindTcpPortRange",
-			syntax = "externalFacingBindTcpPortRange=PORT_RANGE",
+			name = "clientEndpoints.bindUdpPortRange",
+			syntax = "clientEndpoints.bindUdpPortRange=PORT_RANGE",
 			valueType = PortRange.class
 	)
-	public static final RuleActionSpec<PortRange> EXTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-			"externalFacingBindTcpPortRange"));
-	
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all "
-					+ "external-facing UDP sockets (can be specified multiple "
-					+ "times with each rule action specifying another port "
-					+ "range)",
-			name = "externalFacingBindUdpPortRange",
-			syntax = "externalFacingBindUdpPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)
-	public static final RuleActionSpec<PortRange> EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-			"externalFacingBindUdpPortRange"));
+	public static final RuleActionSpec<PortRange> CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+			"clientEndpoints.bindUdpPortRange"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the network interface that provides a "
-					+ "binding host address for all external-facing sockets",
-			name = "externalFacingNetInterface",
-			syntax = "externalFacingNetInterface=NETWORK_INTERFACE",
+					+ "binding host address for all client endpoints",
+			name = "clientEndpoints.netInterface",
+			syntax = "clientEndpoints.netInterface=NETWORK_INTERFACE",
 			valueType = NetInterface.class
 	)
-	public static final RuleActionSpec<NetInterface> EXTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-			"externalFacingNetInterface"));
+	public static final RuleActionSpec<NetInterface> CLIENT_ENDPOINTS_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"clientEndpoints.netInterface"));
 
 	@NameValuePairValueSpecDoc(
-			description = "Specifies a socket setting for all external-facing "
-					+ "sockets (can be specified multiple times with each rule "
-					+ "action specifying another socket setting)",
-			name = "externalFacingSocketSetting",
-			syntax = "externalFacingSocketSetting=SOCKET_SETTING",
+			description = "Specifies a socket setting for all client "
+					+ "endpoints (can be specified multiple times with each " 
+					+ "rule action specifying another socket setting)",
+			name = "clientEndpoints.socketSetting",
+			syntax = "clientEndpoints.socketSetting=SOCKET_SETTING",
 			valueType = SocketSetting.class
 	)
-	public static final RuleActionSpec<SocketSetting<Object>> EXTERNAL_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-			"externalFacingSocketSetting"));
+	public static final RuleActionSpec<SocketSetting<Object>> CLIENT_ENDPOINTS_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+			"clientEndpoints.socketSetting"));
+	
+	@NameValuePairValueSpecDoc(
+			description = "Specifies a socket setting for the client TCP "
+					+ "socket (can be specified multiple times with each "
+					+ "rule action specifying another socket setting)",
+			name = "clientSocket.socketSetting",
+			syntax = "clientSocket.socketSetting=SOCKET_SETTING",
+			valueType = SocketSetting.class
+	)	
+	public static final RuleActionSpec<SocketSetting<Object>> CLIENT_SOCKET_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+			"clientSocket.socketSetting"));
 	
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the firewall action to take",
@@ -179,69 +167,81 @@ public final class GeneralRuleActionSpecConstants {
 			"firewallActionLogAction"));
 
 	@NameValuePairValueSpecDoc(
-			description = "Specifies the binding host name or address for all "
-					+ "internal-facing sockets",
-			name = "internalFacingBindHost",
-			syntax = "internalFacingBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final RuleActionSpec<Host> INTERNAL_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-			"internalFacingBindHost"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies an acceptable binding host address type "
-					+ "for all internal-facing sockets (can be specified "
-					+ "multiple times with each rule action specifying "
-					+ "another host address type)",
-			name = "internalFacingBindHostAddressType",
-			syntax = "internalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
-			valueType = HostAddressType.class
-	)
-	public static final RuleActionSpec<HostAddressType> INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-			"internalFacingBindHostAddressType"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a binding port range for all "
-					+ "internal-facing UDP sockets (can be specified multiple "
-					+ "times with each rule action specifying another port "
-					+ "range)",
-			name = "internalFacingBindUdpPortRange",
-			syntax = "internalFacingBindUdpPortRange=PORT_RANGE",
-			valueType = PortRange.class
-	)
-	public static final RuleActionSpec<PortRange> INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-			"internalFacingBindUdpPortRange"));
-
-	@NameValuePairValueSpecDoc(
 			description = "Specifies the network interface that provides a "
-					+ "binding host address for all internal-facing sockets",
-			name = "internalFacingNetInterface",
-			syntax = "internalFacingNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final RuleActionSpec<NetInterface> INTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-			"internalFacingNetInterface"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies a socket setting for all internal-facing "
-					+ "sockets (can be specified multiple times with each rule "
-					+ "action specifying another socket setting)",
-			name = "internalFacingSocketSetting",
-			syntax = "internalFacingSocketSetting=SOCKET_SETTING",
-			valueType = SocketSetting.class
-	)
-	public static final RuleActionSpec<SocketSetting<Object>> INTERNAL_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-			"internalFacingSocketSetting"));
-
-	@NameValuePairValueSpecDoc(
-			description = "Specifies the network interface that provides a "
-					+ "binding host address for all sockets",
+					+ "binding host address for all endpoints",
 			name = "netInterface",
 			syntax = "netInterface=NETWORK_INTERFACE",
 			valueType = NetInterface.class
 	)
 	public static final RuleActionSpec<NetInterface> NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
 			"netInterface"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the binding host name or address for all "
+					+ "remote endpoints",
+			name = "remoteEndpoints.bindHost",
+			syntax = "remoteEndpoints.bindHost=HOST",
+			valueType = Host.class
+	)
+	public static final RuleActionSpec<Host> REMOTE_ENDPOINTS_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+			"remoteEndpoints.bindHost"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies an acceptable binding host address type "
+					+ "for all remote endpoints (can be specified "
+					+ "multiple times with each rule action specifying "
+					+ "another host address type)",
+			name = "remoteEndpoints.bindHostAddressType",
+			syntax = "remoteEndpoints.bindHostAddressType=HOST_ADDRESS_TYPE",
+			valueType = HostAddressType.class
+	)
+	public static final RuleActionSpec<HostAddressType> REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+			"remoteEndpoints.bindHostAddressType"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies a binding port range for all "
+					+ "remote TCP endpoints (can be specified multiple "
+					+ "times with each rule action specifying another port "
+					+ "range)",
+			name = "remoteEndpoints.bindTcpPortRange",
+			syntax = "remoteEndpoints.bindTcpPortRange=PORT_RANGE",
+			valueType = PortRange.class
+	)
+	public static final RuleActionSpec<PortRange> REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+			"remoteEndpoints.bindTcpPortRange"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies a binding port range for all "
+					+ "remote UDP endpoints (can be specified multiple "
+					+ "times with each rule action specifying another port "
+					+ "range)",
+			name = "remoteEndpoints.bindUdpPortRange",
+			syntax = "remoteEndpoints.bindUdpPortRange=PORT_RANGE",
+			valueType = PortRange.class
+	)
+	public static final RuleActionSpec<PortRange> REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+			"remoteEndpoints.bindUdpPortRange"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies the network interface that provides a "
+					+ "binding host address for all remote endpoints",
+			name = "remoteEndpoints.netInterface",
+			syntax = "remoteEndpoints.netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final RuleActionSpec<NetInterface> REMOTE_ENDPOINTS_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+			"remoteEndpoints.netInterface"));
+
+	@NameValuePairValueSpecDoc(
+			description = "Specifies a socket setting for all remote "
+					+ "endpoints (can be specified multiple times with each "
+					+ "rule action specifying another socket setting)",
+			name = "remoteEndpoints.socketSetting",
+			syntax = "remoteEndpoints.socketSetting=SOCKET_SETTING",
+			valueType = SocketSetting.class
+	)
+	public static final RuleActionSpec<SocketSetting<Object>> REMOTE_ENDPOINTS_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+			"remoteEndpoints.socketSetting"));
 
 	@NameValuePairValueSpecDoc(
 			description = "Specifies the logging action to take if a route ID "
@@ -275,7 +275,7 @@ public final class GeneralRuleActionSpecConstants {
 			"selectableRouteId"));
 	
 	@NameValuePairValueSpecDoc(
-			description = "Specifies a socket setting for all sockets (can be "
+			description = "Specifies a socket setting for all endpoints (can be "
 					+ "specified multiple times with each rule action "
 					+ "specifying another socket setting)",
 			name = "socketSetting",

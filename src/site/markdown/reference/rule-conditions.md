@@ -63,216 +63,252 @@
 
 ## All Rule Conditions
 
+<a id="clientaddress"></a>
 ### clientAddress
 
 **Description:** Specifies the client address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-method"></a>
 ### socks.method
 
 **Description:** Specifies the negotiated method.
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socks-reply-serverboundaddress"></a>
 ### socks.reply.serverBoundAddress
 
 **Description:** Specifies the server bound address of the reply
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-reply-serverboundport"></a>
 ### socks.reply.serverBoundPort
 
 **Description:** Specifies the server bound port of the reply
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-request-command"></a>
 ### socks.request.command
 
 **Description:** Specifies the command of the request
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socks-request-desireddestinationaddress"></a>
 ### socks.request.desiredDestinationAddress
 
 **Description:** Specifies the desired destination address of the request
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-request-desireddestinationport"></a>
 ### socks.request.desiredDestinationPort
 
 **Description:** Specifies the desired destination port of the request
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-secondreply-serverboundaddress"></a>
 ### socks.secondReply.serverBoundAddress
 
 **Description:** Specifies the server bound address of the second reply (for the BIND request)
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-secondreply-serverboundport"></a>
 ### socks.secondReply.serverBoundPort
 
 **Description:** Specifies the server bound port of the second reply (for the BIND request)
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-udp-inbound-desireddestinationaddress"></a>
 ### socks.udp.inbound.desiredDestinationAddress
 
 **Description:** Specifies the UDP inbound desired destination address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-udp-inbound-desireddestinationport"></a>
 ### socks.udp.inbound.desiredDestinationPort
 
 **Description:** Specifies the UDP inbound desired destination port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-udp-inbound-sourceaddress"></a>
 ### socks.udp.inbound.sourceAddress
 
 **Description:** Specifies the UDP inbound source address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-udp-inbound-sourceport"></a>
 ### socks.udp.inbound.sourcePort
 
 **Description:** Specifies the UDP inbound source port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-udp-outbound-desireddestinationaddress"></a>
 ### socks.udp.outbound.desiredDestinationAddress
 
 **Description:** Specifies the UDP outbound desired destination address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-udp-outbound-desireddestinationport"></a>
 ### socks.udp.outbound.desiredDestinationPort
 
 **Description:** Specifies the UDP outbound desired destination port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-udp-outbound-sourceaddress"></a>
 ### socks.udp.outbound.sourceAddress
 
 **Description:** Specifies the UDP outbound source address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks-udp-outbound-sourceport"></a>
 ### socks.udp.outbound.sourcePort
 
 **Description:** Specifies the UDP outbound source port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks-user"></a>
 ### socks.user
 
 **Description:** Specifies the user if any after the negotiated method
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socks5-method"></a>
 ### socks5.method
 
 **Description:** Specifies the negotiated method
 
 **Value Type:** [SOCKS5 Method](value-types.md#socks5-method)
 
+<a id="socks5-reply-serverboundaddress"></a>
 ### socks5.reply.serverBoundAddress
 
 **Description:** Specifies the server bound address of the reply
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-reply-serverboundport"></a>
 ### socks5.reply.serverBoundPort
 
 **Description:** Specifies the server bound port of the reply
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-request-command"></a>
 ### socks5.request.command
 
 **Description:** Specifies the command of the request
 
 **Value Type:** [SOCKS5 Request Command](value-types.md#socks5-request-command)
 
+<a id="socks5-request-desireddestinationaddress"></a>
 ### socks5.request.desiredDestinationAddress
 
 **Description:** Specifies the desired destination address of the request
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-request-desireddestinationport"></a>
 ### socks5.request.desiredDestinationPort
 
 **Description:** Specifies the desired destination port of the request
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-secondreply-serverboundaddress"></a>
 ### socks5.secondReply.serverBoundAddress
 
 **Description:** Specifies the server bound address of the second reply (for the BIND request)
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-secondreply-serverboundport"></a>
 ### socks5.secondReply.serverBoundPort
 
 **Description:** Specifies the server bound port of the second reply (for the BIND request)
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-udp-inbound-desireddestinationaddress"></a>
 ### socks5.udp.inbound.desiredDestinationAddress
 
 **Description:** Specifies the UDP inbound desired destination address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-udp-inbound-desireddestinationport"></a>
 ### socks5.udp.inbound.desiredDestinationPort
 
 **Description:** Specifies the UDP inbound desired destination port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-udp-inbound-sourceaddress"></a>
 ### socks5.udp.inbound.sourceAddress
 
 **Description:** Specifies the UDP inbound source address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-udp-inbound-sourceport"></a>
 ### socks5.udp.inbound.sourcePort
 
 **Description:** Specifies the UDP inbound source port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-udp-outbound-desireddestinationaddress"></a>
 ### socks5.udp.outbound.desiredDestinationAddress
 
 **Description:** Specifies the UDP outbound desired destination address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-udp-outbound-desireddestinationport"></a>
 ### socks5.udp.outbound.desiredDestinationPort
 
 **Description:** Specifies the UDP outbound desired destination port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-udp-outbound-sourceaddress"></a>
 ### socks5.udp.outbound.sourceAddress
 
 **Description:** Specifies the UDP outbound source address
 
 **Value Type:** [Address Range](value-types.md#address-range)
 
+<a id="socks5-udp-outbound-sourceport"></a>
 ### socks5.udp.outbound.sourcePort
 
 **Description:** Specifies the UDP outbound source port
 
 **Value Type:** [Port Range](value-types.md#port-range)
 
+<a id="socks5-user"></a>
 ### socks5.user
 
 **Description:** Specifies the user if any after the negotiated method
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksserveraddress"></a>
 ### socksServerAddress
 
 **Description:** Specifies the SOCKS server address the client connected to

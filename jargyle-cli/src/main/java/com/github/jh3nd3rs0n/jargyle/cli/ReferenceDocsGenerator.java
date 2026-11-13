@@ -253,6 +253,9 @@ final class ReferenceDocsGenerator {
                 NameValuePairValueSpecDoc::name));
         for (NameValuePairValueSpecDoc nameValuePairValueSpecDoc :
                 nameValuePairValueSpecDocs) {
+            mw.printf(
+                    "<a id=\"%s\"></a>%n",
+                    MarkdownWriter.toId(nameValuePairValueSpecDoc.name()));
             mw.printHeader(3, nameValuePairValueSpecDoc.name());
             mw.println();
             mw.println();

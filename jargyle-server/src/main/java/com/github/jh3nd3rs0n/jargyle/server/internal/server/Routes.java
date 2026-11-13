@@ -90,33 +90,33 @@ public final class Routes {
 				new SettingToPropertyConverter(
 						DtlsPropertySpecConstants.DTLS_WRAPPED_RECEIVE_BUFFER_SIZE));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_BIND_HOST, 
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_BIND_HOST, 
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.CLIENT_BIND_HOST));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_BIND_HOST_ADDRESS_TYPES,
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES,
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_BIND_PORT_RANGES, 
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_BIND_PORT_RANGES, 
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_PORT_RANGES));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_CONNECT_TIMEOUT, 
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT, 
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_NET_INTERFACE,
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_NET_INTERFACE,
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.CLIENT_NET_INTERFACE));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_NET_INTERFACE));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_CLIENT_SOCKET_SETTINGS, 
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_PREPARE_SOCKET,
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_PREPARE_SOCKET));
 		SETTING_CONVERTER_MAP.put(
-				ChainingGeneralSettingSpecConstants.CHAINING_PREPARE_CLIENT_SOCKET,
+				ChainingGeneralSettingSpecConstants.CHAINING_SOCKS_SERVER_SOCKET_SOCKET_SETTINGS, 
 				new SettingToPropertyConverter(
-						GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET));
+						GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_SOCKET_SETTINGS));
 		SETTING_CONVERTER_MAP.put(
 				ChainingSocksSettingSpecConstants.CHAINING_SOCKS_GSSAPIAUTHMETHOD_MECHANISM_OID,
 				new SettingToPropertyConverter(

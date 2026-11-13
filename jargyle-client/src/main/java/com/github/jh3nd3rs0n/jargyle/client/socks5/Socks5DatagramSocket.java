@@ -35,7 +35,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		public Socks5DatagramSocketImpl(
 				final Socks5ClientAgent clientAgent) throws SocketException {
 			DatagramSocket datagramSock = new DatagramSocket((SocketAddress) null);
-			Socket sock = clientAgent.newClientSocketBuilder().newClientSocket();
+			Socket sock =
+					clientAgent.newSocksServerSocketBuilder().newSocksServerSocket();
 			this.associated = false;
 			this.connected = false;
 			this.datagramSocket = datagramSock;
@@ -77,7 +78,7 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		}
 		
 		public void connect(SocketAddress addr) throws SocketException {
-			if (addr == null || !(addr instanceof InetSocketAddress)) {
+			if (!(addr instanceof InetSocketAddress)) {
 				throw new IllegalArgumentException(
 						"address must be an instance of InetSocketAddress");
 			}
@@ -162,19 +163,19 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 		
 		public void socks5UdpAssociate() throws IOException {
 			Socket sock;
-			if (!this.socks5ClientAgent.canPrepareClientSocket()) {
-				sock = this.socks5ClientAgent.newClientSocketBuilder()
-						.newBoundConnectedClientSocket();
-				this.socks5ClientAgent.newClientSocketBuilder()
+			if (!this.socks5ClientAgent.canPrepareSocksServerSocket()) {
+				sock = this.socks5ClientAgent.newSocksServerSocketBuilder()
+						.newBoundConnectedSocksServerSocket();
+				this.socks5ClientAgent.newSocksServerSocketBuilder()
 						.proceedToConfigure(sock)
 						.configure();
 			} else {
-				sock = this.socks5ClientAgent.newClientSocketBuilder()
+				sock = this.socks5ClientAgent.newSocksServerSocketBuilder()
 						.proceedToConfigure(this.socket)
 						.configure()
 						.proceedToConnect()
 						.setToBind(true)
-						.getConnectedClientSocket();
+						.getConnectedSocksServerSocket();
 			}
 			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
@@ -212,8 +213,8 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 			}
 			InetAddress serverBoundInetAddress = InetAddress.getByName(
 					serverBoundAddress);
-			datagramSock = this.socks5ClientAgent.newClientDatagramSocketBuilder()
-					.getConnectedClientDatagramSocket(
+			datagramSock = this.socks5ClientAgent.newSocksServerFacingDatagramSocketBuilder()
+					.getConnectedSocksServerFacingDatagramSocket(
 							datagramSock,
 							serverBoundInetAddress,
 							serverBoundPort);
@@ -555,16 +556,14 @@ public final class Socks5DatagramSocket extends DatagramSocket {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [getSocks5Client()=")
-			.append(this.getSocks5Client())
-			.append(", getLocalSocketAddress()=")
-			.append(this.getLocalSocketAddress())
-			.append(", getRemoteSocketAddress()=")
-			.append(this.getRemoteSocketAddress())
-			.append("]");
-		return builder.toString();
+        return this.getClass().getSimpleName() +
+                " [getSocks5Client()=" +
+                this.getSocks5Client() +
+                ", getLocalSocketAddress()=" +
+                this.getLocalSocketAddress() +
+                ", getRemoteSocketAddress()=" +
+                this.getRemoteSocketAddress() +
+                "]";
 	}
 
 }

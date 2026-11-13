@@ -131,7 +131,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		public Socks5ServerSocketImpl(
 				final Socks5ClientAgent clientAgent) {
 			Socket sock = 
-					clientAgent.newClientSocketBuilder().newClientSocket();
+					clientAgent.newSocksServerSocketBuilder().newSocksServerSocket();
 			this.bound = false;
 			this.closed = false;
 			this.socks5ClientAgent = clientAgent;
@@ -178,8 +178,8 @@ public final class Socks5ServerSocket extends ServerSocket {
 						this.localInetAddress,
 						this.localPort);
 				Socket newSocket = 
-						this.socks5ClientAgent.newClientSocketBuilder()
-								.newClientSocket();
+						this.socks5ClientAgent.newSocksServerSocketBuilder()
+								.newSocksServerSocket();
 				if (this.performancePreferences != null) {
 					this.performancePreferences.applyTo(newSocket);
 				}
@@ -256,7 +256,7 @@ public final class Socks5ServerSocket extends ServerSocket {
 		}
 		
 		public void setReuseAddress(boolean on) throws SocketException {
-			Boolean b = Boolean.valueOf(on);
+			Boolean b = on;
 			this.socket.setReuseAddress(on);
 			this.socketSettings.putValue(
 					StandardSocketSettingSpecConstants.SO_REUSEADDR, b);
@@ -272,16 +272,16 @@ public final class Socks5ServerSocket extends ServerSocket {
 		public void socks5Bind(
 				final int port, final InetAddress bindAddr) throws IOException {
 			Socket sock;
-			if (!this.socks5ClientAgent.canPrepareClientSocket()) {
-				sock = this.socks5ClientAgent.newClientSocketBuilder()
-						.newBoundConnectedClientSocket();
+			if (!this.socks5ClientAgent.canPrepareSocksServerSocket()) {
+				sock = this.socks5ClientAgent.newSocksServerSocketBuilder()
+						.newBoundConnectedSocksServerSocket();
 				this.socketSettings.applyTo(sock);
 			} else {
-				sock = this.socks5ClientAgent.newClientSocketBuilder()
+				sock = this.socks5ClientAgent.newSocksServerSocketBuilder()
 						.proceedToConfigure(this.socket)
 						.proceedToConnect()
 						.setToBind(true)
-						.getConnectedClientSocket();
+						.getConnectedSocksServerSocket();
 			}
 			Method method = this.socks5ClientAgent.negotiateMethod(sock);
 			MethodEncapsulation methodEncapsulation = 
@@ -523,14 +523,12 @@ public final class Socks5ServerSocket extends ServerSocket {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [getSocks5Client()=")
-			.append(this.getSocks5Client())
-			.append(", getLocalSocketAddress()=")
-			.append(this.getLocalSocketAddress())
-			.append("]");
-		return builder.toString();
+        return this.getClass().getSimpleName() +
+                " [getSocks5Client()=" +
+                this.getSocks5Client() +
+                ", getLocalSocketAddress()=" +
+                this.getLocalSocketAddress() +
+                "]";
 	}
 
 }

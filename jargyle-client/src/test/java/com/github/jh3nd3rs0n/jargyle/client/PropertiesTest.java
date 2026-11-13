@@ -10,33 +10,33 @@ public class PropertiesTest {
     public void testOfProperties() {
         Assert.assertNotNull(Properties.of(Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"))));
+                        "socksClient.socksServerSocket.connectTimeout", "1"))));
     }
 
     @Test
     public void testOfPropertyVarargs() {
         Assert.assertNotNull(Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1")));
+                        "socksClient.socksServerSocket.connectTimeout", "1")));
     }
 
     @Test
     public void testEqualsObject01() {
         Properties properties = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Assert.assertEquals(properties, properties);
     }
 
@@ -44,11 +44,11 @@ public class PropertiesTest {
     public void testEqualsObject02() {
         Properties properties = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Assert.assertNotEquals(properties, null);
     }
 
@@ -56,11 +56,11 @@ public class PropertiesTest {
     public void testEqualsObject03() {
         Object obj1 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Object obj2 = new Object();
         Assert.assertNotEquals(obj1, obj2);
     }
@@ -69,18 +69,18 @@ public class PropertiesTest {
     public void testEqualsObject04() {
         Properties properties1 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Properties properties2 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"),
+                        "socksClient.socksServerSocket.connectTimeout", "1"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientSocketSettings", ""));
+                        "socksClient.socksServerSocket.socketSettings", ""));
         Assert.assertNotEquals(properties1, properties2);
     }
 
@@ -88,25 +88,25 @@ public class PropertiesTest {
     public void testEqualsObject05() {
         Properties properties1 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Properties properties2 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Assert.assertEquals(properties1, properties2);
     }
 
     @Test
     public void testGetValue01() {
         PropertySpec<Host> propertySpec =
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST;
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST;
         Property<Host> defaultProperty = propertySpec.getDefaultProperty();
         Properties properties = Properties.of();
         Assert.assertEquals(
@@ -117,7 +117,7 @@ public class PropertiesTest {
     @Test
     public void testGetValue02() {
         PropertySpec<Host> propertySpec =
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST;
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST;
         Property<Host> property = propertySpec.newProperty(Host.newInstance(
                 "0.0.0.1"));
         Properties properties = Properties.of(property);
@@ -130,18 +130,18 @@ public class PropertiesTest {
     public void testHashCode01() {
         Properties properties1 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Properties properties2 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"),
+                        "socksClient.socksServerSocket.connectTimeout", "1"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientSocketSettings", ""));
+                        "socksClient.socksServerSocket.socketSettings", ""));
         Assert.assertNotEquals(properties1.hashCode(), properties2.hashCode());
     }
 
@@ -149,18 +149,18 @@ public class PropertiesTest {
     public void testHashCode02() {
         Properties properties1 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Properties properties2 = Properties.of(
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindHost", "0.0.0.0"),
+                        "socksClient.socksServerSocket.bindHost", "0.0.0.0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientBindPortRanges", "0"),
+                        "socksClient.socksServerSocket.bindPortRanges", "0"),
                 Property.newInstanceWithParsedValue(
-                        "socksClient.clientConnectTimeout", "1"));
+                        "socksClient.socksServerSocket.connectTimeout", "1"));
         Assert.assertEquals(properties1.hashCode(), properties2.hashCode());
     }
 

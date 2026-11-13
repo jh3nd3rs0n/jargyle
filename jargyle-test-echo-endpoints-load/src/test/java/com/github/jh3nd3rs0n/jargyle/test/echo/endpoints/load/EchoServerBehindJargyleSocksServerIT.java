@@ -46,7 +46,7 @@ public class EchoServerBehindJargyleSocksServerIT {
 
     private static AbstractSocksServer newJargyleSocksServer() {
         return new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(Port.valueOf(0)),
                 GeneralSettingSpecConstants.BACKLOG.newSetting(

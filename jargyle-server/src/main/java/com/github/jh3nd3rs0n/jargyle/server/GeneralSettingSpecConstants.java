@@ -20,7 +20,7 @@ public final class GeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			defaultValue = "50",
 			description = "The maximum length of the queue of incoming client "
-					+ "connections to the SOCKS server",
+					+ "TCP connections to the SOCKS server",
 			name = "backlog",
 			syntax = "backlog=NON_NEGATIVE_INTEGER",
 			valueType = NonNegativeInteger.class
@@ -33,7 +33,7 @@ public final class GeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			defaultValue = "0.0.0.0",
 			description = "The default binding host name or address for all "
-					+ "sockets",
+					+ "endpoints",
 			name = "bindHost",
 			syntax = "bindHost=HOST",
 			valueType = Host.class
@@ -46,7 +46,7 @@ public final class GeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			defaultValue = "HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS",
 			description = "The comma separated list of default acceptable "
-					+ "binding host address types for all sockets",
+					+ "binding host address types for all endpoints",
 			name = "bindHostAddressTypes",
 			syntax = "bindHostAddressTypes=HOST_ADDRESS_TYPES",
 			valueType = HostAddressTypes.class
@@ -59,7 +59,7 @@ public final class GeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			defaultValue = "0",
 			description = "The comma separated list of default binding port "
-					+ "ranges for all TCP sockets",
+					+ "ranges for all TCP endpoints",
 			name = "bindTcpPortRanges",
 			syntax = "bindTcpPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -72,7 +72,7 @@ public final class GeneralSettingSpecConstants {
 	@NameValuePairValueSpecDoc(
 			defaultValue = "0",
 			description = "The comma separated list of default binding port "
-					+ "ranges for all UDP sockets",
+					+ "ranges for all UDP endpoints",
 			name = "bindUdpPortRanges",
 			syntax = "bindUdpPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
@@ -81,17 +81,150 @@ public final class GeneralSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
 					"bindUdpPortRanges",
 					PortRanges.getDefault()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The default binding host name or address for all "
+					+ "client endpoints",
+			name = "clientEndpoints.bindHost",
+			syntax = "clientEndpoints.bindHost=HOST",
+			valueType = Host.class
+	)
+	public static final SettingSpec<Host> CLIENT_ENDPOINTS_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"clientEndpoints.bindHost",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default acceptable "
+					+ "binding host address types for all client endpoints",
+			name = "clientEndpoints.bindHostAddressTypes",
+			syntax = "clientEndpoints.bindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"clientEndpoints.bindHostAddressTypes",
+					HostAddressTypes.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all client TCP endpoints",
+			name = "clientEndpoints.bindTcpPortRanges",
+			syntax = "clientEndpoints.bindTcpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
+	)
+	public static final SettingSpec<PortRanges> CLIENT_ENDPOINTS_BIND_TCP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"clientEndpoints.bindTcpPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all client UDP endpoints",
+			name = "clientEndpoints.bindUdpPortRanges",
+			syntax = "clientEndpoints.bindUdpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
+	)
+	public static final SettingSpec<PortRanges> CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"clientEndpoints.bindUdpPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The default network interface that provides a "
+					+ "binding host address for all client endpoints",
+			name = "clientEndpoints.netInterface",
+			syntax = "clientEndpoints.netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> CLIENT_ENDPOINTS_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"clientEndpoints.netInterface",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default socket settings "
+					+ "for all client endpoints",
+			name = "clientEndpoints.socketSettings",
+			syntax = "clientEndpoints.socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
+	)
+	public static final SettingSpec<SocketSettings> CLIENT_ENDPOINTS_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"clientEndpoints.socketSettings",
+					SocketSettings.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The binding host name or address for the "
+					+ "client-facing TCP server socket",
+			name = "clientFacingServerSocket.bindHost",
+			syntax = "clientFacingServerSocket.bindHost=HOST",
+			valueType = Host.class
+	)
+	public static final SettingSpec<Host> CLIENT_FACING_SERVER_SOCKET_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"clientFacingServerSocket.bindHost",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for the client-facing TCP server "
+					+ "socket",
+			name = "clientFacingServerSocket.bindHostAddressTypes",
+			syntax = "clientFacingServerSocket.bindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> CLIENT_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"clientFacingServerSocket.bindHostAddressTypes",
+					HostAddressTypes.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of binding port ranges for "
+					+ "the client-facing TCP server socket",
+			name = "clientFacingServerSocket.bindPortRanges",
+			syntax = "clientFacingServerSocket.bindPortRangesPORT_RANGES",
+			valueType = PortRanges.class
+	)
+	public static final SettingSpec<PortRanges> CLIENT_FACING_SERVER_SOCKET_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"clientFacingServerSocket.bindPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding host "
+					+ "address for the client-facing TCP server socket",
+			name = "clientFacingServerSocket.netInterface",
+			syntax = "clientFacingServerSocket.netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> CLIENT_FACING_SERVER_SOCKET_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"clientFacingServerSocket.netInterface",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of socket settings for the "
+					+ "client-facing TCP server socket",
+			name = "clientFacingServerSocket.socketSettings",
+			syntax = "clientFacingServerSocket.socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
+	)
+	public static final SettingSpec<SocketSettings> CLIENT_FACING_SERVER_SOCKET_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"clientFacingServerSocket.socketSettings",
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
-					+ "client socket",
-			name = "clientSocketSettings",
-			syntax = "clientSocketSettings=SOCKET_SETTINGS",
+					+ "client TCP socket",
+			name = "clientSocket.socketSettings",
+			syntax = "clientSocket.socketSettings=SOCKET_SETTINGS",
 			valueType = SocketSettings.class
 	)
-	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SETTINGS = 
+	public static final SettingSpec<SocketSettings> CLIENT_SOCKET_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"clientSocketSettings", 
+					"clientSocket.socketSettings", 
 					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
@@ -104,152 +237,6 @@ public final class GeneralSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new StringSettingSpec(
 					"doc",
 					null));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The default binding host name or address for all "
-					+ "external-facing sockets",
-			name = "externalFacingBindHost",
-			syntax = "externalFacingBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> EXTERNAL_FACING_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"externalFacingBindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default acceptable "
-					+ "binding host address types for all external-facing "
-					+ "sockets",
-			name = "externalFacingBindHostAddressTypes",
-			syntax = "externalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"externalFacingBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default binding port "
-					+ "ranges for all external-facing TCP sockets",
-			name = "externalFacingBindTcpPortRanges",
-			syntax = "externalFacingBindTcpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_TCP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"externalFacingBindTcpPortRanges",
-					PortRanges.of()));
-			
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default binding port "
-					+ "ranges for all external-facing UDP sockets",
-			name = "externalFacingBindUdpPortRanges",
-			syntax = "externalFacingBindUdpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> EXTERNAL_FACING_BIND_UDP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"externalFacingBindUdpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The default network interface that provides a "
-					+ "binding host address for all external-facing sockets",
-			name = "externalFacingNetInterface",
-			syntax = "externalFacingNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> EXTERNAL_FACING_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"externalFacingNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default socket settings "
-					+ "for all external-facing sockets",
-			name = "externalFacingSocketSettings",
-			syntax = "externalFacingSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> EXTERNAL_FACING_SOCKET_SETTINGS =
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"externalFacingSocketSettings", 
-					SocketSettings.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The default binding host name or address for all "
-					+ "internal-facing sockets",
-			name = "internalFacingBindHost",
-			syntax = "internalFacingBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> INTERNAL_FACING_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"internalFacingBindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default acceptable "
-					+ "binding host address types for all internal-facing "
-					+ "sockets",
-			name = "internalFacingBindHostAddressTypes",
-			syntax = "internalFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"internalFacingBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default binding port "
-					+ "ranges for all internal-facing TCP sockets",
-			name = "internalFacingBindTcpPortRanges",
-			syntax = "internalFacingBindTcpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_TCP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"internalFacingBindTcpPortRanges",
-					PortRanges.of()));
-			
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default binding port "
-					+ "ranges for all internal-facing UDP sockets",
-			name = "internalFacingBindUdpPortRanges",
-			syntax = "internalFacingBindUdpPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> INTERNAL_FACING_BIND_UDP_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"internalFacingBindUdpPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The default network interface that provides a "
-					+ "binding host address for all internal-facing sockets",
-			name = "internalFacingNetInterface",
-			syntax = "internalFacingNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> INTERNAL_FACING_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"internalFacingNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of default socket settings "
-					+ "for all internal-facing sockets",
-			name = "internalFacingSocketSettings",
-			syntax = "internalFacingSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> INTERNAL_FACING_SOCKET_SETTINGS =
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"internalFacingSocketSettings", 
-					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			defaultValue = "lastRoute",
@@ -265,7 +252,7 @@ public final class GeneralSettingSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			description = "The default network interface that provides a "
-					+ "binding host address for all sockets",
+					+ "binding host address for all endpoints",
 			name = "netInterface",
 			syntax = "netInterface=NETWORK_INTERFACE",
 			valueType = NetInterface.class
@@ -277,7 +264,8 @@ public final class GeneralSettingSpecConstants {
 
 	@NameValuePairValueSpecDoc(
 			defaultValue = "1080",
-			description = "The port for the SOCKS server",
+			description = "The port for the SOCKS server (or specifically "
+					+ "the port for the client-facing TCP server socket)",
 			name = "port",
 			syntax = "port=PORT",
 			valueType = Port.class
@@ -286,6 +274,78 @@ public final class GeneralSettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PortSettingSpec(
 					"port", 
 					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The default binding host name or address for all "
+					+ "remote endpoints",
+			name = "remoteEndpoints.bindHost",
+			syntax = "remoteEndpoints.bindHost=HOST",
+			valueType = Host.class
+	)
+	public static final SettingSpec<Host> REMOTE_ENDPOINTS_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"remoteEndpoints.bindHost",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default acceptable "
+					+ "binding host address types for all remote endpoints",
+			name = "remoteEndpoints.bindHostAddressTypes",
+			syntax = "remoteEndpoints.bindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"remoteEndpoints.bindHostAddressTypes",
+					HostAddressTypes.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all remote TCP endpoints",
+			name = "remoteEndpoints.bindTcpPortRanges",
+			syntax = "remoteEndpoints.bindTcpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
+	)
+	public static final SettingSpec<PortRanges> REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"remoteEndpoints.bindTcpPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default binding port "
+					+ "ranges for all remote UDP endpoints",
+			name = "remoteEndpoints.bindUdpPortRanges",
+			syntax = "remoteEndpoints.bindUdpPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
+	)
+	public static final SettingSpec<PortRanges> REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"remoteEndpoints.bindUdpPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The default network interface that provides a "
+					+ "binding host address for all remote endpoints",
+			name = "remoteEndpoints.netInterface",
+			syntax = "remoteEndpoints.netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> REMOTE_ENDPOINTS_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"remoteEndpoints.netInterface",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of default socket settings "
+					+ "for all remote endpoints",
+			name = "remoteEndpoints.socketSettings",
+			syntax = "remoteEndpoints.socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
+	)
+	public static final SettingSpec<SocketSettings> REMOTE_ENDPOINTS_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"remoteEndpoints.socketSettings",
+					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The logging action to take if a route is selected",
@@ -324,7 +384,7 @@ public final class GeneralSettingSpecConstants {
 	
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of default socket settings "
-					+ "for all sockets",
+					+ "for all endpoints",
 			name = "socketSettings",
 			syntax = "socketSettings=SOCKET_SETTINGS",
 			valueType = SocketSettings.class
@@ -332,66 +392,6 @@ public final class GeneralSettingSpecConstants {
 	public static final SettingSpec<SocketSettings> SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
 					"socketSettings", 
-					SocketSettings.of()));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for the SOCKS "
-					+ "server socket",
-			name = "socksServerBindHost",
-			syntax = "socksServerBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> SOCKS_SERVER_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socksServerBindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of acceptable binding "
-					+ "host address types for the SOCKS server socket",
-			name = "socksServerBindHostAddressTypes",
-			syntax = "socksServerBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> SOCKS_SERVER_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socksServerBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "the SOCKS server socket",
-			name = "socksServerBindPortRanges",
-			syntax = "socksServerBindPortRangesPORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS_SERVER_BIND_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socksServerBindPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The network interface that provides a binding host "
-					+ "address for the SOCKS server socket",
-			name = "socksServerNetInterface",
-			syntax = "socksServerNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> SOCKS_SERVER_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socksServerNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for the "
-					+ "SOCKS server socket",
-			name = "socksServerSocketSettings",
-			syntax = "socksServerSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS_SERVER_SOCKET_SETTINGS =
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socksServerSocketSettings",
 					SocketSettings.of()));
 	
 	public static List<SettingSpec<Object>> values() {

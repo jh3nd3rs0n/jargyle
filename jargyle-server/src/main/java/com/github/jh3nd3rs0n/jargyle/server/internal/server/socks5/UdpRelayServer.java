@@ -40,7 +40,7 @@ final class UdpRelayServer {
 		private final int clientPort;
 		private HostResolver hostResolver;
 		private int idleTimeout;
-		private final DatagramSocket peerFacingDatagramSocket;
+		private final DatagramSocket remoteFacingDatagramSocket;
 		private RuleContext ruleContext;
 		private Rules rules;
 		
@@ -48,10 +48,10 @@ final class UdpRelayServer {
 				final String clientAddr,
 				final int clientPrt,
 				final DatagramSocket clientFacingDatagramSock,
-				final DatagramSocket peerFacingDatagramSock) {
+				final DatagramSocket remoteFacingDatagramSock) {
 			Objects.requireNonNull(clientAddr);
 			Objects.requireNonNull(clientFacingDatagramSock);
-			Objects.requireNonNull(peerFacingDatagramSock);
+			Objects.requireNonNull(remoteFacingDatagramSock);
 			if (clientPrt < 0 || clientPrt > Port.MAX_INT_VALUE) {
 				throw new IllegalArgumentException(
 						"client port is out of range");
@@ -62,7 +62,7 @@ final class UdpRelayServer {
 			this.clientPort = clientPrt;
 			this.hostResolver = DEFAULT_HOST_RESOLVER;
 			this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
-			this.peerFacingDatagramSocket = peerFacingDatagramSock;
+			this.remoteFacingDatagramSocket = remoteFacingDatagramSock;
 			this.ruleContext = new RuleContext(DEFAULT_RULE_CONTEXT);
 			this.rules = DEFAULT_RULES;
 		}
@@ -271,7 +271,7 @@ final class UdpRelayServer {
 							buffer, buffer.length);
 					IOException ioe = null;
 					try {
-						this.peerFacingDatagramSocket.receive(packet);
+						this.remoteFacingDatagramSocket.receive(packet);
 						this.udpRelayServer.setIdleStartTime(
 								System.currentTimeMillis());
 					} catch (IOException e) {
@@ -686,7 +686,7 @@ final class UdpRelayServer {
 					}
 					ioe = null;
 					try {
-						this.peerFacingDatagramSocket.send(packet);
+						this.remoteFacingDatagramSocket.send(packet);
 					} catch (IOException e) {
 						ioe = e;
 					}
@@ -730,7 +730,7 @@ final class UdpRelayServer {
 		protected final DatagramSocket clientFacingDatagramSocket;
 		protected final HostResolver hostResolver;
 		protected final int idleTimeout;
-		protected final DatagramSocket peerFacingDatagramSocket;
+		protected final DatagramSocket remoteFacingDatagramSocket;
 		protected final RuleContext ruleContext;
 		protected final Rules rules;
 		protected final UdpRelayServer udpRelayServer;
@@ -740,7 +740,7 @@ final class UdpRelayServer {
 			this.clientFacingDatagramSocket = server.clientFacingDatagramSocket;
 			this.hostResolver = server.hostResolver;
 			this.idleTimeout = server.idleTimeout;
-			this.peerFacingDatagramSocket = server.peerFacingDatagramSocket;			
+			this.remoteFacingDatagramSocket = server.remoteFacingDatagramSocket;			
 			this.ruleContext = server.ruleContext;
 			this.rules = server.rules;
 			this.udpRelayServer = server;
@@ -752,8 +752,8 @@ final class UdpRelayServer {
 			builder.append(this.getClass().getSimpleName())
 				.append(" [clientFacingDatagramSocket=")
 				.append(this.clientFacingDatagramSocket)
-				.append(", peerFacingDatagramSocket=")
-				.append(this.peerFacingDatagramSocket)
+				.append(", remoteFacingDatagramSocket=")
+				.append(this.remoteFacingDatagramSocket)
 				.append("]");
 			return builder.toString();
 		}
@@ -777,7 +777,7 @@ final class UdpRelayServer {
 	private final HostResolver hostResolver;
 	private final AtomicLong idleStartTime;
 	private final int idleTimeout;
-	private final DatagramSocket peerFacingDatagramSocket;
+	private final DatagramSocket remoteFacingDatagramSocket;
 	private final RuleContext ruleContext;
 	private final Rules rules;
 	private final AtomicReference<State> state;
@@ -791,7 +791,7 @@ final class UdpRelayServer {
 		this.hostResolver = builder.hostResolver;
 		this.idleStartTime = new AtomicLong(0L);
 		this.idleTimeout = builder.idleTimeout;
-		this.peerFacingDatagramSocket = builder.peerFacingDatagramSocket;
+		this.remoteFacingDatagramSocket = builder.remoteFacingDatagramSocket;
 		this.ruleContext = builder.ruleContext;
 		this.rules = builder.rules;
 		this.state = new AtomicReference<State>(State.STOPPED);

@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.Socket;
 
-public class ConfiguringClientSocketBuilderTest {
+public class ConfiguringSocksServerSocketBuilderTest {
 
     @Test
     public void testConfigure01() throws IOException {
@@ -21,18 +21,18 @@ public class ConfiguringClientSocketBuilderTest {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost");
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS.newProperty(SocketSettings.of(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_SOCKET_SETTINGS.newProperty(SocketSettings.of(
                         StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(soTimeout),
                         StandardSocketSettingSpecConstants.SO_RCVBUF.newSocketSetting(receiveBufferSize),
                         StandardSocketSettingSpecConstants.SO_SNDBUF.newSocketSetting(sendBufferSize))));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientSocketBuilder clientSocketBuilder =
-                socksClientAgent.newClientSocketBuilder();
+        SocksServerSocketBuilder socksServerSocketBuilder =
+                socksClientAgent.newSocksServerSocketBuilder();
         try (Socket socket = new Socket()) {
-            ConfiguringClientSocketBuilder configuringClientSocketBuilder =
-                    clientSocketBuilder.proceedToConfigure(socket);
-            configuringClientSocketBuilder.configure();
+            ConfiguringSocksServerSocketBuilder configuringSocksServerSocketBuilder =
+                    socksServerSocketBuilder.proceedToConfigure(socket);
+            configuringSocksServerSocketBuilder.configure();
             Assert.assertEquals(soTimeout.intValue(), socket.getSoTimeout());
             Assert.assertEquals(
                     receiveBufferSize.intValue(),

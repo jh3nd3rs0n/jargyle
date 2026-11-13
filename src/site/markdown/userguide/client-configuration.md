@@ -3,6 +3,15 @@
 ## Contents
 
 -   [Overview](#overview)
+-   [(TCP) Socket Connection Types](#tcp-socket-connection-types)
+    -   [Extemporaneous (TCP) Socket Connection Type](#extemporaneous-tcp-socket-connection-type)
+    -   [Prepared (TCP) Socket Connection Type](#prepared-tcp-socket-connection-type)
+-   [Configuring the SOCKS Server TCP Socket](#configuring-the-socks-server-tcp-socket)
+    -   [Binding the SOCKS Server TCP Socket to a Host Name or Address](#binding-the-socks-server-tcp-socket-to-a-host-name-or-address)
+    -   [Binding the SOCKS Server TCP Socket to a Host Address from a Network Interface](#binding-the-socks-server-tcp-socket-to-a-host-address-from-a-network-interface)
+    -   [Binding the SOCKS Server TCP Socket to a Port Number Range or Port Number Ranges](#binding-the-socks-server-tcp-socket-to-a-port-number-range-or-port-number-ranges)
+    -   [Applying Socket Settings to the SOCKS Server TCP Socket](#applying-socket-settings-to-the-socks-server-tcp-socket)
+    -   [Preparing the SOCKS Server TCP Socket Before Connecting](#preparing-the-socks-server-tcp-socket-before-connecting)
 -   [Enabling SSL/TLS-layered TCP Traffic Between the Client and the SOCKS Server](#enabling-ssltls-layered-tcp-traffic-between-the-client-and-the-socks-server)
 -   [Enabling DTLS-layered UDP Traffic Between the Client and the SOCKS Server](#enabling-dtls-layered-udp-traffic-between-the-client-and-the-socks-server)
 -   [Accessing the SOCKS Server Using SOCKS5 Authentication](#accessing-the-socks-server-using-socks5-authentication)
@@ -16,6 +25,573 @@
 
 This document discusses how to further use the [client API](client-api.md) 
 by means of configuration.
+
+## (TCP) Socket Connection Types
+
+There are two types of connections a TCP socket (`Socket`) can make: an
+extemporaneous connection and a prepared connection. Each connection type
+has its advantages and disadvantages.
+
+### Extemporaneous (TCP) Socket Connection Type
+
+An extemporaneous connection occurs when creating a `Socket` from one of the
+following methods:
+
+-   `SocketFactory.newSocket(java.lang.String host, int port)`
+-   `SocketFactory.newSocket(java.lang.String host, int port, java.net.InetAddress localAddr, int localPort)`
+-   `SocketFactory.newSocket(java.net.InetAddress address, int port)`
+-   `SocketFactory.newSocket(java.net.InetAddress address, int port, java.net.InetAddress localAddr, int localPort)`
+
+When an extemporaneous connection is about to be made, no preparation is made
+for the `Socket` before connecting.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import java.io.IOException;
+
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        Socket socket = socketFactory.newSocket("example.com", 443);
+        // ...
+    }
+}
+```
+
+Here are the following advantages/disadvantages:
+
+**Advantages:**
+
+-   When having the `Socket`'s traffic set through a SOCKS server, if a target
+    host name is provided for the `Socket` to connect to
+    (`java.lang.String host`), the target host name will be resolved by the
+    SOCKS server
+
+**Disadvantages:**
+
+-  Some `Socket` configuration might not be applied after the connection is
+   made. Only a prepared connection can have such `Socket` configuration
+   applied earlier.
+-  No timeout in milliseconds can be specified for how long a wait for the
+   `Socket` to connect.
+
+### Prepared (TCP) Socket Connection Type
+
+For a prepared connection, the following occurs:
+
+1.   An unbound and unconnected `Socket` is created from the method
+     `SocketFactory.newSocket()`.
+2.   The `Socket` is bound by using the method
+     `Socket.bind(java.net.SocketAddress bindpoint)`.
+3.   Additional configuration is applied to the `Socket` (optional).
+4.   The `Socket` is connected by using either of the following methods:
+    -   `Socket.connect(java.net.SocketAddress endpoint)`
+    -   `Socket.connect(java.net.SocketAddress endpoint, int timeout)`
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import java.io.IOException;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        Socket socket = socketFactory.newSocket();
+        socket.bind(new InetSocketAddress(null, 0));
+        socket.connect(new InetSocketAddress("example.com", 443));
+        // ...
+    }
+}
+```
+
+Here are the following advantages/disadvantages:
+
+**Advantages:**
+
+-   `Socket` configuration that can only be applied before a connection is
+    made can be applied.
+-   A timeout in milliseconds can be specified for how long a wait for the
+    `Socket` to connect (`int timeout`).
+
+**Disadvantages:**
+
+-   When having the `Socket`'s traffic set through a SOCKS server, if a target
+    host name is provided for the TCP socket to connect to, the target host
+    name is resolved through the local system not the SOCKS server.
+
+## Configuring the SOCKS Server TCP Socket
+
+Objects that have their traffic routed through the SOCKS server each has a 
+client. Each client has an underlying TCP socket to the SOCKS server. In this 
+documentation, this underlying TCP socket is called the SOCKS server TCP 
+socket.
+
+Depending on the object, the SOCKS server TCP socket can be configured in only 
+one of the following ways:
+
+-   **Configuring the object**. Configuring certain objects configure their 
+    SOCKS server TCP sockets without any special properties required. `Socket` 
+    would be such an object.
+-   **Configuring the object and using properties prefixed with
+    `socksClient.socksServerSocket`**. Configuring certain objects configure
+    some parts of their SOCKS server TCP sockets but the special properties 
+    are required to configure other parts of their SOCKS server TCP sockets. 
+    `ServerSocket` would be such an object.
+-   **Using properties prefixed with `socksClient.socksServerSocket`**. 
+    Configuring certain objects does nothing to their SOCKS server TCP sockets.
+    `DatagramSocket` would be such an object. Special properties are required 
+    to configure their SOCKS server TCP sockets. 
+
+### Binding the SOCKS Server TCP Socket to a Host Name or Address
+
+You can bind the SOCKS server TCP socket to a host name or to a host address.
+
+For a `Socket`, you can provide the host name or address as a
+`java.lang.String` or a `java.net.InetAddress` to the following methods:
+
+-   `SocketFactory.newSocket(java.lang.String host, int port, java.net.InetAddress localAddr, int localPort)`:
+    The third method argument `localAddr` is used to bind the SOCKS server TCP 
+    socket to a host name or address.
+-   `SocketFactory.newSocket(java.net.InetAddress address, int port, java.net.InetAddress localAddr, int localPort)`:
+    The third method argument `localAddr` is used to bind the SOCKS server TCP 
+    socket to a host address.
+-   `Socket.bind(java.net.SocketAddress bindpoint)`: The host name or address 
+    of the provided `java.net.SocketAddress` is used to bind the SOCKS server 
+    TCP socket to a host name or address.
+
+For all other objects, you would use the property 
+`socksClient.socksServerSocket.bindHost`.
+
+The host address can be an IPv4 address or an IPv6 address.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        /*
+         * Examples of binding the SOCKS server TCP socket to a host name or 
+         * address:
+         * 
+         * System.setProperty("socksClient.socksServerSocket.bindHost", "a96p08.local");
+         * 
+         * System.setProperty("socksClient.socksServerSocket.bindHost", "192.168.1.231");
+         * 
+         * System.setProperty("socksClient.socksServerSocket.bindHost", "fe80::34ef:938a:402f:e526%17");
+         * 
+         */
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        /*
+         * Examples of binding the SOCKS server TCP socket to a host name or
+         * address through a Socket:
+         * 
+         * Socket socket = socketFactory.newSocket("example.com", 443, "a96p08.local", 0);
+         * 
+         * Socket socket = socketFactory.newSocket("example.com", 443, "192.168.1.231", 0);
+         * 
+         * Socket socket = socketFactory.newSocket("example.com", 443, "fe80::34ef:938a:402f:e526%17", 0);
+         * 
+         * InetAddress address = InetAddress.getByName("example.com");
+         * InetAddress localAddr = InetAddress.getByName("a96p08.local");
+         * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
+         * 
+         * Socket socket = socketFactory.newSocket();
+         * socket.bind(new InetSocketAddress("a96p08.local", 0));
+         * 
+         */
+        // ...
+    }
+}
+```
+
+<a id="binding-the-socks-server-tcp-socket-to-a-host-address-from-a-network-interface"></a>
+### Binding the SOCKS Server TCP Socket to a Host Address from a Network Interface
+
+Instead of binding the SOCKS server TCP socket to a specified host address, 
+you can bind it to a host address from a specified network interface.
+
+For a `Socket`, you can provide the name of the network interface to 
+`NetInterface.newInstanceFrom(java.lang.String s)` and receive a 
+`NetInterface` object that can provide you a host address.
+
+For all other objects, you would use the property 
+`socksClient.socksServerSocket.netInterface`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import com.github.jh3nd3rs0n.jargyle.common.net.NetInterface;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        /*
+         * Example of binding the SOCKS server TCP socket to a host address 
+         * from a network interface:
+         * 
+         * System.setProperty("socksClient.socksServerSocket.netInterface", "eth0");
+         * 
+         */
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        /*
+         * Examples of binding the SOCKS server TCP socket to a host address 
+         * from a network interface through a Socket:
+         * 
+         * InetAddress address = InetAddress.getByName("example.com");
+         * InetAddress localAddr = NetInterface.newInstanceFrom("eth0")
+         *     .getHostAddresses().get(0).toInetAddress();
+         * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
+         * 
+         * Socket socket = socketFactory.newSocket();
+         * socket.bind(new InetSocketAddress(
+         *     NetInterface.newInstanceFrom("eth0")
+         *         .getHostAddresses().get(0).toInetAddress(), 
+         *     0));
+         * 
+         */
+        // ...
+    }
+}
+```
+
+You can also specify which 
+[host address types](common-topics.md#host-address-types) to choose from the 
+network interface.
+
+For a `Socket`, you can provide the host address types to 
+`NetInterface.getHostAddresses(HostAddressTypes hostAddressTypes)` to the 
+`NetInterface` object.
+
+For all other objects, you would use the property
+`socksClient.socksServerSocket.bindHostAddressTypes`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import com.github.jh3nd3rs0n.jargyle.common.net.NetInterface;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddressType;
+import com.github.jh3nd3rs0n.jargyle.common.net.HostAddressTypes;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        /*
+         * Example of binding the SOCKS server TCP socket to a host address 
+         * from a network interface:
+         * 
+         * System.setProperty("socksClient.socksServerSocket.netInterface", "eth0");
+         * System.setProperty("socksClient.socksServerSocket.bindHostAddressTypes", "HOST_IPV4_ADDRESS");
+         * 
+         */
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        /*
+         * Examples of binding the SOCKS server TCP socket to a host address 
+         * from a network interface through a Socket:
+         * 
+         * InetAddress address = InetAddress.getByName("example.com");
+         * InetAddress localAddr = NetInterface.newInstanceFrom("eth0")
+         *     .getHostAddresses(HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS))
+         *     .get(0)
+         *     .toInetAddress();
+         * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
+         * 
+         * Socket socket = socketFactory.newSocket();
+         * socket.bind(new InetSocketAddress(
+         *     NetInterface.newInstanceFrom("eth0")
+         *         .getHostAddresses(HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS))
+         *         .get(0)
+         *         .toInetAddress(), 
+         *     0));
+         * 
+         */
+        // ...
+    }
+}
+```
+
+<a id="binding-the-socks-server-tcp-socket-to-a-port-number-range-or-port-number-ranges"></a>
+### Binding the SOCKS Server TCP Socket to a Port Number Range or Port Number Ranges
+
+You can bind the SOCKS server TCP socket to a 
+[port number range or port number ranges](common-topics.md#port-number-ranges).
+
+For a `Socket`, you can only provide a port number to the following methods:
+
+-   `SocketFactory.newSocket(java.lang.String host, int port, java.net.InetAddress localAddr, int localPort)`:
+    The fourth method argument `localPort` is used to bind the SOCKS server 
+    TCP socket to a port number.
+-   `SocketFactory.newSocket(java.net.InetAddress address, int port, java.net.InetAddress localAddr, int localPort)`:
+    The fourth method argument `localPort` is used to bind the SOCKS server 
+    TCP socket to a port number.
+-   `Socket.bind(java.net.SocketAddress bindpoint)`: The port number of the 
+    provided `java.net.SocketAddress` is used to bind the SOCKS server TCP 
+    socket to a port number.
+
+For all other objects, you would use the property 
+`socksClient.socksServerSocket.bindPortRanges`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        /*
+         * Examples of binding the SOCKS server TCP socket to a port number 
+         * range or port number ranges:
+         * 
+         * System.setProperty("socksClient.socksServerSocket.bindPortRanges", "20400-23500");
+         * 
+         * System.setProperty("socksClient.socksServerSocket.bindPortRanges", "5000,6500-7500");
+         * 
+         * System.setProperty("socksClient.socksServerSocket.bindPortRanges", "3500-4500,6000,9000-10000");
+         * 
+         */
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        /*
+         * Examples of binding the SOCKS server TCP socket to a port number 
+         * through a Socket:
+         * 
+         * Socket socket = socketFactory.newSocket("example.com", 443, "a96p08.local", 0);
+         * 
+         * Socket socket = socketFactory.newSocket("example.com", 443, "192.168.1.231", 0);
+         * 
+         * Socket socket = socketFactory.newSocket("example.com", 443, "fe80::34ef:938a:402f:e526%17", 0);
+         * 
+         * InetAddress address = InetAddress.getByName("example.com");
+         * InetAddress localAddr = InetAddress.getByName("a96p08.local");
+         * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
+         * 
+         * Socket socket = socketFactory.newSocket();
+         * socket.bind(new InetSocketAddress("a96p08.local", 0));
+         * 
+         */
+        // ...
+    }
+}
+```
+
+### Applying Socket Settings to the SOCKS Server TCP Socket
+
+You can apply [socket settings](common-topics.md#socket-settings) to the SOCKS 
+server TCP socket.
+
+For a `Socket`, you would use the following methods:
+
+-   `Socket.setKeepAlive(boolean on)`
+-   `Socket.setOption(java.net.SocketOption<T> name, T value)`
+-   `Socket.setReceiveBufferSize(int size)`
+-   `Socket.setReuseAddress(boolean on)`
+-   `Socket.setSendBufferSize(int size)`
+-   `Socket.setSoLinger(boolean on, int linger)`
+-   `Socket.setSoTimeout(int timeout)`
+-   `Socket.setTcpNoDelay(boolean on)`
+-   `Socket.setTrafficClass(int tc)`
+
+For a `ServerSocket`, you would use the following methods:
+
+-   `ServerSocket.setOption(java.net.SocketOption<T> name, T value)`
+-   `ServerSocket.setReceiveBufferSize(int size)`
+-   `ServerSocket.setReuseAddress(boolean on)`
+-   `ServerSocket.setSoTimeout(int timeout)`
+
+For all other objects, you would use the property 
+`socksClient.socksServerSocket.socketSettings`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        /*
+         * Example of applying socket settings to the SOCKS server TCP socket:
+         * 
+         * System.setProperty("socksClient.socksServerSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256");
+         * 
+         */
+        /*
+         * Example of applying socket settings to the SOCKS server TCP socket 
+         * through a Socket:
+         * 
+         * SocketFactory socketFactory = SocketFactory.getInstance();
+         * Socket socket = socketFactory.newSocket();
+         * socket.setReceiveBufferSize(256);
+         * socket.setSendBufferSize(256);
+         * 
+         */
+        /*
+         * Example of applying socket settings to the SOCKS server TCP socket
+         * through a ServerSocket:
+         *
+         * ServerSocketFactory serverSocketFactory = ServerSocketFactory.getInstance();
+         * ServerSocket serverSocket = serverSocketFactory.newServerSocket();
+         * serverSocket.setReceiveBufferSize(256);
+         * serverSocket.bind(new InetSocketAddress(null, 5000));
+         * Socket socket = serverSocket.accept();
+         * socket.setSendBufferSize(256);
+         *
+         */
+        // ...
+    }
+}
+```
+
+### Preparing the SOCKS Server TCP Socket Before Connecting
+
+You can prepare the SOCKS server TCP socket before connecting.
+
+For a `Socket`, making a 
+[prepared connection](#prepared-tcp-socket-connection-type) prepares the SOCKS 
+server TCP socket before connecting.
+
+For all other objects, you would have the property 
+`socksClient.socksServerSocket.prepareSocket` set to `true`.
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        System.setProperty(
+            "socksClient.socksServerUri", "socks5://jargyle.net:1234");
+        /*
+         * Example of preparing the SOCKS server TCP socket before connecting:
+         * 
+         * System.setProperty("socksClient.socksServerSocket.prepareSocket", "true");
+         * System.setProperty("socksClient.socksServerSocket.connectTimeout", "120000");
+         * 
+         */
+        SocketFactory socketFactory = SocketFactory.getInstance();
+        /*
+         * Example of preparing the SOCKS server TCP socket before connecting
+         * through a Socket:
+         * 
+         * Socket socket = socketFactory.newSocket();
+         * socket.bind(new InetSocketAddress(null, 0));
+         * socket.connect(new InetSocketAddress("example.com", 443), 120000);
+         * 
+         */
+        // ...
+    }
+}
+```
 
 <a id="enabling-ssltls-layered-tcp-traffic-between-the-client-and-the-socks-server"></a>
 ## Enabling SSL/TLS-layered TCP Traffic Between the Client and the SOCKS Server
@@ -441,7 +1017,12 @@ principal) for the SOCKS server residing at `jargyle.net`.
 ## Resolving Host Names From the SOCKS Server
 
 By default, host name resolution from the SOCKS server occurs only when a 
-`Socket` is created with a provided `String` for the target host name.
+`Socket` is created from the following methods:
+
+-   `SocketFactory.newSocket(java.lang.String host, int port)`: The first 
+    method argument `host` gets resolved from the SOCKS server
+-   `SocketFactory.newSocket(java.lang.String host, int port, java.net.InetAddress localAddr, int localPort)`:
+    The first method argument `host` gets resolved from the SOCKS server
 
 API example:
 
@@ -507,9 +1088,9 @@ public class ClientApp {
             "true");
         HostResolverFactory hostResolverFactory = 
             HostResolverFactory.getInstance();
-        SocketFactory socketFactory = SocketFactory.getInstance();
         HostResolver hostResolver = hostResolverFactory.newHostResolver();
         InetAddress inetAddress = hostResolver.resolve("example.com");
+        SocketFactory socketFactory = SocketFactory.getInstance();        
         Socket socket = socketFactory.newSocket(inetAddress, 443);
         // ...
     }
@@ -518,9 +1099,9 @@ public class ClientApp {
 
 ## Routing Traffic Through a Specified Chain of SOCKS Servers
 
-You can have the client route traffic through a specified chain of SOCKS 
-servers. To do this, you will need to create a chain of `SocksClient` objects 
-with each `SocksClient` object specifying a SOCKS server.
+You can have objects route traffic through a specified chain of SOCKS servers. 
+To do this, you will need to create a chain of `SocksClient` objects with each 
+`SocksClient` object specifying a SOCKS server.
 
 API example:
 
@@ -562,9 +1143,17 @@ public class ClientApp {
 }
 ```
 
-To specify the properties regarding a SOCKS server in the chain, the 
-`Properties` object for the properties regarding a SOCKS server will need to 
-be set for the `SocksClient` object specifying the SOCKS server.
+Objects that have traffic routed through a specified chain of SOCKS servers 
+each has a `SocksClient` object. Each `SocksClient` object has an underlying 
+TCP socket to the last SOCKS server in the chain. Within each underlying TCP 
+socket to the last SOCKS server in the chain is another `SocksClient` object. 
+Within each `SocksClient` object is an underlying TCP socket to the 
+second-to-last SOCKS server in the chain and so on. All of these underlying 
+TCP sockets are called the SOCKS server TCP sockets.
+
+For configuring any of the SOCKS server TCP sockets, it is recommended to 
+configure only the last SOCKS server TCP socket in the chain by setting the 
+`Properties` object for the last `SocksClient` object.
 
 API example:
 
@@ -575,6 +1164,79 @@ import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Property;
+import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUri;
+import com.github.jh3nd3rs0n.jargyle.client.SocksServerUriScheme;
+
+import java.io.IOException;
+
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientApp {
+    public static void main(String[] args) throws IOException {
+        SocksClient socksClient1 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("alpha-alpha.net", 11111)
+            .newSocksClient(Properties.of());
+        SocksClient socksClient2 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("beta-alpha.net", 22221)
+            .newSocksClient(Properties.of(), socksClient1);
+        SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
+            .newSocksServerUri("gamma-alpha.net", 33331)
+            .newSocksClient(Properties.of(
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.socksServerSocket.socketSettings", 
+                     "SO_RCVBUF=256,SO_SNDBUF=256")
+            ), socksClient2);
+        /*
+         * Example of configuring the last SOCKS server TCP socket
+         * through a Socket:
+         *
+         * SocketFactory socketFactory = socksClient3.getSocksSocketFactory();
+         * Socket socket = socketFactory.newSocket();
+         * socket.setReceiveBufferSize(256);
+         * socket.setSendBufferSize(256);
+         *
+         */
+        /*
+         * Example of configuring the last SOCKS server TCP socket
+         * through a ServerSocket:
+         *
+         * ServerSocketFactory serverSocketFactory = 
+         *     socksClient3.getSocksServerSocketFactory();
+         * ServerSocket serverSocket = serverSocketFactory.newServerSocket();
+         * serverSocket.setReceiveBufferSize(256);
+         * serverSocket.bind(new InetSocketAddress(null, 5000));
+         * Socket socket = serverSocket.accept();
+         * socket.setSendBufferSize(256);
+         *
+         */
+        // ...
+    }
+}
+```
+
+To specify the properties regarding SSL/TLS/DTLS and authentication for a 
+SOCKS server in the chain, the `Properties` object for the properties for that 
+SOCKS server will need to be set for the `SocksClient` object specifying that 
+SOCKS server. 
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
+import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
+import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
@@ -602,6 +1264,12 @@ public class ClientApp {
             .newSocksServerUri("beta-alpha.net", 22221)
             .newSocksClient(Properties.of(
                  Property.newInstanceFromParsedValue(
+                     "socksClient.ssl.enabled", "true"),
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.ssl.trustStoreFile", "server.jks"),
+                 Property.newInstanceFromParsedValue(
+                     "socksClient.ssl.trustStorePassword", "password"),
+                 Property.newInstanceFromParsedValue(
                      "socksClient.socks5.methods", "USERNAME_PASSWORD"),
                  Property.newInstanceFromParsedValue(
                      "socksClient.socks5.userpassauthmethod.username",
@@ -620,23 +1288,17 @@ public class ClientApp {
 }
 ```
 
-The known limitations of routing traffic through a specified chain of SOCKS 
-servers include the following:
+How the host names of the SOCKS servers in a chain of SOCKS servers are 
+resolved depends on the [type of connection](#tcp-socket-connection-types) a 
+`Socket` makes. If it makes an 
+[extemporaneous connection](#extemporaneous-tcp-socket-connection-type), the 
+specified host name for each SOCKS server except the first is resolved by the 
+previous SOCKS server (the specified host name of the first is resolved by the 
+local system). If it makes a 
+[prepared connection](#prepared-tcp-socket-connection-type), the specified 
+host name for each SOCKS server is resolved by the local system.
 
--   Only TCP traffic can be routed through the chain.
-
-**Note**: When connecting a `Socket` to a target host through a chain of 
-specified SOCKS servers with one or more of the SOCKS servers from the 2nd to 
-the *n*th specified with a host name, how the host names of the SOCKS servers 
-are resolved depends on how the `Socket` will be connecting to the target 
-host. If the `Socket` is created with the provided target host (a `String` or 
-a `java.net.InetAddress` for the target host), the specified host name for 
-each SOCKS server from the 2nd to the *n*th is resolved by the previous. If 
-the `Socket` is created unconnected and is later connected by its `connect()` 
-method, the specified host name for each SOCKS server from the 2nd to the 
-*n*th is resolved by the local system.
-
-API example of creating a connected `Socket`:
+API example of a `Socket` making an extemporaneous connection:
 
 ```java
 package com.example;
@@ -645,6 +1307,7 @@ import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
@@ -678,18 +1341,18 @@ public class ClientApp {
          * The host name 'beta-alpha.net' is resolved by the previous SOCKS 
          * server with the host name 'alpha-alpha.net'.
          * 
-         * The host name 'gamma-gamma.net' is resolved by the previous SOCKS 
+         * The host name 'gamma-alpha.net' is resolved by the previous SOCKS 
          * server with the host name 'beta-alpha.net'.
          * 
          * The host name 'example.com' is resolved by the last SOCKS server 
-         * with the host name 'gamma-gamma.net'.
+         * with the host name 'gamma-alpha.net'.
          */
         // ...
     }
 }
 ```
 
-API example of creating an unconnected `Socket` to be connected:
+API example of a `Socket` making a prepared connection:
 
 ```java
 package com.example;
@@ -698,6 +1361,7 @@ import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
@@ -708,6 +1372,7 @@ import java.io.IOException;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -722,17 +1387,21 @@ public class ClientApp {
         SocksClient socksClient3 = SocksServerUriScheme.SOCKS5
             .newSocksServerUri("gamma-alpha.net", 33331)
             .newSocksClient(Properties.of(), socksClient2);
-        SocketFactory socketFactory = 
+        HostResolverFactory hostResolverFactory =
+            socksClient3.getSocksHostResolverFactory();
+        HostResolver hostResolver = hostResolverFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("example.com");
+        SocketFactory socketFactory =
             socksClient3.getSocksSocketFactory();
         Socket socket = socketFactory.newSocket();
-        // ...
-        socket.connect(new java.net.InetSocketAddress("example.com", 443));
+        socket.bind(new InetSocketAddress(null, 0));
+        socket.connect(new InetSocketAddress(inetAddress, 443));
         /*
          * The host name 'alpha-alpha.net' is resolved by the local system.
          * 
          * The host name 'beta-alpha.net' is resolved by the local system.
          * 
-         * The host name 'gamma-gamma.net' is resolved by the local system.
+         * The host name 'gamma-alpha.net' is resolved by the local system.
          * 
          * The host name 'example.com' is resolved by the local system.
          */
@@ -741,15 +1410,14 @@ public class ClientApp {
 }
 ```
 
-If you would like to create an unconnected `Socket` to be connected and have 
-each of the SOCKS servers resolve the specified host name of the next SOCKS 
-server, you will need to set the property
-`socksClient.socks.socksHostResolver.resolveFromSocksServer` set to `true` 
-for each server. Again, this property can only be used if each SOCKS server 
+If you would like to have the `Socket` make a prepared connection without the 
+aforementioned limitations, you will need to have the setting 
+`socksClient.socks.socksHostResolver.resolveFromSocksServer` set to `true` for 
+each server. Again, this setting can only be used if each SOCKS server 
 supports handling the 
 [RESOLVE request](../reference/socks5-resolve-request.md).
 
-API example of creating an unconnected `Socket` to be connected:
+API example:
 
 ```java
 package com.example;
@@ -758,6 +1426,7 @@ import com.github.jh3nd3rs0n.jargyle.client.DatagramSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolver;
 import com.github.jh3nd3rs0n.jargyle.client.HostResolverFactory;
 import com.github.jh3nd3rs0n.jargyle.client.Properties;
+import com.github.jh3nd3rs0n.jargyle.client.Property;
 import com.github.jh3nd3rs0n.jargyle.client.ServerSocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocketFactory;
 import com.github.jh3nd3rs0n.jargyle.client.SocksClient;
@@ -768,6 +1437,7 @@ import java.io.IOException;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -791,26 +1461,34 @@ public class ClientApp {
                     "socksClient.socks.socksHostResolver.resolveFromSocksServer",
                     "true"
             )), socksClient2);
-        SocketFactory socketFactory = 
+        HostResolverFactory hostResolverFactory =
+            socksClient3.getSocksHostResolverFactory();
+        HostResolver hostResolver = hostResolverFactory.newHostResolver();
+        InetAddress inetAddress = hostResolver.resolve("example.com");
+        SocketFactory socketFactory =
             socksClient3.getSocksSocketFactory();
         Socket socket = socketFactory.newSocket();
-        // ...
-        HostResolver hostResolver = hostResolverFactory.newHostResolver();
-        InetAddress inetAddress = hostResolver.resolve("example.com");        
-        socket.connect(new java.net.InetSocketAddress(inetAddress, 443));
+        socket.bind(new InetSocketAddress(null, 0));
+        socket.connect(new InetSocketAddress(inetAddress, 443));
         /*
          * The host name 'alpha-alpha.net' is resolved by the local system.
          *
          * The host name 'beta-alpha.net' is resolved by the previous SOCKS
          * server with the host name 'alpha-alpha.net'.
          *
-         * The host name 'gamma-gamma.net' is resolved by the previous SOCKS
+         * The host name 'gamma-alpha.net' is resolved by the previous SOCKS
          * server with the host name 'beta-alpha.net'.
          *
          * The host name 'example.com' is resolved by the last SOCKS server
-         * with the host name 'gamma-gamma.net'.
+         * with the host name 'gamma-alpha.net'.
          */
         // ...
     }
 }
 ```
+
+The known limitations of routing traffic through a specified chain of SOCKS
+servers include the following:
+
+-   Only TCP traffic can be routed through the chain.
+

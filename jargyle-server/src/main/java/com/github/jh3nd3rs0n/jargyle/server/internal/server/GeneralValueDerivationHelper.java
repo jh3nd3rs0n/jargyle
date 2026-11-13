@@ -16,330 +16,172 @@ public final class GeneralValueDerivationHelper {
      */
     private GeneralValueDerivationHelper() {
     }
- 
-    private static Host getBindHostFrom(final Rule rule) {
-        return rule.getLastRuleActionValue(
-                GeneralRuleActionSpecConstants.BIND_HOST);
-    }
-    
-    private static Host getBindHostFrom(final Settings settings) {
-        return settings.getLastValue(GeneralSettingSpecConstants.BIND_HOST);
-    }
-    
+
     private static HostAddressTypes getBindHostAddressTypesFrom(
             final Rule rule) {
         return HostAddressTypes.of(rule.getRuleActionValues(
                 GeneralRuleActionSpecConstants.BIND_HOST_ADDRESS_TYPE));
     }
-    
+
     private static HostAddressTypes getBindHostAddressTypesFrom(
             final Settings settings) {
         return settings.getLastValue(
                 GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES);
     }
-    
+
+    private static Host getBindHostFrom(final Rule rule) {
+        return rule.getLastRuleActionValue(
+                GeneralRuleActionSpecConstants.BIND_HOST);
+    }
+
+    private static Host getBindHostFrom(final Settings settings) {
+        return settings.getLastValue(GeneralSettingSpecConstants.BIND_HOST);
+    }
+
     private static PortRanges getBindTcpPortRangesFrom(final Rule rule) {
         return PortRanges.of(rule.getRuleActionValues(
                 GeneralRuleActionSpecConstants.BIND_TCP_PORT_RANGE));
     }
-    
+
     private static PortRanges getBindTcpPortRangesFrom(
             final Settings settings) {
         return settings.getLastValue(
                 GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES);
     }
-    
+
     private static PortRanges getBindUdpPortRangesFrom(final Rule rule) {
         return PortRanges.of(rule.getRuleActionValues(
                 GeneralRuleActionSpecConstants.BIND_UDP_PORT_RANGE));
     }
-    
+
     private static PortRanges getBindUdpPortRangesFrom(
             final Settings settings) {
         return settings.getLastValue(
                 GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES);
     }
-    
-    private static SocketSettings getClientSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(
-                new ArrayList<>(rule.getRuleActionValues(
-                        GeneralRuleActionSpecConstants.CLIENT_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getInternalFacingSocketSettingsFrom(rule);
-    } 
-    
-    private static SocketSettings getClientSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                GeneralSettingSpecConstants.CLIENT_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getInternalFacingSocketSettingsFrom(settings);
-    }
 
-    public static SocketSettings getClientSocketSettingsFrom(
-            final Rule rule, final Settings settings) {
-        SocketSettings socketSettings = getClientSocketSettingsFrom(rule);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getClientSocketSettingsFrom(settings);
-    }
-    
-    public static Host getExternalFacingBindHostFrom(final Rule rule) {
-        Host host = rule.getLastRuleActionValue(
-                GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return getBindHostFrom(rule);
-    }
-    
-    public static Host getExternalFacingBindHostFrom(final Settings settings) {
-        Host host = settings.getLastValue(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return getBindHostFrom(settings);
-    }
-    
-    public static HostAddressTypes getExternalFacingBindHostAddressTypesFrom(
+    public static HostAddressTypes getClientEndpointsBindHostAddressTypesFrom(
             final Rule rule) {
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(
                 rule.getRuleActionValues(
-                        GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getBindHostAddressTypesFrom(rule);
-    }
-    
-    public static HostAddressTypes getExternalFacingBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getBindHostAddressTypesFrom(settings);
-    }
-    
-    public static PortRanges getExternalFacingTcpPortRangesFrom(final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return getBindTcpPortRangesFrom(rule);
-    }
-    
-    public static PortRanges getExternalFacingTcpPortRangesFrom(
-            final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return getBindTcpPortRangesFrom(settings);
-    }
-    
-    public static PortRanges getExternalFacingUdpPortRangesFrom(final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return getBindUdpPortRangesFrom(rule);
-    }
-    
-    public static PortRanges getExternalFacingUdpPortRangesFrom(
-            final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return getBindUdpPortRangesFrom(settings);
-    }
-    
-    public static NetInterface getExternalFacingNetInterfaceFrom(final Rule rule) {
-        NetInterface netInterface = rule.getLastRuleActionValue(
-                GeneralRuleActionSpecConstants.EXTERNAL_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return getNetInterfaceFrom(rule);
-    }
-    
-    public static NetInterface getExternalFacingNetInterfaceFrom(
-            final Settings settings) {
-        NetInterface netInterface = settings.getLastValue(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return getNetInterfaceFrom(settings);
-    }
-    
-    public static SocketSettings getExternalFacingSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
-                rule.getRuleActionValues(
-                        GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getSocketSettingsFrom(rule);
-    }
-    
-    public static SocketSettings getExternalFacingSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getSocketSettingsFrom(settings);
-    }
-
-    public static Host getInternalFacingBindHostFrom(final Rule rule) {
-        Host host = rule.getLastRuleActionValue(
-                GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return getBindHostFrom(rule);
-    }
-
-    public static Host getInternalFacingBindHostFrom(final Settings settings) {
-        Host host = settings.getLastValue(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return getBindHostFrom(settings);
-    }
-
-    public static HostAddressTypes getInternalFacingBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE));
+                        GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPE));
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
         return getBindHostAddressTypesFrom(rule);
     }
 
-    public static HostAddressTypes getInternalFacingBindHostAddressTypesFrom(
+    public static HostAddressTypes getClientEndpointsBindHostAddressTypesFrom(
             final Settings settings) {
         HostAddressTypes hostAddressTypes = settings.getLastValue(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES);
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPES);
         if (!hostAddressTypes.toList().isEmpty()) {
             return hostAddressTypes;
         }
         return getBindHostAddressTypesFrom(settings);
     }
 
-    public static PortRanges getInternalFacingUdpPortRangesFrom(final Rule rule) {
+    public static Host getClientEndpointsBindHostFrom(final Rule rule) {
+        Host host = rule.getLastRuleActionValue(
+                GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return getBindHostFrom(rule);
+    }
+
+    public static Host getClientEndpointsBindHostFrom(final Settings settings) {
+        Host host = settings.getLastValue(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return getBindHostFrom(settings);
+    }
+
+    public static PortRanges getClientEndpointsBindUdpPortRangesFrom(final Rule rule) {
         PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGE));
+                GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGE));
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
         return getBindUdpPortRangesFrom(rule);
     }
 
-    public static PortRanges getInternalFacingUdpPortRangesFrom(
+    public static PortRanges getClientEndpointsBindUdpPortRangesFrom(
             final Settings settings) {
         PortRanges portRanges = settings.getLastValue(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGES);
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGES);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
         return getBindUdpPortRangesFrom(settings);
     }
 
-    public static NetInterface getInternalFacingNetInterfaceFrom(final Rule rule) {
+    public static NetInterface getClientEndpointsNetInterfaceFrom(final Rule rule) {
         NetInterface netInterface = rule.getLastRuleActionValue(
-                GeneralRuleActionSpecConstants.INTERNAL_FACING_NET_INTERFACE);
+                GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
         return getNetInterfaceFrom(rule);
     }
 
-    public static NetInterface getInternalFacingNetInterfaceFrom(
+    public static NetInterface getClientEndpointsNetInterfaceFrom(
             final Settings settings) {
         NetInterface netInterface = settings.getLastValue(
-                GeneralSettingSpecConstants.INTERNAL_FACING_NET_INTERFACE);
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
         return getNetInterfaceFrom(settings);
     }
 
-    public static SocketSettings getInternalFacingSocketSettingsFrom(
+    public static SocketSettings getClientEndpointsSocketSettingsFrom(
             final Rule rule) {
         SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
                 rule.getRuleActionValues(
-                        GeneralRuleActionSpecConstants.INTERNAL_FACING_SOCKET_SETTING)));
+                        GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_SOCKET_SETTING)));
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
         return getSocketSettingsFrom(rule);
     }
 
-    public static SocketSettings getInternalFacingSocketSettingsFrom(
+    public static SocketSettings getClientEndpointsSocketSettingsFrom(
             final Settings settings) {
         SocketSettings socketSettings = settings.getLastValue(
-                GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS);
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_SOCKET_SETTINGS);
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
         return getSocketSettingsFrom(settings);
     }
-    
-    private static NetInterface getNetInterfaceFrom(final Rule rule) {
-        return rule.getLastRuleActionValue(
-                GeneralRuleActionSpecConstants.NET_INTERFACE);
-    }
-    
-    private static NetInterface getNetInterfaceFrom(final Settings settings) {
-        return settings.getLastValue(
-                GeneralSettingSpecConstants.NET_INTERFACE);
-    }
-    
-    private static SocketSettings getSocketSettingsFrom(final Rule rule) {
-        return SocketSettings.of(new ArrayList<>(rule.getRuleActionValues(
-                GeneralRuleActionSpecConstants.SOCKET_SETTING)));
-    }
-    
-    private static SocketSettings getSocketSettingsFrom(
+
+    private static HostAddressTypes getClientFacingServerSocketBindHostAddressTypesFrom(
             final Settings settings) {
-        return settings.getLastValue(
-                GeneralSettingSpecConstants.SOCKET_SETTINGS);
+        HostAddressTypes hostAddressTypes = settings.getLastValue(
+                GeneralSettingSpecConstants.CLIENT_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return getClientEndpointsBindHostAddressTypesFrom(settings);
     }
 
-    public static Host getSocksServerBindHostFrom(final Settings settings) {
+    public static Host getClientFacingServerSocketBindHostFrom(final Settings settings) {
         Host host = settings.getLastValue(
-                GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST);
+                GeneralSettingSpecConstants.CLIENT_FACING_SERVER_SOCKET_BIND_HOST);
         if (host != null) {
             return host;
         }
-        host = getInternalFacingBindHostFrom(settings);
+        host = getClientEndpointsBindHostFrom(settings);
         if (host != null) {
             return host;
         }
-        NetInterface netInterface = getSocksServerNetInterfaceFrom(settings);
+        NetInterface netInterface = getClientFacingServerSocketNetInterfaceFrom(settings);
         if (netInterface != null) {
             return netInterface.getHostAddresses(
-                    getSocksServerBindHostAddressTypesFrom(settings))
+                            getClientFacingServerSocketBindHostAddressTypesFrom(settings))
                     .stream()
                     .findFirst()
                     .orElse(HostIpv4Address.getAllZerosInstance());
@@ -347,29 +189,19 @@ public final class GeneralValueDerivationHelper {
         return HostIpv4Address.getAllZerosInstance();
     }
 
-    private static HostAddressTypes getSocksServerBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                GeneralSettingSpecConstants.SOCKS_SERVER_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getInternalFacingBindHostAddressTypesFrom(settings);
-    }
-
-    public static PortRanges getSocksServerBindPortRangesFrom(
+    public static PortRanges getClientFacingServerSocketBindPortRangesFrom(
             final Settings settings) {
         Port port = settings.getLastValue(GeneralSettingSpecConstants.PORT);
         if (port != null) {
             return PortRanges.of(PortRange.of(port));
         }
         PortRanges portRanges = settings.getLastValue(
-                GeneralSettingSpecConstants.SOCKS_SERVER_BIND_PORT_RANGES);
+                GeneralSettingSpecConstants.CLIENT_FACING_SERVER_SOCKET_BIND_PORT_RANGES);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
         portRanges = settings.getLastValue(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_TCP_PORT_RANGES);
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_TCP_PORT_RANGES);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
@@ -381,24 +213,192 @@ public final class GeneralValueDerivationHelper {
         return portRanges;
     }
 
-    private static NetInterface getSocksServerNetInterfaceFrom(
+    private static NetInterface getClientFacingServerSocketNetInterfaceFrom(
             final Settings settings) {
         NetInterface netInterface = settings.getLastValue(
-                GeneralSettingSpecConstants.SOCKS_SERVER_NET_INTERFACE);
+                GeneralSettingSpecConstants.CLIENT_FACING_SERVER_SOCKET_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
-        return getInternalFacingNetInterfaceFrom(settings);
+        return getClientEndpointsNetInterfaceFrom(settings);
     }
 
-    public static SocketSettings getSocksServerSocketSettingsFrom(
+    public static SocketSettings getClientFacingServerSocketSocketSettingsFrom(
             final Settings settings) {
         SocketSettings socketSettings = settings.getLastValue(
-                GeneralSettingSpecConstants.SOCKS_SERVER_SOCKET_SETTINGS);
+                GeneralSettingSpecConstants.CLIENT_FACING_SERVER_SOCKET_SOCKET_SETTINGS);
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getInternalFacingSocketSettingsFrom(settings);
+        return getClientEndpointsSocketSettingsFrom(settings);
     }
-    
+
+    private static SocketSettings getClientSocketSocketSettingsFrom(
+            final Rule rule) {
+        SocketSettings socketSettings = SocketSettings.of(
+                new ArrayList<>(rule.getRuleActionValues(
+                        GeneralRuleActionSpecConstants.CLIENT_SOCKET_SOCKET_SETTING)));
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getClientEndpointsSocketSettingsFrom(rule);
+    }
+
+    private static SocketSettings getClientSocketSocketSettingsFrom(
+            final Settings settings) {
+        SocketSettings socketSettings = settings.getLastValue(
+                GeneralSettingSpecConstants.CLIENT_SOCKET_SOCKET_SETTINGS);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getClientEndpointsSocketSettingsFrom(settings);
+    }
+
+    public static SocketSettings getClientSocketSocketSettingsFrom(
+            final Rule rule, final Settings settings) {
+        SocketSettings socketSettings = getClientSocketSocketSettingsFrom(rule);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getClientSocketSocketSettingsFrom(settings);
+    }
+
+    private static NetInterface getNetInterfaceFrom(final Rule rule) {
+        return rule.getLastRuleActionValue(
+                GeneralRuleActionSpecConstants.NET_INTERFACE);
+    }
+
+    private static NetInterface getNetInterfaceFrom(final Settings settings) {
+        return settings.getLastValue(
+                GeneralSettingSpecConstants.NET_INTERFACE);
+    }
+
+    public static HostAddressTypes getRemoteEndpointsBindHostAddressTypesFrom(
+            final Rule rule) {
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
+                rule.getRuleActionValues(
+                        GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE));
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return getBindHostAddressTypesFrom(rule);
+    }
+
+    public static HostAddressTypes getRemoteEndpointsBindHostAddressTypesFrom(
+            final Settings settings) {
+        HostAddressTypes hostAddressTypes = settings.getLastValue(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return getBindHostAddressTypesFrom(settings);
+    }
+
+    public static Host getRemoteEndpointsBindHostFrom(final Rule rule) {
+        Host host = rule.getLastRuleActionValue(
+                GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return getBindHostFrom(rule);
+    }
+
+    public static Host getRemoteEndpointsBindHostFrom(final Settings settings) {
+        Host host = settings.getLastValue(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return getBindHostFrom(settings);
+    }
+
+    public static PortRanges getRemoteEndpointsBindTcpPortRangesFrom(final Rule rule) {
+        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
+                GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE));
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return getBindTcpPortRangesFrom(rule);
+    }
+
+    public static PortRanges getRemoteEndpointsBindTcpPortRangesFrom(
+            final Settings settings) {
+        PortRanges portRanges = settings.getLastValue(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGES);
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return getBindTcpPortRangesFrom(settings);
+    }
+
+    public static PortRanges getRemoteEndpointsBindUdpPortRangesFrom(final Rule rule) {
+        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
+                GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGE));
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return getBindUdpPortRangesFrom(rule);
+    }
+
+    public static PortRanges getRemoteEndpointsBindUdpPortRangesFrom(
+            final Settings settings) {
+        PortRanges portRanges = settings.getLastValue(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGES);
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return getBindUdpPortRangesFrom(settings);
+    }
+
+    public static NetInterface getRemoteEndpointsNetInterfaceFrom(final Rule rule) {
+        NetInterface netInterface = rule.getLastRuleActionValue(
+                GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return getNetInterfaceFrom(rule);
+    }
+
+    public static NetInterface getRemoteEndpointsNetInterfaceFrom(
+            final Settings settings) {
+        NetInterface netInterface = settings.getLastValue(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return getNetInterfaceFrom(settings);
+    }
+
+    public static SocketSettings getRemoteEndpointsSocketSettingsFrom(
+            final Rule rule) {
+        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
+                rule.getRuleActionValues(
+                        GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTING)));
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getSocketSettingsFrom(rule);
+    }
+
+    public static SocketSettings getRemoteEndpointsSocketSettingsFrom(
+            final Settings settings) {
+        SocketSettings socketSettings = settings.getLastValue(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTINGS);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getSocketSettingsFrom(settings);
+    }
+
+    private static SocketSettings getSocketSettingsFrom(final Rule rule) {
+        return SocketSettings.of(new ArrayList<>(rule.getRuleActionValues(
+                GeneralRuleActionSpecConstants.SOCKET_SETTING)));
+    }
+
+    private static SocketSettings getSocketSettingsFrom(
+            final Settings settings) {
+        return settings.getLastValue(
+                GeneralSettingSpecConstants.SOCKET_SETTINGS);
+    }
+
 }

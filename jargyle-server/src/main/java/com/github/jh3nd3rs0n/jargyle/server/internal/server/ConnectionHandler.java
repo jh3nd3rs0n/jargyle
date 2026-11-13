@@ -93,7 +93,7 @@ final class ConnectionHandler {
     }
 
     private boolean configureClientSocket(final Socket clientSock) {
-        SocketSettings socketSettings = this.getClientSocketSettings();
+        SocketSettings socketSettings = this.getClientSocketSocketSettings();
         try {
             socketSettings.applyTo(clientSock);
         } catch (UnsupportedOperationException | SocketException e) {
@@ -141,8 +141,8 @@ final class ConnectionHandler {
                 GeneralSettingSpecConstants.ROUTE_SELECTION_STRATEGY);
     }
 
-    private SocketSettings getClientSocketSettings() {
-        return GeneralValueDerivationHelper.getClientSocketSettingsFrom(
+    private SocketSettings getClientSocketSocketSettings() {
+        return GeneralValueDerivationHelper.getClientSocketSocketSettingsFrom(
                 this.applicableRule, this.settings);
     }
 

@@ -22,246 +22,228 @@ import java.util.Iterator;
 final class BindRequestHandler extends RequestHandler {
 
     private final RelayRequestHandlerContext context;
-	private final ServerEventLogger serverEventLogger;
-		
-	public BindRequestHandler(final RelayRequestHandlerContext cntxt) {
+    private final ServerEventLogger serverEventLogger;
+
+    public BindRequestHandler(final RelayRequestHandlerContext cntxt) {
         this.context = cntxt;
         this.context.setLogMessageSource(this);
-		this.serverEventLogger = cntxt.getServerEventLogger();
-	}
-	
-	private Socket acceptInboundSocketFrom(final ServerSocket listenSocket) {
-		Socket inboundSocket;
-		try {
-			inboundSocket = listenSocket.accept();
-		} catch (IOException e) {
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Error in waiting for an inbound socket"), 
-					e);
-			this.context.sendReply(
-					Reply.newFailureInstance(
+        this.serverEventLogger = cntxt.getServerEventLogger();
+    }
+
+    private Socket acceptRemoteSocketFrom(final ServerSocket remoteFacingServerSocket) {
+        Socket remoteSocket;
+        try {
+            remoteSocket = remoteFacingServerSocket.accept();
+        } catch (IOException e) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Error in waiting for a remote socket"),
+                    e);
+            this.context.sendReply(
+                    Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-			return null;
-		}
-		return inboundSocket;
-	}
-	
-	private boolean canAllowSecondReply() {
+            return null;
+        }
+        return remoteSocket;
+    }
+
+    private boolean canAllowSecondReply() {
         if (!this.hasSecondReplyRuleCondition()) {
             return true;
         }
-		Rule applicableRule =
+        Rule applicableRule =
                 this.context.getApplicableRule();
-		RuleContext ruleContext =
+        RuleContext ruleContext =
                 this.context.getRuleContext();
-		FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
-				GeneralRuleActionSpecConstants.FIREWALL_ACTION);
-		if (firewallAction == null) {
-			this.context.sendReply(
-					Reply.newFailureInstance(
+        FirewallAction firewallAction = applicableRule.getLastRuleActionValue(
+                GeneralRuleActionSpecConstants.FIREWALL_ACTION);
+        if (firewallAction == null) {
+            this.context.sendReply(
+                    Reply.newFailureInstance(
                             ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
-			return false;
-		}
-		LogAction firewallActionLogAction = 
-				applicableRule.getLastRuleActionValue(
-						GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION);
-		if (firewallAction.equals(FirewallAction.ALLOW)) {
-			if (!this.canAllowSecondReplyWithinLimit()) {
-				return false;
-			}
-			if (firewallActionLogAction != null) {
-				firewallActionLogAction.invoke(
-						ObjectLogMessageHelper.objectLogMessage(
-								this,
-								"Second SOCKS5 reply allowed based on the "
-								+ "following rule and context: rule: %s "
-								+ "context: %s",
-								applicableRule,
-								ruleContext));					
-			}
-		} else if (firewallAction.equals(FirewallAction.DENY)
-				&& firewallActionLogAction != null) {
-			firewallActionLogAction.invoke(
-					ObjectLogMessageHelper.objectLogMessage(
-							this,
-							"Second SOCKS5 reply denied based on the "
-							+ "following rule and context: rule: %s "
-							+ "context: %s",
-							applicableRule,
-							ruleContext));				
-		}
-		if (FirewallAction.ALLOW.equals(firewallAction)) {
-			return true;
-		}
-		this.context.sendReply(
-				Reply.newFailureInstance(
+            return false;
+        }
+        LogAction firewallActionLogAction =
+                applicableRule.getLastRuleActionValue(
+                        GeneralRuleActionSpecConstants.FIREWALL_ACTION_LOG_ACTION);
+        if (firewallAction.equals(FirewallAction.ALLOW)) {
+            if (!this.canAllowSecondReplyWithinLimit()) {
+                return false;
+            }
+            if (firewallActionLogAction != null) {
+                firewallActionLogAction.invoke(
+                        ObjectLogMessageHelper.objectLogMessage(
+                                this,
+                                "Second SOCKS5 reply allowed based on the "
+                                        + "following rule and context: rule: %s "
+                                        + "context: %s",
+                                applicableRule,
+                                ruleContext));
+            }
+        } else if (firewallAction.equals(FirewallAction.DENY)
+                && firewallActionLogAction != null) {
+            firewallActionLogAction.invoke(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Second SOCKS5 reply denied based on the "
+                                    + "following rule and context: rule: %s "
+                                    + "context: %s",
+                            applicableRule,
+                            ruleContext));
+        }
+        if (FirewallAction.ALLOW.equals(firewallAction)) {
+            return true;
+        }
+        this.context.sendReply(
+                Reply.newFailureInstance(
                         ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
-		return false;
-	}
-	
-	private boolean canAllowSecondReplyWithinLimit() {
-		Rule applicableRule =
+        return false;
+    }
+
+    private boolean canAllowSecondReplyWithinLimit() {
+        Rule applicableRule =
                 this.context.getApplicableRule();
-		RuleContext ruleContext =
+        RuleContext ruleContext =
                 this.context.getRuleContext();
-		NonNegativeIntegerLimit firewallActionAllowLimit =
-				applicableRule.getLastRuleActionValue(
-						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
-		LogAction firewallActionAllowLimitReachedLogAction =
-				applicableRule.getLastRuleActionValue(
-						GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
-		if (firewallActionAllowLimit != null) {
-			if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
-				if (firewallActionAllowLimitReachedLogAction != null) {
-					firewallActionAllowLimitReachedLogAction.invoke(
-							ObjectLogMessageHelper.objectLogMessage(
-									this,
-									"Allowed limit has been reached based on "
-									+ "the following rule and context: rule: "
-									+ "%s context: %s",
-									applicableRule,
-									ruleContext));
-				}
-				this.context.sendReply(
-						Reply.newFailureInstance(
+        NonNegativeIntegerLimit firewallActionAllowLimit =
+                applicableRule.getLastRuleActionValue(
+                        GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT);
+        LogAction firewallActionAllowLimitReachedLogAction =
+                applicableRule.getLastRuleActionValue(
+                        GeneralRuleActionSpecConstants.FIREWALL_ACTION_ALLOW_LIMIT_REACHED_LOG_ACTION);
+        if (firewallActionAllowLimit != null) {
+            if (!firewallActionAllowLimit.tryIncrementCurrentCount()) {
+                if (firewallActionAllowLimitReachedLogAction != null) {
+                    firewallActionAllowLimitReachedLogAction.invoke(
+                            ObjectLogMessageHelper.objectLogMessage(
+                                    this,
+                                    "Allowed limit has been reached based on "
+                                            + "the following rule and context: rule: "
+                                            + "%s context: %s",
+                                    applicableRule,
+                                    ruleContext));
+                }
+                this.context.sendReply(
+                        Reply.newFailureInstance(
                                 ReplyCode.CONNECTION_NOT_ALLOWED_BY_RULESET));
-				return false;				
-			}
-			this.context.addBelowAllowLimitRule(
+                return false;
+            }
+            this.context.addBelowAllowLimitRule(
                     applicableRule);
-		}
-		return true;
-	}
-	
-	private boolean configureInboundSocket(final Socket inboundSocket) {
-		SocketSettings socketSettings = this.getInboundSocketSettings();
-		try {
-			socketSettings.applyTo(inboundSocket);
-		} catch (UnsupportedOperationException | SocketException e) {
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in setting the inbound socket"), 
-					e);
-			this.context.sendReply(
-					Reply.newFailureInstance(
-                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-			return false;			
-		}
-        return true;
-	}
-	
-	private boolean configureListenSocket(final ServerSocket listenSocket) {
-		SocketSettings socketSettings = this.getListenSocketSettings();
-		try {
-			socketSettings.applyTo(listenSocket);
-		} catch (UnsupportedOperationException | SocketException e) {
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, "Error in setting the listen socket"), 
-					e);
-			this.context.sendReply(
-					Reply.newFailureInstance(
-                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-			return false;			
-		}
-        return true;
-	}
-
-	private SocketSettings getInboundSocketSettings() {
-		return Socks5ValueDerivationHelper.getSocks5OnBindRequestInboundSocketSettingsFrom(
-				this.context.getApplicableRule(),
-                this.context.getSettings());
-	}
-
-	private Host getListenBindHost() {
-		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindHostFrom(
-				this.context.getApplicableRule(),
-                this.context.getSettings());
-	}
-	
-	private PortRanges getListenBindPortRanges() {
-		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenBindPortRangesFrom(
-				this.context.getApplicableRule(),
-                this.context.getSettings());
-	}
-	
-	private SocketSettings getListenSocketSettings() {
-		return Socks5ValueDerivationHelper.getSocks5OnBindRequestListenSocketSettingsFrom(
-				this.context.getApplicableRule(),
-                this.context.getSettings());
-	}
-	
-	private int getRelayBufferSize() {
-		return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayBufferSizeFrom(
-				this.context.getApplicableRule(),
-                this.context.getSettings()).intValue();
-	}
-	
-	private int getRelayIdleTimeout() {
-		return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayIdleTimeoutFrom(
-				this.context.getApplicableRule(),
-                this.context.getSettings()).intValue();
-	}
-	
-	private Integer getRelayInboundBandwidthLimit() {
-		PositiveInteger relayInboundBandwidthLimit =
-				Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayInboundBandwidthLimitFrom(
-						this.context.getApplicableRule(),
-                        this.context.getSettings());
-		if (relayInboundBandwidthLimit != null) {
-			return relayInboundBandwidthLimit.intValue();
-		}
-		return null;
-	}
-	
-	private Integer getRelayOutboundBandwidthLimit() {
-		PositiveInteger relayOutboundBandwidthLimit =
-				Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(
-						this.context.getApplicableRule(),
-                        this.context.getSettings());
-		if (relayOutboundBandwidthLimit != null) {
-			return relayOutboundBandwidthLimit.intValue();
-		}
-		return null;
-	}
-	
-	private boolean hasSecondReplyRuleCondition() {
-		Rule applicableRule =
-                this.context.getApplicableRule();
-        if (applicableRule.hasRuleCondition(
-                SocksRuleConditionSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
-            return true;
         }
-        if (applicableRule.hasRuleCondition(
-                SocksRuleConditionSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_PORT)) {
-            return true;
+        return true;
+    }
+
+    private boolean configureRemoteFacingServerSocket(final ServerSocket remoteFacingServerSocket) {
+        SocketSettings socketSettings = this.getRemoteFacingServerSocketSettings();
+        try {
+            socketSettings.applyTo(remoteFacingServerSocket);
+        } catch (UnsupportedOperationException | SocketException e) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Error in setting the remote facing server socket"),
+                    e);
+            this.context.sendReply(
+                    Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+            return false;
         }
-		if (applicableRule.hasRuleCondition(
-				Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
-			return true;
-		}
-        return applicableRule.hasRuleCondition(
-                Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT);
+        return true;
+    }
+
+    private boolean configureRemoteSocket(final Socket remoteSocket) {
+        SocketSettings socketSettings = this.getRemoteSocketSocketSettings();
+        try {
+            socketSettings.applyTo(remoteSocket);
+        } catch (UnsupportedOperationException | SocketException e) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this, "Error in setting the remote socket"),
+                    e);
+            this.context.sendReply(
+                    Reply.newFailureInstance(
+                            ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
+            return false;
+        }
+        return true;
+    }
+
+    private int getRelayBufferSize() {
+        return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayBufferSizeFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings()).intValue();
+    }
+
+    private int getRelayIdleTimeout() {
+        return Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayIdleTimeoutFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings()).intValue();
+    }
+
+    private Integer getRelayInboundBandwidthLimit() {
+        PositiveInteger relayInboundBandwidthLimit =
+                Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayInboundBandwidthLimitFrom(
+                        this.context.getApplicableRule(),
+                        this.context.getSettings());
+        if (relayInboundBandwidthLimit != null) {
+            return relayInboundBandwidthLimit.intValue();
+        }
+        return null;
+    }
+
+    private Integer getRelayOutboundBandwidthLimit() {
+        PositiveInteger relayOutboundBandwidthLimit =
+                Socks5ValueDerivationHelper.getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(
+                        this.context.getApplicableRule(),
+                        this.context.getSettings());
+        if (relayOutboundBandwidthLimit != null) {
+            return relayOutboundBandwidthLimit.intValue();
+        }
+        return null;
+    }
+
+    private Host getRemoteFacingServerSocketBindHost() {
+        return Socks5ValueDerivationHelper.getSocks5OnBindRequestRemoteFacingServerSocketBindHostFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings());
+    }
+
+    private PortRanges getRemoteFacingServerSocketBindPortRanges() {
+        return Socks5ValueDerivationHelper.getSocks5OnBindRequestRemoteFacingServerSocketBindPortRangesFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings());
+    }
+
+    private SocketSettings getRemoteFacingServerSocketSettings() {
+        return Socks5ValueDerivationHelper.getSocks5OnBindRequestRemoteFacingServerSocketSocketSettingsFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings());
+    }
+
+    private SocketSettings getRemoteSocketSocketSettings() {
+        return Socks5ValueDerivationHelper.getSocks5OnBindRequestRemoteSocketSocketSettingsFrom(
+                this.context.getApplicableRule(),
+                this.context.getSettings());
     }
 
     @Override
     public void handleRequest() throws IOException {
-        ServerSocket listenSocket = null;
+        ServerSocket remoteFacingServerSocket = null;
         Reply rep;
-        Socket inboundSocket = null;
+        Socket remoteSocket = null;
         Socket clientSocket =
                 this.context.getClientSocket();
         Reply secondRep;
         try {
-            listenSocket = this.newListenSocket();
-            if (listenSocket == null) {
+            remoteFacingServerSocket = this.newRemoteFacingServerSocket();
+            if (remoteFacingServerSocket == null) {
                 return;
             }
-            InetAddress inetAddress = listenSocket.getInetAddress();
-            String serverBoundAddress =	inetAddress.getHostAddress();
-            int serverBoundPort = listenSocket.getLocalPort();
+            InetAddress inetAddress = remoteFacingServerSocket.getInetAddress();
+            String serverBoundAddress = inetAddress.getHostAddress();
+            int serverBoundPort = remoteFacingServerSocket.getLocalPort();
             rep = Reply.newSuccessInstance(
                     Address.newInstanceFrom(serverBoundAddress),
                     Port.valueOf(serverBoundPort));
@@ -290,28 +272,29 @@ final class BindRequestHandler extends RequestHandler {
             if (!this.context.sendReply(rep)) {
                 return;
             }
-            inboundSocket = this.acceptInboundSocketFrom(listenSocket);
+            remoteSocket = this.acceptRemoteSocketFrom(remoteFacingServerSocket);
             try {
-                listenSocket.close();
+                remoteFacingServerSocket.close();
             } catch (IOException e) {
                 this.serverEventLogger.warn(
                         ObjectLogMessageHelper.objectLogMessage(
-                                this, "Error in closing the listen socket"),
+                                this,
+                                "Error in closing the remote facing server socket"),
                         e);
                 this.context.sendReply(
                         Reply.newFailureInstance(
                                 ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
                 return;
             }
-            if (inboundSocket == null) {
+            if (remoteSocket == null) {
                 return;
             }
-            if (!this.configureInboundSocket(inboundSocket)) {
+            if (!this.configureRemoteSocket(remoteSocket)) {
                 return;
             }
             serverBoundAddress =
-                    inboundSocket.getInetAddress().getHostAddress();
-            serverBoundPort = inboundSocket.getPort();
+                    remoteSocket.getInetAddress().getHostAddress();
+            serverBoundPort = remoteSocket.getPort();
             secondRep = Reply.newSuccessInstance(
                     Address.newInstanceFrom(serverBoundAddress),
                     Port.valueOf(serverBoundPort));
@@ -340,10 +323,10 @@ final class BindRequestHandler extends RequestHandler {
             if (!this.context.sendReply(secondRep)) {
                 return;
             }
-            inboundSocket = this.limitInboundSocket(inboundSocket);
+            remoteSocket = this.limitRemoteSocket(remoteSocket);
             clientSocket = this.limitClientSocket(clientSocket);
             Relay.Builder builder = new Relay.Builder(
-                    clientSocket, inboundSocket);
+                    clientSocket, remoteSocket);
             builder.bufferSize(this.getRelayBufferSize());
             builder.idleTimeout(this.getRelayIdleTimeout());
             Relay relay = builder.build();
@@ -356,169 +339,189 @@ final class BindRequestHandler extends RequestHandler {
                         e);
             }
         } finally {
-            if (inboundSocket != null && !inboundSocket.isClosed()) {
-                inboundSocket.close();
+            if (remoteSocket != null && !remoteSocket.isClosed()) {
+                remoteSocket.close();
             }
-            if (listenSocket != null && !listenSocket.isClosed()) {
-                listenSocket.close();
+            if (remoteFacingServerSocket != null && !remoteFacingServerSocket.isClosed()) {
+                remoteFacingServerSocket.close();
             }
         }
     }
 
-	private Socket limitClientSocket(final Socket clientSocket) {
-		Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
-		if (outboundBandwidthLimit != null) {
-			return new BandwidthLimitedSocket(
-					clientSocket, outboundBandwidthLimit);
-		}
-		return clientSocket;
-	}
-	
-	private Socket limitInboundSocket(final Socket inboundSocket) {
-		Integer inboundBandwidthLimit = this.getRelayInboundBandwidthLimit();
-		if (inboundBandwidthLimit != null) {
-			return new BandwidthLimitedSocket(
-					inboundSocket, inboundBandwidthLimit);
-		}
-		return inboundSocket;
-	}
-	
-	private ServerSocket newListenSocket() {
-		InetAddress desiredDestinationInetAddress =
-				this.resolveDesiredDestinationAddress(
-						this.context.getDesiredDestinationAddress().toString());
-		if (desiredDestinationInetAddress == null) {
-			return null;
-		}
-		InetAddress bindInetAddress = desiredDestinationInetAddress;
-		if (HostAddress.isAllZerosHostAddress(
-				desiredDestinationInetAddress.getHostAddress())) {
-			Host listenBindHost = this.getListenBindHost();
-			try {
-				bindInetAddress = listenBindHost.toInetAddress();
-			} catch (UnknownHostException e) {
-				this.serverEventLogger.warn(
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Unable to bind the listen socket to the "
-								+ "following host: %s",
-								listenBindHost));
-				this.context.sendReply(
-						Reply.newFailureInstance(
+    private boolean hasSecondReplyRuleCondition() {
+        Rule applicableRule =
+                this.context.getApplicableRule();
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                SocksRuleConditionSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_PORT)) {
+            return true;
+        }
+        if (applicableRule.hasRuleCondition(
+                Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS)) {
+            return true;
+        }
+        return applicableRule.hasRuleCondition(
+                Socks5RuleConditionSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT);
+    }
+
+    private Socket limitClientSocket(final Socket clientSocket) {
+        Integer outboundBandwidthLimit = this.getRelayOutboundBandwidthLimit();
+        if (outboundBandwidthLimit != null) {
+            return new BandwidthLimitedSocket(
+                    clientSocket, outboundBandwidthLimit);
+        }
+        return clientSocket;
+    }
+
+    private Socket limitRemoteSocket(final Socket remoteSocket) {
+        Integer remoteBandwidthLimit = this.getRelayInboundBandwidthLimit();
+        if (remoteBandwidthLimit != null) {
+            return new BandwidthLimitedSocket(
+                    remoteSocket, remoteBandwidthLimit);
+        }
+        return remoteSocket;
+    }
+
+    private ServerSocket newRemoteFacingServerSocket() {
+        InetAddress desiredDestinationInetAddress =
+                this.resolveDesiredDestinationAddress(
+                        this.context.getDesiredDestinationAddress().toString());
+        if (desiredDestinationInetAddress == null) {
+            return null;
+        }
+        InetAddress bindInetAddress = desiredDestinationInetAddress;
+        if (HostAddress.isAllZerosHostAddress(
+                desiredDestinationInetAddress.getHostAddress())) {
+            Host remoteFacingServerSocketBindHost = this.getRemoteFacingServerSocketBindHost();
+            try {
+                bindInetAddress = remoteFacingServerSocketBindHost.toInetAddress();
+            } catch (UnknownHostException e) {
+                this.serverEventLogger.warn(
+                        ObjectLogMessageHelper.objectLogMessage(
+                                this,
+                                "Unable to bind the remote facing server socket "
+                                        + "to the following host: %s",
+                                remoteFacingServerSocketBindHost));
+                this.context.sendReply(
+                        Reply.newFailureInstance(
                                 ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-				return null;
-			}
-		}
-		int desiredDestinationPort =
+                return null;
+            }
+        }
+        int desiredDestinationPort =
                 this.context.getDesiredDestinationPort().intValue();
-		PortRanges bindPortRanges = (desiredDestinationPort == 0) ?
-				this.getListenBindPortRanges() : PortRanges.of(
-						PortRange.of(Port.valueOf(
-								desiredDestinationPort)));
-		ServerSocket listenSocket = null;
-		boolean listenSocketBound = false;
-		for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
-				!listenSocketBound && iterator.hasNext();) {
-			PortRange bindPortRange = iterator.next();
-			for (Iterator<Port> iter = bindPortRange.iterator();
-					!listenSocketBound && iter.hasNext();) {
-				Port bindPort = iter.next();
-				try {
-					listenSocket = this.newListenSocket(
-							bindInetAddress, bindPort);
-				} catch (BindException e) {
-					continue;
-				}
-				if (listenSocket == null) {
-					return null;
-				}
-				listenSocketBound = true;
-			}
-		}
-		if (!listenSocketBound) {
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Unable to bind the listen socket to the "
-							+ "following address and port (range(s)): %s %s",
-							bindInetAddress,
-							bindPortRanges));
-			this.context.sendReply(
-					Reply.newFailureInstance(
+        PortRanges bindPortRanges = (desiredDestinationPort == 0) ?
+                this.getRemoteFacingServerSocketBindPortRanges() : PortRanges.of(
+                PortRange.of(Port.valueOf(
+                        desiredDestinationPort)));
+        ServerSocket remoteFacingServerSocket = null;
+        boolean remoteFacingServerSocketBound = false;
+        for (Iterator<PortRange> iterator = bindPortRanges.toList().iterator();
+             !remoteFacingServerSocketBound && iterator.hasNext(); ) {
+            PortRange bindPortRange = iterator.next();
+            for (Iterator<Port> iter = bindPortRange.iterator();
+                 !remoteFacingServerSocketBound && iter.hasNext(); ) {
+                Port bindPort = iter.next();
+                try {
+                    remoteFacingServerSocket = this.newRemoteFacingServerSocket(
+                            bindInetAddress, bindPort);
+                } catch (BindException e) {
+                    continue;
+                }
+                if (remoteFacingServerSocket == null) {
+                    return null;
+                }
+                remoteFacingServerSocketBound = true;
+            }
+        }
+        if (!remoteFacingServerSocketBound) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Unable to bind the remote facing server socket "
+                                    + "to the following address and port "
+                                    + "(range(s)): %s %s",
+                            bindInetAddress,
+                            bindPortRanges));
+            this.context.sendReply(
+                    Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-			return null;
-		}
-		return listenSocket;
-	}
-	
-	private ServerSocket newListenSocket(
-			final InetAddress bindInetAddress,
-			final Port bindPort) throws BindException {
-		ServerSocketFactory listenSocketFactory =
-				this.context.getSelectedRoute().getServerSocketFactory();
-		ServerSocket listenSocket;
-		try {
-			listenSocket = listenSocketFactory.newServerSocket();
-		} catch (IOException e) {
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Error in creating the listen socket"), 
-					e);
-			this.context.sendReply(
-					Reply.newFailureInstance(
+            return null;
+        }
+        return remoteFacingServerSocket;
+    }
+
+    private ServerSocket newRemoteFacingServerSocket(
+            final InetAddress bindInetAddress,
+            final Port bindPort) throws BindException {
+        ServerSocketFactory remoteFacingServerSocketFactory =
+                this.context.getSelectedRoute().getServerSocketFactory();
+        ServerSocket remoteFacingServerSocket;
+        try {
+            remoteFacingServerSocket = remoteFacingServerSocketFactory.newServerSocket();
+        } catch (IOException e) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Error in creating the remote facing server socket"),
+                    e);
+            this.context.sendReply(
+                    Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-			return null;
-		}
-		if (!this.configureListenSocket(listenSocket)) {
-			try {
-				listenSocket.close();
-			} catch (IOException e) {
-				throw new AssertionError(e);
-			}
-			return null;
-		}
-		try {
-			listenSocket.bind(new InetSocketAddress(
-					bindInetAddress, bindPort.intValue()));
-		} catch (BindException e) {
-			try {
-				listenSocket.close();
-			} catch (IOException ex) {
-				throw new AssertionError(ex);
-			}
-			throw e;
-		} catch (IOException e) {
-			if (ThrowableHelper.isOrHasInstanceOf(e, BindException.class)) {
-				try {
-					listenSocket.close();
-				} catch (IOException ex) {
-					throw new AssertionError(ex);
-				}
-				throw new BindException();
-			}
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Error in binding the listen socket"), 
-					e);
-			this.context.sendReply(
-					Reply.newFailureInstance(
+            return null;
+        }
+        if (!this.configureRemoteFacingServerSocket(remoteFacingServerSocket)) {
+            try {
+                remoteFacingServerSocket.close();
+            } catch (IOException e) {
+                throw new AssertionError(e);
+            }
+            return null;
+        }
+        try {
+            remoteFacingServerSocket.bind(new InetSocketAddress(
+                    bindInetAddress, bindPort.intValue()));
+        } catch (BindException e) {
+            try {
+                remoteFacingServerSocket.close();
+            } catch (IOException ex) {
+                throw new AssertionError(ex);
+            }
+            throw e;
+        } catch (IOException e) {
+            if (ThrowableHelper.isOrHasInstanceOf(e, BindException.class)) {
+                try {
+                    remoteFacingServerSocket.close();
+                } catch (IOException ex) {
+                    throw new AssertionError(ex);
+                }
+                throw new BindException();
+            }
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Error in binding the remote facing server socket"),
+                    e);
+            this.context.sendReply(
+                    Reply.newFailureInstance(
                             ReplyCode.GENERAL_SOCKS_SERVER_FAILURE));
-			try {
-				listenSocket.close();
-			} catch (IOException ex) {
-				throw new AssertionError(ex);
-			}
-			return null;
-		}
-		return listenSocket;
-	}
-	
-	private RuleContext newSecondReplyRuleContext(
-			final Reply secondRep) {
-		RuleContext secondReplyRuleContext = new RuleContext(
-				this.context.getRuleContext());
+            try {
+                remoteFacingServerSocket.close();
+            } catch (IOException ex) {
+                throw new AssertionError(ex);
+            }
+            return null;
+        }
+        return remoteFacingServerSocket;
+    }
+
+    private RuleContext newSecondReplyRuleContext(
+            final Reply secondRep) {
+        RuleContext secondReplyRuleContext = new RuleContext(
+                this.context.getRuleContext());
         String secondReplyServerBoundAddress = secondRep.getServerBoundAddress().toString();
         Port secondReplyServerBoundPort = secondRep.getServerBoundPort();
         secondReplyRuleContext.putRuleArgValue(
@@ -527,62 +530,62 @@ final class BindRequestHandler extends RequestHandler {
         secondReplyRuleContext.putRuleArgValue(
                 SocksRuleArgSpecConstants.SOCKS_SECOND_REPLY_SERVER_BOUND_PORT,
                 secondReplyServerBoundPort);
-		secondReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS,
-				secondReplyServerBoundAddress);
-		secondReplyRuleContext.putRuleArgValue(
-				Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT,
-				secondReplyServerBoundPort);
-		return secondReplyRuleContext;
-	}
-	
-	private InetAddress resolveDesiredDestinationAddress(
-			final String desiredDestinationAddress) {
-		HostResolverFactory hostResolverFactory =
-				this.context.getSelectedRoute().getHostResolverFactory();
-		HostResolver hostResolver =	hostResolverFactory.newHostResolver();
-		InetAddress desiredDestinationInetAddress;
-		try {
-			desiredDestinationInetAddress = hostResolver.resolve(
-					desiredDestinationAddress);
-		} catch (UnknownHostException e) {
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Unable to resolve the desired destination "
-							+ "address for the listen socket: %s",
-							desiredDestinationAddress), 
-					e);
-			this.context.sendReply(
+        secondReplyRuleContext.putRuleArgValue(
+                Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_ADDRESS,
+                secondReplyServerBoundAddress);
+        secondReplyRuleContext.putRuleArgValue(
+                Socks5RuleArgSpecConstants.SOCKS5_SECOND_REPLY_SERVER_BOUND_PORT,
+                secondReplyServerBoundPort);
+        return secondReplyRuleContext;
+    }
+
+    private InetAddress resolveDesiredDestinationAddress(
+            final String desiredDestinationAddress) {
+        HostResolverFactory hostResolverFactory =
+                this.context.getSelectedRoute().getHostResolverFactory();
+        HostResolver hostResolver = hostResolverFactory.newHostResolver();
+        InetAddress desiredDestinationInetAddress;
+        try {
+            desiredDestinationInetAddress = hostResolver.resolve(
+                    desiredDestinationAddress);
+        } catch (UnknownHostException e) {
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Unable to resolve the desired destination "
+                                    + "address for the remote facing server socket: %s",
+                            desiredDestinationAddress),
+                    e);
+            this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
-			return null;
-		} catch (IOException e) {
-			if (ThrowableHelper.isOrHasInstanceOf(
-					e, UnknownHostException.class)) {
-				this.serverEventLogger.warn(
-						ObjectLogMessageHelper.objectLogMessage(
-								this, 
-								"Unable to resolve the desired destination "
-								+ "address for the listen socket: %s",
-								desiredDestinationAddress), 
-						e);
-				this.context.sendReply(
+            return null;
+        } catch (IOException e) {
+            if (ThrowableHelper.isOrHasInstanceOf(
+                    e, UnknownHostException.class)) {
+                this.serverEventLogger.warn(
+                        ObjectLogMessageHelper.objectLogMessage(
+                                this,
+                                "Unable to resolve the desired destination "
+                                        + "address for the remote facing server socket: %s",
+                                desiredDestinationAddress),
+                        e);
+                this.context.sendReply(
                         Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
-				return null;				
-			}
-			this.serverEventLogger.warn(
-					ObjectLogMessageHelper.objectLogMessage(
-							this, 
-							"Error in resolving the desired destination "
-							+ "address for the listen socket: %s",
-							desiredDestinationAddress), 
-					e);
-			this.context.sendReply(
+                return null;
+            }
+            this.serverEventLogger.warn(
+                    ObjectLogMessageHelper.objectLogMessage(
+                            this,
+                            "Error in resolving the desired destination "
+                                    + "address for the remote facing server socket: %s",
+                            desiredDestinationAddress),
+                    e);
+            this.context.sendReply(
                     Reply.newFailureInstance(ReplyCode.HOST_UNREACHABLE));
-			return null;
-		}
-		return desiredDestinationInetAddress;
-	}
+            return null;
+        }
+        return desiredDestinationInetAddress;
+    }
 
     @Override
     public String toString() {

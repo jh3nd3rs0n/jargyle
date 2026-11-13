@@ -89,101 +89,27 @@ public final class Socks5SettingSpecConstants {
 					Methods.of()));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for the "
-					+ "inbound socket",
-			name = "socks5.onBindRequest.inboundSocketSettings",
-			syntax = "socks5.onBindRequest.inboundSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTINGS = 
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onBindRequest.inboundSocketSettings", 
-					SocketSettings.of()));
-	
-	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for the listen "
-					+ "socket if the provided host address is all zeros",
-			name = "socks5.onBindRequest.listenBindHost",
-			syntax = "socks5.onBindRequest.listenBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST =
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onBindRequest.listenBindHost",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of acceptable binding " +
-					"host address types for the listen socket if the "
-					+ "provided host address is all zeros",
-			name = "socks5.onBindRequest.listenBindHostAddressTypes",
-			syntax = "socks5.onBindRequest.listenBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socks5.onBindRequest.listenBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "the listen socket if the provided port is zero",
-			name = "socks5.onBindRequest.listenBindPortRanges",
-			syntax = "socks5.onBindRequest.listenBindPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)
-	public static final SettingSpec<PortRanges> SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onBindRequest.listenBindPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The network interface that provides a binding "
-					+ "host address for the listen socket if the provided "
-					+ "host address is all zeros",
-			name = "socks5.onBindRequest.listenNetInterface",
-			syntax = "socks5.onBindRequest.listenNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> SOCKS5_ON_BIND_REQUEST_LISTEN_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socks5.onBindRequest.listenNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for the "
-					+ "listen socket",
-			name = "socks5.onBindRequest.listenSocketSettings",
-			syntax = "socks5.onBindRequest.listenSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTINGS = 
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onBindRequest.listenSocketSettings", 
-					SocketSettings.of()));
-	
-	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data",
 			name = "socks5.onBindRequest.relayBufferSize",
 			syntax = "socks5.onBindRequest.relayBufferSize=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_BUFFER_SIZE = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_BUFFER_SIZE =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onBindRequest.relayBufferSize", 
+					"socks5.onBindRequest.relayBufferSize",
 					null));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on relaying no data",
 			name = "socks5.onBindRequest.relayIdleTimeout",
 			syntax = "socks5.onBindRequest.relayIdleTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_IDLE_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_BIND_REQUEST_RELAY_IDLE_TIMEOUT =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onBindRequest.relayIdleTimeout", 
+					"socks5.onBindRequest.relayIdleTimeout",
 					null));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The upper limit on bandwidth in bytes per second of "
 					+ "receiving inbound data to be relayed",
@@ -195,7 +121,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onBindRequest.relayInboundBandwidthLimit",
 					null));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The upper limit on bandwidth in bytes per second of "
 					+ "receiving outbound data to be relayed",
@@ -207,21 +133,82 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onBindRequest.relayOutboundBandwidthLimit",
 					null));
+	
+	@NameValuePairValueSpecDoc(
+			description = "The binding host name or address for the " 
+					+ "remote-facing TCP server socket if the provided host " 
+					+ "address is all zeros",
+			name = "socks5.onBindRequest.remoteFacingServerSocket.bindHost",
+			syntax = "socks5.onBindRequest.remoteFacingServerSocket.bindHost=HOST",
+			valueType = Host.class
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST =
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"socks5.onBindRequest.remoteFacingServerSocket.bindHost",
+					null));
 
 	@NameValuePairValueSpecDoc(
-			description = "The boolean value to indicate if the target-facing "
-					+ "socket is to be prepared before connecting (involves "
-					+ "applying the specified socket settings, resolving the "
-					+ "target host name, and setting the specified timeout on "
-					+ "waiting to connect)",
-			name = "socks5.onConnectRequest.prepareTargetFacingSocket",
-			syntax = "socks5.onConnectRequest.prepareTargetFacingSocket=true|false",
-			valueType = Boolean.class
-	)	
-	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET = 
-			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
-					"socks5.onConnectRequest.prepareTargetFacingSocket", 
+			description = "The comma separated list of acceptable binding " 
+					+ "host address types for the remote-facing TCP server " 
+					+ "socket if the provided host address is all zeros",
+			name = "socks5.onBindRequest.remoteFacingServerSocket.bindHostAddressTypes",
+			syntax = "socks5.onBindRequest.remoteFacingServerSocket.bindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onBindRequest.remoteFacingServerSocket.bindHostAddressTypes",
+					HostAddressTypes.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of binding port ranges " 
+					+ "for the remote-facing TCP server socket if the " 
+					+ "provided port is zero",
+			name = "socks5.onBindRequest.remoteFacingServerSocket.bindPortRanges",
+			syntax = "socks5.onBindRequest.remoteFacingServerSocket.bindPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
+	)
+	public static final SettingSpec<PortRanges> SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onBindRequest.remoteFacingServerSocket.bindPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding "
+					+ "host address for the remote-facing TCP server socket " 
+					+ "if the provided host address is all zeros",
+			name = "socks5.onBindRequest.remoteFacingServerSocket.netInterface",
+			syntax = "socks5.onBindRequest.remoteFacingServerSocket.netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onBindRequest.remoteFacingServerSocket.netInterface",
 					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of socket settings for " 
+					+ "the remote-facing TCP server socket",
+			name = "socks5.onBindRequest.remoteFacingServerSocket.socketSettings",
+			syntax = "socks5.onBindRequest.remoteFacingServerSocket.socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_SOCKET_SETTINGS = 
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"socks5.onBindRequest.remoteFacingServerSocket.socketSettings", 
+					SocketSettings.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of socket settings for " 
+					+ "the remote TCP socket",
+			name = "socks5.onBindRequest.remoteSocket.socketSettings",
+			syntax = "socks5.onBindRequest.remoteSocket.socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_BIND_REQUEST_REMOTE_SOCKET_SOCKET_SETTINGS =
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"socks5.onBindRequest.remoteSocket.socketSettings",
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data",
@@ -270,219 +257,174 @@ public final class Socks5SettingSpecConstants {
 					null));
 	
 	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for the "
-					+ "target-facing socket",
-			name = "socks5.onConnectRequest.targetFacingBindHost",
-			syntax = "socks5.onConnectRequest.targetFacingBindHost=HOST",
+			description = "The binding host name or address for the remote "
+					+ "TCP socket",
+			name = "socks5.onConnectRequest.remoteSocket.bindHost",
+			syntax = "socks5.onConnectRequest.remoteSocket.bindHost=HOST",
 			valueType = Host.class
 	)
-	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST = 
+	public static final SettingSpec<Host> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onConnectRequest.targetFacingBindHost", 
+					"socks5.onConnectRequest.remoteSocket.bindHost", 
 					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable binding "
-					+ "host address types for the target-facing socket",
-			name = "socks5.onConnectRequest.targetFacingBindHostAddressTypes",
-			syntax = "socks5.onConnectRequest.targetFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+					+ "host address types for the remote TCP socket",
+			name = "socks5.onConnectRequest.remoteSocket.bindHostAddressTypes",
+			syntax = "socks5.onConnectRequest.remoteSocket.bindHostAddressTypes=HOST_ADDRESS_TYPES",
 			valueType = HostAddressTypes.class
 	)
-	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPES =
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST_ADDRESS_TYPES =
 			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socks5.onConnectRequest.targetFacingBindHostAddressTypes",
+					"socks5.onConnectRequest.remoteSocket.bindHostAddressTypes",
 					HostAddressTypes.of()));
 
 	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "the target-facing socket",
-			name = "socks5.onConnectRequest.targetFacingBindPortRanges",
-			syntax = "socks5.onConnectRequest.targetFacingBindPortRanges=PORT_RANGES",
+			description = "The comma separated list of binding port ranges "
+					+ "for the remote TCP socket",
+			name = "socks5.onConnectRequest.remoteSocket.bindPortRanges",
+			syntax = "socks5.onConnectRequest.remoteSocket.bindPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
 	)	
-	public static final SettingSpec<PortRanges> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGES =
+	public static final SettingSpec<PortRanges> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onConnectRequest.targetFacingBindPortRanges",
+					"socks5.onConnectRequest.remoteSocket.bindPortRanges",
 					PortRanges.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on waiting for the "
-					+ "target-facing socket to connect",
-			name = "socks5.onConnectRequest.targetFacingConnectTimeout",
-			syntax = "socks5.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER",
+					+ "remote TCP socket to connect",
+			name = "socks5.onConnectRequest.remoteSocket.connectTimeout",
+			syntax = "socks5.onConnectRequest.remoteSocket.connectTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_CONNECT_TIMEOUT = 
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onConnectRequest.targetFacingConnectTimeout", 
+					"socks5.onConnectRequest.remoteSocket.connectTimeout", 
 					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The network interface that provides a binding "
-					+ "host address for the target-facing socket",
-			name = "socks5.onConnectRequest.targetFacingNetInterface",
-			syntax = "socks5.onConnectRequest.targetFacingNetInterface=NETWORK_INTERFACE",
+					+ "host address for the remote TCP socket",
+			name = "socks5.onConnectRequest.remoteSocket.netInterface",
+			syntax = "socks5.onConnectRequest.remoteSocket.netInterface=NETWORK_INTERFACE",
 			valueType = NetInterface.class
 	)
-	public static final SettingSpec<NetInterface> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE =
+	public static final SettingSpec<NetInterface> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_NET_INTERFACE =
 			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socks5.onConnectRequest.targetFacingNetInterface",
+					"socks5.onConnectRequest.remoteSocket.netInterface",
+					null));
+	
+	@NameValuePairValueSpecDoc(
+			description = "The boolean value to indicate if the remote TCP "
+					+ "socket is to be prepared before connecting (involves "
+					+ "applying the specified socket settings, resolving the "
+					+ "target host name, and setting the specified timeout "
+					+ "on waiting to connect)",
+			name = "socks5.onConnectRequest.remoteSocket.prepareSocket",
+			syntax = "socks5.onConnectRequest.remoteSocket.prepareSocket=true|false",
+			valueType = Boolean.class
+	)
+	public static final SettingSpec<Boolean> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_PREPARE_SOCKET =
+			SETTING_SPECS.addThenGet(new BooleanSettingSpec(
+					"socks5.onConnectRequest.remoteSocket.prepareSocket",
 					null));
 
 	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for the "
-					+ "target-facing socket",
-			name = "socks5.onConnectRequest.targetFacingSocketSettings",
-			syntax = "socks5.onConnectRequest.targetFacingSocketSettings=SOCKET_SETTINGS",
+			description = "The comma separated list of socket settings for " 
+					+ "the remote TCP socket",
+			name = "socks5.onConnectRequest.remoteSocket.socketSettings",
+			syntax = "socks5.onConnectRequest.remoteSocket.socketSettings=SOCKET_SETTINGS",
 			valueType = SocketSettings.class
 	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTINGS = 
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onConnectRequest.targetFacingSocketSettings", 
+					"socks5.onConnectRequest.remoteSocket.socketSettings", 
 					SocketSettings.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The binding host name or address for the "
 					+ "client-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.clientFacingBindHost",
-			syntax = "socks5.onUdpAssociateRequest.clientFacingBindHost=HOST",
+			name = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost=HOST",
 			valueType = Host.class
 	)
-	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST = 
+	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST = 
 			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onUdpAssociateRequest.clientFacingBindHost", 
+					"socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost", 
 					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of acceptable binding "
 					+ "host address types for the client-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes",
-			syntax = "socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
+			name = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressTypes",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressTypes=HOST_ADDRESS_TYPES",
 			valueType = HostAddressTypes.class
 	)
-	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPES =
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPES =
 			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socks5.onUdpAssociateRequest.clientFacingBindHostAddressTypes",
+					"socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressTypes",
 					HostAddressTypes.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of binding port ranges for "
 					+ "the client-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.clientFacingBindPortRanges",
-			syntax = "socks5.onUdpAssociateRequest.clientFacingBindPortRanges=PORT_RANGES",
+			name = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges=PORT_RANGES",
 			valueType = PortRanges.class
 	)	
-	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGES =
+	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGES =
 			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onUdpAssociateRequest.clientFacingBindPortRanges",
+					"socks5.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges",
 					PortRanges.of()));
 
 	@NameValuePairValueSpecDoc(
 			description = "The network interface that provides a binding host "
 					+ "address for the client-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.clientFacingNetInterface",
-			syntax = "socks5.onUdpAssociateRequest.clientFacingNetInterface=NETWORK_INTERFACE",
+			name = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface=NETWORK_INTERFACE",
 			valueType = NetInterface.class
 	)
-	public static final SettingSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE =
+	public static final SettingSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_NET_INTERFACE =
 			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socks5.onUdpAssociateRequest.clientFacingNetInterface",
+					"socks5.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface",
 					null));
 
 	@NameValuePairValueSpecDoc(
 			description = "The comma separated list of socket settings for the "
 					+ "client-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.clientFacingSocketSettings",
-			syntax = "socks5.onUdpAssociateRequest.clientFacingSocketSettings=SOCKET_SETTINGS",
+			name = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.socketSettings",
+			syntax = "socks5.onUdpAssociateRequest.clientFacingDatagramSocket.socketSettings=SOCKET_SETTINGS",
 			valueType = SocketSettings.class
 	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTINGS = 
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_SOCKET_SETTINGS = 
 			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onUdpAssociateRequest.clientFacingSocketSettings", 
+					"socks5.onUdpAssociateRequest.clientFacingDatagramSocket.socketSettings", 
 					SocketSettings.of()));
 
-	@NameValuePairValueSpecDoc(
-			description = "The binding host name or address for the peer-facing "
-					+ "UDP socket",
-			name = "socks5.onUdpAssociateRequest.peerFacingBindHost",
-			syntax = "socks5.onUdpAssociateRequest.peerFacingBindHost=HOST",
-			valueType = Host.class
-	)
-	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST = 
-			SETTING_SPECS.addThenGet(new HostSettingSpec(
-					"socks5.onUdpAssociateRequest.peerFacingBindHost", 
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of acceptable binding "
-					+ "host address types for the peer-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes",
-			syntax = "socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes=HOST_ADDRESS_TYPES",
-			valueType = HostAddressTypes.class
-	)
-	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPES =
-			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
-					"socks5.onUdpAssociateRequest.peerFacingBindHostAddressTypes",
-					HostAddressTypes.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of binding port ranges for "
-					+ "the peer-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.peerFacingBindPortRanges",
-			syntax = "socks5.onUdpAssociateRequest.peerFacingBindPortRanges=PORT_RANGES",
-			valueType = PortRanges.class
-	)	
-	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGES =
-			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
-					"socks5.onUdpAssociateRequest.peerFacingBindPortRanges",
-					PortRanges.of()));
-
-	@NameValuePairValueSpecDoc(
-			description = "The network interface that provides a binding host "
-					+ "address for the peer-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.peerFacingNetInterface",
-			syntax = "socks5.onUdpAssociateRequest.peerFacingNetInterface=NETWORK_INTERFACE",
-			valueType = NetInterface.class
-	)
-	public static final SettingSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE =
-			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
-					"socks5.onUdpAssociateRequest.peerFacingNetInterface",
-					null));
-
-	@NameValuePairValueSpecDoc(
-			description = "The comma separated list of socket settings for the "
-					+ "peer-facing UDP socket",
-			name = "socks5.onUdpAssociateRequest.peerFacingSocketSettings",
-			syntax = "socks5.onUdpAssociateRequest.peerFacingSocketSettings=SOCKET_SETTINGS",
-			valueType = SocketSettings.class
-	)
-	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTINGS = 
-			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
-					"socks5.onUdpAssociateRequest.peerFacingSocketSettings", 
-					SocketSettings.of()));
-	
 	@NameValuePairValueSpecDoc(
 			description = "The buffer size in bytes for relaying the data",
 			name = "socks5.onUdpAssociateRequest.relayBufferSize",
 			syntax = "socks5.onUdpAssociateRequest.relayBufferSize=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_BUFFER_SIZE =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onUdpAssociateRequest.relayBufferSize", 
+					"socks5.onUdpAssociateRequest.relayBufferSize",
 					null));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The timeout in milliseconds on relaying no data",
 			name = "socks5.onUdpAssociateRequest.relayIdleTimeout",
 			syntax = "socks5.onUdpAssociateRequest.relayIdleTimeout=POSITIVE_INTEGER",
 			valueType = PositiveInteger.class
 	)
-	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_IDLE_TIMEOUT = 
+	public static final SettingSpec<PositiveInteger> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_RELAY_IDLE_TIMEOUT =
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
-					"socks5.onUdpAssociateRequest.relayIdleTimeout", 
+					"socks5.onUdpAssociateRequest.relayIdleTimeout",
 					null));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The upper limit on bandwidth in bytes per second of "
 					+ "receiving inbound data to be relayed",
@@ -494,7 +436,7 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onUdpAssociateRequest.relayInboundBandwidthLimit",
 					null));
-	
+
 	@NameValuePairValueSpecDoc(
 			description = "The upper limit on bandwidth in bytes per second of "
 					+ "receiving outbound data to be relayed",
@@ -506,6 +448,66 @@ public final class Socks5SettingSpecConstants {
 			SETTING_SPECS.addThenGet(new PositiveIntegerSettingSpec(
 					"socks5.onUdpAssociateRequest.relayOutboundBandwidthLimit",
 					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The binding host name or address for the remote-facing "
+					+ "UDP socket",
+			name = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost",
+			syntax = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost=HOST",
+			valueType = Host.class
+	)
+	public static final SettingSpec<Host> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST = 
+			SETTING_SPECS.addThenGet(new HostSettingSpec(
+					"socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost", 
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of acceptable binding "
+					+ "host address types for the remote-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressTypes",
+			syntax = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressTypes=HOST_ADDRESS_TYPES",
+			valueType = HostAddressTypes.class
+	)
+	public static final SettingSpec<HostAddressTypes> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPES =
+			SETTING_SPECS.addThenGet(new HostAddressTypesSettingSpec(
+					"socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressTypes",
+					HostAddressTypes.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of binding port ranges for "
+					+ "the remote-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges",
+			syntax = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges=PORT_RANGES",
+			valueType = PortRanges.class
+	)	
+	public static final SettingSpec<PortRanges> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGES =
+			SETTING_SPECS.addThenGet(new PortRangesSettingSpec(
+					"socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges",
+					PortRanges.of()));
+
+	@NameValuePairValueSpecDoc(
+			description = "The network interface that provides a binding host "
+					+ "address for the remote-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface",
+			syntax = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface=NETWORK_INTERFACE",
+			valueType = NetInterface.class
+	)
+	public static final SettingSpec<NetInterface> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_NET_INTERFACE =
+			SETTING_SPECS.addThenGet(new NetInterfaceSettingSpec(
+					"socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface",
+					null));
+
+	@NameValuePairValueSpecDoc(
+			description = "The comma separated list of socket settings for the "
+					+ "remote-facing UDP socket",
+			name = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSettings",
+			syntax = "socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSettings=SOCKET_SETTINGS",
+			valueType = SocketSettings.class
+	)
+	public static final SettingSpec<SocketSettings> SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_SOCKET_SETTINGS = 
+			SETTING_SPECS.addThenGet(new SocketSettingsSettingSpec(
+					"socks5.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSettings", 
+					SocketSettings.of()));
 	
 	@NameValuePairValueSpecDoc(
 			description = "The user repository used for username password "

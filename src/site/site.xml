@@ -27,6 +27,7 @@
 			<item name="Client API" href="userguide/client-api.html" />
 			<item name="Client Configuration" href="userguide/client-configuration.html" />
 			<item name="Command Line Interface" href="userguide/cli.html" />
+			<item name="Common Topics" href="userguide/common-topics.html" />
 			<item name="Server API" href="userguide/server-api.html" />
 			<item name="Server Configuration" href="userguide/server-configuration.html" />
 		</menu>

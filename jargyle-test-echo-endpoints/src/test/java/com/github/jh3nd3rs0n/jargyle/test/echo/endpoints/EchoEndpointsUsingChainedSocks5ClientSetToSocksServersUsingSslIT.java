@@ -68,7 +68,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersUsingSslIT {
     private static List<AbstractSocksServer> newSocksServersUsingSsl() throws IOException {
         List<AbstractSocksServer> socksServerList = new ArrayList<>();
         AbstractSocksServer socksServer1 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
@@ -80,7 +80,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersUsingSslIT {
         socksServerPort1UsingSsl = socksServer1.getPort();
         socksServerList.add(socksServer1);
         AbstractSocksServer socksServer2 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),

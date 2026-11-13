@@ -8,22 +8,20 @@
 -   [Directory Overview](#directory-overview) 
 -   [Build Requirements](#build-requirements)
 -   [Frequently Used Maven Commands](#frequently-used-maven-commands)
+-   [License](#license)
 
 ## Overview
 
-Jargyle is a Java SOCKS5 server and a Java SOCKS5 client/server API. It is
-inspired by [JSocks](https://jsocks.sourceforge.net/),
+Jargyle is a Java SOCKS5 server and a Java SOCKS5 client/server API. It is 
+inspired by 
+[JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
 
-Jargyle is licensed under the
-[MIT license](https://opensource.org/licenses/MIT).
-Its license can be found [here](LICENSE).
-
-This README file discusses how to get started in building Jargyle. For 
-detailed examples and usage instructions including how to use 
-Jargyle, please refer to the 
+This README file discusses how to get started in building Jargyle. For
+detailed examples and usage instructions including how to use
+Jargyle, please refer to the
 [project website](https://jh3nd3rs0n.github.io/jargyle).
 
 ## Directory Overview
@@ -186,3 +184,8 @@ These commands are to be executed at the top directory of Jargyle.
         These are needed for running tests that involve GSS-API 
         authentication.
     
+## License
+
+Jargyle is licensed under the
+[MIT license](https://opensource.org/licenses/MIT).
+Its license can be found [here](LICENSE).

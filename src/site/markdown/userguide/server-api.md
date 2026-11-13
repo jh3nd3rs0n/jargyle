@@ -79,9 +79,9 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
-        Setting<Object> socksServerSocketSettings = 
+        Setting<Object> clientFacingServerSocketSocketSettings = 
             Setting.newInstanceWithParsedValue(
-                "socksServerSocketSettings", "SO_TIMEOUT=0");
+                "clientFacingServerSocket.socketSettings", "SO_TIMEOUT=0");
         
         // ...
     }
@@ -117,12 +117,12 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
-        Setting<Object> socksServerSocketSettings = 
+        Setting<Object> clientFacingServerSocketSocketSettings = 
             Setting.newInstanceWithParsedValue(
-                "socksServerSocketSettings", "SO_TIMEOUT=0");
+                "clientFacingServerSocket.socketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.of(
-            port, backlog, socksServerSocketSettings);
+            port, backlog, clientFacingServerSocketSocketSettings);
         
         // ...
     }
@@ -132,6 +132,16 @@ public class ServerApp {
 Unless stated otherwise, if there are `Setting` objects of the same name in a 
 `Settings` object, then from those `Setting` objects the last `Setting` object 
 is recognized by the `SocksServer`.
+
+Some `Setting` objects have higher precedence over other `Setting` objects. 
+The more specific the `Setting` object the more precedence it has over less 
+specific `Setting` objects. For example, the `Setting` object `port` has 
+higher precedence over the `Setting` object 
+`clientFacingServerSocket.portRanges`. The `Setting` object `port` is more 
+specific about the port number for the server's client-facing TCP server 
+socket. The `Setting` object `clientFacingServerSocket.portRanges` is 
+comparatively less specific since it specifies ranges of port numbers to 
+choose from for the server's client-facing TCP server socket.
 
 ## The Configuration Object
 
@@ -170,12 +180,12 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
-        Setting<Object> socksServerSocketSettings = 
+        Setting<Object> clientFacingServerSocketSocketSettings = 
             Setting.newInstanceWithParsedValue(
-                "socksServerSocketSettings", "SO_TIMEOUT=0");
+                "clientFacingServerSocket.socketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.of(
-            port, backlog, socksServerSocketSettings);
+            port, backlog, clientFacingServerSocketSocketSettings);
         
         Configuration configuration =
             Configuration.newUnmodifiableInstance(settings);
@@ -212,12 +222,12 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
-        Setting<Object> socksServerSocketSettings = 
+        Setting<Object> clientFacingServerSocketSocketSettings = 
             Setting.newInstanceWithParsedValue(
-                "socksServerSocketSettings", "SO_TIMEOUT=0");
+                "clientFacingServerSocket.socketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.of(
-            port, backlog, socksServerSocketSettings);
+            port, backlog, clientFacingServerSocketSocketSettings);
         
         Configuration configuration =
             Configuration.newUnmodifiableInstance(settings);
@@ -265,12 +275,12 @@ public class ServerApp {
             Setting.newInstanceWithParsedValue(
                 "backlog", "100");
         
-        Setting<Object> socksServerSocketSettings = 
+        Setting<Object> clientFacingServerSocketSocketSettings = 
             Setting.newInstanceWithParsedValue(
-                "socksServerSocketSettings", "SO_TIMEOUT=0");
+                "clientFacingServerSocket.socketSettings", "SO_TIMEOUT=0");
         
         Settings settings = Settings.of(
-            port, backlog, socksServerSocketSettings);
+            port, backlog, clientFacingServerSocketSocketSettings);
         
         Configuration configuration =
             Configuration.newUnmodifiableInstance(settings);

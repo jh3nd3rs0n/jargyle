@@ -261,6 +261,15 @@ public class ClientApp {
 }
 ```
 
+Some system properties have higher precedence over other system properties.
+The more specific the system property the more precedence it has over less 
+specific system properties. For example, the system property
+`socksClient.socks5.methods` has higher precedence over the system property
+`socksClient.socks.methods`. The system property
+`socksClient.socks5.methods` is more specific about the SOCKS protocol version
+it specifies to. The system property `socksClient.socks.methods` is
+comparatively less specific since it specifies to any SOCKS protocol version.
+
 Although in the above examples, the system properties are set within the code, 
 the system properties can instead be set outside the program through the `-D` 
 option in the `java` utility. This gives the advantage of enabling traffic 

@@ -16,74 +16,6 @@ import java.util.Map;
 public final class SocksRuleActionSpecConstants {
 
     private static final RuleActionSpecs RULE_ACTION_SPECS = new RuleActionSpecs();
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a socket setting for the inbound socket "
-                    + "(can be specified multiple times with each rule action "
-                    + "specifying another socket setting)",
-            name = "socks.onBindRequest.inboundSocketSetting",
-            syntax = "socks.onBindRequest.inboundSocketSetting=SOCKET_SETTING",
-            valueType = SocketSetting.class
-    )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_BIND_REQUEST_INBOUND_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onBindRequest.inboundSocketSetting"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies the binding host name or address for the "
-                    + "listen socket if the provided host address is all zeros",
-            name = "socks.onBindRequest.listenBindHost",
-            syntax = "socks.onBindRequest.listenBindHost=HOST",
-            valueType = Host.class
-    )
-    public static final RuleActionSpec<Host> SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-            "socks.onBindRequest.listenBindHost"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies an acceptable binding host address type "
-                    + "for the listen socket if the provided host address is "
-                    + "all zeros (can be specified multiple times with each "
-                    + "rule specifying another host address type)",
-            name = "socks.onBindRequest.listenBindHostAddressType",
-            syntax = "socks.onBindRequest.listenBindHostAddressType=HOST_ADDRESS_TYPE",
-            valueType = HostAddressType.class
-    )
-    public static final RuleActionSpec<HostAddressType> SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-            "socks.onBindRequest.listenBindHostAddressType"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a binding port range for the listen socket "
-                    + "if the provided port is zero (can be specified multiple "
-                    + "times with each rule action specifying another port "
-                    + "range)",
-            name = "socks.onBindRequest.listenBindPortRange",
-            syntax = "socks.onBindRequest.listenBindPortRange=PORT_RANGE",
-            valueType = PortRange.class
-    )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onBindRequest.listenBindPortRange"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies the network interface that provides a "
-                    + "binding host address for the listen socket if the "
-                    + "provided host address is all zeros",
-            name = "socks.onBindRequest.listenNetInterface",
-            syntax = "socks.onBindRequest.listenNetInterface=NETWORK_INTERFACE",
-            valueType = NetInterface.class
-    )
-    public static final RuleActionSpec<NetInterface> SOCKS_ON_BIND_REQUEST_LISTEN_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-            "socks.onBindRequest.listenNetInterface"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a socket setting for the listen socket "
-                    + "(can be specified multiple times with each rule action "
-                    + "specifying another socket setting)",
-            name = "socks.onBindRequest.listenSocketSetting",
-            syntax = "socks.onBindRequest.listenSocketSetting=SOCKET_SETTING",
-            valueType = SocketSetting.class
-    )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_BIND_REQUEST_LISTEN_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onBindRequest.listenSocketSetting"));
-
     @NameValuePairValueSpecDoc(
             description = "Specifies the buffer size in bytes for relaying the "
                     + "data",
@@ -125,17 +57,74 @@ public final class SocksRuleActionSpecConstants {
             "socks.onBindRequest.relayOutboundBandwidthLimit"));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies the boolean value to indicate if the "
-                    + "target-facing socket is to be prepared before "
-                    + "connecting (involves applying the specified socket "
-                    + "settings, resolving the target host name, and setting "
-                    + "the specified timeout on waiting to connect)",
-            name = "socks.onConnectRequest.prepareTargetFacingSocket",
-            syntax = "socks.onConnectRequest.prepareTargetFacingSocket=true|false",
-            valueType = Boolean.class
+            description = "Specifies the binding host name or address for the "
+                    + "remote-facing TCP server socket if the provided host " 
+                    + "address is all zeros",
+            name = "socks.onBindRequest.remoteFacingServerSocket.bindHost",
+            syntax = "socks.onBindRequest.remoteFacingServerSocket.bindHost=HOST",
+            valueType = Host.class
     )
-    public static final RuleActionSpec<Boolean> SOCKS_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET = RULE_ACTION_SPECS.addThenGet(new BooleanRuleActionSpec(
-            "socks.onConnectRequest.prepareTargetFacingSocket"));
+    public static final RuleActionSpec<Host> SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+            "socks.onBindRequest.remoteFacingServerSocket.bindHost"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies an acceptable binding host address type "
+                    + "for the remote-facing TCP server socket if the "
+                    + "provided host address is all zeros (can be specified "
+                    + "multiple times with each rule specifying another host "
+                    + "address type)",
+            name = "socks.onBindRequest.remoteFacingServerSocket.bindHostAddressType",
+            syntax = "socks.onBindRequest.remoteFacingServerSocket.bindHostAddressType=HOST_ADDRESS_TYPE",
+            valueType = HostAddressType.class
+    )
+    public static final RuleActionSpec<HostAddressType> SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+            "socks.onBindRequest.remoteFacingServerSocket.bindHostAddressType"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a binding port range for the "
+                    + "remote-facing TCP server socket if the provided port "
+                    + "is zero (can be specified multiple times with each "
+                    + "rule action specifying another port range)",
+            name = "socks.onBindRequest.remoteFacingServerSocket.bindPortRange",
+            syntax = "socks.onBindRequest.remoteFacingServerSocket.bindPortRange=PORT_RANGE",
+            valueType = PortRange.class
+    )
+    public static final RuleActionSpec<PortRange> SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onBindRequest.remoteFacingServerSocket.bindPortRange"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies the network interface that provides a "
+                    + "binding host address for the remote-facing TCP server "
+                    + "socket if the provided host address is all zeros",
+            name = "socks.onBindRequest.remoteFacingServerSocket.netInterface",
+            syntax = "socks.onBindRequest.remoteFacingServerSocket.netInterface=NETWORK_INTERFACE",
+            valueType = NetInterface.class
+    )
+    public static final RuleActionSpec<NetInterface> SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+            "socks.onBindRequest.remoteFacingServerSocket.netInterface"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a socket setting for the remote-facing " 
+                    + "TCP server socket (can be specified multiple times "
+                    + "with each rule action specifying another socket "
+                    + "setting)",
+            name = "socks.onBindRequest.remoteFacingServerSocket.socketSetting",
+            syntax = "socks.onBindRequest.remoteFacingServerSocket.socketSetting=SOCKET_SETTING",
+            valueType = SocketSetting.class
+    )
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onBindRequest.remoteFacingServerSocket.socketSetting"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a socket setting for the remote TCP "
+                    + "socket (can be specified multiple times with each "
+                    + "rule action specifying another socket setting)",
+            name = "socks.onBindRequest.remoteSocket.socketSetting",
+            syntax = "socks.onBindRequest.remoteSocket.socketSetting=SOCKET_SETTING",
+            valueType = SocketSetting.class
+    )
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_BIND_REQUEST_REMOTE_SOCKET_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onBindRequest.remoteSocket.socketSetting"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the buffer size in bytes for relaying the "
@@ -179,189 +168,135 @@ public final class SocksRuleActionSpecConstants {
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the binding host name or address for the "
-                    + "target-facing socket",
-            name = "socks.onConnectRequest.targetFacingBindHost",
-            syntax = "socks.onConnectRequest.targetFacingBindHost=HOST",
+                    + "remote TCP socket",
+            name = "socks.onConnectRequest.remoteSocket.bindHost",
+            syntax = "socks.onConnectRequest.remoteSocket.bindHost=HOST",
             valueType = Host.class
     )
-    public static final RuleActionSpec<Host> SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-            "socks.onConnectRequest.targetFacingBindHost"));
+    public static final RuleActionSpec<Host> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.bindHost"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies an acceptable binding host address type "
-                    + "for the target-facing socket (can be specified "
-                    + "multiple times with each rule action specifying "
-                    + "another host address type)",
-            name = "socks.onConnectRequest.targetFacingBindHostAddressType",
-            syntax = "socks.onConnectRequest.targetFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+                    + "for the remote TCP socket (can be specified multiple "
+                    + "times with each rule action specifying another host "
+                    + "address type)",
+            name = "socks.onConnectRequest.remoteSocket.bindHostAddressType",
+            syntax = "socks.onConnectRequest.remoteSocket.bindHostAddressType=HOST_ADDRESS_TYPE",
             valueType = HostAddressType.class
     )
-    public static final RuleActionSpec<HostAddressType> SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-            "socks.onConnectRequest.targetFacingBindHostAddressType"));
+    public static final RuleActionSpec<HostAddressType> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.bindHostAddressType"));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies a binding port range for the target-facing "
-                    + "socket (can be specified multiple times with each rule "
-                    + "action specifying another port range)",
-            name = "socks.onConnectRequest.targetFacingBindPortRange",
-            syntax = "socks.onConnectRequest.targetFacingBindPortRange=PORT_RANGE",
+            description = "Specifies a binding port range for the remote TCP "
+                    + "socket (can be specified multiple times with each "
+                    + "rule action specifying another port range)",
+            name = "socks.onConnectRequest.remoteSocket.bindPortRange",
+            syntax = "socks.onConnectRequest.remoteSocket.bindPortRange=PORT_RANGE",
             valueType = PortRange.class
     )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onConnectRequest.targetFacingBindPortRange"));
+    public static final RuleActionSpec<PortRange> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.bindPortRange"));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies the timeout in milliseconds on waiting for "
-                    + "the target-facing socket to connect",
-            name = "socks.onConnectRequest.targetFacingConnectTimeout",
-            syntax = "socks.onConnectRequest.targetFacingConnectTimeout=POSITIVE_INTEGER",
+            description = "Specifies the timeout in milliseconds on waiting "
+                    + "for the remote TCP socket to connect",
+            name = "socks.onConnectRequest.remoteSocket.connectTimeout",
+            syntax = "socks.onConnectRequest.remoteSocket.connectTimeout=POSITIVE_INTEGER",
             valueType = PositiveInteger.class
     )
-    public static final RuleActionSpec<PositiveInteger> SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT = RULE_ACTION_SPECS.addThenGet(new PositiveIntegerRuleActionSpec(
-            "socks.onConnectRequest.targetFacingConnectTimeout"));
+    public static final RuleActionSpec<PositiveInteger> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_CONNECT_TIMEOUT = RULE_ACTION_SPECS.addThenGet(new PositiveIntegerRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.connectTimeout"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the network interface that provides a "
-                    + "binding host address for the target-facing socket",
-            name = "socks.onConnectRequest.targetFacingNetInterface",
-            syntax = "socks.onConnectRequest.targetFacingNetInterface=NETWORK_INTERFACE",
+                    + "binding host address for the remote TCP socket",
+            name = "socks.onConnectRequest.remoteSocket.netInterface",
+            syntax = "socks.onConnectRequest.remoteSocket.netInterface=NETWORK_INTERFACE",
             valueType = NetInterface.class
     )
-    public static final RuleActionSpec<NetInterface> SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-            "socks.onConnectRequest.targetFacingNetInterface"));
+    public static final RuleActionSpec<NetInterface> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.netInterface"));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies a socket setting for the target-facing "
-                    + "socket (can be specified multiple times with each rule "
-                    + "action specifying another socket setting)",
-            name = "socks.onConnectRequest.targetFacingSocketSetting",
-            syntax = "socks.onConnectRequest.targetFacingSocketSetting=SOCKET_SETTING",
+            description = "Specifies the boolean value to indicate if the "
+                    + "remote TCP socket is to be prepared before connecting "
+                    + "(involves applying the specified socket settings, "
+                    + "resolving the target host name, and setting the "
+                    + "specified timeout on waiting to connect)",
+            name = "socks.onConnectRequest.remoteSocket.prepareSocket",
+            syntax = "socks.onConnectRequest.remoteSocket.prepareSocket=true|false",
+            valueType = Boolean.class
+    )
+    public static final RuleActionSpec<Boolean> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_PREPARE_SOCKET = RULE_ACTION_SPECS.addThenGet(new BooleanRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.prepareSocket"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a socket setting for the remote TCP "
+                    + "socket (can be specified multiple times with each "
+                    + "rule action specifying another socket setting)",
+            name = "socks.onConnectRequest.remoteSocket.socketSetting",
+            syntax = "socks.onConnectRequest.remoteSocket.socketSetting=SOCKET_SETTING",
             valueType = SocketSetting.class
     )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onConnectRequest.targetFacingSocketSetting"));
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onConnectRequest.remoteSocket.socketSetting"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the binding host name or address for all "
-                    + "external-facing sockets",
-            name = "socks.onRequest.externalFacingBindHost",
-            syntax = "socks.onRequest.externalFacingBindHost=HOST",
+                    + "client endpoints",
+            name = "socks.onRequest.clientEndpoints.bindHost",
+            syntax = "socks.onRequest.clientEndpoints.bindHost=HOST",
             valueType = Host.class
     )
-    public static final RuleActionSpec<Host> SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-            "socks.onRequest.externalFacingBindHost"));
+    public static final RuleActionSpec<Host> SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+            "socks.onRequest.clientEndpoints.bindHost"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies an acceptable binding host address type "
-                    + "for all external-facing sockets (can be specified "
+                    + "for all client endpoints (can be specified "
                     + "multiple times with each rule action specifying "
                     + "another host address type)",
-            name = "socks.onRequest.externalFacingBindHostAddressType",
-            syntax = "socks.onRequest.externalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+            name = "socks.onRequest.clientEndpoints.bindHostAddressType",
+            syntax = "socks.onRequest.clientEndpoints.bindHostAddressType=HOST_ADDRESS_TYPE",
             valueType = HostAddressType.class
     )
-    public static final RuleActionSpec<HostAddressType> SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-            "socks.onRequest.externalFacingBindHostAddressType"));
+    public static final RuleActionSpec<HostAddressType> SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+            "socks.onRequest.clientEndpoints.bindHostAddressType"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies a binding port range for all "
-                    + "external-facing TCP sockets (can be specified multiple "
+                    + "client UDP endpoints (can be specified multiple "
                     + "times with each rule action specifying another port "
                     + "range)",
-            name = "socks.onRequest.externalFacingBindTcpPortRange",
-            syntax = "socks.onRequest.externalFacingBindTcpPortRange=PORT_RANGE",
+            name = "socks.onRequest.clientEndpoints.bindUdpPortRange",
+            syntax = "socks.onRequest.clientEndpoints.bindUdpPortRange=PORT_RANGE",
             valueType = PortRange.class
     )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onRequest.externalFacingBindTcpPortRange"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a binding port range for all "
-                    + "external-facing UDP sockets (can be specified multiple "
-                    + "times with each rule action specifying another port "
-                    + "range)",
-            name = "socks.onRequest.externalFacingBindUdpPortRange",
-            syntax = "socks.onRequest.externalFacingBindUdpPortRange=PORT_RANGE",
-            valueType = PortRange.class
-    )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onRequest.externalFacingBindUdpPortRange"));
+    public static final RuleActionSpec<PortRange> SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onRequest.clientEndpoints.bindUdpPortRange"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the network interface that provides a "
-                    + "binding host address for all external-facing sockets",
-            name = "socks.onRequest.externalFacingNetInterface",
-            syntax = "socks.onRequest.externalFacingNetInterface=NETWORK_INTERFACE",
+                    + "binding host address for all client endpoints",
+            name = "socks.onRequest.clientEndpoints.netInterface",
+            syntax = "socks.onRequest.clientEndpoints.netInterface=NETWORK_INTERFACE",
             valueType = NetInterface.class
     )
-    public static final RuleActionSpec<NetInterface> SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-            "socks.onRequest.externalFacingNetInterface"));
+    public static final RuleActionSpec<NetInterface> SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+            "socks.onRequest.clientEndpoints.netInterface"));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies a socket setting for all external-facing "
-                    + "sockets (can be specified multiple times with each rule "
-                    + "action specifying another socket setting)",
-            name = "socks.onRequest.externalFacingSocketSetting",
-            syntax = "socks.onRequest.externalFacingSocketSetting=SOCKET_SETTING",
+            description = "Specifies a socket setting for all client "
+                    + "endpoints (can be specified multiple times with each "
+                    + "rule action specifying another socket setting)",
+            name = "socks.onRequest.clientEndpoints.socketSetting",
+            syntax = "socks.onRequest.clientEndpoints.socketSetting=SOCKET_SETTING",
             valueType = SocketSetting.class
     )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onRequest.externalFacingSocketSetting"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies the binding host name or address for all "
-                    + "internal-facing sockets",
-            name = "socks.onRequest.internalFacingBindHost",
-            syntax = "socks.onRequest.internalFacingBindHost=HOST",
-            valueType = Host.class
-    )
-    public static final RuleActionSpec<Host> SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-            "socks.onRequest.internalFacingBindHost"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies an acceptable binding host address type "
-                    + "for all internal-facing sockets (can be specified "
-                    + "multiple times with each rule action specifying "
-                    + "another host address type)",
-            name = "socks.onRequest.internalFacingBindHostAddressType",
-            syntax = "socks.onRequest.internalFacingBindHostAddressType=HOST_ADDRESS_TYPE",
-            valueType = HostAddressType.class
-    )
-    public static final RuleActionSpec<HostAddressType> SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-            "socks.onRequest.internalFacingBindHostAddressType"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a binding port range for all "
-                    + "internal-facing UDP sockets (can be specified multiple "
-                    + "times with each rule action specifying another port "
-                    + "range)",
-            name = "socks.onRequest.internalFacingBindUdpPortRange",
-            syntax = "socks.onRequest.internalFacingBindUdpPortRange=PORT_RANGE",
-            valueType = PortRange.class
-    )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onRequest.internalFacingBindUdpPortRange"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies the network interface that provides a "
-                    + "binding host address for all internal-facing sockets",
-            name = "socks.onRequest.internalFacingNetInterface",
-            syntax = "socks.onRequest.internalFacingNetInterface=NETWORK_INTERFACE",
-            valueType = NetInterface.class
-    )
-    public static final RuleActionSpec<NetInterface> SOCKS_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-            "socks.onRequest.internalFacingNetInterface"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a socket setting for all internal-facing "
-                    + "sockets (can be specified multiple times with each rule "
-                    + "action specifying another socket setting)",
-            name = "socks.onRequest.internalFacingSocketSetting",
-            syntax = "socks.onRequest.internalFacingSocketSetting=SOCKET_SETTING",
-            valueType = SocketSetting.class
-    )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onRequest.internalFacingSocketSetting"));
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onRequest.clientEndpoints.socketSetting"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the buffer size in bytes for relaying the "
@@ -404,112 +339,125 @@ public final class SocksRuleActionSpecConstants {
             "socks.onRequest.relayOutboundBandwidthLimit"));
 
     @NameValuePairValueSpecDoc(
-            description = "Specifies the binding host name or address for the "
-                    + "client-facing UDP socket",
-            name = "socks.onUdpAssociateRequest.clientFacingBindHost",
-            syntax = "socks.onUdpAssociateRequest.clientFacingBindHost=HOST",
+            description = "Specifies the binding host name or address for all "
+                    + "remote endpoints",
+            name = "socks.onRequest.remoteEndpoints.bindHost",
+            syntax = "socks.onRequest.remoteEndpoints.bindHost=HOST",
             valueType = Host.class
     )
-    public static final RuleActionSpec<Host> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-            "socks.onUdpAssociateRequest.clientFacingBindHost"));
+    public static final RuleActionSpec<Host> SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+            "socks.onRequest.remoteEndpoints.bindHost"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies an acceptable binding host address type "
+                    + "for all remote endpoints (can be specified "
+                    + "multiple times with each rule action specifying "
+                    + "another host address type)",
+            name = "socks.onRequest.remoteEndpoints.bindHostAddressType",
+            syntax = "socks.onRequest.remoteEndpoints.bindHostAddressType=HOST_ADDRESS_TYPE",
+            valueType = HostAddressType.class
+    )
+    public static final RuleActionSpec<HostAddressType> SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+            "socks.onRequest.remoteEndpoints.bindHostAddressType"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a binding port range for all "
+                    + "remote TCP endpoints (can be specified multiple "
+                    + "times with each rule action specifying another port "
+                    + "range)",
+            name = "socks.onRequest.remoteEndpoints.bindTcpPortRange",
+            syntax = "socks.onRequest.remoteEndpoints.bindTcpPortRange=PORT_RANGE",
+            valueType = PortRange.class
+    )
+    public static final RuleActionSpec<PortRange> SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onRequest.remoteEndpoints.bindTcpPortRange"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a binding port range for all "
+                    + "remote UDP endpoints (can be specified multiple "
+                    + "times with each rule action specifying another port "
+                    + "range)",
+            name = "socks.onRequest.remoteEndpoints.bindUdpPortRange",
+            syntax = "socks.onRequest.remoteEndpoints.bindUdpPortRange=PORT_RANGE",
+            valueType = PortRange.class
+    )
+    public static final RuleActionSpec<PortRange> SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onRequest.remoteEndpoints.bindUdpPortRange"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies the network interface that provides a "
+                    + "binding host address for all remote endpoints",
+            name = "socks.onRequest.remoteEndpoints.netInterface",
+            syntax = "socks.onRequest.remoteEndpoints.netInterface=NETWORK_INTERFACE",
+            valueType = NetInterface.class
+    )
+    public static final RuleActionSpec<NetInterface> SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+            "socks.onRequest.remoteEndpoints.netInterface"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a socket setting for all remote "
+                    + "endpoints (can be specified multiple times with each "
+                    + "rule action specifying another socket setting)",
+            name = "socks.onRequest.remoteEndpoints.socketSetting",
+            syntax = "socks.onRequest.remoteEndpoints.socketSetting=SOCKET_SETTING",
+            valueType = SocketSetting.class
+    )
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onRequest.remoteEndpoints.socketSetting"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies the binding host name or address for the "
+                    + "client-facing UDP socket",
+            name = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost",
+            syntax = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost=HOST",
+            valueType = Host.class
+    )
+    public static final RuleActionSpec<Host> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+            "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies an acceptable binding host address type "
                     + "for the client-facing UDP socket (can be specified "
                     + "multiple times with each rule action specifying "
                     + "another host address type)",
-            name = "socks.onUdpAssociateRequest.clientFacingBindHostAddressType",
-            syntax = "socks.onUdpAssociateRequest.clientFacingBindHostAddressType=HOST_ADDRESS_TYPE",
+            name = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressType",
+            syntax = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressType=HOST_ADDRESS_TYPE",
             valueType = HostAddressType.class
     )
-    public static final RuleActionSpec<HostAddressType> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-            "socks.onUdpAssociateRequest.clientFacingBindHostAddressType"));
+    public static final RuleActionSpec<HostAddressType> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+            "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressType"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies a binding port range for the client-facing "
                     + "UDP socket (can be specified multiple times with each "
                     + "rule action specifying another port range)",
-            name = "socks.onUdpAssociateRequest.clientFacingBindPortRange",
-            syntax = "socks.onUdpAssociateRequest.clientFacingBindPortRange=PORT_RANGE",
+            name = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRange",
+            syntax = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRange=PORT_RANGE",
             valueType = PortRange.class
     )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onUdpAssociateRequest.clientFacingBindPortRange"));
+    public static final RuleActionSpec<PortRange> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRange"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the network interface that provides a "
                     + "binding host address for the client-facing UDP socket",
-            name = "socks.onUdpAssociateRequest.clientFacingNetInterface",
-            syntax = "socks.onUdpAssociateRequest.clientFacingNetInterface=NETWORK_INTERFACE",
+            name = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface",
+            syntax = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface=NETWORK_INTERFACE",
             valueType = NetInterface.class
     )
-    public static final RuleActionSpec<NetInterface> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-            "socks.onUdpAssociateRequest.clientFacingNetInterface"));
+    public static final RuleActionSpec<NetInterface> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+            "socks.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies a socket setting for the client-facing UDP "
                     + "socket (can be specified multiple times with each rule "
                     + "action specifying another socket setting)",
-            name = "socks.onUdpAssociateRequest.clientFacingSocketSetting",
-            syntax = "socks.onUdpAssociateRequest.clientFacingSocketSetting=SOCKET_SETTING",
+            name = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.socketSetting",
+            syntax = "socks.onUdpAssociateRequest.clientFacingDatagramSocket.socketSetting=SOCKET_SETTING",
             valueType = SocketSetting.class
     )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onUdpAssociateRequest.clientFacingSocketSetting"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies the binding host name or address for the "
-                    + "peer-facing UDP socket",
-            name = "socks.onUdpAssociateRequest.peerFacingBindHost",
-            syntax = "socks.onUdpAssociateRequest.peerFacingBindHost=HOST",
-            valueType = Host.class
-    )
-    public static final RuleActionSpec<Host> SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
-            "socks.onUdpAssociateRequest.peerFacingBindHost"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies an acceptable binding host address type "
-                    + "for the peer-facing UDP socket (can be specified "
-                    + "multiple times with each rule action specifying "
-                    + "another host address type)",
-            name = "socks.onUdpAssociateRequest.peerFacingBindHostAddressType",
-            syntax = "socks.onUdpAssociateRequest.peerFacingBindHostAddressType=HOST_ADDRESS_TYPE",
-            valueType = HostAddressType.class
-    )
-    public static final RuleActionSpec<HostAddressType> SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
-            "socks.onUdpAssociateRequest.peerFacingBindHostAddressType"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a binding port range for the peer-facing "
-                    + "UDP socket (can be specified multiple times with each "
-                    + "rule action specifying another port range)",
-            name = "socks.onUdpAssociateRequest.peerFacingBindPortRange",
-            syntax = "socks.onUdpAssociateRequest.peerFacingBindPortRange=PORT_RANGE",
-            valueType = PortRange.class
-    )
-    public static final RuleActionSpec<PortRange> SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
-            "socks.onUdpAssociateRequest.peerFacingBindPortRange"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies the network interface that provides a "
-                    + "binding host address for the peer-facing UDP socket",
-            name = "socks.onUdpAssociateRequest.peerFacingNetInterface",
-            syntax = "socks.onUdpAssociateRequest.peerFacingNetInterface=NETWORK_INTERFACE",
-            valueType = NetInterface.class
-    )
-    public static final RuleActionSpec<NetInterface> SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
-            "socks.onUdpAssociateRequest.peerFacingNetInterface"));
-
-    @NameValuePairValueSpecDoc(
-            description = "Specifies a socket setting for the peer-facing UDP "
-                    + "socket (can be specified multiple times with each rule "
-                    + "action specifying another socket setting)",
-            name = "socks.onUdpAssociateRequest.peerFacingSocketSetting",
-            syntax = "socks.onUdpAssociateRequest.peerFacingSocketSetting=SOCKET_SETTING",
-            valueType = SocketSetting.class
-    )
-    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
-            "socks.onUdpAssociateRequest.peerFacingSocketSetting"));
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onUdpAssociateRequest.clientFacingDatagramSocket.socketSetting"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the buffer size in bytes for relaying the "
@@ -550,6 +498,60 @@ public final class SocksRuleActionSpecConstants {
     )
     public static final RuleActionSpec<PositiveInteger> SOCKS_ON_UDP_ASSOCIATE_REQUEST_RELAY_OUTBOUND_BANDWIDTH_LIMIT = RULE_ACTION_SPECS.addThenGet(new PositiveIntegerRuleActionSpec(
             "socks.onUdpAssociateRequest.relayOutboundBandwidthLimit"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies the binding host name or address for the "
+                    + "remote-facing UDP socket",
+            name = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost",
+            syntax = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost=HOST",
+            valueType = Host.class
+    )
+    public static final RuleActionSpec<Host> SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST = RULE_ACTION_SPECS.addThenGet(new HostRuleActionSpec(
+            "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies an acceptable binding host address type "
+                    + "for the remote-facing UDP socket (can be specified "
+                    + "multiple times with each rule action specifying "
+                    + "another host address type)",
+            name = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressType",
+            syntax = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressType=HOST_ADDRESS_TYPE",
+            valueType = HostAddressType.class
+    )
+    public static final RuleActionSpec<HostAddressType> SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPE = RULE_ACTION_SPECS.addThenGet(new HostAddressTypeRuleActionSpec(
+            "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressType"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a binding port range for the remote-facing "
+                    + "UDP socket (can be specified multiple times with each "
+                    + "rule action specifying another port range)",
+            name = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRange",
+            syntax = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRange=PORT_RANGE",
+            valueType = PortRange.class
+    )
+    public static final RuleActionSpec<PortRange> SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGE = RULE_ACTION_SPECS.addThenGet(new PortRangeRuleActionSpec(
+            "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRange"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies the network interface that provides a "
+                    + "binding host address for the remote-facing UDP socket",
+            name = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface",
+            syntax = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface=NETWORK_INTERFACE",
+            valueType = NetInterface.class
+    )
+    public static final RuleActionSpec<NetInterface> SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_NET_INTERFACE = RULE_ACTION_SPECS.addThenGet(new NetInterfaceRuleActionSpec(
+            "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface"));
+
+    @NameValuePairValueSpecDoc(
+            description = "Specifies a socket setting for the remote-facing UDP "
+                    + "socket (can be specified multiple times with each rule "
+                    + "action specifying another socket setting)",
+            name = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSetting",
+            syntax = "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSetting=SOCKET_SETTING",
+            valueType = SocketSetting.class
+    )
+    public static final RuleActionSpec<SocketSetting<Object>> SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_SOCKET_SETTING = RULE_ACTION_SPECS.addThenGet(new SocketSettingRuleActionSpec(
+            "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSetting"));
 
     @NameValuePairValueSpecDoc(
             description = "Specifies the desired destination address "

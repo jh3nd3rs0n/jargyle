@@ -3,6 +3,15 @@
 ## Contents
 
 -   [Overview](#overview)
+-   [Configuring Endpoints](#configuring-endpoints)
+    -   [Binding Endpoints to a Host Name or Address](#binding-endpoints-to-a-host-name-or-address)
+    -   [Binding Endpoints to a Host Address from a Network Interface](#binding-endpoints-to-a-host-address-from-a-network-interface)
+    -   [Binding Endpoints to a Port Number Range or Port Number Ranges](#binding-endpoints-to-a-port-number-range-or-port-number-ranges)
+    -   [Applying Socket Settings to Endpoints](#applying-socket-settings-to-endpoints)
+    -   [TCP Socket Connection Types](#tcp-socket-connection-types)
+        -   [Extemporaneous TCP Socket Connection Type](#extemporaneous-tcp-socket-connection-type)
+        -   [Prepared TCP Socket Connection Type](#prepared-tcp-socket-connection-type)
+    -   [Preparing the Remote TCP Socket Before Connecting](#preparing-the-remote-tcp-socket-before-connecting)
 -   [Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients](#enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients)
 -   [Enabling DTLS-layered UDP Traffic Between the Server and Its Clients](#enabling-dtls-layered-udp-traffic-between-the-server-and-its-clients)
 -   [Using SOCKS5 Authentication](#using-socks5-authentication)
@@ -10,6 +19,13 @@
     -   [Using Username Password Authentication](#using-username-password-authentication)
     -   [Using GSS-API Authentication](#using-gss-api-authentication)
 -   [Chaining to Another SOCKS Server](#chaining-to-another-socks-server)
+    -   [Configuring the Other SOCKS Server TCP Socket](#configuring-the-other-socks-server-tcp-socket) 
+        -   [Binding the Other SOCKS Server TCP Socket to a Host Name or Address](#binding-the-other-socks-server-tcp-socket-to-a-host-name-or-address)
+        -   [Binding the Other SOCKS Server TCP Socket to a Host Address from a Network Interface](#binding-the-other-socks-server-tcp-socket-to-a-host-address-from-a-network-interface)
+        -   [Binding the Other SOCKS Server TCP Socket to a Port Number Range or Port Number Ranges](#binding-the-other-socks-server-tcp-socket-to-a-port-number-range-or-port-number-ranges)
+        -   [Applying Socket Settings to the Other SOCKS Server TCP Socket](#applying-socket-settings-to-the-other-socks-server-tcp-socket)
+        -   [Preparing the Other SOCKS Server TCP Socket Before Connecting](#preparing-the-other-socks-server-tcp-socket-before-connecting)
+        -   [Summary for Configuring the Other SOCKS Server TCP Socket](#summary-for-configuring-the-other-socks-server-tcp-socket)
     -   [Enabling SSL/TLS-layered TCP Traffic Between the Server and the Other SOCKS Server](#enabling-ssltls-layered-tcp-traffic-between-the-server-and-the-other-socks-server)
     -   [Enabling DTLS-layered UDP Traffic Between the Server and the Other SOCKS Server](#enabling-dtls-layered-udp-traffic-between-the-server-and-the-other-socks-server)
     -   [Chaining to the Other SOCKS Server Using SOCKS5 Authentication](#chaining-to-the-other-socks-server-using-socks5-authentication)
@@ -19,22 +35,1398 @@
     -   [Resolving Host Names From the Other SOCKS Server](#resolving-host-names-from-the-other-socks-server)
 -   [Chaining to a Specified Chain of Other SOCKS Servers](#chaining-to-a-specified-chain-of-other-socks-servers)
 -   [Chaining to Specified Chains of Other SOCKS Servers](#chaining-to-specified-chains-of-other-socks-servers)
+-   [Configuring Relay Settings](#configuring-relay-settings)
+-   [Limiting Relay Bandwidth](#limiting-relay-bandwidth)
 -   [Using Rules to Manage Traffic](#using-rules-to-manage-traffic)
     -   [Rule Conditions](#rule-conditions)
     -   [Rule Actions](#rule-actions)
     -   [Allowing or Denying Traffic](#allowing-or-denying-traffic)
-    -   [Allowing a Limited Number of Simultaneous Instances of Traffic](#allowing-a-limited-number-of-simultaneous-instances-of-traffic)
+    -   [Allowing a Limited Number of Simultaneous Connections](#allowing-a-limited-number-of-simultaneous-connections)
     -   [Routing Traffic Through a Selection of Specified Chains of SOCKS Servers](#routing-traffic-through-a-selection-of-specified-chains-of-socks-servers)
     -   [Redirecting the Desired Destination](#redirecting-the-desired-destination)
-    -   [Configuring Sockets](#configuring-sockets)
-    -   [Configuring Relay Settings](#configuring-relay-settings)
-    -   [Limiting Relay Bandwidth](#limiting-relay-bandwidth)
+    -   [Configuring Endpoints Through Rules](#configuring-endpoints-through-rules)
+    -   [Configuring Relay Settings Through Rules](#configuring-relay-settings-through-rules)
+    -   [Limiting Relay Bandwidth Through Rules](#limiting-relay-bandwidth-through-rules)
 
 ## Overview
 
 This document discusses how to further use the 
 [server](cli.md#starting-the-server) and the [server API](server-api.md) by 
 means of configuration.
+
+## Configuring Endpoints
+
+The server has endpoints that interact with clients, servers, and peers.
+
+The following are the types of endpoints:
+
+-   `DatagramSocket`: A UDP socket that sends or receives UDP datagram packets 
+    to or from other UDP peers 
+-   `ServerSocket`: A TCP server socket that waits for and accepts a TCP socket
+    that is connected to a client
+-   `Socket`: A TCP socket that is connected to a client or will be connected
+    to a server.
+
+The endpoints are categorized as follows:
+
+-   **Client endpoints**: Endpoints that face or serve the client
+    -   `clientFacingServerSocket`: The client-facing TCP server socket that 
+        the server uses to wait for and accept a TCP socket that is connected 
+        to the client
+    -   `clientSocket`: The accepted TCP socket connected to the client
+    -   `socks.onUdpAssociateRequest.clientFacingDatagramSocket`: The
+        client-facing UDP socket that sends and receives UDP datagram packets 
+        to and from the client
+-   **Remote endpoints**: Endpoints that face or connect to targets/peers 
+    that are remote from the client
+    -   `socks.onBindRequest.remoteFacingServerSocket`: The remote-facing TCP
+        server socket that waits for and accepts a TCP socket that is 
+        connected to the remote client
+    -   `socks.onBindRequest.remoteSocket`: The accepted TCP socket connected 
+        to the remote client
+    -   `socks.onConnectRequest.remoteSocket`: The TCP socket to be connected 
+        to the remote server
+    -   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket`: The
+        remote-facing UDP socket that sends and receives UDP datagram packets 
+        to and from the remote peer
+
+You can configure all endpoints as a whole, you can configure all endpoints of 
+one side of the server as a whole, or you can configure individual endpoints.
+
+### Binding Endpoints to a Host Name or Address
+
+You can bind endpoints to a host name or to a host address.
+
+You can bind all endpoints to a host name or to a host address by using the 
+setting `bindHost`. The host address can be an IPv4 address or an IPv6 address. 
+The default value for the setting is the wildcard address `0.0.0.0`.
+
+Command line examples:
+
+```bash
+jargyle start-server \
+    --setting=bindHost=jargyle.net
+```
+
+```bash
+jargyle start-server \
+    --setting=bindHost=192.168.1.231
+```
+
+```bash
+jargyle start-server \
+    --setting=bindHost=fe80::34ef:938a:402f:e526%17
+```
+
+Server configuration file examples:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>bindHost</name>
+            <value>jargyle.net</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>bindHost</name>
+            <value>192.168.1.231</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>bindHost</name>
+            <value>fe80::34ef:938a:402f:e526%17</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API examples:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "bindHost", "jargyle.net")
+        ))).start();
+    }
+}
+```
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "bindHost", "192.168.1.231")
+        ))).start();
+    }
+}
+```
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "bindHost", "fe80::34ef:938a:402f:e526%17")
+        ))).start();
+    }
+}
+```
+
+You can bind all endpoints of one side of the server to a host name or to a 
+host address by using any of the following settings:
+
+-   `clientEndpoints.bindHost`: The default binding host name or address for 
+    all client endpoints
+-   `remoteEndpoints.bindHost`: The default binding host name or address for
+    all remote endpoints
+-   `socks.onRequest.clientEndpoints.bindHost`: The binding host name or 
+    address for all client endpoints
+-   `socks.onRequest.remoteEndpoints.bindHost`: The binding host name or 
+    address for all remote endpoints
+
+The host address can be an IPv4 address or an IPv6 address. 
+
+If no value is specified for the setting 
+`socks.onRequest.clientEndpoints.bindHost`, then the value is obtained from 
+the setting `clientEndpoints.bindHost`. If no value is specified for the 
+setting `clientEndpoints.bindHost`, then the value is obtained from the 
+setting `bindHost`. 
+
+If no value is specified for the setting 
+`socks.onRequest.remoteEndpoints.bindHost`, then the value is obtained from 
+the setting `remoteEndpoints.bindHost`. If no value is specified for the 
+setting `remoteEndpoints.bindHost`, then the value is obtained from the 
+setting `bindHost`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientEndpoints.bindHost=jargyle.net \
+    --setting=remoteEndpoints.bindHost=192.168.1.231
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientEndpoints.bindHost</name>
+            <value>jargyle.net</value>
+        </setting>
+        <setting>
+            <name>remoteEndpoints.bindHost</name>
+            <value>192.168.1.231</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "clientEndpoints.bindHost", "jargyle.net"),
+            Setting.newInstanceWithParsedValue(
+                "remoteEndpoints.bindHost", "192.168.1.231")
+        ))).start();
+    }
+}
+```
+
+You can bind individual endpoints to a host name or to a host address by using 
+any of the following settings:
+
+-   `clientFacingServerSocket.bindHost`: The binding host name or address for 
+    the client-facing TCP server socket
+-   `socks.onBindRequest.remoteFacingServerSocket.bindHost`: The binding host 
+    name or address for the remote-facing TCP server socket
+-   `socks.onConnectRequest.remoteSocket.bindHost`: The binding host name or 
+    address for the remote TCP socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost`: The 
+    binding host name or address for the client-facing UDP socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost`: The
+    binding host name or address for the remote-facing UDP socket
+
+The host address can be an IPv4 address or an IPv6 address. 
+
+If no value is specified for a setting, depending on the endpoint, the value 
+is obtained from either of the settings 
+`socks.onRequest.clientEndpoints.bindHost`, 
+`socks.onRequest.remoteEndpoints.bindHost`, `clientEndpoints.bindHost`, or 
+`remoteEndpoints.bindHost`. 
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientFacingServerSocket.bindHost=jargyle.net \
+    --setting=socks.onConnectRequest.remoteSocket.bindHost=192.168.1.231
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientFacingServerSocket.bindHost</name>
+            <value>jargyle.net</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindHost</name>
+            <value>192.168.1.231</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "clientFacingServerSocket.bindHost", "jargyle.net"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.bindHost", "192.168.1.231")
+        ))).start();
+    }
+}
+```
+
+### Binding Endpoints to a Host Address from a Network Interface
+
+Instead of binding endpoints to a specified host address, you can bind 
+endpoints to a host address from a specified network interface.
+
+You can bind all endpoints to a host address from a network interface by using 
+the setting `netInterface`. The specified network interface must be the name 
+of the network interface.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=netInterface=eth0
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>netInterface</name>
+            <value>eth0</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "netInterface", "eth0")
+        ))).start();
+    }
+}
+```
+
+You can also specify which 
+[host address types](common-topics.md#host-address-types) to choose from the 
+network interface by using the setting `bindHostAddressTypes`. The default 
+value for the setting `bindHostAddressTypes` is 
+`HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=netInterface=eth0 \
+    --setting=bindHostAddressTypes=HOST_IPV4_ADDRESS
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "netInterface", "eth0"), 
+            Setting.newInstanceWithParsedValue(
+                "bindHostAddressTypes", "HOST_IPV4_ADDRESS")
+        ))).start();
+    }
+}
+```
+
+You can bind all endpoints of one side of the server to a host address from a 
+network interface by using any of the following settings:
+
+-   `clientEndpoints.netInterface`: The default network interface that 
+    provides a binding host address for all client endpoints
+-   `remoteEndpoints.netInterface`: The default network interface that 
+    provides a binding host address for all remote endpoints
+-   `socks.onRequest.clientEndpoints.netInterface`: The network interface that 
+    provides a binding host address for all client endpoints
+-   `socks.onRequest.remoteEndpoints.netInterface`: The network interface that 
+    provides a binding host address for all remote endpoints
+
+The specified network interface must be the name of the network interface.
+
+If no value is specified for the setting
+`socks.onRequest.clientEndpoints.netInterface`, then the value is obtained 
+from the setting `clientEndpoints.netInterface`. If no value is specified for 
+the setting `clientEndpoints.netInterface`, then the value is obtained from 
+the setting `netInterface`.
+
+If no value is specified for the setting
+`socks.onRequest.remoteEndpoints.netInterface`, then the value is obtained 
+from the setting `remoteEndpoints.netInterface`. If no value is specified for 
+the setting `remoteEndpoints.netInterface`, then the value is obtained from 
+the setting `netInterface`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientEndpoints.netInterface=eth0 \
+    --setting=remoteEndpoints.netInterface=eth1
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientEndpoints.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>remoteEndpoints.netInterface</name>
+            <value>eth1</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "clientEndpoints.netInterface", "eth0"),
+                Setting.newInstanceWithParsedValue(
+                        "remoteEndpoints.netInterface", "eth1")
+        ))).start();
+    }
+}
+```
+
+You can also specify which host address types to choose from the network 
+interface by using the following settings:
+
+-   `clientEndpoints.bindHostAddressTypes`: The comma separated list of 
+    default acceptable binding host address types for all client endpoints
+-   `remoteEndpoints.bindHostAddressTypes`: The comma separated list of 
+    default acceptable binding host address types for all remote endpoints
+-   `socks.onRequest.clientEndpoints.bindHostAddressTypes`: The comma 
+    separated list of acceptable binding host address types for all client 
+    endpoints
+-   `socks.onRequest.remoteEndpoints.bindHostAddressTypes`: The comma 
+    separated list of acceptable binding host address types for all remote 
+    endpoints
+
+If no value is specified for the setting
+`socks.onRequest.clientEndpoints.bindHostAddressTypes`, then the value is 
+obtained from the setting `clientEndpoints.bindHostAddressTypes`. If no value 
+is specified for the setting `clientEndpoints.bindHostAddressTypes`, then the 
+value is obtained from the setting `bindHostAddressTypes`.
+
+If no value is specified for the setting
+`socks.onRequest.remoteEndpoints.bindHostAddressTypes`, then the value is 
+obtained from the setting `remoteEndpoints.bindHostAddressTypes`. If no value 
+is specified for the setting `remoteEndpoints.bindHostAddressTypes`, then the 
+value is obtained from the setting `bindHostAddressTypes`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientEndpoints.netInterface=eth0 \
+    --setting=clientEndpoints.bindHostAddressTypes=HOST_IPV4_ADDRESS \
+    --setting=remoteEndpoints.netInterface=eth1 \
+    --setting=remoteEndpoints.bindHostAddressTypes=HOST_IPV4_ADDRESS
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientEndpoints.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>clientEndpoints.bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>
+        <setting>
+            <name>remoteEndpoints.netInterface</name>
+            <value>eth1</value>
+        </setting>
+        <setting>
+            <name>remoteEndpoints.bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "clientEndpoints.netInterface", "eth0"),
+                Setting.newInstanceWithParsedValue(
+                        "clientEndpoints.bindHostAddressTypes", "HOST_IPV4_ADDRESS"),
+                Setting.newInstanceWithParsedValue(
+                        "remoteEndpoints.netInterface", "eth1"),
+                Setting.newInstanceWithParsedValue(
+                        "remoteEndpoints.bindHostAddressTypes", "HOST_IPV4_ADDRESS")
+        ))).start();
+    }
+}
+```
+
+You can bind individual endpoints to a host address from a network interface 
+by using any of the following settings:
+
+-   `clientFacingServerSocket.netInterface`: The network interface that 
+    provides a binding host address for the client-facing TCP server socket
+-   `socks.onBindRequest.remoteFacingServerSocket.netInterface`: The network 
+    interface that provides a binding host address for the remote-facing TCP 
+    server socket if the provided host address is all zeros
+-   `socks.onConnectRequest.remoteSocket.netInterface`: The network interface 
+    that provides a binding host address for the remote TCP socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface`: The 
+    network interface that provides a binding host address for the 
+    client-facing UDP socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface`: The 
+    network interface that provides a binding host address for the 
+    remote-facing UDP socket
+
+The specified network interface must be the name of the network interface.
+
+If no value is specified for a setting, depending on the endpoint, the value
+is obtained from either of the settings
+`socks.onRequest.clientEndpoints.netInterface`,
+`socks.onRequest.remoteEndpoints.netInterface`, 
+`clientEndpoints.netInterface`, or 
+`remoteEndpoints.netInterface`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientFacingServerSocket.netInterface=eth0 \
+    --setting=socks.onConnectRequest.remoteSocket.netInterface=eth1
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientFacingServerSocket.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.netInterface</name>
+            <value>eth1</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "clientFacingServerSocket.netInterface", "eth0"),
+                Setting.newInstanceWithParsedValue(
+                        "socks.onConnectRequest.remoteSocket.netInterface", "eth1")
+        ))).start();
+    }
+}
+```
+
+You can also specify which host address types to choose from the network 
+interface by using the following settings:
+
+-   `clientFacingServerSocket.bindHostAddressTypes`: The comma separated list 
+    of acceptable binding host address types for the client-facing TCP server 
+    socket
+-   `socks.onBindRequest.remoteFacingServerSocket.bindHostAddressTypes`: The 
+    comma separated list of acceptable binding host address types for the 
+    remote-facing TCP server socket if the provided host address is all zeros
+-   `socks.onConnectRequest.remoteSocket.bindHostAddressTypes`: The comma 
+    separated list of acceptable binding host address types for the remote TCP 
+    socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressTypes`: 
+    The comma separated list of acceptable binding host address types for the 
+    client-facing UDP socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAddressTypes`: 
+    The comma separated list of acceptable binding host address types for the 
+    remote-facing UDP socket
+
+If no value is specified for a setting, depending on the endpoint, the value
+is obtained from either of the settings
+`socks.onRequest.clientEndpoints.bindHostAddressTypes`,
+`socks.onRequest.remoteEndpoints.bindHostAddressTypes`,
+`clientEndpoints.bindHostAddressTypes`, or
+`remoteEndpoints.bindHostAddressTypes`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientFacingServerSocket.netInterface=eth0 \
+    --setting=clientFacingServerSocket.bindHostAddressTypes=HOST_IPV4_ADDRESS \
+    --setting=socks.onConnectRequest.remoteSocket.netInterface=eth1 \
+    --setting=socks.onConnectRequest.remoteSocket.bindHostAddressTypes=HOST_IPV4_ADDRESS
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientFacingServerSocket.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>clientFacingServerSocket.bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.netInterface</name>
+            <value>eth1</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "clientFacingServerSocket.netInterface", "eth0"),
+                Setting.newInstanceWithParsedValue(
+                        "clientFacingServerSocket.bindHostAddressTypes", "HOST_IPV4_ADDRESS"),
+                Setting.newInstanceWithParsedValue(
+                        "socks.onConnectRequest.remoteSocket.netInterface", "eth1"),
+                Setting.newInstanceWithParsedValue(
+                        "socks.onConnectRequest.remoteSocket.bindHostAddressTypes", "HOST_IPV4_ADDRESS")
+        ))).start();
+    }
+}
+```
+
+### Binding Endpoints to a Port Number Range or Port Number Ranges
+
+You can bind endpoints to a 
+[port number range or port number ranges](common-topics.md#port-number-ranges).
+
+You can bind all endpoints to a port number range or port number ranges using 
+the following settings:
+
+-   `bindTcpPortRanges`: The comma separated list of default binding port 
+    ranges for all TCP endpoints (default value is `0`)
+-   `bindUdpPortRanges`: The comma separated list of default binding port 
+    ranges for all UDP endpoints (default value is `0`)
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=bindTcpPortRanges=5000-6000 \
+    --setting=bindUdpPortRanges=10000-20000,40000-50000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>bindTcpPortRanges</name>
+            <portRanges>
+                <portRange>5000-6000</portRange>
+            </portRanges>
+        </setting>
+        <setting>
+            <name>bindUdpPortRanges</name>
+            <portRanges>
+                <portRange>10000-20000</portRange>
+                <portRange>40000-50000</portRange>
+            </portRanges>            
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "bindTcpPortRanges", "5000-6000"),
+                Setting.newInstanceWithParsedValue(
+                        "bindUdpPortRanges", "10000-20000,40000-50000")
+        ))).start();
+    }
+}
+```
+
+You can bind all endpoints of one side of the server to a port number range or 
+port number ranges using the following settings:
+
+-   `clientEndpoints.bindTcpPortRanges`: The comma separated list of default 
+    binding port ranges for all client TCP endpoints
+-   `clientEndpoints.bindUdpPortRanges`: The comma separated list of default 
+    binding port ranges for all client UDP endpoints
+-   `remoteEndpoints.bindTcpPortRanges`: The comma separated list of default 
+    binding port ranges for all remote TCP endpoints
+-   `remoteEndpoints.bindUdpPortRanges`: The comma separated list of default 
+    binding port ranges for all remote UDP endpoints
+-   `socks.onRequest.clientEndpoints.bindUdpPortRanges`: The comma separated 
+    list of binding port ranges for all client UDP endpoints
+-   `socks.onRequest.remoteEndpoints.bindTcpPortRanges`: The comma separated 
+    list of binding port ranges for all remote TCP endpoints
+-   `socks.onRequest.remoteEndpoints.bindUdpPortRanges`: The comma separated 
+    list of binding port ranges for all remote UDP endpoints
+
+If no value is specified for the setting
+`socks.onRequest.clientEndpoints.bindUdpPortRanges`, then the value is
+obtained from the setting `clientEndpoints.bindUdpPortRanges`. If no value
+is specified for the setting `clientEndpoints.bindUdpPortRanges`, then the
+value is obtained from the setting `bindUdpPortRanges`.
+
+If no value is specified for the setting
+`socks.onRequest.remoteEndpoints.bindTcpPortRanges`, then the value is
+obtained from the setting `remoteEndpoints.bindTcpPortRanges`. If no value
+is specified for the setting `remoteEndpoints.bindTcpPortRanges`, then the
+value is obtained from the setting `bindTcpPortRanges`.
+
+If no value is specified for the setting
+`socks.onRequest.remoteEndpoints.bindUdpPortRanges`, then the value is
+obtained from the setting `remoteEndpoints.bindUdpPortRanges`. If no value
+is specified for the setting `remoteEndpoints.bindUdpPortRanges`, then the
+value is obtained from the setting `bindUdpPortRanges`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientEndpoints.bindTcpPortRanges=5000-5500 \
+    --setting=clientEndpoints.bindUdpPortRanges=10000-20000 \
+    --setting=remoteEndpoints.bindTcpPortRanges=5600-6000,8000-9000 \
+    --setting=remoteEndpoints.bindUdpPortRanges=40000-50000,60000-64000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientEndpoints.bindTcpPortRanges</name>
+            <portRanges>
+                <portRange>5000-5500</portRange>
+            </portRanges>
+        </setting>
+        <setting>
+            <name>clientEndpoints.bindUdpPortRanges</name>
+            <portRanges>
+                <portRange>10000-20000</portRange>
+            </portRanges>            
+        </setting>
+        <setting>
+            <name>remoteEndpoints.bindTcpPortRanges</name>
+            <portRanges>
+                <portRange>5600-6000</portRange>
+                <portRange>8000-9000</portRange>
+            </portRanges>
+        </setting>
+        <setting>
+            <name>remoteEndpoints.bindUdpPortRanges</name>
+            <portRanges>
+                <portRange>40000-50000</portRange>
+                <portRange>60000-64000</portRange>
+            </portRanges>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "clientEndpoints.bindTcpPortRanges", "5000-5500"),
+                Setting.newInstanceWithParsedValue(
+                        "clientEndpoints.bindUdpPortRanges", "10000-20000"),
+                Setting.newInstanceWithParsedValue(
+                        "remoteEndpoints.bindTcpPortRanges", "5600-6000,8000-9000"),
+                Setting.newInstanceWithParsedValue(
+                        "remoteEndpoints.bindUdpPortRanges", "40000-50000,60000-64000")
+        ))).start();
+    }
+}
+```
+
+You can bind individual endpoints to a port number range or port number ranges 
+using the following settings:
+
+-   `clientFacingServerSocket.bindPortRanges`: The comma separated list of 
+    binding port ranges for the client-facing TCP server socket
+-   `socks.onBindRequest.remoteFacingServerSocket.bindPortRanges`: The comma 
+    separated list of binding port ranges for the remote-facing TCP server 
+    socket if the provided port is zero
+-   `socks.onConnectRequest.remoteSocket.bindPortRanges`: The comma separated 
+    list of binding port ranges for the remote TCP socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges`: 
+    The comma separated list of binding port ranges for the client-facing UDP 
+    socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges`: 
+    The comma separated list of binding port ranges for the remote-facing UDP 
+    socket
+
+If no value is specified for a setting, depending on the endpoint, the value
+is obtained from either of the settings
+`socks.onRequest.clientEndpoints.bindUdpPortRanges`,
+`socks.onRequest.remoteEndpoints.bindTcpPortRanges`,
+`socks.onRequest.remoteEndpoints.bindUdpPortRanges`,
+`clientEndpoints.bindTcpPortRanges`, `clientEndpoints.bindUdpPortRanges`,
+`remoteEndpoints.bindTcpPortRanges`, or `remoteEndpoints.bindUdpPortRanges`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socks.onConnectRequest.remoteSocket.bindPortRanges=5600-6000,8000-9000 \
+    --setting=socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges=10000-20000 \
+    --setting=socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges=40000-50000,60000-64000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindPortRanges</name>
+            <portRanges>
+                <portRange>5600-6000</portRange>
+                <portRange>8000-9000</portRange>
+            </portRanges>
+        </setting>
+        <setting>
+            <name>socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges</name>
+            <portRanges>
+                <portRange>10000-20000</portRange>
+            </portRanges>            
+        </setting>
+        <setting>
+            <name>socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges</name>
+            <portRanges>
+                <portRange>40000-50000</portRange>
+                <portRange>60000-64000</portRange>
+            </portRanges>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "socks.onConnectRequest.remoteSocket.bindPortRanges", "5600-6000,8000-9000"),
+                Setting.newInstanceWithParsedValue(
+                        "socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRanges", "10000-20000"),
+                Setting.newInstanceWithParsedValue(
+                        "socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRanges", "40000-50000,60000-64000")
+        ))).start();
+    }
+}
+```
+
+### Applying Socket Settings to Endpoints
+
+You can apply [socket settings](common-topics.md#socket-settings) to endpoints.
+
+You can apply socket settings to all endpoints by using the setting 
+`socketSettings`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socketSettings=SO_RCVBUF=256
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socketSettings", "SO_RCVBUF=256")
+        ))).start();
+    }
+}
+```
+
+You can apply socket settings to all endpoints of one side of the server by 
+using the following settings:
+
+-   `clientEndpoints.socketSettings`: The comma separated list of default 
+    socket settings for all client endpoints
+-   `remoteEndpoints.socketSettings`: The comma separated list of default 
+    socket settings for all remote endpoints
+-   `socks.onRequest.clientEndpoints.socketSettings`: The comma separated list 
+    of socket settings for all client endpoints
+-   `socks.onRequest.remoteEndpoints.socketSettings`: The comma separated list 
+    of socket settings for all remote endpoints
+
+If no value is specified for the setting
+`socks.onRequest.clientEndpoints.socketSettings`, then the value is
+obtained from the setting `clientEndpoints.socketSettings`. If no value
+is specified for the setting `clientEndpoints.socketSettings`, then the
+value is obtained from the setting `socketSettings`.
+
+If no value is specified for the setting
+`socks.onRequest.remoteEndpoints.socketSettings`, then the value is
+obtained from the setting `remoteEndpoints.socketSettings`. If no value
+is specified for the setting `remoteEndpoints.socketSettings`, then the
+value is obtained from the setting `socketSettings`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientEndpoints.socketSettings=SO_RCVBUF=256 \
+    --setting=remoteEndpoints.socketSettings=SO_RCVBUF=256
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientEndpoints.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>remoteEndpoints.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>        
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "clientEndpoints.socketSettings", "SO_RCVBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "remoteEndpoints.socketSettings", "SO_RCVBUF=256")
+        ))).start();
+    }
+}
+```
+
+You can apply socket settings to individual endpoints by using the following 
+settings:
+
+-   `clientFacingServerSocket.socketSettings`: The comma separated list of 
+    socket settings for the client-facing TCP server socket
+-   `clientSocket.socketSettings`: The comma separated list of socket settings 
+    for the client TCP socket
+-   `socks.onBindRequest.remoteFacingServerSocket.socketSettings`: The comma 
+    separated list of socket settings for the remote-facing TCP server socket
+-   `socks.onBindRequest.remoteSocket.socketSettings`: The comma separated 
+    list of socket settings for the remote TCP socket
+-   `socks.onConnectRequest.remoteSocket.socketSettings`: The comma separated 
+    list of socket settings for the remote TCP socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.socketSettings`: 
+    The comma separated list of socket settings for the client-facing UDP 
+    socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSettings`: 
+    The comma separated list of socket settings for the remote-facing UDP 
+    socket
+
+If no value is specified for a setting, depending on the endpoint, the value
+is obtained from either of the settings
+`socks.onRequest.clientEndpoints.socketSettings`,
+`socks.onRequest.remoteEndpoints.socketSettings`,
+`clientEndpoints.socketSettings`, or `remoteEndpoints.socketSettings`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=clientFacingServerSocket.socketSettings=SO_RCVBUF=256 \
+    --setting=socks.onBindRequest.remoteFacingServerSocket.socketSettings=SO_RCVBUF=256 \
+    --setting=socks.onConnectRequest.remoteSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>clientFacingServerSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.remoteFacingServerSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "clientFacingServerSocket.socketSettings", "SO_RCVBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.remoteFacingServerSocket.socketSettings", "SO_RCVBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256")
+        ))).start();
+    }
+}
+```
+
+### TCP Socket Connection Types
+
+There are two types of connections a TCP socket can make: an extemporaneous 
+connection and a prepared connection. Each connection type has its advantages 
+and disadvantages.
+
+#### Extemporaneous TCP Socket Connection Type
+
+When an extemporaneous connection is about to be made, no preparation is made 
+for the TCP socket before connecting. Here are the following 
+advantages/disadvantages:
+
+**Advantages**:
+
+-   When having the TCP socket's traffic set through a SOCKS server, if a
+    target host name is provided for the TCP socket to connect to, the target
+    host name will be resolved by the SOCKS server.
+
+**Disadvantages**:
+
+-   Some socket settings might not be applied after the connection is made.
+    Only a prepared outbound connection will allow for such socket settings
+    to be applied.
+-   No timeout in milliseconds can be specified for how long a wait for the
+    TCP socket to connect.
+
+#### Prepared TCP Socket Connection Type
+
+When a prepared outbound connection is about to be made, preparation is made
+for the TCP socket before connecting. Such preparation includes applying the
+specified socket settings for the TCP socket, resolving the target host name,
+and setting the specified timeout in milliseconds on waiting for the TCP
+socket to connect. Here are the following advantages/disadvantages:
+
+**Advantages**:
+
+-   Socket settings that can only be applied before a connection is made can
+    be applied.
+-   A timeout in milliseconds can be specified for how long a wait for the TCP
+    socket to connect.
+
+**Disadvantages**:
+
+-   When having the TCP socket's traffic set through a SOCKS server, if a
+    target host name is provided for the TCP socket to connect to, the target
+    host name is resolved through the local system not the SOCKS server.
+
+### Preparing the Remote TCP Socket Before Connecting
+
+You can [prepare](#prepared-tcp-socket-connection-type) the remote TCP socket 
+before connecting by having the setting 
+`socks.onConnectRequest.remoteSocket.prepareSocket` set to `true`. 
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socks.onConnectRequest.remoteSocket.prepareSocket=true \
+    --setting=socks.onConnectRequest.remoteSocket.connectTimeout=120000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.prepareSocket</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.connectTimeout</name>
+            <value>120000</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue(
+                        "socks.onConnectRequest.remoteSocket.prepareSocket", "true"),
+                Setting.newInstanceWithParsedValue(
+                        "socks.onConnectRequest.remoteSocket.connectTimeout", "120000")
+        ))).start();
+    }
+}
+```
 
 <a id="enabling-ssltls-layered-tcp-traffic-between-the-server-and-its-clients"></a>
 ## Enabling SSL/TLS-layered TCP Traffic Between the Server and Its Clients
@@ -759,6 +2151,703 @@ machine of where the other SOCKS server resides (`alpha-alpha.net`), and the
 port number of the other SOCKS server (`11111`). In the aforementioned 
 examples, the SOCKS protocol version 5 is used. At this time, the only 
 supported scheme for the URI format is `socks5`
+
+### Configuring the Other SOCKS Server TCP Socket
+
+The server uses endpoints to interact with the world remote from the client.
+When the server is chained to another SOCKS server, those endpoints that the 
+server uses become SOCKS-enabled, meaning that their traffic is routed through 
+the other SOCKS server. In each of those endpoints is an underlying TCP socket 
+to the other SOCKS server. In this documentation, this underlying TCP socket 
+is called the other SOCKS server TCP socket.  
+
+Depending on the endpoint, the other SOCKS server TCP socket can be configured 
+in only one of the following ways:
+
+-   **Configuring the endpoint**. Configuring certain endpoints configure 
+    their other SOCKS server TCP sockets without any special settings 
+    required. `socks.onConnectRequest.remoteSocket` is such an endpoint.
+-   **Configuring the endpoint and using settings prefixed with 
+    `chaining.socksServerSocket`**. Configuring certain endpoints configure 
+    some parts of their other SOCKS server TCP sockets but the special 
+    settings are required to configure other parts of their other SOCKS server 
+    TCP sockets. `socks.onBindRequest.remoteFacingServerSocket` is such an 
+    endpoint.
+-   **Using settings prefixed with `chaining.socksServerSocket`**. Configuring 
+    certain endpoints does nothing to their other SOCKS server TCP sockets.
+    `socks.onUdpAssociateRequest.remoteFacingDatagramSocket` is such an 
+    endpoint. Special settings are required to configure their other SOCKS 
+    server TCP sockets.   
+
+<a id="binding-the-other-socks-server-tcp-socket-to-a-host-name-or-address"></a>
+#### Binding the Other SOCKS Server TCP Socket to a Host Name or Address
+
+You can bind the other SOCKS server TCP socket to a host name or to a host 
+address.
+
+For the endpoint `socks.onConnectRequest.remoteSocket`, you would use the 
+setting `socks.onConnectRequest.remoteSocket.bindHost`.
+
+For all other endpoints, you would use the setting 
+`chaining.socksServerSocket.bindHost`.
+
+The host address can be an IPv4 address or an IPv6 address.
+
+Command line examples:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.bindHost=jargyle.net \
+    --setting=socks.onConnectRequest.remoteSocket.bindHost=jargyle.net
+```
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.bindHost=192.168.1.231 \
+    --setting=socks.onConnectRequest.remoteSocket.bindHost=192.168.1.231
+```
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.bindHost=fe80::34ef:938a:402f:e526%17 \
+    --setting=socks.onConnectRequest.remoteSocket.bindHost=fe80::34ef:938a:402f:e526%17
+```
+
+Server configuration file examples:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.bindHost</name>
+            <value>jargyle.net</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindHost</name>
+            <value>jargyle.net</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.bindHost</name>
+            <value>192.168.1.231</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindHost</name>
+            <value>192.168.1.231</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.bindHost</name>
+            <value>fe80::34ef:938a:402f:e526%17</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindHost</name>
+            <value>fe80::34ef:938a:402f:e526%17</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API examples:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.bindHost",
+                "jargyle.net"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.bindHost",
+                "jargyle.net")                
+        ))).start();
+    }
+}
+```
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.bindHost",
+                "192.168.1.231"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.bindHost",
+                "192.168.1.231")                
+        ))).start();
+    }
+}
+```
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.bindHost",
+                "fe80::34ef:938a:402f:e526%17"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.bindHost",
+                "fe80::34ef:938a:402f:e526%17")                
+        ))).start();
+    }
+}
+```
+
+<a id="binding-the-other-socks-server-tcp-socket-to-a-host-address-from-a-network-interface"></a>
+#### Binding the Other SOCKS Server TCP Socket to a Host Address from a Network Interface
+
+Instead of binding the other SOCKS server TCP socket to a specified host 
+address, you can bind it to a host address from a specified network interface.
+
+For the endpoint `socks.onConnectRequest.remoteSocket`, you would use the 
+setting `socks.onConnectRequest.remoteSocket.netInterface`.
+
+For all other endpoints, you would use the setting 
+`chaining.socksServerSocket.netInterface`. 
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.netInterface=eth0 \
+    --setting=socks.onConnectRequest.remoteSocket.netInterface=eth0
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.netInterface</name>
+            <value>eth0</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri",
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.netInterface", "eth0"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.netInterface", "eth0")
+        ))).start();
+    }
+}
+```
+
+You can also specify which 
+[host address types](common-topics.md#host-address-types) to choose from the 
+network interface.
+
+For the endpoint `socks.onConnectRequest.remoteSocket`, you would use the
+setting `socks.onConnectRequest.remoteSocket.bindHostAddressTypes`.
+
+For all other endpoints, you would use the setting
+`chaining.socksServerSocket.bindHostAddressTypes`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.netInterface=eth0 \
+    --setting=chaining.socksServerSocket.bindHostAddressTypes=HOST_IPV4_ADDRESS \
+    --setting=socks.onConnectRequest.remoteSocket.netInterface=eth0 \
+    --setting=socks.onConnectRequest.remoteSocket.bindHostAddressTypes=HOST_IPV4_ADDRESS
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>        
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.netInterface</name>
+            <value>eth0</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindHostAddressTypes</name>
+            <hostAddressTypes>
+                <hostAddressType>HOST_IPV4_ADDRESS</hostAddressType>
+            </hostAddressTypes>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri",
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.netInterface", "eth0"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.bindHostAddressTypes", "HOST_IPV4_ADDRESS"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.netInterface", "eth0"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.bindHostAddressTypes", "HOST_IPV4_ADDRESS")
+        ))).start();
+    }
+}
+```
+
+<a id="binding-the-other-socks-server-tcp-socket-to-a-port-number-range-or-port-number-ranges"></a>
+#### Binding the Other SOCKS Server TCP Socket to a Port Number Range or Port Number Ranges
+
+You can bind the other SOCKS server TCP socket to a 
+[port number range or port number ranges](common-topics.md#port-number-ranges).
+
+For the endpoint `socks.onConnectRequest.remoteSocket`, you would use the
+setting `socks.onConnectRequest.remoteSocket.bindPortRanges`.
+
+For all other endpoints, you would use the setting
+`chaining.socksServerSocket.bindPortRanges`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.bindPortRanges=5000-6000 \
+    --setting=socks.onConnectRequest.remoteSocket.bindPortRanges=5000-6000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.bindPortRanges</name>
+            <portRanges>
+                <portRange>5000-6000</portRange>
+            </portRanges>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.bindPortRanges</name>
+            <portRanges>
+                <portRange>5000-6000</portRange>
+            </portRanges>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri",
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.bindPortRanges", "5000-6000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.bindPortRanges", "5000-6000")
+        ))).start();
+    }
+}
+```
+
+#### Applying Socket Settings to the Other SOCKS Server TCP Socket
+
+You can apply [socket settings](common-topics.md#socket-settings) to the other 
+SOCKS server TCP socket.
+
+For the endpoint `socks.onConnectRequest.remoteSocket`, you would use the
+setting `socks.onConnectRequest.remoteSocket.socketSettings`.
+
+For the endpoint `socks.onBindRequest.remoteFacingServerSocket`, you would use 
+the setting `socks.onBindRequest.remoteFacingServerSocket.socketSettings`.
+
+For the endpoint `socks.onBindRequest.remoteSocket`, you would use the setting 
+`socks.onBindRequest.remoteSocket.socketSettings`.
+
+For the endpoint `socks.onUdpAssociateRequest.remoteFacingDatagramSocket`, you 
+would use the setting `chaining.socksServerSocket.socketSettings`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256 \
+    --setting=socks.onConnectRequest.remoteSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256 \
+    --setting=socks.onBindRequest.remoteFacingServerSocket.socketSettings=SO_RCVBUF=256 \
+    --setting=socks.onBindRequest.remoteSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.remoteFacingServerSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.remoteSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri",
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.remoteFacingServerSocket.socketSettings", "SO_RCVBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.remoteSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256")
+        ))).start();
+    }
+}
+```
+
+#### Preparing the Other SOCKS Server TCP Socket Before Connecting
+
+You can [prepare](#prepared-tcp-socket-connection-type) the other SOCKS server 
+TCP socket before connecting.
+
+For the endpoint `socks.onConnectRequest.remoteSocket`, you would have the
+setting `socks.onConnectRequest.remoteSocket.prepareSocket` set to `true`.
+
+For all other endpoints, you would have the setting
+`chaining.socksServerSocket.prepareSocket` set to `true`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerSocket.prepareSocket=true \
+    --setting=chaining.socksServerSocket.connectTimeout=120000 \
+    --setting=socks.onConnectRequest.remoteSocket.prepareSocket=true \
+    --setting=socks.onConnectRequest.remoteSocket.connectTimeout=120000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.prepareSocket</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.connectTimeout</name>
+            <value>120000</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.prepareSocket</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.connectTimeout</name>
+            <value>120000</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri",
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.prepareSocket", "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.connectTimeout", "120000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.prepareSocket", "true"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.connectTimeout", "120000")
+        ))).start();
+    }
+}
+```
+
+<a id="summary-for-configuring-the-other-socks-server-tcp-socket"></a>
+#### Summary for Configuring the Other SOCKS Server TCP Socket
+
+The following is a table that summarizes which setting to use to configure the 
+other SOCKS server TCP socket:
+
+<table>
+<tr>
+<th colspan="4">Endpoints</th>
+</tr>
+<tr>
+<th></th>
+<th><code>socks.onConnectRequest.remoteSocket</code></th>
+<th><code>socks.onBindRequest.remoteFacingServerSocket</code></th>
+<th><code>socks.onBindRequest.remoteSocket</code></th>
+<th><code>socks.onUdpAssociateRequest.remoteFacingDatagramSocket</code></th>
+</tr>
+<tr>
+<td>Binding the Other SOCKS Server TCP Socket to a Host Name or Address</td>
+<td><code>socks.onConnectRequest.remoteSocket.bindHost</code></td>
+<td><code>chaining.socksServerSocket.bindHost</code></td>
+<td><i>Not applicable</i></td>
+<td><code>chaining.socksServerSocket.bindHost</code></td>
+</tr>
+<tr>
+<td>Binding the Other SOCKS Server TCP Socket to a Host Address from a Network Interface</td>
+<td><code>socks.onConnectRequest.remoteSocket.netInterface</code><br/><code>socks.onConnectRequest.remoteSocket.bindHostAddressTypes</code></td>
+<td><code>chaining.socksServerSocket.netInterface</code><br/><code>chaining.socksServerSocket.bindHostAddressTypes</code></td>
+<td><i>Not applicable</i></td>
+<td><code>chaining.socksServerSocket.netInterface</code><br/><code>chaining.socksServerSocket.bindHostAddressTypes</code></td>
+</tr>
+<tr>
+<td>Binding the Other SOCKS Server TCP Socket to a Port Number Range or Port Number Ranges</td>
+<td><code>socks.onConnectRequest.remoteSocket.bindPortRanges</code></td>
+<td><code>chaining.socksServerSocket.bindPortRanges</code></td>
+<td><i>Not applicable</i></td>
+<td><code>chaining.socksServerSocket.bindPortRanges</code></td>
+</tr>
+<tr>
+<td>Applying Socket Settings to the Other SOCKS Server TCP Socket</td>
+<td><code>socks.onConnectRequest.remoteSocket.socketSettings</code></td>
+<td><code>socks.onBindRequest.remoteFacingServerSocket.socketSettings</code></td>
+<td><code>socks.onBindRequest.remoteSocket.socketSettings</code></td>
+<td><code>chaining.socksServerSocket.socketSettings</code></td>
+</tr>
+<tr>
+<td>Preparing the Other SOCKS Server TCP Socket Before Connecting</td>
+<td><code>socks.onConnectRequest.remoteSocket.prepareSocket</code></td>
+<td><code>chaining.socksServerSocket.prepareSocket</code></td>
+<td><i>Not applicable</i></td>
+<td><code>chaining.socksServerSocket.prepareSocket</code></td>
+</tr>
+</table>
 
 <a id="enabling-ssltls-layered-tcp-traffic-between-the-server-and-the-other-socks-server"></a>
 ### Enabling SSL/TLS-layered TCP Traffic Between the Server and the Other SOCKS Server
@@ -1518,24 +3607,25 @@ principal) for the other SOCKS server residing at `alpha-alpha.net`.
 Before discussing host name resolution from the other SOCKS server, a brief 
 explanation of the server's internals:
 
-The server uses sockets to interact with the external world.
+The server uses endpoints to interact with the world remote from the client.
 
--   Under the CONNECT request, it uses a socket that connects to the desired 
-target server. In this documentation, this socket is called the target-facing 
+-   Under the CONNECT request, it uses a TCP socket to be connected to the 
+remote server. In this documentation, this socket is called the remote TCP 
 socket.
--   Under the BIND request, it uses a socket that listens for an inbound socket. 
-In this documentation, this socket is called the listen socket.
+-   Under the BIND request, it uses a TCP server socket that waits for and 
+accepts a remote TCP socket. In this documentation, this socket is called 
+the remote-facing TCP server socket.
 -   Under the UDP ASSOCIATE request, it uses a UDP socket that sends and 
-receives datagram packets to and from peer UDP sockets. In this documentation, 
-this UDP socket is called the peer-facing UDP socket.
+receives UDP datagram packets to and from remote UDP peers. In this 
+documentation, this UDP socket is called the remote-facing UDP socket.
 
 The server also uses a host resolver to resolve host names for the 
-aforementioned sockets and for the 
+aforementioned endpoints and for the 
 [RESOLVE request](../reference/socks5-resolve-request.md).
 
-When the server is chained to another SOCKS server, the aforementioned sockets 
-that the server uses become SOCKS-enabled, meaning that their traffic is routed 
-through the other SOCKS server.
+When the server is chained to another SOCKS server, the aforementioned 
+endpoints that the server uses become SOCKS-enabled, meaning that their 
+traffic is routed through the other SOCKS server.
 
 It is similar for the host resolver. When the server is chained to another 
 SOCKS server, the host resolver that the server uses becomes SOCKS-enabled, 
@@ -1549,35 +3639,29 @@ performed but has the following limitations:
 
 Default host name resolution from the other SOCKS server OCCURS ONLY...
 
--   ...under the CONNECT request when the target-facing socket makes an 
-extemporaneous outbound connection. No preparation before connecting is made. 
-Such preparation includes applying the specified socket settings for the 
-target-facing socket, resolving the target host name, and setting the 
-specified timeout in milliseconds on waiting for the target-facing socket to 
-connect. The host resolver is not used in resolving the target host name. When 
-the target-facing socket is SOCKS-enabled, the target host name is resolved 
-by the other SOCKS server and not through the local system.
+-   ...under the CONNECT request when the remote TCP socket makes an 
+[extemporaneous connection](#extemporaneous-tcp-socket-connection-type). The 
+host resolver is not used in resolving the target host name. When the remote 
+TCP socket is SOCKS-enabled, the target host name is resolved by the other 
+SOCKS server and not through the local system.
 
 Default host name resolution from the other SOCKS server DOES NOT OCCUR...
 
--   ...under the CONNECT request when the target-facing socket makes a 
-prepared outbound connection. Preparation before connecting is enabled by 
-setting the setting `socks.onConnectRequest.prepareTargetFacingSocket` to 
-`true`. Such preparation includes applying the specified socket settings for 
-the target-facing socket, resolving the target host name, and setting the 
-specified timeout in milliseconds on waiting for the target-facing socket to 
-connect. The host resolver is used in resolving the target host name. Because 
-of its default functionality, the host resolver resolves the target host name 
-through the local system.
--   ...under the BIND request when resolving the binding host name for the 
-listen socket. The host resolver is used in resolving the binding host name for 
-the listen socket. Because of its default functionality, the host resolver 
-resolves the binding host name for the listen socket through the local system.
--   ...under the UDP ASSOCIATE request when resolving the host name for an 
-outbound datagram packet. The host resolver is used in resolving the host name 
-for an outbound datagram packet. Because of its default functionality, the host 
-resolver resolves the host name for an outbound datagram packet through the 
+-   ...under the CONNECT request when the remote TCP socket makes a 
+[prepared connection](#prepared-tcp-socket-connection-type). The host resolver 
+is used in resolving the target host name. Because of its default 
+functionality, the host resolver resolves the target host name through the 
 local system.
+-   ...under the BIND request when resolving the binding host name for the 
+remote-facing TCP server socket. The host resolver is used in resolving the 
+binding host name for the remote-facing TCP server socket. Because of its 
+default functionality, the host resolver resolves the binding host name for 
+the remote-facing TCP server socket through the local system.
+-   ...under the UDP ASSOCIATE request when resolving the host name for an 
+outbound UDP datagram packet. The host resolver is used in resolving the host 
+name for an outbound UDP datagram packet. Because of its default 
+functionality, the host resolver resolves the host name for an outbound UDP 
+datagram packet through the local system.
 -   ...under the RESOLVE request when resolving the provided host name. The host 
 resolver is used in resolving the provided host name. Because of its default 
 functionality, the host resolver resolves the provided host name through the 
@@ -1710,9 +3794,142 @@ public class ServerApp {
 }
 ```
 
-To specify the settings regarding a SOCKS server in the chain, the settings 
-regarding a SOCKS server will need to be placed after that specified SOCKS 
-server but before the next specified SOCKS server if any.
+The server uses endpoints to interact with the world remote from the client.
+When the server is chained to a specified chain of other SOCKS servers, those
+endpoints that the server uses become SOCKS-enabled, meaning that their 
+traffic is routed through the specified chain of other SOCKS servers. In each 
+of those endpoints is an underlying TCP socket to the last other SOCKS server 
+in the chain. Within each underlying TCP socket to the last other SOCKS server
+in the chain is another underlying TCP socket to the second-to-last other 
+SOCKS server in the chain and so on. All of these underlying TCP sockets are 
+called the other SOCKS server TCP sockets.
+
+For configuring any of the other SOCKS server TCP sockets, it is recommended 
+to configure only the last other SOCKS server TCP socket in the chain.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socksServerUri=socks5://beta-alpha.net:22221 \
+    --setting=chaining.socksServerUri=socks5://gamma-alpha.net:33331 \
+    --setting=chaining.socksServerSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256 \
+    --setting=socks.onConnectRequest.remoteSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256 \
+    --setting=socks.onBindRequest.remoteFacingServerSocket.socketSettings=SO_RCVBUF=256 \
+    --setting=socks.onBindRequest.remoteSocket.socketSettings=SO_RCVBUF=256,SO_SNDBUF=256
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://beta-alpha.net:22221</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://gamma-alpha.net:33331</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.remoteFacingServerSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.remoteSocket.socketSettings</name>
+            <socketSettings>
+                <socketSetting>
+                    <name>SO_RCVBUF</name>
+                    <value>256</value>
+                </socketSetting>
+                <socketSetting>
+                    <name>SO_SNDBUF</name>
+                    <value>256</value>
+                </socketSetting>
+            </socketSettings>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-alpha.net:22221"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-alpha.net:33331"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.remoteFacingServerSocket.socketSettings", "SO_RCVBUF=256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.remoteSocket.socketSettings", "SO_RCVBUF=256,SO_SNDBUF=256")
+        ))).start();
+    }
+}
+```
+
+To specify the settings regarding SSL/TLS/DTLS and authentication for a SOCKS 
+server in the chain, the settings will need to be placed after that specified 
+SOCKS server.
 
 Command line example:
 
@@ -1722,6 +3939,9 @@ jargyle start-server \
     --setting=chaining.socks5.methods=GSSAPI \
     --setting=chaining.socks5.gssapiauthmethod.serviceName=rcmd/alpha-alpha.net \
     --setting=chaining.socksServerUri=socks5://beta-alpha.net:22221 \
+    --setting=chaining.ssl.enabled=true \
+    --setting=chaining.ssl.trustStoreFile=server.jks \
+    --setting=chaining.ssl.trustStorePassword=password \
     --setting=chaining.socks5.methods=USERNAME_PASSWORD \
     --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
     --setting=chaining.socks5.userpassauthmethod.password=opensesame \
@@ -1751,6 +3971,19 @@ Server configuration file example:
         <setting>
             <name>chaining.socksServerUri</name>
             <value>socks5://beta-alpha.net:22221</value>
+        </setting>
+        <setting>
+            <name>chaining.ssl.enabled</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>chaining.ssl.trustStoreFile</name>
+            <value>server.jks</value>
+        </setting>
+        <setting>
+            <name>chaining.ssl.trustStorePassword</name>
+            <value>password</value>
+            <doc>If this configuration file was created by new-server-config-file, the password would be encrypted</doc>
         </setting>
         <setting>
             <name>chaining.socks5.methods</name>
@@ -1802,6 +4035,12 @@ public class ServerApp {
                 "chaining.socksServerUri", 
                 "socks5://beta-alpha.net:22221"),
             Setting.newInstanceWithParsedValue(
+                "chaining.ssl.enabled", "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.trustStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.ssl.trustStorePassword", "password"),
+            Setting.newInstanceWithParsedValue(
                 "chaining.socks5.methods", "USERNAME_PASSWORD"),
             Setting.newInstanceWithParsedValue(
                 "chaining.socks5.userpassauthmethod.username",
@@ -1817,7 +4056,138 @@ public class ServerApp {
 }
 ```
 
-The known limitations of chaining to a specified chain of other SOCKS servers 
+How the host names of the other SOCKS servers in a chain of other SOCKS 
+servers are resolved depends on the 
+[type of connection](#tcp-socket-connection-types) 
+the other SOCKS server TCP sockets make. If they make an 
+[extemporaneous connection](#extemporaneous-tcp-socket-connection-type), the 
+specified host name for each SOCKS server except the first is resolved by the 
+previous SOCKS server (the specified host name of the first is resolved by the 
+local system). If they make a 
+[prepared connection](#prepared-tcp-socket-connection-type) (`prepareSocket` 
+set to `true`), the specified host name for each SOCKS server is resolved by 
+the local system.
+
+If you would like to have the other SOCKS server TCP sockets make a prepared 
+connection without the aforementioned limitations, you will need to have the 
+setting `chaining.socks.socksHostResolver.resolveFromSocksServer` set to 
+`true` for each server. Again, this setting can only be used if each SOCKS 
+server supports handling the 
+[RESOLVE request](../reference/socks5-resolve-request.md).
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=chaining.socksServerUri=socks5://alpha-alpha.net:11111 \
+    --setting=chaining.socks.socksHostResolver.resolveFromSocksServer=true \
+    --setting=chaining.socksServerUri=socks5://beta-alpha.net:22221 \
+    --setting=chaining.socks.socksHostResolver.resolveFromSocksServer=true \
+    --setting=chaining.socksServerUri=socks5://gamma-alpha.net:33331 \
+    --setting=chaining.socks.socksHostResolver.resolveFromSocksServer=true \
+    --setting=chaining.socksServerSocket.prepareSocket=true \
+    --setting=chaining.socksServerSocket.connectTimeout=120000 \
+    --setting=socks.onConnectRequest.remoteSocket.prepareSocket=true \
+    --setting=socks.onConnectRequest.remoteSocket.connectTimeout=120000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://alpha-alpha.net:11111</value>
+        </setting>
+        <setting>
+            <name>chaining.socks.socksHostResolver.resolveFromSocksServer</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://beta-alpha.net:22221</value>
+        </setting>
+        <setting>
+            <name>chaining.socks.socksHostResolver.resolveFromSocksServer</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerUri</name>
+            <value>socks5://gamma-alpha.net:33331</value>
+        </setting>
+        <setting>
+            <name>chaining.socks.socksHostResolver.resolveFromSocksServer</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.prepareSocket</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>chaining.socksServerSocket.connectTimeout</name>
+            <value>120000</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.prepareSocket</name>
+            <value>true</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.remoteSocket.connectTimeout</name>
+            <value>120000</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://alpha-alpha.net:11111"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks.socksHostResolver.resolveFromSocksServer",
+                "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://beta-alpha.net:22221"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks.socksHostResolver.resolveFromSocksServer",
+                "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerUri", 
+                "socks5://gamma-alpha.net:33331"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socks.socksHostResolver.resolveFromSocksServer",
+                "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.prepareSocket", "true"),
+            Setting.newInstanceWithParsedValue(
+                "chaining.socksServerSocket.connectTimeout", "120000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.prepareSocket", "true"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.remoteSocket.connectTimeout", "120000")
+        ))).start();
+    }
+}
+```
+
+The known limitations of chaining to a specified chain of other SOCKS servers
 include the following:
 
 -   Only TCP traffic can be routed through the chain.
@@ -2531,6 +4901,351 @@ public class ServerApp {
 }
 ```
 
+## Configuring Relay Settings
+
+You can configure settings for the relaying of data between clients and their 
+remote targets/peers. You can configure the relay settings for all SOCKS 
+requests or for each SOCKS request.
+
+You can configure the relay settings for all SOCKS requests using the 
+following settings:
+
+-   `socks.onRequest.relayBufferSize`: The buffer size in bytes for relaying 
+    the data (Value must be an integer between 1 (inclusive) and 2147483647 
+    (inclusive)) (Default value is `1024`)
+-   `socks.onRequest.relayIdleTimeout`: The timeout in milliseconds on 
+    relaying no data (Value must be an integer between 1 (inclusive) and 
+    2147483647 (inclusive)) (Default value is `60000`)
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socks.onRequest.relayBufferSize=256 \
+    --setting=socks.onRequest.relayIdleTimeout=500
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks.onRequest.relayBufferSize</name>
+            <value>256</value>
+        </setting>
+        <setting>
+            <name>socks.onRequest.relayIdleTimeout</name>
+            <value>500</value>
+        </setting>        
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks.onRequest.relayBufferSize", "256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onRequest.relayIdleTimeout", "500")
+        ))).start();
+    }
+}
+```
+
+You can configure the relay settings for each SOCKS request using the 
+following settings:
+
+-   `socks.onBindRequest.relayBufferSize`: The buffer size in bytes for 
+    relaying the data (Value must be an integer between 1 (inclusive) and 
+    2147483647 (inclusive))
+-   `socks.onBindRequest.relayIdleTimeout`: The timeout in milliseconds on
+    relaying no data (Value must be an integer between 1 (inclusive) and
+    2147483647 (inclusive))
+-   `socks.onConnectRequest.relayBufferSize`: The buffer size in bytes for 
+    relaying the data (Value must be an integer between 1 (inclusive) and 
+    2147483647 (inclusive))
+-   `socks.onConnectRequest.relayIdleTimeout`: The timeout in milliseconds on
+    relaying no data (Value must be an integer between 1 (inclusive) and
+    2147483647 (inclusive))
+-   `socks.onUdpAssociateRequest.relayBufferSize`: The buffer size in bytes 
+    for relaying the data (Value must be an integer between 1 (inclusive) and 
+    2147483647 (inclusive))
+-   `socks.onUdpAssociateRequest.relayIdleTimeout`: The timeout in 
+    milliseconds on relaying no data (Value must be an integer between 1 
+    (inclusive) and 2147483647 (inclusive))
+
+If no value is specified for a setting, depending on the setting, the value
+is obtained from either of the settings
+`socks.onRequest.relayBufferSize` or `socks.onRequest.relayIdleTimeout`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socks.onBindRequest.relayBufferSize=256 \
+    --setting=socks.onBindRequest.relayIdleTimeout=500 \
+    --setting=socks.onConnectRequest.relayBufferSize=256 \
+    --setting=socks.onConnectRequest.relayIdleTimeout=500 \
+    --setting=socks.onUdpAssociateRequest.relayBufferSize=512 \
+    --setting=socks.onUdpAssociateRequest.relayIdleTimeout=1000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks.onBindRequest.relayBufferSize</name>
+            <value>256</value>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.relayIdleTimeout</name>
+            <value>500</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.relayBufferSize</name>
+            <value>256</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.relayIdleTimeout</name>
+            <value>500</value>
+        </setting>
+        <setting>
+            <name>socks.onUdpAssociateRequest.relayBufferSize</name>
+            <value>512</value>
+        </setting>
+        <setting>
+            <name>socks.onUdpAssociateRequest.relayIdleTimeout</name>
+            <value>1000</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.relayBufferSize", "256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.relayIdleTimeout", "500"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.relayBufferSize", "256"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.relayIdleTimeout", "500"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onUdpAssociateRequest.relayBufferSize", "512"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onUdpAssociateRequest.relayIdleTimeout", "1000")
+        ))).start();
+    }
+}
+```
+
+## Limiting Relay Bandwidth
+
+You can limit the bandwidth of the relaying of data between clients and their 
+remote targets/peers. You can limit the relay bandwidth for all SOCKS requests 
+or for each SOCKS request.
+
+You can limit the relay bandwidth for all SOCKS requests using the following 
+settings:
+
+-   `socks.onRequest.relayInboundBandwidthLimit`: Specifies the upper limit on 
+    bandwidth in bytes per second of receiving inbound data to be relayed
+-   `socks.onRequest.relayOutboundBandwidthLimit`: Specifies the upper limit 
+    on bandwidth in bytes per second of receiving outbound data to be relayed
+
+The value given to any of the settings must be an integer between 1
+(inclusive) and 2147483647 (inclusive)
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socks.onRequest.relayInboundBandwidthLimit=1024000 \
+    --setting=socks.onRequest.relayOutboundBandwidthLimit=1024000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks.onRequest.relayInboundBandwidthLimit</name>
+            <value>1024000</value>
+        </setting>
+        <setting>
+            <name>socks.onRequest.relayOutboundBandwidthLimit</name>
+            <value>1024000</value>
+        </setting>        
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks.onRequest.relayInboundBandwidthLimit", "1024000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onRequest.relayOutboundBandwidthLimit", "1024000")
+        ))).start();
+    }
+}
+```
+
+You can limit the relay bandwidth for each SOCKS request using the following
+settings:
+
+-   `socks.onBindRequest.relayInboundBandwidthLimit`: Specifies the upper
+    limit on bandwidth in bytes per second of receiving inbound data to be 
+    relayed
+-   `socks.onBindRequest.relayOutboundBandwidthLimit`: Specifies the upper
+    limit on bandwidth in bytes per second of receiving outbound data to be 
+    relayed
+-   `socks.onConnectRequest.relayInboundBandwidthLimit`: Specifies the upper
+    limit on bandwidth in bytes per second of receiving inbound data to be 
+    relayed
+-   `socks.onConnectRequest.relayOutboundBandwidthLimit`: Specifies the upper
+    limit on bandwidth in bytes per second of receiving outbound data to be 
+    relayed
+-   `socks.onUdpAssociateRequest.relayInboundBandwidthLimit`: Specifies the
+    upper limit on bandwidth in bytes per second of receiving inbound data to 
+    be relayed
+-   `socks.onUdpAssociateRequest.relayOutboundBandwidthLimit`: Specifies the
+    upper limit on bandwidth in bytes per second of receiving outbound data to 
+    be relayed
+
+Again, the value given to any of the settings must be an integer between 1
+(inclusive) and 2147483647 (inclusive)
+
+If no value is specified for a setting, depending on the setting, the value
+is obtained from either of the settings
+`socks.onRequest.relayInboundBandwidthLimit` or 
+`socks.onRequest.relayOutboundBandwidthLimit`.
+
+Command line example:
+
+```bash
+jargyle start-server \
+    --setting=socks.onBindRequest.relayInboundBandwidthLimit=1024000 \
+    --setting=socks.onBindRequest.relayOutboundBandwidthLimit=1024000 \
+    --setting=socks.onConnectRequest.relayInboundBandwidthLimit=1024000 \
+    --setting=socks.onConnectRequest.relayOutboundBandwidthLimit=1024000 \
+    --setting=socks.onUdpAssociateRequest.relayInboundBandwidthLimit=2048000 \
+    --setting=socks.onUdpAssociateRequest.relayOutboundBandwidthLimit=2048000
+```
+
+Server configuration file example:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration>
+    <settings>
+        <setting>
+            <name>socks.onBindRequest.relayInboundBandwidthLimit</name>
+            <value>1024000</value>
+        </setting>
+        <setting>
+            <name>socks.onBindRequest.relayOutboundBandwidthLimit</name>
+            <value>1024000</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.relayInboundBandwidthLimit</name>
+            <value>1024000</value>
+        </setting>
+        <setting>
+            <name>socks.onConnectRequest.relayOutboundBandwidthLimit</name>
+            <value>1024000</value>
+        </setting>
+        <setting>
+            <name>socks.onUdpAssociateRequest.relayInboundBandwidthLimit</name>
+            <value>2048000</value>
+        </setting>
+        <setting>
+            <name>socks.onUdpAssociateRequest.relayOutboundBandwidthLimit</name>
+            <value>2048000</value>
+        </setting>
+    </settings>
+</configuration>
+```
+
+API example:
+
+```java
+package com.example;
+
+import com.github.jh3nd3rs0n.jargyle.server.Configuration;
+import com.github.jh3nd3rs0n.jargyle.server.Setting;
+import com.github.jh3nd3rs0n.jargyle.server.Settings;
+import com.github.jh3nd3rs0n.jargyle.server.SocksServer;
+
+import java.io.IOException;
+
+public class ServerApp {
+    public static void main(String[] args) throws IOException {
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.relayInboundBandwidthLimit", "1024000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onBindRequest.relayOutboundBandwidthLimit", "1024000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.relayInboundBandwidthLimit", "1024000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onConnectRequest.relayOutboundBandwidthLimit", "1024000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onUdpAssociateRequest.relayInboundBandwidthLimit", "2048000"),
+            Setting.newInstanceWithParsedValue(
+                "socks.onUdpAssociateRequest.relayOutboundBandwidthLimit", "2048000")
+        ))).start();
+    }
+}
+```
+
 ## Using Rules to Manage Traffic
 
 A rule consists of the following:
@@ -2884,6 +5599,15 @@ Unless otherwise stated, if a rule action of the same name appears more than
 once in the comma separated list or in the `<ruleActions/>` XML element, then 
 only the last rule action of the same name is recognized.
 
+Some rule actions have higher precedence over other rule actions. The more 
+specific the rule action the more precedence it has over less specific rule 
+actions. For example, the rule action `clientEnpoints.bindUdpPortRange` has 
+higher precedence over the rule action `bindUdpPortRange`. The rule action 
+`clientEnpoints.bindUdpPortRange` is more specific about a range of port 
+numbers to choose from for client UDP endpoints. The rule action 
+`bindUdpPortRange` is comparatively less specific since it specifies a range 
+of port numbers to choose from for all UDP endpoints.
+
 A complete listing of rule actions can be found 
 [here](../reference/rule-actions.md).
 
@@ -3026,15 +5750,15 @@ public class ServerApp {
 }
 ```
 
-### Allowing a Limited Number of Simultaneous Instances of Traffic
+### Allowing a Limited Number of Simultaneous Connections
 
-To allow a limited number of simultaneous specific instances of traffic, you 
-will need the following rule action:
+To allow a limited number of simultaneous connections, you will need the 
+following rule action:
 
 -   `firewallActionAllowLimit`
 
-The value given to the rule action must be an integer between 0 (inclusive) and 
-2147483647 (inclusive)
+The value given to the rule action must be an integer between 0 (inclusive) 
+and 2147483647 (inclusive)
 
 This rule action can be used with the following rule conditions:
 
@@ -3051,8 +5775,7 @@ This rule action can be used with the following rule conditions:
 -   `socksServerAddress`
 
 You can also specify the logging action to take if the limit on the number of 
-simultaneous specific instances of traffic has been reached by adding the 
-following rule action:
+simultaneous connections has been reached by adding the following rule action:
 
 -   `firewallActionAllowLimitReachedLogAction`
 
@@ -3526,163 +6249,170 @@ public class ServerApp {
 }
 ```
 
-### Configuring Sockets
+### Configuring Endpoints Through Rules
 
-To configure the sockets, you will need any of the following rule actions:
+To configure the endpoints through rules, you will need any of the following 
+rule actions:
 
--   `bindHost`: Specifies the binding host name or address for all sockets
+-   `bindHost`: Specifies the binding host name or address for all endpoints
 -   `bindHostAddressType`: Specifies an acceptable binding host address type
-for all sockets (This rule action can be specified multiple times with each 
-rule action specifying another host address type)
--   `bindTcpPortRange`: Specifies a binding port range for all TCP sockets 
-(This rule action can be specified multiple times with each rule action 
-specifying another port range)
--   `bindUdpPortRange`: Specifies a binding port range for all UDP sockets 
-(This rule action can be specified multiple times with each rule action 
-specifying another port range)
--   `clientSocketSetting`: Specifies a socket setting for the client socket 
-(This rule action can be specified multiple times with each rule action 
-specifying another socket setting)
--   `externalFacingBindHost`: Specifies the binding host name or address 
-for all external-facing sockets 
--   `externalFacingBindHostAddressType`: Specifies an acceptable binding 
-host address type for all external-facing sockets (This rule action can be 
-specified multiple times with each rule action specifying another host address 
-type)
--   `externalFacingBindTcpPortRange`: Specifies a binding 
-port range for all external-facing TCP 
-sockets (This rule action can be specified multiple times with each rule action 
-specifying another port range)
--   `externalFacingBindUdpPortRange`: Specifies a binding 
-port range for all external-facing UDP 
-sockets (This rule action can be specified multiple times with each rule action 
-specifying another port range)
--   `externalFacingNetInterface`: Specifies the network interface that 
-provides a binding host address for all external-facing sockets 
--   `externalFacingSocketSetting`: Specifies a socket setting for all 
-external-facing sockets (This rule action can be specified multiple times with 
-each rule action specifying another socket setting)
--   `internalFacingBindHost`: Specifies the binding host name or address for 
-all internal-facing sockets
--   `internalFacingBindHostAddressType`: Specifies an acceptable binding host 
-address type for all internal-facing sockets (This rule action can be 
-specified multiple times with each rule action specifying another host address 
-type)
--   `internalFacingBindUdpPortRange`: Specifies a binding 
-port range for all internal-facing UDP 
-sockets (This rule action can be specified multiple times with each rule action 
-specifying another port range)
--   `internalFacingNetInterface`: Specifies the network interface that 
-provides a binding host address for all internal-facing sockets 
--   `internalFacingSocketSetting`: Specifies a socket setting for all 
-internal-facing sockets (This rule action can be specified multiple times with 
-each rule action specifying another socket setting)
--   `netInterface`: Specifies the network interface that provides a binding 
-host address for all sockets 
--   `socketSetting`: Specifies a socket setting for all sockets (This rule 
-action can be specified multiple times with each rule action specifying another 
-socket setting)
--   `socks.onBindRequest.inboundSocketSetting`: Specifies a socket setting for 
-the inbound socket (This rule action can be specified multiple times with each 
-rule action specifying another socket setting)
--   `socks.onBindRequest.listenBindHost`: Specifies the binding host name or 
-address for the listen socket if the provided host address is all zeros
--   `socks.onBindRequest.listenBindHostAddressType`: Specifies an acceptable 
-binding host address type for the listen socket (This rule action can be 
-specified multiple times with each rule action specifying another host address 
-type) 
--   `socks.onBindRequest.listenBindPortRange`: Specifies a binding 
-port range for the listen socket if the provided port is zero (This rule 
-action can be specified multiple times with each rule action specifying another 
-port range)
--   `socks.onBindRequest.listenNetInterface`: Specifies the network interface 
-that provides a binding host address for the listen socket
--   `socks.onBindRequest.listenSocketSetting`: Specifies a socket setting for 
-the listen socket (This rule action can be specified multiple times with each 
-rule action specifying another socket setting)
--   `socks.onConnectRequest.prepareTargetFacingSocket`: Specifies the boolean 
-value to indicate if the target-facing socket is to be prepared before 
-connecting (involves applying the specified socket settings, resolving the 
-target host name, and setting the specified timeout on waiting to connect)
--   `socks.onConnectRequest.targetFacingBindHost`: Specifies the binding host 
-name or address for the target-facing socket
--   `socks.onConnectRequest.targetFacingBindHostAddressType`: Specifies an 
-acceptable binding host address type for the target-facing socket (This rule 
-action can be specified multiple times with each rule action specifying 
-another host address type)
--   `socks.onConnectRequest.targetFacingBindPortRange`: Specifies a binding 
-port range for the target-facing socket (This rule action can be specified 
-multiple times with each rule action specifying another port range)
--   `socks.onConnectRequest.targetFacingConnectTimeout`: Specifies the timeout 
-in milliseconds on waiting for the target-facing socket to connect (Value must 
-be an integer between 1 (inclusive) and 2147483647 (inclusive))
--   `socks.onConnectRequest.targetFacingNetInterface`: Specifies the network
-interface that provides a binding host address for the target-facing socket
--   `socks.onConnectRequest.targetFacingSocketSetting`: Specifies a socket 
-setting for the target-facing socket (This rule action can be specified multiple 
-times with each rule action specifying another socket setting)
--   `socks.onRequest.externalFacingBindHost`: Specifies the binding host
-name or address for all external-facing sockets
--   `socks.onRequest.externalFacingBindHostAddressType`: Specifies an 
-acceptable binding host address type for all external-facing sockets (This 
-rule action can be specified multiple times with each rule action specifying 
-another host address type) 
--   `socks.onRequest.externalFacingBindTcpPortRange`: Specifies a
-binding port range for all external-facing TCP sockets (This rule action can be
-specified multiple times with each rule action specifying another port range)
--   `socks.onRequest.externalFacingBindUdpPortRange`: Specifies a
-binding port range for all external-facing UDP sockets (This rule action can be
-specified multiple times with each rule action specifying another port range)
--   `socks.onRequest.externalFacingNetInterface`: Specifies the network 
-interface that provides a binding host address for all external-facing sockets
--   `socks.onRequest.externalFacingSocketSetting`: Specifies a socket
-setting for all external-facing sockets (This rule action can be specified
-multiple times with each rule action specifying another socket setting)
--   `socks.onRequest.internalFacingBindHost`: Specifies the binding
-host name or address for all internal-facing sockets
--   `socks.onRequest.internalFacingBindHostAddressType`: Specifies an 
-acceptable binding host address type for all internal-facing sockets (This 
-rule action can be specified multiple times with each rule action specifying 
-another host address type)
--   `socks.onRequest.internalFacingBindUdpPortRange`: Specifies a
-binding port range for all internal-facing UDP sockets (This rule action can be
-specified multiple times with each rule action specifying another port range)
--   `socks.onRequest.internalFacingNetInterface`: Specifies the network
-interface that provides a binding host address for all internal-facing sockets
--   `socks.onRequest.internalFacingSocketSetting`: Specifies a socket
-setting for all internal-facing sockets (This rule action can be specified
-multiple times with each rule action specifying another socket setting)
--   `socks.onUdpAssociateRequest.clientFacingBindHost`: Specifies the binding 
-host name or address for the client-facing UDP socket
--   `socks.onUdpAssociateRequest.clientFacingBindHostAddressType`: Specifies 
-an acceptable binding host address type for the client-facing UDP socket (This 
-rule action can be specified multiple times with each rule action specifying 
-another host address type)
--   `socks.onUdpAssociateRequest.clientFacingBindPortRange`: Specifies a 
-binding port range for the client-facing UDP socket (This rule action can be 
-specified multiple times with each rule action specifying another port range)
--   `socks.onUdpAssociateRequest.clientFacingNetInterface`: Specifies a 
-network interface that provides a binding host address for the client-facing 
-UDP socket
--   `socks.onUdpAssociateRequest.clientFacingSocketSetting`: Specifies a 
-socket setting for the client-facing UDP socket (This rule action can be 
-specified multiple times with each rule action specifying another socket 
-setting)
--   `socks.onUdpAssociateRequest.peerFacingBindHost`: Specifies the binding 
-host name or address for the peer-facing UDP socket
--   `socks.onUdpAssociateRequest.peerFacingBindHostAdddressType`: Specifies 
-an acceptable binding host address type for the peer-facing UDP socket (This 
-rule action can be specified multiple times with each rule action specifying 
-another host address type)
--   `socks.onUdpAssociateRequest.peerFacingBindPortRange`: Specifies a 
-binding port range for the peer-facing UDP socket (This rule action can be 
-specified multiple times with each rule action specifying another port range)
--   `socks.onUdpAssociateRequest.peerFacingNetInterface`: Specifies the 
-network interface that provides a binding host address for the peer-facing UDP 
-socket
--   `socks.onUdpAssociateRequest.peerFacingSocketSetting`: Specifies a socket 
-setting for the peer-facing UDP socket (This rule action can be specified 
-multiple times with each rule action specifying another socket setting)
+    for all endpoints (This rule action can be specified multiple times with 
+    each rule action specifying another host address type)
+-   `bindTcpPortRange`: Specifies a binding port range for all TCP endpoints
+    (This rule action can be specified multiple times with each rule action
+    specifying another port range)
+-   `bindUdpPortRange`: Specifies a binding port range for all UDP endpoints
+    (This rule action can be specified multiple times with each rule action
+    specifying another port range)
+-   `clientEndpoints.bindHost`: Specifies the binding host name or address for
+    all client endpoints
+-   `clientEndpoints.bindHostAddressType`: Specifies an acceptable binding 
+    host address type for all client endpoints (This rule action can be
+    specified multiple times with each rule action specifying another host 
+    address type)
+-   `clientEndpoints.bindUdpPortRange`: Specifies a binding port range for all 
+    client UDP endpoints (This rule action can be specified multiple times 
+    with each rule action specifying another port range)
+-   `clientEndpoints.netInterface`: Specifies the network interface that
+    provides a binding host address for all client endpoints
+-   `clientEndpoints.socketSetting`: Specifies a socket setting for all
+    client endpoints (This rule action can be specified multiple times with
+    each rule action specifying another socket setting)
+-   `clientSocket.socketSetting`: Specifies a socket setting for the client 
+    TCP socket (This rule action can be specified multiple times with each 
+    rule action specifying another socket setting)
+-   `netInterface`: Specifies the network interface that provides a binding
+    host address for all endpoints
+-   `remoteEndpoints.bindHost`: Specifies the binding host name or address
+    for all remote endpoints
+-   `remoteEndpoints.bindHostAddressType`: Specifies an acceptable binding
+    host address type for all remote endpoints (This rule action can be
+    specified multiple times with each rule action specifying another host 
+    address type)
+-   `remoteEndpoints.bindTcpPortRange`: Specifies a binding port range for all 
+    remote TCP endpoints (This rule action can be specified multiple times 
+    with each rule action specifying another port range)
+-   `remoteEndpoints.bindUdpPortRange`: Specifies a binding port range for all 
+    remote UDP endpoints (This rule action can be specified multiple times 
+    with each rule action specifying another port range)
+-   `remoteEndpoints.netInterface`: Specifies the network interface that
+    provides a binding host address for all remote endpoints
+-   `remoteEndpoints.socketSetting`: Specifies a socket setting for all
+    remote endpoints (This rule action can be specified multiple times with
+    each rule action specifying another socket setting)
+-   `socketSetting`: Specifies a socket setting for all endpoints (This rule
+    action can be specified multiple times with each rule action specifying 
+    another socket setting)
+-   `socks.onBindRequest.remoteFacingServerSocket.bindHost`: Specifies the 
+    binding host name or address for the remote-facing TCP server socket if 
+    the provided host address is all zeros
+-   `socks.onBindRequest.remoteFacingServerSocket.bindHostAddressType`: 
+    Specifies an acceptable binding host address type for the remote-facing 
+    TCP server socket (This rule action can be specified multiple times with 
+    each rule action specifying another host address type)
+-   `socks.onBindRequest.remoteFacingServerSocket.bindPortRange`: Specifies a 
+    binding port range for the remote-facing TCP server socket if the provided 
+    port is zero (This rule action can be specified multiple times with each 
+    rule action specifying another port range)
+-   `socks.onBindRequest.remoteFacingServerSocket.netInterface`: Specifies the 
+    network interface that provides a binding host address for the 
+    remote-facing TCP server socket
+-   `socks.onBindRequest.remoteFacingServerSocket.socketSetting`: Specifies a 
+    socket setting for the remote-facing TCP server socket (This rule action 
+    can be specified multiple times with each rule action specifying another 
+    socket setting)
+-   `socks.onBindRequest.remoteSocket.socketSetting`: Specifies a socket 
+    setting for the remote TCP socket (This rule action can be specified 
+    multiple times with each rule action specifying another socket setting)
+-   `socks.onConnectRequest.remoteSocket.bindHost`: Specifies the binding host
+    name or address for the remote TCP socket
+-   `socks.onConnectRequest.remoteSocket.bindHostAddressType`: Specifies an
+    acceptable binding host address type for the remote TCP socket (This rule 
+    action can be specified multiple times with each rule action specifying 
+    another host address type)
+-   `socks.onConnectRequest.remoteSocket.bindPortRange`: Specifies a binding
+    port range for the remote TCP socket (This rule action can be specified 
+    multiple times with each rule action specifying another port range)
+-   `socks.onConnectRequest.remoteSocket.connectTimeout`: Specifies the timeout
+    in milliseconds on waiting for the remote TCP socket to connect (Value must 
+    be an integer between 1 (inclusive) and 2147483647 (inclusive))
+-   `socks.onConnectRequest.remoteSocket.netInterface`: Specifies the network
+    interface that provides a binding host address for the remote TCP socket
+-   `socks.onConnectRequest.remoteSocket.prepareSocket`: Specifies the boolean
+    value to indicate if the remote TCP socket is to be prepared before 
+    connecting (involves applying the specified socket settings, resolving the 
+    target host name, and setting the specified timeout on waiting to connect)
+-   `socks.onConnectRequest.remoteSocket.socketSetting`: Specifies a socket
+    setting for the remote TCP socket (This rule action can be specified 
+    multiple times with each rule action specifying another socket setting)
+-   `socks.onRequest.clientEndpoints.bindHost`: Specifies the binding host 
+    name or address for all client endpoints
+-   `socks.onRequest.clientEndpoints.bindHostAddressType`: Specifies an
+    acceptable binding host address type for all client endpoints (This
+    rule action can be specified multiple times with each rule action 
+    specifying another host address type)
+-   `socks.onRequest.clientEndpoints.bindUdpPortRange`: Specifies a
+    binding port range for all client UDP endpoints (This rule action can be
+    specified multiple times with each rule action specifying another port 
+    range)
+-   `socks.onRequest.clientEndpoints.netInterface`: Specifies the network
+    interface that provides a binding host address for all client endpoints
+-   `socks.onRequest.clientEndpoints.socketSetting`: Specifies a socket
+    setting for all client endpoints (This rule action can be specified
+    multiple times with each rule action specifying another socket setting)
+-   `socks.onRequest.remoteEndpoints.bindHost`: Specifies the binding host
+    name or address for all remote endpoints
+-   `socks.onRequest.remoteEndpoints.bindHostAddressType`: Specifies an
+    acceptable binding host address type for all remote endpoints (This
+    rule action can be specified multiple times with each rule action 
+    specifying another host address type)
+-   `socks.onRequest.remoteEndpoints.bindTcpPortRange`: Specifies a
+    binding port range for all remote-facing TCP endpoints (This rule action 
+    can be specified multiple times with each rule action specifying another 
+    port range)
+-   `socks.onRequest.remoteEndpoints.bindUdpPortRange`: Specifies a
+    binding port range for all remote UDP endpoints (This rule action can be
+    specified multiple times with each rule action specifying another port 
+    range)
+-   `socks.onRequest.remoteEndpoints.netInterface`: Specifies the network
+    interface that provides a binding host address for all remote endpoints
+-   `socks.onRequest.remoteEndpoints.socketSetting`: Specifies a socket
+    setting for all remote endpoints (This rule action can be specified
+    multiple times with each rule action specifying another socket setting)
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHost`: 
+    Specifies the binding host name or address for the client-facing UDP socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindHostAddressType`: 
+    Specifies an acceptable binding host address type for the client-facing 
+    UDP socket (This rule action can be specified multiple times with each 
+    rule action specifying another host address type)
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.bindPortRange`: 
+    Specifies a binding port range for the client-facing UDP socket (This rule 
+    action can be specified multiple times with each rule action specifying 
+    another port range)
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.netInterface`: 
+    Specifies a network interface that provides a binding host address for the 
+    client-facing UDP socket
+-   `socks.onUdpAssociateRequest.clientFacingDatagramSocket.socketSetting`: 
+    Specifies a socket setting for the client-facing UDP socket (This rule 
+    action can be specified multiple times with each rule action specifying 
+    another socket setting)
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHost`: 
+    Specifies the binding host name or address for the remote-facing UDP socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindHostAdddressType`: 
+    Specifies an acceptable binding host address type for the remote-facing 
+    UDP socket (This rule action can be specified multiple times with each 
+    rule action specifying another host address type)
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.bindPortRange`: 
+    Specifies a binding port range for the remote-facing UDP socket (This rule 
+    action can be specified multiple times with each rule action specifying 
+    another port range)
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.netInterface`: 
+    Specifies the network interface that provides a binding host address for 
+    the remote-facing UDP socket
+-   `socks.onUdpAssociateRequest.remoteFacingDatagramSocket.socketSetting`: 
+    Specifies a socket setting for the remote-facing UDP socket (This rule 
+    action can be specified multiple times with each rule action specifying 
+    another socket setting)
 
 These rule actions can be used with the following rule conditions:
 
@@ -3694,8 +6424,8 @@ These rule actions can be used with the following rule conditions:
 -   `socks.user`
 -   `socksServerAddress`
 
-The rule action `socks.onBindRequest.inboundSocketSetting` can also be used with 
-the following rule conditions:
+The rule action `socks.onBindRequest.remoteSocket.socketSetting` can also be 
+used with the following rule conditions:
 
 -   `socks.reply.serverBoundAddress`
 -   `socks.reply.serverBoundPort`
@@ -3704,10 +6434,10 @@ Command line example:
 
 ```bash
 # Allow the CONNECT request to connect to 'special-server.net' and configure 
-# the target-facing socket.
+# the TCP socket to be used to access the remote server.
 # Allow anything else.
 jargyle start-server \
-    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256 \
+    --setting=rule=socks.request.command=CONNECT,socks.request.desiredDestinationAddress=special-server.net,firewallAction=ALLOW,socks.onConnectRequest.remoteSocket.socketSetting=SO_RCVBUF=256,socks.onConnectRequest.remoteSocket.socketSetting=SO_SNDBUF=256 \
     --setting=rule=firewallAction=ALLOW
 ```
 
@@ -3736,14 +6466,14 @@ Server configuration file example:
                         <value>ALLOW</value>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks.onConnectRequest.targetFacingSocketSetting</name>
+                        <name>socks.onConnectRequest.remoteSocket.socketSetting</name>
                         <socketSetting>
                             <name>SO_RCVBUF</name>
                             <value>256</value>
                         </socketSetting>
                     </ruleAction>
                     <ruleAction>
-                        <name>socks.onConnectRequest.targetFacingSocketSetting</name>
+                        <name>socks.onConnectRequest.remoteSocket.socketSetting</name>
                         <socketSetting>
                             <name>SO_SNDBUF</name>
                             <value>256</value>
@@ -3751,7 +6481,7 @@ Server configuration file example:
                     </ruleAction>
                 </ruleActions>
             </rule>
-            <doc>Allow the CONNECT request to connect to 'special-server.net' and configure the target-facing socket.</doc>
+            <doc>Allow the CONNECT request to connect to 'special-server.net' and configure the TCP socket to be used to access the remote server.</doc>
         </setting>
         <setting>
             <name>rule</name>
@@ -3786,17 +6516,17 @@ public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
             /*
-             * Allow the CONNECT request to connect to 
-             * 'special-server.net' and configure the target-facing 
-             * socket.
+             * Allow the CONNECT request to connect to 'special-server.net' 
+             * and configure the TCP socket to be used to access the remote 
+             * server.
              */
             Setting.newInstanceWithParsedValue(
                 "rule", 
                 "socks.request.command=CONNECT,"
                 + "socks.request.desiredDestinationAddress=special-server.net,"
                 + "firewallAction=ALLOW,"
-                + "socks.onConnectRequest.targetFacingSocketSetting=SO_RCVBUF=256,"
-                + "socks.onConnectRequest.targetFacingSocketSetting=SO_SNDBUF=256"),
+                + "socks.onConnectRequest.remoteSocket.socketSetting=SO_RCVBUF=256,"
+                + "socks.onConnectRequest.remoteSocket.socketSetting=SO_SNDBUF=256"),
             /*
              * Allow anything else.
              */
@@ -3807,9 +6537,10 @@ public class ServerApp {
 }
 ```
 
-### Configuring Relay Settings
+### Configuring Relay Settings Through Rules
 
-To configure the relay settings, you will need any of the following rule actions:
+To configure the relay settings through rules, you will need any of the 
+following rule actions:
 
 -   `socks.onBindRequest.relayBufferSize`: Specifies the buffer size in bytes 
 for relaying the data (Value must be an integer between 1 (inclusive) and 
@@ -3946,9 +6677,10 @@ public class ServerApp {
 }
 ```
 
-### Limiting Relay Bandwidth
+### Limiting Relay Bandwidth Through Rules
 
-To limit the relay bandwidth, you will need any of the following rule actions:
+To limit the relay bandwidth through rules, you will need any of the following 
+rule actions:
 
 -   `socks.onBindRequest.relayInboundBandwidthLimit`: Specifies the upper 
 limit on bandwidth in bytes per second of receiving inbound data to be relayed

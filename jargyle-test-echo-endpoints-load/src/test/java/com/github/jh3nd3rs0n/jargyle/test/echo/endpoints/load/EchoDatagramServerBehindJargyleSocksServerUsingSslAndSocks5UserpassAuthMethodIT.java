@@ -70,7 +70,7 @@ public class EchoDatagramServerBehindJargyleSocksServerUsingSslAndSocks5Userpass
 
     private static AbstractSocksServer newJargyleSocksServerUsingSslAndSocks5UserpassAuthMethod() {
         return new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(Port.valueOf(0)),
                 GeneralSettingSpecConstants.BACKLOG.newSetting(

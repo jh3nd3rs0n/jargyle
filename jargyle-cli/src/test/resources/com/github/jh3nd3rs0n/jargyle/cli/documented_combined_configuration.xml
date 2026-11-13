@@ -14,7 +14,7 @@
             <value>100</value>
         </setting>
         <setting>
-            <name>socksServerSocketSettings</name>
+            <name>clientFacingServerSocket.socketSettings</name>
             <socketSettings>
                 <socketSetting>
                     <name>SO_TIMEOUT</name>

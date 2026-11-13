@@ -27,16 +27,16 @@ public final class Relay {
 		
 		private int bufferSize;
 		private final Socket clientSocket;
-		private final Socket externalSocket;		
 		private int idleTimeout;
+		private final Socket remoteSocket;
 		
-		public Builder(final Socket clientSock, final Socket externalSock) {
+		public Builder(final Socket clientSock, final Socket remoteSock) {
 			Objects.requireNonNull(clientSock);
-			Objects.requireNonNull(externalSock);
+			Objects.requireNonNull(remoteSock);
 			this.bufferSize = DEFAULT_BUFFER_SIZE;
 			this.clientSocket = clientSock;
-			this.externalSocket = externalSock;			
 			this.idleTimeout = DEFAULT_IDLE_TIMEOUT;
+			this.remoteSocket = remoteSock;
 		}
 		
 		public Builder bufferSize(final int bffrSize) {
@@ -217,7 +217,7 @@ public final class Relay {
 	private static final class InboundDataWorker extends DataWorker {
 
 		public InboundDataWorker(final Relay rly) throws IOException {
-			super(rly, rly.externalSocket, rly.clientSocket);
+			super(rly, rly.remoteSocket, rly.clientSocket);
 		}
 		
 	}
@@ -225,7 +225,7 @@ public final class Relay {
 	private static final class OutboundDataWorker extends DataWorker {
 
 		public OutboundDataWorker(final Relay rly) throws IOException {
-			super(rly, rly.clientSocket, rly.externalSocket);
+			super(rly, rly.clientSocket, rly.remoteSocket);
 		}
 		
 	}
@@ -241,18 +241,18 @@ public final class Relay {
 	private final Socket clientSocket;
 	private final int bufferSize;
 	private ExecutorService executor;
-	private final Socket externalSocket;	
 	private final AtomicLong idleStartTime;
 	private final int idleTimeout;
+	private final Socket remoteSocket;
 	private final AtomicReference<State> state;
 	
 	private Relay(final Builder builder) {
 		this.clientSocket = builder.clientSocket;
 		this.bufferSize = builder.bufferSize;
 		this.executor = null;
-		this.externalSocket = builder.externalSocket;		
 		this.idleStartTime = new AtomicLong(0L);
 		this.idleTimeout = builder.idleTimeout;
+		this.remoteSocket = builder.remoteSocket;
 		this.state = new AtomicReference<State>(State.STOPPED);
 	}
 	

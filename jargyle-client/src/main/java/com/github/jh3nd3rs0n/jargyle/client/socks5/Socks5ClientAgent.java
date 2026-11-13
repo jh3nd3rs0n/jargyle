@@ -47,11 +47,11 @@ final class Socks5ClientAgent extends SocksClientAgent {
 
     public MethodEncapsulation doMethodSubNegotiation(
             final Method method,
-            final Socket connectedClientSocket) throws IOException {
+            final Socket connectedSocksServerSocket) throws IOException {
         MethodSubNegotiator methodSubNegotiator =
                 MethodSubNegotiator.getInstance(method);
         return methodSubNegotiator.subNegotiate(
-                connectedClientSocket, this);
+                connectedSocksServerSocket, this);
     }
 
     @Override
@@ -179,13 +179,13 @@ final class Socks5ClientAgent extends SocksClientAgent {
     }
 
     public Method negotiateMethod(
-            final Socket connectedClientSocket) throws IOException {
+            final Socket connectedSocksServerSocket) throws IOException {
         Methods methods = Methods.newInstanceFrom(
                 this.getMethods().toString());
         ClientMethodSelectionMessage cmsm =
                 ClientMethodSelectionMessage.newInstance(methods);
-        InputStream inputStream = connectedClientSocket.getInputStream();
-        OutputStream outputStream = connectedClientSocket.getOutputStream();
+        InputStream inputStream = connectedSocksServerSocket.getInputStream();
+        OutputStream outputStream = connectedSocksServerSocket.getOutputStream();
         outputStream.write(cmsm.toByteArray());
         outputStream.flush();
         ServerMethodSelectionMessage smsm =
@@ -194,8 +194,8 @@ final class Socks5ClientAgent extends SocksClientAgent {
     }
 
     public Reply receiveReply(
-            final Socket connectedClientSocket) throws IOException {
-        InputStream inputStream = connectedClientSocket.getInputStream();
+            final Socket connectedSocksServerSocket) throws IOException {
+        InputStream inputStream = connectedSocksServerSocket.getInputStream();
         Reply rep = Reply.newInstanceFrom(inputStream);
         ReplyCode replyCode = rep.getReplyCode();
         if (!replyCode.equals(ReplyCode.SUCCEEDED)) {
@@ -206,8 +206,8 @@ final class Socks5ClientAgent extends SocksClientAgent {
 
     public void sendRequest(
             final Request req,
-            final Socket connectedClientSocket) throws IOException {
-        OutputStream outputStream = connectedClientSocket.getOutputStream();
+            final Socket connectedSocksServerSocket) throws IOException {
+        OutputStream outputStream = connectedSocksServerSocket.getOutputStream();
         outputStream.write(req.toByteArray());
         outputStream.flush();
     }

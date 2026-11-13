@@ -245,6 +245,15 @@ for the value assigned to the setting.
 Unless stated otherwise, if there are settings of the same name, then from 
 those settings the last setting is recognized by the server.
 
+Some settings have higher precedence over other settings. The more specific 
+the setting the more precedence it has over less specific settings. For
+example, the setting `port` has higher precedence over the setting 
+`clientFacingServerSocket.portRanges`. The setting `port` is more specific 
+about the port number for the server's client-facing TCP server socket. The 
+setting `clientFacingServerSocket.portRanges` is comparatively less specific 
+since it specifies ranges of port numbers to choose from for the server's 
+client-facing TCP server socket.
+
 A complete listing of settings can be found by running either the command 
 `jargyle new-server-config-file --settings-help` or the command 
 `jargyle start-server --settings-help`. The output from either command would 
@@ -266,7 +275,7 @@ by adding one command line option after an earlier server configuration file:
 ```bash
 jargyle new-server-config-file \
     --config-file=general_configuration.xml \
-    --setting=socksServerSocketSettings=SO_TIMEOUT=0 \
+    --setting=clientFacingServerSocket.socketSettings=SO_TIMEOUT=0 \
     supplemented_general_configuration.xml
 ```
 
@@ -285,7 +294,7 @@ jargyle new-server-config-file \
             <value>100</value>
         </setting>
         <setting>
-            <name>socksServerSocketSettings</name>
+            <name>clientFacingServerSocket.socketSettings</name>
             <socketSettings>
                 <socketSetting>
                     <name>SO_TIMEOUT</name>
@@ -353,7 +362,7 @@ jargyle new-server-config-file \
             <value>100</value>
         </setting>
         <setting>
-            <name>socksServerSocketSettings</name>
+            <name>clientFacingServerSocket.socketSettings</name>
             <socketSettings>
                 <socketSetting>
                     <name>SO_TIMEOUT</name>
@@ -417,7 +426,7 @@ jargyle new-server-config-file \
             <value>100</value>
         </setting>
         <setting>
-            <name>socksServerSocketSettings</name>
+            <name>clientFacingServerSocket.socketSettings</name>
             <socketSettings>
                 <socketSetting>
                     <name>SO_TIMEOUT</name>
@@ -476,7 +485,7 @@ by editing the server configuration file to include it.
             <doc>Allow for 100 backlogged incoming client connections</doc>
         </setting>
         <setting>
-            <name>socksServerSocketSettings</name>
+            <name>clientFacingServerSocket.socketSettings</name>
             <socketSettings>
                 <socketSetting>
                     <name>SO_TIMEOUT</name>
@@ -534,7 +543,7 @@ and settings from an earlier server configuration file:
 jargyle start-server \
     --setting=port=1234 \
     --setting=backlog=100 \
-    --setting=socksServerSocketSettings=SO_TIMEOUT=0 \
+    --setting=clientFacingServerSocket.socketSettings=SO_TIMEOUT=0 \
     --config-file=socks5_configuration.xml
 ```
 
@@ -568,12 +577,12 @@ The following are the settings in the monitored server configuration file that
 if changed will have no effect during the running of the server:
 
 -   `backlog`
+-   `clientFacingServerSocket.bindHost`
+-   `clientFacingServerSocket.bindHostAddressTypes`
+-   `clientFacingServerSocket.bindPortRanges`
+-   `clientFacingServerSocket.netInterface`
+-   `clientFacingServerSocket.socketSettings`
 -   `port`
--   `socksServerBindHost`
--   `socksServerBindHostAddressTypes`
--   `socksServerBindPortRanges`
--   `socksServerNetInterface`
--   `socksServerSocketSettings`
 
 A restart of the server would be required if you want any of the changed 
 aforementioned settings to be applied to the running server.

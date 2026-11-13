@@ -1,102 +1,103 @@
 # About Jargyle
 
-## Introduction
+## What is Jargyle?
 
 Jargyle is a Java SOCKS5 server and a Java SOCKS5 client/server API. It is 
-inspired by [JSocks](https://jsocks.sourceforge.net/),
+inspired by 
+[JSocks](https://jsocks.sourceforge.net/),
 [SocksLib](https://github.com/fengyouchao/sockslib),
 [Esocks](https://github.com/fengyouchao/esocks) and
 [Dante](https://www.inet.no/dante/index.html).
 
-## Project Status
+## What is the Status of Jargyle?
 
 Jargyle is still a **work in progress** and is **not yet production-ready**. 
 Here’s why:
 
 -   **Testing**: Comprehensive unit and integration tests are still under 
-    development. This means that while the project is functional, it is not 
-    yet fully tested for all use cases and edge cases.
+    development. This means that while Jargyle is functional, it is not yet 
+    fully tested for all use cases and edge cases.
 
 -   **Documentation**: The Javadocs and reference documentation are 
     incomplete. The user guide provides basic usage examples, but some 
     advanced features may lack detailed explanations.
 
-**Warning**: Breaking changes may occur as the project evolves. However, any 
+**Warning**: Breaking changes may occur as Jargyle evolves. However, any 
 existing documentation will be updated to reflect these changes.
 
-## Features
+## What Makes Jargyle Different from Other Java SOCKS Servers and APIs?
 
-### Core Functionality
+Jargyle **completely implements the SOCKS5 protocol** described in RFC 
+[1928](https://datatracker.ietf.org/doc/html/rfc1928). In addition to 
+supporting all SOCKS5 requests (**CONNECT, BIND, and UDP ASSOCIATE**), it 
+supports **no authentication**, **username/password authentication**, and also 
+**GSS-API authentication**.
 
--   **CONNECT, BIND, and UDP ASSOCIATE**: Supports all standard SOCKS5 
-    requests.
+It can use **SSL/TLS and DTLS** to encrypt TCP and UDP traffic between client 
+and server for enhanced security.
 
--   **Authentication**: Supports No Authentication, Username/Password 
-    Authentication, and GSS-API Authentication.
+It can perform **(SOCKS server) chaining**, routing traffic through multiple 
+SOCKS servers.
 
-### Advanced Features
+It can perform **host name resolution** through the local system or through a 
+SOCKS server. 
 
--   **SSL/TLS and DTLS Support**: Encrypt TCP and UDP traffic for enhanced 
-    security.
+For the SOCKS server and the SOCKS server API, you can **manage traffic using 
+rules**. With rules, you can do the following:
 
--   **Proxy Chaining**: Route traffic through multiple SOCKS servers.
+-   **Allow or deny traffic** based on various criteria
 
--   **Host Resolution**: Resolve hostnames locally or through a SOCKS server.
+-   **Limit** the number of **simultaneous connections**
 
--   **Rule-Based Traffic Management (for the SOCKS server and the SOCKS server 
-    API)**:
-  
-    -   **Firewall Rules**: Allow or deny traffic based on various criteria.
-    
-    -   **Rate Limiting**: Limit the number of simultaneous connections.
-    
-    -   **Route Selection**: Route traffic through specific proxy chains based 
-        on rules.
-    
-    -   **Traffic Redirection**: Redirect traffic to different destinations.
-    
-    -   **Socket Configuration**: Configure socket settings (e.g., buffer 
-        sizes).
-    
-    -   **Bandwidth Limiting**: Control the bandwidth used for data relay.
+-   **Route traffic** through specific SOCKS server chains based on rules
 
-## Uses
+-   **Redirect traffic** to different destinations
 
--   **Enhancing SOCKS Support**: Use Jargyle to provide advanced SOCKS 
-    features (e.g., authentication, proxy chaining) to applications that only 
-    have basic SOCKS support.
+-   **Configure** endpoints
 
--   **Secure Tunneling**: Encrypt your network traffic using SSL/TLS and DTLS.
+-   **Limit bandwidth** of relaying data
 
--   **Testing and Development**: Simulate different network conditions and 
-    test SOCKS client/server implementations.
+## How Can Applications That Have Basic SOCKS Support Work with Jargyle's Features?
 
-## Examples
+Through chaining, a running instance of Jargyle using none to little 
+authentication could route traffic through another running instance of Jargyle 
+using SSL/TLS/DTLS and authentication. Applications that have basic SOCKS 
+support can use the former to take advantage of the features of the latter.
 
-The following examples demonstrate how to use Jargyle's command-line interface 
-and APIs.
+## What Are Some Examples of Using Jargyle?
 
-### Command Line Examples
+Here are a few command line examples:
 
 ```bash
-# Start a SOCKS server on port 8080 with username/password authentication
+# Start a SOCKS server on port 8080 with SSL/TLS and username/password authentication
 jargyle start-server \
     --setting=port=8080 \
+    --setting=ssl.enabled=true \
+    --setting=ssl.keyStoreFile=server.jks \
+    --setting=ssl.keyStorePassword=password \
     --setting=socks5.methods=USERNAME_PASSWORD \
     --setting=socks5.userpassauthmethod.userRepository=StringSourceUserRepository:Aladdin:opensesame
 ```
 
 ```bash
-# Start a SOCKS server that chains to another SOCKS server
+# Start a SOCKS server on port 1080 that chains to the previous SOCKS server
 jargyle start-server \
-    --setting=chaining.socksServerUri=socks5://upstream-proxy.example.com:1080
+    --setting=port=1080 \
+    --setting=chaining.socksServerUri=socks5://jargyle.net:8080 \
+    --setting=chaining.ssl.enabled=true \
+    --setting=chaining.ssl.trustStoreFile=server.jks \
+    --setting=chaining.ssl.trustStorePassword=password \
+    --setting=chaining.socks5.methods=USERNAME_PASSWORD \
+    --setting=chaining.socks5.userpassauthmethod.username=Aladdin \
+    --setting=chaining.socks5.userpassauthmethod.password=opensesame
 ```
 
-### SOCKS Server API Examples
+Here is a SOCKS server API example of the first command line example done 
+programmatically:
 
 ```java
 
-// Example: Start a basic SOCKS server programmatically
+// Example: Start a SOCKS server programmatically on port 8080 with SSL/TLS and username/password authentication
 
 package com.example;
 
@@ -109,18 +110,23 @@ import java.io.IOException;
 
 public class ServerApp {
     public static void main(String[] args) throws IOException {
-        SocksServer server = new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                Setting.newInstanceWithParsedValue("port", "1080")
+        new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
+                Setting.newInstanceWithParsedValue("port", "8080"),
+                Setting.newInstanceWithParsedValue("ssl.enabled", "true"),
+                Setting.newInstanceWithParsedValue("ssl.keyStoreFile", "server.jks"),
+                Setting.newInstanceWithParsedValue("ssl.keyStorePassword", "password"),
+                Setting.newInstanceWithParsedValue("socks5.methods", "USERNAME_PASSWORD"),
+                Setting.newInstanceWithParsedValue("socks5.userpassauthmethod.userRepository", "StringSourceUserRepository:Aladdin:opensesame")
         ))).start();
     }
 }
 ```
 
-### SOCKS Client API Examples
+Here is a SOCKS client API example connecting to the previous SOCKS server:
 
 ```java
 
-// Example: Configure a SOCKS client to connect to a SOCKS server
+// Example: Configure a SOCKS client to connect to the previous SOCKS server
 
 package com.example;
 
@@ -132,7 +138,13 @@ import java.net.Socket;
 
 public class ClientApp {
     public static void main(String[] args) throws IOException {
-        System.setProperty("socksClient.socksServerUri", "socks5://127.0.0.1:1080");
+        System.setProperty("socksClient.socksServerUri", "socks5://jargyle.net:8080");
+        System.setProperty("socksClient.ssl.enabled", "true");
+        System.setProperty("socksClient.ssl.trustStoreFile", "server.jks");
+        System.setProperty("socksClient.ssl.trustStorePassword", "password");
+        System.setProperty("socksClient.socks5.methods", "USERNAME_PASSWORD");
+        System.setProperty("socksClient.socks5.userpassauthmethod.username", "Aladdin");
+        System.setProperty("socksClient.socks5.userpassauthmethod.password", "opensesame");
         SocketFactory socketFactory = SocketFactory.getInstance();
         Socket socket = socketFactory.newSocket("example.com", 80);
         // ...
@@ -140,29 +152,29 @@ public class ClientApp {
 }
 ```
 
-## Get Started
+## How Can I Get Started with Jargyle?
 
-1.   **Download**: Download the latest release of Jargyle from 
-     [Downloads](./downloads.html).
+You can download the latest release of Jargyle [here](./downloads.html).
 
-2.   **Explore**:
-     
-     -   **User Guide**: Learn how to use Jargyle with the 
-         [user guide](userguide/index.md).
-     
-     -   **API Reference (Incomplete)**: Explore the API documentation in the 
-         [reference documentation](reference/index.md). *(Note: This 
-         documentation is currently incomplete.)*
-     
-     -   **JavaDocs (Incomplete)**: Browse the JavaDocs 
-         [here](https://jh3nd3rs0n.github.io/jargyle/apidocs/index.html). 
-         *(Note: These JavaDocs are currently incomplete.)*
-     
-3.   **Feedback Welcome!**: If you encounter any issues or have suggestions, 
-     please open an [issue](https://github.com/jh3nd3rs0n/jargyle/issues) on 
-     GitHub. Your feedback will help improve Jargyle!
+You can also explore the following:
 
-## License
+-   **User Guide**: Learn how to use Jargyle with the
+    [user guide](userguide/index.md).
+
+-   **Reference Documentation**: Explore Jargyle's comprehensive usage with 
+    the [reference documentation](reference/index.md). 
+    *(Note: This documentation is currently incomplete.)*
+
+-   **Javadocs**: Browse the 
+    [SOCKS client/server API Javadocs](https://jh3nd3rs0n.github.io/jargyle/apidocs/index.html).
+    *(Note: These Javadocs are currently incomplete.)*
+
+Feedback is welcome. If you encounter any issues or have suggestions, please 
+open an issue on GitHub 
+[here](https://github.com/jh3nd3rs0n/jargyle/issues). Your feedback will help 
+improve Jargyle!
+
+## What is the License for Jargyle?
 
 Jargyle is licensed under the 
 [MIT license](https://opensource.org/licenses/MIT). You are free to use, 

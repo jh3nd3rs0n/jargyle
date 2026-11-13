@@ -43,7 +43,7 @@ public class EchoEndpointsUsingSocks5ClientSetToChainedSocksServersIT {
     private static List<AbstractSocksServer> newChainedSocksServers() throws IOException {
         List<AbstractSocksServer> socksServerList = new ArrayList<>();
         AbstractSocksServer socksServer3 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
@@ -55,7 +55,7 @@ public class EchoEndpointsUsingSocks5ClientSetToChainedSocksServersIT {
         int chainedSocksServerPort3 = socksServer3.getPort();
         socksServerList.add(socksServer3);
         AbstractSocksServer socksServer2 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
@@ -71,7 +71,7 @@ public class EchoEndpointsUsingSocks5ClientSetToChainedSocksServersIT {
         int chainedSocksServerPort2 = socksServer2.getPort();
         socksServerList.add(socksServer2);
         AbstractSocksServer socksServer1 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),

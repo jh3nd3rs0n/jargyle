@@ -196,7 +196,7 @@ public class ServerConfigurationFileCreatorCLIIT {
 		String[] args = new String[] {
 				"--config-file=".concat(
 						this.generalConfigurationFile.toAbsolutePath().toString()),
-				"--setting=socksServerSocketSettings=SO_TIMEOUT=0",
+				"--setting=clientFacingServerSocket.socketSettings=SO_TIMEOUT=0",
 				this.supplementedGeneralConfigurationFile.toAbsolutePath().toString()
 		};
 		CLI cli = new ServerConfigurationFileCreatorCLI(null, null, args, false);

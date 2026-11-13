@@ -73,202 +73,6 @@ final class Socks5ValueDerivationHelper {
         return Methods.newInstanceFrom(
                 SocksValueDerivationHelper.getSocksMethodsFrom(settings).toString());
     }
-    
-    private static SocketSettings getSocks5OnBindRequestInboundSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(rule);
-    }
-
-    private static SocketSettings getSocks5OnBindRequestInboundSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_INBOUND_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings);
-    }
-
-    public static SocketSettings getSocks5OnBindRequestInboundSocketSettingsFrom(
-            final Rule rule, final Settings settings) {
-        SocketSettings socketSettings =
-                getSocks5OnBindRequestInboundSocketSettingsFrom(rule);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getSocks5OnBindRequestInboundSocketSettingsFrom(settings);
-    }
-
-    private static Host getSocks5OnBindRequestListenBindHostFrom(
-            final Rule rule) {
-        Host host = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(rule);
-    }
-
-    private static Host getSocks5OnBindRequestListenBindHostFrom(
-            final Settings settings) {
-        Host host = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings);
-    }
-
-    public static Host getSocks5OnBindRequestListenBindHostFrom(
-            final Rule rule, final Settings settings) {
-        Host host = getSocks5OnBindRequestListenBindHostFrom(rule);
-        if (host != null) {
-            return host;
-        }
-        host = getSocks5OnBindRequestListenBindHostFrom(settings);
-        if (host != null) {
-            return host;
-        }
-        NetInterface netInterface =
-                getSocks5OnBindRequestListenNetInterfaceFrom(rule, settings);
-        if (netInterface != null) {
-            return netInterface.getHostAddresses(
-                    getSocks5OnBindRequestListenBindHostAddressTypesFrom(
-                            rule, settings))
-                    .stream()
-                    .findFirst()
-                    .orElse(HostIpv4Address.getAllZerosInstance());
-        }
-        return HostIpv4Address.getAllZerosInstance();
-    }
-
-    private static HostAddressTypes getSocks5OnBindRequestListenBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(rule);
-    }
-
-    private static HostAddressTypes getSocks5OnBindRequestListenBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings);
-    }
-
-    private static HostAddressTypes getSocks5OnBindRequestListenBindHostAddressTypesFrom(
-            final Rule rule, final Settings settings) {
-        HostAddressTypes hostAddressTypes =
-                getSocks5OnBindRequestListenBindHostAddressTypesFrom(rule);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getSocks5OnBindRequestListenBindHostAddressTypesFrom(settings);
-    }
-
-    private static PortRanges getSocks5OnBindRequestListenBindPortRangesFrom(
-            final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(rule);
-    }
-
-    private static PortRanges getSocks5OnBindRequestListenBindPortRangesFrom(
-            final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings);
-    }
-
-    public static PortRanges getSocks5OnBindRequestListenBindPortRangesFrom(
-            final Rule rule, final Settings settings) {
-        PortRanges portRanges = getSocks5OnBindRequestListenBindPortRangesFrom(
-                rule);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return getSocks5OnBindRequestListenBindPortRangesFrom(settings);
-    }
-
-    private static NetInterface getSocks5OnBindRequestListenNetInterfaceFrom(
-            final Rule rule) {
-        NetInterface netInterface = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(rule);
-    }
-
-    private static NetInterface getSocks5OnBindRequestListenNetInterfaceFrom(
-            final Settings settings) {
-        NetInterface netInterface = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings);
-    }
-
-    private static NetInterface getSocks5OnBindRequestListenNetInterfaceFrom(
-            final Rule rule, final Settings settings) {
-        NetInterface netInterface =
-                getSocks5OnBindRequestListenNetInterfaceFrom(rule);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return getSocks5OnBindRequestListenNetInterfaceFrom(settings);
-    }
-
-    private static SocketSettings getSocks5OnBindRequestListenSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(rule);
-    }
-
-    private static SocketSettings getSocks5OnBindRequestListenSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_LISTEN_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings);
-    }
-
-    public static SocketSettings getSocks5OnBindRequestListenSocketSettingsFrom(
-            final Rule rule, final Settings settings) {
-        SocketSettings socketSettings =
-                getSocks5OnBindRequestListenSocketSettingsFrom(rule);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getSocks5OnBindRequestListenSocketSettingsFrom(settings);
-    }
 
     private static PositiveInteger getSocks5OnBindRequestRelayBufferSizeFrom(
             final Rule rule) {
@@ -279,7 +83,7 @@ final class Socks5ValueDerivationHelper {
         }
         return SocksValueDerivationHelper.getSocksOnBindRequestRelayBufferSizeFrom(rule);
     }
-    
+
     private static PositiveInteger getSocks5OnBindRequestRelayBufferSizeFrom(
             final Settings settings) {
         PositiveInteger relayBufferSize = settings.getLastValue(
@@ -292,7 +96,7 @@ final class Socks5ValueDerivationHelper {
 
     public static PositiveInteger getSocks5OnBindRequestRelayBufferSizeFrom(
             final Rule rule, final Settings settings) {
-        PositiveInteger relayBufferSize = 
+        PositiveInteger relayBufferSize =
                 getSocks5OnBindRequestRelayBufferSizeFrom(rule);
         if (relayBufferSize != null) {
             return relayBufferSize;
@@ -390,33 +194,200 @@ final class Socks5ValueDerivationHelper {
         return getSocks5OnBindRequestRelayOutboundBandwidthLimitFrom(settings);
     }
 
-    private static Boolean getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
+    private static HostAddressTypes getSocks5OnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(
             final Rule rule) {
-        Boolean b = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
-        if (b != null) {
-            return b;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPE));
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(rule);
     }
 
-    private static Boolean getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
+    private static HostAddressTypes getSocks5OnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(
             final Settings settings) {
-        Boolean b = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET);
-        if (b != null) {
-            return b;
+        HostAddressTypes hostAddressTypes = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings);
     }
 
-    public static Boolean getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(
+    private static HostAddressTypes getSocks5OnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(
             final Rule rule, final Settings settings) {
-        Boolean b = getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(rule);
-        if (b != null) {
-            return b;
+        HostAddressTypes hostAddressTypes =
+                getSocks5OnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(rule);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
         }
-        return getSocks5OnConnectRequestPrepareTargetFacingSocketFrom(settings);
+        return getSocks5OnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static Host getSocks5OnBindRequestRemoteFacingServerSocketBindHostFrom(
+            final Rule rule) {
+        Host host = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(rule);
+    }
+
+    private static Host getSocks5OnBindRequestRemoteFacingServerSocketBindHostFrom(
+            final Settings settings) {
+        Host host = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(settings);
+    }
+
+    public static Host getSocks5OnBindRequestRemoteFacingServerSocketBindHostFrom(
+            final Rule rule, final Settings settings) {
+        Host host = getSocks5OnBindRequestRemoteFacingServerSocketBindHostFrom(rule);
+        if (host != null) {
+            return host;
+        }
+        host = getSocks5OnBindRequestRemoteFacingServerSocketBindHostFrom(settings);
+        if (host != null) {
+            return host;
+        }
+        NetInterface netInterface =
+                getSocks5OnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule, settings);
+        if (netInterface != null) {
+            return netInterface.getHostAddresses(
+                            getSocks5OnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(
+                                    rule, settings))
+                    .stream()
+                    .findFirst()
+                    .orElse(HostIpv4Address.getAllZerosInstance());
+        }
+        return HostIpv4Address.getAllZerosInstance();
+    }
+
+    private static PortRanges getSocks5OnBindRequestRemoteFacingServerSocketBindPortRangesFrom(
+            final Rule rule) {
+        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_PORT_RANGE));
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(rule);
+    }
+
+    private static PortRanges getSocks5OnBindRequestRemoteFacingServerSocketBindPortRangesFrom(
+            final Settings settings) {
+        PortRanges portRanges = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_PORT_RANGES);
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings);
+    }
+
+    public static PortRanges getSocks5OnBindRequestRemoteFacingServerSocketBindPortRangesFrom(
+            final Rule rule, final Settings settings) {
+        PortRanges portRanges = getSocks5OnBindRequestRemoteFacingServerSocketBindPortRangesFrom(
+                rule);
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return getSocks5OnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings);
+    }
+
+    private static NetInterface getSocks5OnBindRequestRemoteFacingServerSocketNetInterfaceFrom(
+            final Rule rule) {
+        NetInterface netInterface = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_NET_INTERFACE);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule);
+    }
+
+    private static NetInterface getSocks5OnBindRequestRemoteFacingServerSocketNetInterfaceFrom(
+            final Settings settings) {
+        NetInterface netInterface = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_NET_INTERFACE);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings);
+    }
+
+    private static NetInterface getSocks5OnBindRequestRemoteFacingServerSocketNetInterfaceFrom(
+            final Rule rule, final Settings settings) {
+        NetInterface netInterface =
+                getSocks5OnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return getSocks5OnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings);
+    }
+
+    private static SocketSettings getSocks5OnBindRequestRemoteFacingServerSocketSocketSettingsFrom(
+            final Rule rule) {
+        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_SOCKET_SETTING)));
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(rule);
+    }
+
+    private static SocketSettings getSocks5OnBindRequestRemoteFacingServerSocketSocketSettingsFrom(
+            final Settings settings) {
+        SocketSettings socketSettings = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_SOCKET_SETTINGS);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings);
+    }
+
+    public static SocketSettings getSocks5OnBindRequestRemoteFacingServerSocketSocketSettingsFrom(
+            final Rule rule, final Settings settings) {
+        SocketSettings socketSettings =
+                getSocks5OnBindRequestRemoteFacingServerSocketSocketSettingsFrom(rule);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getSocks5OnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings);
+    }
+
+    private static SocketSettings getSocks5OnBindRequestRemoteSocketSocketSettingsFrom(
+            final Rule rule) {
+        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_SOCKET_SOCKET_SETTING)));
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(rule);
+    }
+
+    private static SocketSettings getSocks5OnBindRequestRemoteSocketSocketSettingsFrom(
+            final Settings settings) {
+        SocketSettings socketSettings = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_BIND_REQUEST_REMOTE_SOCKET_SOCKET_SETTINGS);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(settings);
+    }
+
+    public static SocketSettings getSocks5OnBindRequestRemoteSocketSocketSettingsFrom(
+            final Rule rule, final Settings settings) {
+        SocketSettings socketSettings =
+                getSocks5OnBindRequestRemoteSocketSocketSettingsFrom(rule);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getSocks5OnBindRequestRemoteSocketSocketSettingsFrom(settings);
     }
 
     private static PositiveInteger getSocks5OnConnectRequestRelayBufferSizeFrom(
@@ -539,41 +510,72 @@ final class Socks5ValueDerivationHelper {
         return getSocks5OnConnectRequestRelayOutboundBandwidthLimitFrom(settings);
     }
 
-    private static Host getSocks5OnConnectRequestTargetFacingBindHostFrom(
+    private static HostAddressTypes getSocks5OnConnectRequestRemoteSocketBindHostAddressTypesFrom(
+            final Rule rule) {
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST_ADDRESS_TYPE));
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(rule);
+    }
+
+    private static HostAddressTypes getSocks5OnConnectRequestRemoteSocketBindHostAddressTypesFrom(
+            final Settings settings) {
+        HostAddressTypes hostAddressTypes = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST_ADDRESS_TYPES);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static HostAddressTypes getSocks5OnConnectRequestRemoteSocketBindHostAddressTypesFrom(
+            final Rule rule, final Settings settings) {
+        HostAddressTypes hostAddressTypes =
+                getSocks5OnConnectRequestRemoteSocketBindHostAddressTypesFrom(rule);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return getSocks5OnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static Host getSocks5OnConnectRequestRemoteSocketBindHostFrom(
             final Rule rule) {
         Host host = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST);
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST);
         if (host != null) {
             return host;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(rule);
     }
 
-    private static Host getSocks5OnConnectRequestTargetFacingBindHostFrom(
+    private static Host getSocks5OnConnectRequestRemoteSocketBindHostFrom(
             final Settings settings) {
         Host host = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST);
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST);
         if (host != null) {
             return host;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(settings);
     }
 
-    public static Host getSocks5OnConnectRequestTargetFacingBindHostFrom(
+    public static Host getSocks5OnConnectRequestRemoteSocketBindHostFrom(
             final Rule rule, final Settings settings) {
-        Host host = getSocks5OnConnectRequestTargetFacingBindHostFrom(rule);
+        Host host = getSocks5OnConnectRequestRemoteSocketBindHostFrom(rule);
         if (host != null) {
             return host;
         }
-        host = getSocks5OnConnectRequestTargetFacingBindHostFrom(settings);
+        host = getSocks5OnConnectRequestRemoteSocketBindHostFrom(settings);
         if (host != null) {
             return host;
         }
         NetInterface netInterface =
-                getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(rule, settings);
+                getSocks5OnConnectRequestRemoteSocketNetInterfaceFrom(rule, settings);
         if (netInterface != null) {
             return netInterface.getHostAddresses(
-                            getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(
+                            getSocks5OnConnectRequestRemoteSocketBindHostAddressTypesFrom(
                                     rule, settings))
                     .stream()
                     .findFirst()
@@ -582,192 +584,221 @@ final class Socks5ValueDerivationHelper {
         return HostIpv4Address.getAllZerosInstance();
     }
 
-    private static HostAddressTypes getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(rule);
-    }
-
-    private static HostAddressTypes getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings);
-    }
-
-    private static HostAddressTypes getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(
-            final Rule rule, final Settings settings) {
-        HostAddressTypes hostAddressTypes =
-                getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(rule);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getSocks5OnConnectRequestTargetFacingBindHostAddressTypesFrom(settings);
-    }
-
-    private static PortRanges getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
+    private static PortRanges getSocks5OnConnectRequestRemoteSocketBindPortRangesFrom(
             final Rule rule) {
         PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGE));
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_PORT_RANGE));
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(rule);
     }
 
-    private static PortRanges getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
+    private static PortRanges getSocks5OnConnectRequestRemoteSocketBindPortRangesFrom(
             final Settings settings) {
         PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGES);
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_PORT_RANGES);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(settings);
     }
 
-    public static PortRanges getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
+    public static PortRanges getSocks5OnConnectRequestRemoteSocketBindPortRangesFrom(
             final Rule rule, final Settings settings) {
-        PortRanges portRanges = getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(
+        PortRanges portRanges = getSocks5OnConnectRequestRemoteSocketBindPortRangesFrom(
                 rule);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnConnectRequestTargetFacingBindPortRangesFrom(settings);
+        return getSocks5OnConnectRequestRemoteSocketBindPortRangesFrom(settings);
     }
 
-    private static PositiveInteger getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+    private static PositiveInteger getSocks5OnConnectRequestRemoteSocketConnectTimeoutFrom(
             final Rule rule) {
         PositiveInteger i = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_CONNECT_TIMEOUT);
         if (i != null) {
             return i;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketConnectTimeoutFrom(rule);
     }
 
-    private static PositiveInteger getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+    private static PositiveInteger getSocks5OnConnectRequestRemoteSocketConnectTimeoutFrom(
             final Settings settings) {
         PositiveInteger i = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT);
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_CONNECT_TIMEOUT);
         if (i != null) {
             return i;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketConnectTimeoutFrom(settings);
     }
 
-    public static PositiveInteger getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(
+    public static PositiveInteger getSocks5OnConnectRequestRemoteSocketConnectTimeoutFrom(
             final Rule rule, final Settings settings) {
-        PositiveInteger i = getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(rule);
+        PositiveInteger i = getSocks5OnConnectRequestRemoteSocketConnectTimeoutFrom(rule);
         if (i != null) {
             return i;
         }
-        return getSocks5OnConnectRequestTargetFacingConnectTimeoutFrom(settings);
+        return getSocks5OnConnectRequestRemoteSocketConnectTimeoutFrom(settings);
     }
 
-    private static NetInterface getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(
+    private static NetInterface getSocks5OnConnectRequestRemoteSocketNetInterfaceFrom(
             final Rule rule) {
         NetInterface netInterface = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE);
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(rule);
     }
 
-    private static NetInterface getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(
+    private static NetInterface getSocks5OnConnectRequestRemoteSocketNetInterfaceFrom(
             final Settings settings) {
         NetInterface netInterface = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE);
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(settings);
     }
 
-    private static NetInterface getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(
+    private static NetInterface getSocks5OnConnectRequestRemoteSocketNetInterfaceFrom(
             final Rule rule, final Settings settings) {
         NetInterface netInterface =
-                getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(rule);
+                getSocks5OnConnectRequestRemoteSocketNetInterfaceFrom(rule);
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnConnectRequestTargetFacingNetInterfaceFrom(settings);
+        return getSocks5OnConnectRequestRemoteSocketNetInterfaceFrom(settings);
     }
 
-    private static SocketSettings getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(
+    private static Boolean getSocks5OnConnectRequestRemoteSocketPrepareSocketFrom(
+            final Rule rule) {
+        Boolean b = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_PREPARE_SOCKET);
+        if (b != null) {
+            return b;
+        }
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketPrepareSocketFrom(rule);
+    }
+
+    private static Boolean getSocks5OnConnectRequestRemoteSocketPrepareSocketFrom(
+            final Settings settings) {
+        Boolean b = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_PREPARE_SOCKET);
+        if (b != null) {
+            return b;
+        }
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketPrepareSocketFrom(settings);
+    }
+
+    public static Boolean getSocks5OnConnectRequestRemoteSocketPrepareSocketFrom(
+            final Rule rule, final Settings settings) {
+        Boolean b = getSocks5OnConnectRequestRemoteSocketPrepareSocketFrom(rule);
+        if (b != null) {
+            return b;
+        }
+        return getSocks5OnConnectRequestRemoteSocketPrepareSocketFrom(settings);
+    }
+
+    private static SocketSettings getSocks5OnConnectRequestRemoteSocketSocketSettingsFrom(
             final Rule rule) {
         SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
                 rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTING)));
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_SOCKET_SETTING)));
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(rule);
     }
 
-    private static SocketSettings getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(
+    private static SocketSettings getSocks5OnConnectRequestRemoteSocketSocketSettingsFrom(
             final Settings settings) {
         SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTINGS);
+                Socks5SettingSpecConstants.SOCKS5_ON_CONNECT_REQUEST_REMOTE_SOCKET_SOCKET_SETTINGS);
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(settings);
     }
 
-    public static SocketSettings getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(
+    public static SocketSettings getSocks5OnConnectRequestRemoteSocketSocketSettingsFrom(
             final Rule rule, final Settings settings) {
         SocketSettings socketSettings =
-                getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(rule);
+                getSocks5OnConnectRequestRemoteSocketSocketSettingsFrom(rule);
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnConnectRequestTargetFacingSocketSettingsFrom(settings);
+        return getSocks5OnConnectRequestRemoteSocketSocketSettingsFrom(settings);
     }
 
-    private static Host getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(
+    private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(
+            final Rule rule) {
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPE));
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(rule);
+    }
+
+    private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(
+            final Settings settings) {
+        HostAddressTypes hostAddressTypes = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPES);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(
+            final Rule rule, final Settings settings) {
+        HostAddressTypes hostAddressTypes =
+                getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(rule);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static Host getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(
             final Rule rule) {
         Host host = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST);
+                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST);
         if (host != null) {
             return host;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(rule);
     }
 
-    private static Host getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(
+    private static Host getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(
             final Settings settings) {
         Host host = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST);
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST);
         if (host != null) {
             return host;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings);
     }
 
-    public static Host getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(
+    public static Host getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(
             final Rule rule, final Settings settings) {
-        Host host = getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(rule);
+        Host host = getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(rule);
         if (host != null) {
             return host;
         }
-        host = getSocks5OnUdpAssociateRequestClientFacingBindHostFrom(settings);
+        host = getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings);
         if (host != null) {
             return host;
         }
         NetInterface netInterface =
-                getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(rule, settings);
+                getSocks5OnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule, settings);
         if (netInterface != null) {
             return netInterface.getHostAddresses(
-                            getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(
+                            getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(
                                     rule, settings))
                     .stream()
                     .findFirst()
@@ -776,291 +807,95 @@ final class Socks5ValueDerivationHelper {
         return HostIpv4Address.getAllZerosInstance();
     }
 
-    private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule);
-    }
-
-    private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings);
-    }
-
-    private static HostAddressTypes getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(
-            final Rule rule, final Settings settings) {
-        HostAddressTypes hostAddressTypes =
-                getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getSocks5OnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings);
-    }
-
-    private static PortRanges getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
+    private static PortRanges getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(
             final Rule rule) {
         PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE));
+                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGE));
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(rule);
     }
 
-    private static PortRanges getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
+    private static PortRanges getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(
             final Settings settings) {
         PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGES);
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGES);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings);
     }
 
-    public static PortRanges getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
+    public static PortRanges getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(
             final Rule rule, final Settings settings) {
-        PortRanges portRanges = getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(
+        PortRanges portRanges = getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(
                 rule);
         if (!portRanges.toList().isEmpty()) {
             return portRanges;
         }
-        return getSocks5OnUdpAssociateRequestClientFacingBindPortRangesFrom(settings);
+        return getSocks5OnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings);
     }
 
-    private static NetInterface getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(
+    private static NetInterface getSocks5OnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(
             final Rule rule) {
         NetInterface netInterface = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE);
+                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule);
     }
 
-    private static NetInterface getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(
+    private static NetInterface getSocks5OnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(
             final Settings settings) {
         NetInterface netInterface = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE);
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_NET_INTERFACE);
         if (netInterface != null) {
             return netInterface;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings);
     }
 
-    private static NetInterface getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(
+    private static NetInterface getSocks5OnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(
             final Rule rule, final Settings settings) {
         NetInterface netInterface =
-                getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(rule);
+                getSocks5OnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule);
         if (netInterface != null) {
             return netInterface;
         }
-        return getSocks5OnUdpAssociateRequestClientFacingNetInterfaceFrom(settings);
+        return getSocks5OnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings);
     }
 
-    private static SocketSettings getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(
+    private static SocketSettings getSocks5OnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(
             final Rule rule) {
         SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
                 rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING)));
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_SOCKET_SETTING)));
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(rule);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(rule);
     }
 
-    private static SocketSettings getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(
+    private static SocketSettings getSocks5OnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(
             final Settings settings) {
         SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTINGS);
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_SOCKET_SETTINGS);
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings);
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings);
     }
 
-    public static SocketSettings getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(
+    public static SocketSettings getSocks5OnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(
             final Rule rule, final Settings settings) {
         SocketSettings socketSettings =
-                getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(rule);
+                getSocks5OnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(rule);
         if (!socketSettings.toMap().isEmpty()) {
             return socketSettings;
         }
-        return getSocks5OnUdpAssociateRequestClientFacingSocketSettingsFrom(settings);
-    }
-
-    private static Host getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(
-            final Rule rule) {
-        Host host = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(rule);
-    }
-
-    private static Host getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(
-            final Settings settings) {
-        Host host = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST);
-        if (host != null) {
-            return host;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings);
-    }
-
-    public static Host getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(
-            final Rule rule, final Settings settings) {
-        Host host = getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(rule);
-        if (host != null) {
-            return host;
-        }
-        host = getSocks5OnUdpAssociateRequestPeerFacingBindHostFrom(settings);
-        if (host != null) {
-            return host;
-        }
-        NetInterface netInterface =
-                getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule, settings);
-        if (netInterface != null) {
-            return netInterface.getHostAddresses(
-                            getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(
-                                    rule, settings))
-                    .stream()
-                    .findFirst()
-                    .orElse(HostIpv4Address.getAllZerosInstance());
-        }
-        return HostIpv4Address.getAllZerosInstance();
-    }
-
-    private static HostAddressTypes getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(
-            final Rule rule) {
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPE));
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule);
-    }
-
-    private static HostAddressTypes getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(
-            final Settings settings) {
-        HostAddressTypes hostAddressTypes = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPES);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings);
-    }
-
-    private static HostAddressTypes getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(
-            final Rule rule, final Settings settings) {
-        HostAddressTypes hostAddressTypes =
-                getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule);
-        if (!hostAddressTypes.toList().isEmpty()) {
-            return hostAddressTypes;
-        }
-        return getSocks5OnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings);
-    }
-
-    private static PortRanges getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
-            final Rule rule) {
-        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE));
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(rule);
-    }
-
-    private static PortRanges getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
-            final Settings settings) {
-        PortRanges portRanges = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGES);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings);
-    }
-
-    public static PortRanges getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
-            final Rule rule, final Settings settings) {
-        PortRanges portRanges = getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(
-                rule);
-        if (!portRanges.toList().isEmpty()) {
-            return portRanges;
-        }
-        return getSocks5OnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings);
-    }
-
-    private static NetInterface getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(
-            final Rule rule) {
-        NetInterface netInterface = rule.getLastRuleActionValue(
-                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule);
-    }
-
-    private static NetInterface getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(
-            final Settings settings) {
-        NetInterface netInterface = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings);
-    }
-
-    private static NetInterface getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(
-            final Rule rule, final Settings settings) {
-        NetInterface netInterface =
-                getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule);
-        if (netInterface != null) {
-            return netInterface;
-        }
-        return getSocks5OnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings);
-    }
-
-    private static SocketSettings getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(
-            final Rule rule) {
-        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
-                rule.getRuleActionValues(
-                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING)));
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule);
-    }
-
-    private static SocketSettings getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(
-            final Settings settings) {
-        SocketSettings socketSettings = settings.getLastValue(
-                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTINGS);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings);
-    }
-
-    public static SocketSettings getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(
-            final Rule rule, final Settings settings) {
-        SocketSettings socketSettings =
-                getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule);
-        if (!socketSettings.toMap().isEmpty()) {
-            return socketSettings;
-        }
-        return getSocks5OnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings);
+        return getSocks5OnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings);
     }
 
     private static PositiveInteger getSocks5OnUdpAssociateRequestRelayBufferSizeFrom(
@@ -1181,6 +1016,171 @@ final class Socks5ValueDerivationHelper {
             return relayOutboundBandwidthLimit;
         }
         return getSocks5OnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(settings);
+    }
+
+    private static HostAddressTypes getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(
+            final Rule rule) {
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPE));
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(rule);
+    }
+
+    private static HostAddressTypes getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(
+            final Settings settings) {
+        HostAddressTypes hostAddressTypes = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPES);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static HostAddressTypes getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(
+            final Rule rule, final Settings settings) {
+        HostAddressTypes hostAddressTypes =
+                getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(rule);
+        if (!hostAddressTypes.toList().isEmpty()) {
+            return hostAddressTypes;
+        }
+        return getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings);
+    }
+
+    private static Host getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(
+            final Rule rule) {
+        Host host = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(rule);
+    }
+
+    private static Host getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(
+            final Settings settings) {
+        Host host = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST);
+        if (host != null) {
+            return host;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings);
+    }
+
+    public static Host getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(
+            final Rule rule, final Settings settings) {
+        Host host = getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(rule);
+        if (host != null) {
+            return host;
+        }
+        host = getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings);
+        if (host != null) {
+            return host;
+        }
+        NetInterface netInterface =
+                getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule, settings);
+        if (netInterface != null) {
+            return netInterface.getHostAddresses(
+                            getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(
+                                    rule, settings))
+                    .stream()
+                    .findFirst()
+                    .orElse(HostIpv4Address.getAllZerosInstance());
+        }
+        return HostIpv4Address.getAllZerosInstance();
+    }
+
+    private static PortRanges getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(
+            final Rule rule) {
+        PortRanges portRanges = PortRanges.of(rule.getRuleActionValues(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGE));
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(rule);
+    }
+
+    private static PortRanges getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(
+            final Settings settings) {
+        PortRanges portRanges = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGES);
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings);
+    }
+
+    public static PortRanges getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(
+            final Rule rule, final Settings settings) {
+        PortRanges portRanges = getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(
+                rule);
+        if (!portRanges.toList().isEmpty()) {
+            return portRanges;
+        }
+        return getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings);
+    }
+
+    private static NetInterface getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(
+            final Rule rule) {
+        NetInterface netInterface = rule.getLastRuleActionValue(
+                Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_NET_INTERFACE);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule);
+    }
+
+    private static NetInterface getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(
+            final Settings settings) {
+        NetInterface netInterface = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_NET_INTERFACE);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings);
+    }
+
+    private static NetInterface getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(
+            final Rule rule, final Settings settings) {
+        NetInterface netInterface =
+                getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule);
+        if (netInterface != null) {
+            return netInterface;
+        }
+        return getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings);
+    }
+
+    private static SocketSettings getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(
+            final Rule rule) {
+        SocketSettings socketSettings = SocketSettings.of(new ArrayList<>(
+                rule.getRuleActionValues(
+                        Socks5RuleActionSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_SOCKET_SETTING)));
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(rule);
+    }
+
+    private static SocketSettings getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(
+            final Settings settings) {
+        SocketSettings socketSettings = settings.getLastValue(
+                Socks5SettingSpecConstants.SOCKS5_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_SOCKET_SETTINGS);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings);
+    }
+
+    public static SocketSettings getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(
+            final Rule rule, final Settings settings) {
+        SocketSettings socketSettings =
+                getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(rule);
+        if (!socketSettings.toMap().isEmpty()) {
+            return socketSettings;
+        }
+        return getSocks5OnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings);
     }
 
     public static Address getSocks5RequestDesiredDestinationAddressRedirectFrom(

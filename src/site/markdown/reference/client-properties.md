@@ -13,13 +13,13 @@
 
 <table>
 <tr><th>Name</th><th>Value Type</th><th>Description</th></tr>
-<tr><td><a href="#socksclient-clientbindhost"><code>socksClient.clientBindHost</code></a></td><td>Host</td><td>The binding host name or address for the client socket that is used to connect to the SOCKS server<br/><b>Default Value:</b> <code>0.0.0.0</code></td></tr>
-<tr><td><a href="#socksclient-clientbindhostaddresstypes"><code>socksClient.clientBindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the client socket that is used to connect to the SOCKS server<br/><b>Default Value:</b> <code>HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS</code></td></tr>
-<tr><td><a href="#socksclient-clientbindportranges"><code>socksClient.clientBindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the client socket that is used to connect to the SOCKS server<br/><b>Default Value:</b> <code>0</code></td></tr>
-<tr><td><a href="#socksclient-clientconnecttimeout"><code>socksClient.clientConnectTimeout</code></a></td><td>Non-negative Integer</td><td>The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (a timeout of 0 is interpreted as an infinite timeout)<br/><b>Default Value:</b> <code>60000</code></td></tr>
-<tr><td><a href="#socksclient-clientnetinterface"><code>socksClient.clientNetInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the client socket that is used to connect to the SOCKS server</td></tr>
-<tr><td><a href="#socksclient-clientsocketsettings"><code>socksClient.clientSocketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server</td></tr>
-<tr><td><a href="#socksclient-prepareclientsocket"><code>socksClient.prepareClientSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the client socket that is used to connect to the SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the SOCKS server host name, and setting the specified timeout on waiting to connect)<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#socksclient-socksserversocket-bindhost"><code>socksClient.socksServerSocket.bindHost</code></a></td><td>Host</td><td>The binding host name or address for the SOCKS server TCP socket<br/><b>Default Value:</b> <code>0.0.0.0</code></td></tr>
+<tr><td><a href="#socksclient-socksserversocket-bindhostaddresstypes"><code>socksClient.socksServerSocket.bindHostAddressTypes</code></a></td><td>Host Address Types</td><td>The comma separated list of acceptable binding host address types for the SOCKS server TCP socket<br/><b>Default Value:</b> <code>HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS</code></td></tr>
+<tr><td><a href="#socksclient-socksserversocket-bindportranges"><code>socksClient.socksServerSocket.bindPortRanges</code></a></td><td>Port Ranges</td><td>The comma separated list of binding port ranges for the SOCKS server TCP socket<br/><b>Default Value:</b> <code>0</code></td></tr>
+<tr><td><a href="#socksclient-socksserversocket-connecttimeout"><code>socksClient.socksServerSocket.connectTimeout</code></a></td><td>Non-negative Integer</td><td>The timeout in milliseconds on waiting for the SOCKS server TCP socket to connect (a timeout of 0 is interpreted as an infinite timeout)<br/><b>Default Value:</b> <code>60000</code></td></tr>
+<tr><td><a href="#socksclient-socksserversocket-netinterface"><code>socksClient.socksServerSocket.netInterface</code></a></td><td>Network Interface</td><td>The network interface that provides a binding host address for the SOCKS server TCP socket</td></tr>
+<tr><td><a href="#socksclient-socksserversocket-preparesocket"><code>socksClient.socksServerSocket.prepareSocket</code></a></td><td>Boolean</td><td>The boolean value to indicate if the SOCKS server TCP socket is to be prepared before connecting (involves applying the specified socket settings, resolving the SOCKS server host name, and setting the specified timeout on waiting to connect)<br/><b>Default Value:</b> <code>false</code></td></tr>
+<tr><td><a href="#socksclient-socksserversocket-socketsettings"><code>socksClient.socksServerSocket.socketSettings</code></a></td><td>Socket Settings</td><td>The comma separated list of socket settings for the SOCKS server TCP socket</td></tr>
 <tr><td><a href="#socksclient-socksserveruri"><code>socksClient.socksServerUri</code></a></td><td>SOCKS Server URI</td><td>The URI of the SOCKS server</td></tr>
 </table>
 
@@ -89,50 +89,7 @@
 
 ## All Properties
 
-### socksClient.clientBindHost
-
-**Description:** The binding host name or address for the client socket that is used to connect to the SOCKS server
-
-**Value Type:** [Host](value-types.md#host)
-
-**Default Value:** `0.0.0.0`
-
-### socksClient.clientBindHostAddressTypes
-
-**Description:** The comma separated list of acceptable binding host address types for the client socket that is used to connect to the SOCKS server
-
-**Value Type:** [Host Address Types](value-types.md#host-address-types)
-
-**Default Value:** `HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS`
-
-### socksClient.clientBindPortRanges
-
-**Description:** The comma separated list of binding port ranges for the client socket that is used to connect to the SOCKS server
-
-**Value Type:** [Port Ranges](value-types.md#port-ranges)
-
-**Default Value:** `0`
-
-### socksClient.clientConnectTimeout
-
-**Description:** The timeout in milliseconds on waiting for the client socket to connect to the SOCKS server (a timeout of 0 is interpreted as an infinite timeout)
-
-**Value Type:** [Non-negative Integer](value-types.md#non-negative-integer)
-
-**Default Value:** `60000`
-
-### socksClient.clientNetInterface
-
-**Description:** The network interface that provides a binding host address for the client socket that is used to connect to the SOCKS server
-
-**Value Type:** [Network Interface](value-types.md#network-interface)
-
-### socksClient.clientSocketSettings
-
-**Description:** The comma separated list of socket settings for the client socket that is used to connect to the SOCKS server
-
-**Value Type:** [Socket Settings](value-types.md#socket-settings)
-
+<a id="socksclient-dtls-enabled"></a>
 ### socksClient.dtls.enabled
 
 **Description:** The boolean value to indicate if DTLS connections to the SOCKS server are enabled
@@ -141,18 +98,21 @@
 
 **Default Value:** `false`
 
+<a id="socksclient-dtls-enabledciphersuites"></a>
 ### socksClient.dtls.enabledCipherSuites
 
 **Description:** The comma separated list of acceptable cipher suites enabled for DTLS connections to the SOCKS server
 
 **Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
 
+<a id="socksclient-dtls-enabledprotocols"></a>
 ### socksClient.dtls.enabledProtocols
 
 **Description:** The comma separated list of acceptable protocol versions enabled for DTLS connections to the SOCKS server
 
 **Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
 
+<a id="socksclient-dtls-protocol"></a>
 ### socksClient.dtls.protocol
 
 **Description:** The protocol version for the DTLS connections to the SOCKS server
@@ -161,18 +121,21 @@
 
 **Default Value:** `DTLSv1.2`
 
+<a id="socksclient-dtls-truststorefile"></a>
 ### socksClient.dtls.trustStoreFile
 
 **Description:** The trust store file for the DTLS connections to the SOCKS server
 
 **Value Type:** [File](value-types.md#file)
 
+<a id="socksclient-dtls-truststorepassword"></a>
 ### socksClient.dtls.trustStorePassword
 
 **Description:** The password for the trust store for the DTLS connections to the SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-dtls-truststoretype"></a>
 ### socksClient.dtls.trustStoreType
 
 **Description:** The type of trust store for the DTLS connections to the SOCKS server
@@ -181,20 +144,14 @@
 
 **Default Value:** `PKCS12`
 
+<a id="socksclient-dtls-wrappedreceivebuffersize"></a>
 ### socksClient.dtls.wrappedReceiveBufferSize
 
 **Description:** The buffer size for receiving DTLS wrapped datagrams for the DTLS connections to the SOCKS server
 
 **Value Type:** [Positive Integer](value-types.md#positive-integer)
 
-### socksClient.prepareClientSocket
-
-**Description:** The boolean value to indicate if the client socket that is used to connect to the SOCKS server is to be prepared before connecting (involves applying the specified socket settings, resolving the SOCKS server host name, and setting the specified timeout on waiting to connect)
-
-**Value Type:** [Boolean](value-types.md#boolean)
-
-**Default Value:** `false`
-
+<a id="socksclient-socks-gssapiauthmethod-mechanismoid"></a>
 ### socksClient.socks.gssapiauthmethod.mechanismOid
 
 **Description:** The object ID for the GSS-API authentication mechanism to the SOCKS server
@@ -203,6 +160,7 @@
 
 **Default Value:** `1.2.840.113554.1.2.2`
 
+<a id="socksclient-socks-gssapiauthmethod-necreferenceimpl"></a>
 ### socksClient.socks.gssapiauthmethod.necReferenceImpl
 
 **Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the SOCKS server use the NEC reference implementation
@@ -211,6 +169,7 @@
 
 **Default Value:** `false`
 
+<a id="socksclient-socks-gssapiauthmethod-protectionlevels"></a>
 ### socksClient.socks.gssapiauthmethod.protectionLevels
 
 **Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the SOCKS server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
@@ -219,12 +178,14 @@
 
 **Default Value:** `REQUIRED_INTEG_AND_CONF,REQUIRED_INTEG,NONE`
 
+<a id="socksclient-socks-gssapiauthmethod-servicename"></a>
 ### socksClient.socks.gssapiauthmethod.serviceName
 
 **Description:** The GSS-API service name for the SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-socks-gssapiauthmethod-suggestedconf"></a>
 ### socksClient.socks.gssapiauthmethod.suggestedConf
 
 **Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
@@ -233,6 +194,7 @@
 
 **Default Value:** `true`
 
+<a id="socksclient-socks-gssapiauthmethod-suggestedinteg"></a>
 ### socksClient.socks.gssapiauthmethod.suggestedInteg
 
 **Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the SOCKS server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
@@ -241,6 +203,7 @@
 
 **Default Value:** `0`
 
+<a id="socksclient-socks-methods"></a>
 ### socksClient.socks.methods
 
 **Description:** The comma separated list of acceptable authentication methods to the SOCKS server
@@ -249,6 +212,7 @@
 
 **Default Value:** `NO_AUTHENTICATION_REQUIRED`
 
+<a id="socksclient-socks-socksdatagramsocket-clientinfounavailable"></a>
 ### socksClient.socks.socksDatagramSocket.clientInfoUnavailable
 
 **Description:** The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the SOCKS server (an address and port of all zeros is sent instead)
@@ -257,6 +221,7 @@
 
 **Default Value:** `false`
 
+<a id="socksclient-socks-sockshostresolver-resolvefromsocksserver"></a>
 ### socksClient.socks.socksHostResolver.resolveFromSocksServer
 
 **Description:** The boolean value to indicate if host names are to be resolved from the SOCKS server
@@ -265,90 +230,164 @@
 
 **Default Value:** `false`
 
+<a id="socksclient-socks-userpassauthmethod-password"></a>
 ### socksClient.socks.userpassauthmethod.password
 
 **Description:** The password to be used to access the SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-socks-userpassauthmethod-username"></a>
 ### socksClient.socks.userpassauthmethod.username
 
 **Description:** The username to be used to access the SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-socks5-gssapiauthmethod-mechanismoid"></a>
 ### socksClient.socks5.gssapiauthmethod.mechanismOid
 
 **Description:** The object ID for the GSS-API authentication mechanism to the SOCKS5 server
 
 **Value Type:** [Oid](value-types.md#oid)
 
+<a id="socksclient-socks5-gssapiauthmethod-necreferenceimpl"></a>
 ### socksClient.socks5.gssapiauthmethod.necReferenceImpl
 
 **Description:** The boolean value to indicate if the exchange of the GSS-API protection level negotiation must be unprotected should the SOCKS5 server use the NEC reference implementation
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
+<a id="socksclient-socks5-gssapiauthmethod-protectionlevels"></a>
 ### socksClient.socks5.gssapiauthmethod.protectionLevels
 
 **Description:** The comma separated list of acceptable protection levels after GSS-API authentication with the SOCKS5 server (The first is preferred. The remaining are acceptable if the server does not accept the first.)
 
 **Value Type:** [SOCKS5 GSS-API Authentication Method Protection Levels](value-types.md#socks5-gss-api-authentication-method-protection-levels)
 
+<a id="socksclient-socks5-gssapiauthmethod-servicename"></a>
 ### socksClient.socks5.gssapiauthmethod.serviceName
 
 **Description:** The GSS-API service name for the SOCKS5 server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-socks5-gssapiauthmethod-suggestedconf"></a>
 ### socksClient.socks5.gssapiauthmethod.suggestedConf
 
 **Description:** The suggested privacy (i.e. confidentiality) state for GSS-API messages sent after GSS-API authentication with the SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
+<a id="socksclient-socks5-gssapiauthmethod-suggestedinteg"></a>
 ### socksClient.socks5.gssapiauthmethod.suggestedInteg
 
 **Description:** The suggested quality-of-protection (i.e. integrity) value for GSS-API messages sent after GSS-API authentication with the SOCKS5 server (applicable if the negotiated protection level is SELECTIVE_INTEG_OR_CONF)
 
 **Value Type:** [Integer](value-types.md#integer)
 
+<a id="socksclient-socks5-methods"></a>
 ### socksClient.socks5.methods
 
 **Description:** The comma separated list of acceptable authentication methods to the SOCKS5 server
 
 **Value Type:** [SOCKS5 Methods](value-types.md#socks5-methods)
 
+<a id="socksclient-socks5-socks5datagramsocket-clientinfounavailable"></a>
 ### socksClient.socks5.socks5DatagramSocket.clientInfoUnavailable
 
 **Description:** The boolean value to indicate if the client information expected to be used to send UDP datagrams (address and port) is unavailable to be sent to the SOCKS5 server (an address and port of all zeros is sent instead)
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
+<a id="socksclient-socks5-socks5hostresolver-resolvefromsocks5server"></a>
 ### socksClient.socks5.socks5HostResolver.resolveFromSocks5Server
 
 **Description:** The boolean value to indicate if host names are to be resolved from the SOCKS5 server
 
 **Value Type:** [Boolean](value-types.md#boolean)
 
+<a id="socksclient-socks5-userpassauthmethod-password"></a>
 ### socksClient.socks5.userpassauthmethod.password
 
 **Description:** The password to be used to access the SOCKS5 server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-socks5-userpassauthmethod-username"></a>
 ### socksClient.socks5.userpassauthmethod.username
 
 **Description:** The username to be used to access the SOCKS5 server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-socksserversocket-bindhost"></a>
+### socksClient.socksServerSocket.bindHost
+
+**Description:** The binding host name or address for the SOCKS server TCP socket
+
+**Value Type:** [Host](value-types.md#host)
+
+**Default Value:** `0.0.0.0`
+
+<a id="socksclient-socksserversocket-bindhostaddresstypes"></a>
+### socksClient.socksServerSocket.bindHostAddressTypes
+
+**Description:** The comma separated list of acceptable binding host address types for the SOCKS server TCP socket
+
+**Value Type:** [Host Address Types](value-types.md#host-address-types)
+
+**Default Value:** `HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS`
+
+<a id="socksclient-socksserversocket-bindportranges"></a>
+### socksClient.socksServerSocket.bindPortRanges
+
+**Description:** The comma separated list of binding port ranges for the SOCKS server TCP socket
+
+**Value Type:** [Port Ranges](value-types.md#port-ranges)
+
+**Default Value:** `0`
+
+<a id="socksclient-socksserversocket-connecttimeout"></a>
+### socksClient.socksServerSocket.connectTimeout
+
+**Description:** The timeout in milliseconds on waiting for the SOCKS server TCP socket to connect (a timeout of 0 is interpreted as an infinite timeout)
+
+**Value Type:** [Non-negative Integer](value-types.md#non-negative-integer)
+
+**Default Value:** `60000`
+
+<a id="socksclient-socksserversocket-netinterface"></a>
+### socksClient.socksServerSocket.netInterface
+
+**Description:** The network interface that provides a binding host address for the SOCKS server TCP socket
+
+**Value Type:** [Network Interface](value-types.md#network-interface)
+
+<a id="socksclient-socksserversocket-preparesocket"></a>
+### socksClient.socksServerSocket.prepareSocket
+
+**Description:** The boolean value to indicate if the SOCKS server TCP socket is to be prepared before connecting (involves applying the specified socket settings, resolving the SOCKS server host name, and setting the specified timeout on waiting to connect)
+
+**Value Type:** [Boolean](value-types.md#boolean)
+
+**Default Value:** `false`
+
+<a id="socksclient-socksserversocket-socketsettings"></a>
+### socksClient.socksServerSocket.socketSettings
+
+**Description:** The comma separated list of socket settings for the SOCKS server TCP socket
+
+**Value Type:** [Socket Settings](value-types.md#socket-settings)
+
+<a id="socksclient-socksserveruri"></a>
 ### socksClient.socksServerUri
 
 **Description:** The URI of the SOCKS server
 
 **Value Type:** [SOCKS Server URI](value-types.md#socks-server-uri)
 
+<a id="socksclient-ssl-enabled"></a>
 ### socksClient.ssl.enabled
 
 **Description:** The boolean value to indicate if SSL/TLS connections to the SOCKS server are enabled
@@ -357,30 +396,35 @@
 
 **Default Value:** `false`
 
+<a id="socksclient-ssl-enabledciphersuites"></a>
 ### socksClient.ssl.enabledCipherSuites
 
 **Description:** The comma separated list of acceptable cipher suites enabled for SSL/TLS connections to the SOCKS server
 
 **Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
 
+<a id="socksclient-ssl-enabledprotocols"></a>
 ### socksClient.ssl.enabledProtocols
 
 **Description:** The comma separated list of acceptable protocol versions enabled for SSL/TLS connections to the SOCKS server
 
 **Value Type:** [Comma Separated Values](value-types.md#comma-separated-values)
 
+<a id="socksclient-ssl-keystorefile"></a>
 ### socksClient.ssl.keyStoreFile
 
 **Description:** The key store file for the SSL/TLS connections to the SOCKS server
 
 **Value Type:** [File](value-types.md#file)
 
+<a id="socksclient-ssl-keystorepassword"></a>
 ### socksClient.ssl.keyStorePassword
 
 **Description:** The password for the key store for the SSL/TLS connections to the SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-ssl-keystoretype"></a>
 ### socksClient.ssl.keyStoreType
 
 **Description:** The type of key store for the SSL/TLS connections to the SOCKS server
@@ -389,6 +433,7 @@
 
 **Default Value:** `PKCS12`
 
+<a id="socksclient-ssl-protocol"></a>
 ### socksClient.ssl.protocol
 
 **Description:** The protocol version for the SSL/TLS connections to the SOCKS server
@@ -397,18 +442,21 @@
 
 **Default Value:** `TLSv1.2`
 
+<a id="socksclient-ssl-truststorefile"></a>
 ### socksClient.ssl.trustStoreFile
 
 **Description:** The trust store file for the SSL/TLS connections to the SOCKS server
 
 **Value Type:** [File](value-types.md#file)
 
+<a id="socksclient-ssl-truststorepassword"></a>
 ### socksClient.ssl.trustStorePassword
 
 **Description:** The password for the trust store for the SSL/TLS connections to the SOCKS server
 
 **Value Type:** [String](value-types.md#string)
 
+<a id="socksclient-ssl-truststoretype"></a>
 ### socksClient.ssl.trustStoreType
 
 **Description:** The type of trust store for the SSL/TLS connections to the SOCKS server

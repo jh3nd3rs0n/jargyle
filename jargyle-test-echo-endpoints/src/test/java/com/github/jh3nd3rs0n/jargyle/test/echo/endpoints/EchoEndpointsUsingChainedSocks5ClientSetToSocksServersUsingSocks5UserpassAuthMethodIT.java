@@ -88,7 +88,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersUsingSocks5Us
     private static List<AbstractSocksServer> newSocksServersUsingSocks5UserpassAuthMethod() throws IOException {
         List<AbstractSocksServer> socksServerList = new ArrayList<>();
         AbstractSocksServer socksServer1 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
@@ -105,7 +105,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersUsingSocks5Us
         socksServerPort1UsingSocks5UserpassAuthMethod = socksServer1.getPort();
         socksServerList.add(socksServer1);
         AbstractSocksServer socksServer2 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),
@@ -122,7 +122,7 @@ public class EchoEndpointsUsingChainedSocks5ClientSetToSocksServersUsingSocks5Us
         socksServerPort2UsingSocks5UserpassAuthMethod = socksServer2.getPort();
         socksServerList.add(socksServer2);
         AbstractSocksServer socksServer3 = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),

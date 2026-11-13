@@ -44,7 +44,7 @@ public class EchoClientUsingProxiedSocketFactorySetToSocksServerUsingSocks5Userp
                 "Abu:safeDriversSave40%25," +
                 "Jafar:opensesame";
         AbstractSocksServer socksServer = new JargyleSocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
                         Host.newInstance(InetAddress.getLoopbackAddress().getHostAddress())),
                 GeneralSettingSpecConstants.PORT.newSetting(
                         Port.valueOf(0)),

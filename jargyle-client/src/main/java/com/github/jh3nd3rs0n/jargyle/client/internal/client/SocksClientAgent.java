@@ -18,12 +18,13 @@ public class SocksClientAgent {
 
     /**
      * The {@code DtlsDatagramSocketFactory} for the new
-     * {@code ClientDatagramSocketBuilder}.
+     * {@code SocksServerFacingDatagramSocketBuilder}.
      */
     private final DtlsDatagramSocketFactory dtlsDatagramSocketFactory;
 
     /**
-     * The {@code HostResolverFactory} for the new {@code ClientSocketBuilder}.
+     * The {@code HostResolverFactory} for the new
+     * {@code SocksServerSocketBuilder}.
      */
     private final HostResolverFactory hostResolverFactory;
 
@@ -34,7 +35,7 @@ public class SocksClientAgent {
     private final Properties properties;
 
     /**
-     * The {@code SocketFactory} for the new {@code ClientSocketBuilder}.
+     * The {@code SocketFactory} for the new {@code SocksServerSocketBuilder}.
      */
     private final SocketFactory socketFactory;
 
@@ -50,7 +51,7 @@ public class SocksClientAgent {
     private final SocksServerUri socksServerUri;
 
     /**
-     * The {@code SslSocketFactory} for the new {@code ClientSocketBuilder}.
+     * The {@code SslSocketFactory} for the new {@code SocksServerSocketBuilder}.
      */
     private final SslSocketFactory sslSocketFactory;
 
@@ -81,15 +82,15 @@ public class SocksClientAgent {
     /**
      * Returns the {@code boolean} value from the property defined by the
      * {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#PREPARE_CLIENT_SOCKET}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_PREPARE_SOCKET}.
      *
      * @return the {@code boolean} value from the property defined by the
      * {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#PREPARE_CLIENT_SOCKET}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_PREPARE_SOCKET}
      */
-    public final boolean canPrepareClientSocket() {
+    public final boolean canPrepareSocksServerSocket() {
         return this.properties.getValue(
-                GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET);
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_PREPARE_SOCKET);
     }
 
     /**
@@ -109,24 +110,24 @@ public class SocksClientAgent {
     /**
      * Returns the {@code Host} value from one of the properties defined by
      * the {@code PropertySpec} constants:
-     * {@link GeneralPropertySpecConstants#CLIENT_BIND_HOST} and
-     * {@link GeneralPropertySpecConstants#CLIENT_NET_INTERFACE}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_BIND_HOST} and
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_NET_INTERFACE}.
      *
      * @return the {@code Host} value from one of the properties defined by
      * the {@code PropertySpec} constants:
-     * {@link GeneralPropertySpecConstants#CLIENT_BIND_HOST} and
-     * {@link GeneralPropertySpecConstants#CLIENT_NET_INTERFACE}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_BIND_HOST} and
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_NET_INTERFACE}
      */
-    public final Host getClientBindHost() {
+    public final Host getSocksServerSocketBindHost() {
         Host host = this.properties.getValue(
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST);
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST);
         if (host != null) {
             return host;
         }
-        NetInterface netInterface = getClientNetInterface();
+        NetInterface netInterface = getSocksServerSocketNetInterface();
         if (netInterface != null) {
             return netInterface.getHostAddresses(
-                    getClientBindHostAddressTypes())
+                            getSocksServerSocketBindHostAddressTypes())
                     .stream()
                     .findFirst()
                     .orElse(HostIpv4Address.getAllZerosInstance());
@@ -137,70 +138,70 @@ public class SocksClientAgent {
     /**
      * Returns the {@code HostAddressTypes} value from the property defined by
      * the {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_BIND_HOST_ADDRESS_TYPES}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES}.
      *
      * @return the {@code HostAddressTypes} value from the property defined by
      * the {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_BIND_HOST_ADDRESS_TYPES}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES}
      */
-    private HostAddressTypes getClientBindHostAddressTypes() {
+    private HostAddressTypes getSocksServerSocketBindHostAddressTypes() {
         return this.properties.getValue(
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES);
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES);
     }
 
     /**
      * Returns the {@code PortRanges} value for the property defined by the
      * {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_BIND_PORT_RANGES}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_BIND_PORT_RANGES}.
      *
      * @return the {@code PortRanges} value for the property defined by the
      * {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_BIND_PORT_RANGES}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_BIND_PORT_RANGES}
      */
-    public final PortRanges getClientBindPortRanges() {
+    public final PortRanges getSocksServerSocketBindPortRanges() {
         return this.properties.getValue(
-                GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES);
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_PORT_RANGES);
     }
 
     /**
      * Returns the {@code NonNegativeInteger} value for the property defined
      * by the {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_CONNECT_TIMEOUT}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT}.
      *
      * @return the {@code NonNegativeInteger} value for the property defined
      * by the {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_CONNECT_TIMEOUT}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT}
      */
-    public final NonNegativeInteger getClientConnectTimeout() {
-        return this.properties.getValue(GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT);
+    public final NonNegativeInteger getSocksServerSocketConnectTimeout() {
+        return this.properties.getValue(GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT);
     }
 
     /**
      * Returns the {@code NetInterface} value from the property defined by the
      * {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_NET_INTERFACE}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_NET_INTERFACE}.
      *
      * @return the {@code NetInterface} value from the property defined by the
      * {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_NET_INTERFACE}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_NET_INTERFACE}
      */
-    private NetInterface getClientNetInterface() {
+    private NetInterface getSocksServerSocketNetInterface() {
         return this.properties.getValue(
-                GeneralPropertySpecConstants.CLIENT_NET_INTERFACE);
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_NET_INTERFACE);
     }
 
     /**
      * Returns the {@code SocketSettings} value for the property defined by
      * the {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_SOCKET_SETTINGS}.
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_SOCKET_SETTINGS}.
      *
      * @return the {@code SocketSettings} value for the property defined by
      * the {@code PropertySpec} constant
-     * {@link GeneralPropertySpecConstants#CLIENT_SOCKET_SETTINGS}
+     * {@link GeneralPropertySpecConstants#SOCKS_SERVER_SOCKET_SOCKET_SETTINGS}
      */
-    public final SocketSettings getClientSocketSettings() {
+    public final SocketSettings getSocksServerSocketSocketSettings() {
         return this.properties.getValue(
-                GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS);
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_SOCKET_SETTINGS);
     }
 
     /**
@@ -374,21 +375,21 @@ public class SocksClientAgent {
     }
 
     /**
-     * Returns a new {@code ClientDatagramSocketBuilder}.
+     * Returns a new {@code SocksServerFacingDatagramSocketBuilder}.
      *
-     * @return a new {@code ClientDatagramSocketBuilder}
+     * @return a new {@code SocksServerFacingDatagramSocketBuilder}
      */
-    public final ClientDatagramSocketBuilder newClientDatagramSocketBuilder() {
-        return new ClientDatagramSocketBuilder(this.dtlsDatagramSocketFactory);
+    public final SocksServerFacingDatagramSocketBuilder newSocksServerFacingDatagramSocketBuilder() {
+        return new SocksServerFacingDatagramSocketBuilder(this.dtlsDatagramSocketFactory);
     }
 
     /**
-     * Returns a new {@code ClientSocketBuilder}.
+     * Returns a new {@code SocksServerSocketBuilder}.
      *
-     * @return a new {@code ClientSocketBuilder}
+     * @return a new {@code SocksServerSocketBuilder}
      */
-    public final ClientSocketBuilder newClientSocketBuilder() {
-        return new ClientSocketBuilder(
+    public final SocksServerSocketBuilder newSocksServerSocketBuilder() {
+        return new SocksServerSocketBuilder(
                 this,
                 this.hostResolverFactory,
                 this.socketFactory,

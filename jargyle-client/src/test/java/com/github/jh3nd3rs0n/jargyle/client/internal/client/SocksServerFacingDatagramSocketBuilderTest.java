@@ -6,25 +6,28 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
-public class ClientDatagramSocketBuilderTest {
+public class SocksServerFacingDatagramSocketBuilderTest {
 
     @Test
-    public void getConnectedClientDatagramSocketDatagramSocketInetAddressInt01() throws IOException {
+    public void getConnectedSocksServerFacingDatagramSocketDatagramSocketInetAddressInt01() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost");
         Properties properties = Properties.of();
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientDatagramSocketBuilder clientDatagramSocketBuilder =
-                socksClientAgent.newClientDatagramSocketBuilder();
+        SocksServerFacingDatagramSocketBuilder socksServerFacingDatagramSocketBuilder =
+                socksClientAgent.newSocksServerFacingDatagramSocketBuilder();
         InetAddress inetAddress = InetAddress.getLoopbackAddress();
         int port = 2080;
         SocketAddress socketAddress = new InetSocketAddress(inetAddress, port);
         try (DatagramSocket datagramSocket1 = new DatagramSocket(null);
              DatagramSocket datagramSocket2 =
-                     clientDatagramSocketBuilder.getConnectedClientDatagramSocket(
+                     socksServerFacingDatagramSocketBuilder.getConnectedSocksServerFacingDatagramSocket(
                              datagramSocket1,
                              inetAddress,
                              port)) {
@@ -38,21 +41,21 @@ public class ClientDatagramSocketBuilderTest {
     }
 
     @Test
-    public void getConnectedClientDatagramSocketDatagramSocketInetAddressInt02() throws IOException {
+    public void getConnectedSocksServerFacingDatagramSocketDatagramSocketInetAddressInt02() throws IOException {
         SocksServerUri socksServerUri = SocksServerUriScheme.SOCKS5.newSocksServerUri(
                 "localhost");
         Properties properties = Properties.of(
                 DtlsPropertySpecConstants.DTLS_ENABLED.newProperty(true));
         SocksClient socksClient = socksServerUri.newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        ClientDatagramSocketBuilder clientDatagramSocketBuilder =
-                socksClientAgent.newClientDatagramSocketBuilder();
+        SocksServerFacingDatagramSocketBuilder socksServerFacingDatagramSocketBuilder =
+                socksClientAgent.newSocksServerFacingDatagramSocketBuilder();
         InetAddress inetAddress = InetAddress.getLoopbackAddress();
         int port = 3080;
         SocketAddress socketAddress = new InetSocketAddress(inetAddress, port);
         try (DatagramSocket datagramSocket1 = new DatagramSocket(null);
              DatagramSocket datagramSocket2 =
-                     clientDatagramSocketBuilder.getConnectedClientDatagramSocket(
+                     socksServerFacingDatagramSocketBuilder.getConnectedSocksServerFacingDatagramSocket(
                              datagramSocket1,
                              inetAddress,
                              port)) {

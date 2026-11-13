@@ -17,25 +17,25 @@ import java.net.UnknownHostException;
 public class SocksClientAgentTest {
 
     @Test
-    public void testCanPrepareClientSocket01() {
+    public void testCanPrepareSocksServerSocket01() {
         Properties properties = Properties.of();
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        Assert.assertFalse(socksClientAgent.canPrepareClientSocket());
+        Assert.assertFalse(socksClientAgent.canPrepareSocksServerSocket());
     }
 
     @Test
-    public void testCanPrepareClientSocket02() {
+    public void testCanPrepareSocksServerSocket02() {
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.PREPARE_CLIENT_SOCKET.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_PREPARE_SOCKET.newProperty(
                         true));
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
-        Assert.assertTrue(socksClientAgent.canPrepareClientSocket());
+        Assert.assertTrue(socksClientAgent.canPrepareSocksServerSocket());
     }
 
     @Test
@@ -61,52 +61,52 @@ public class SocksClientAgentTest {
     }
 
     @Test
-    public void testGetClientBindHost01() {
+    public void testGetSocksServerSocketBindHost01() {
         Host host = HostIpv4Address.getAllZerosInstance();
         Properties properties = Properties.of();
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 host,
-                socksClientAgent.getClientBindHost());
+                socksClientAgent.getSocksServerSocketBindHost());
     }
 
     @Test
-    public void testGetClientBindHost02() {
+    public void testGetSocksServerSocketBindHost02() {
         Host host = Host.newInstance("127.0.0.1");
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST.newProperty(host));
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST.newProperty(host));
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 host,
-                socksClientAgent.getClientBindHost());
+                socksClientAgent.getSocksServerSocketBindHost());
     }
 
     @Test
-    public void testGetClientBindHost03() throws SocketException, UnknownHostException {
+    public void testGetSocksServerSocketBindHost03() throws SocketException, UnknownHostException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_NET_INTERFACE.newProperty(netInterface),
-                GeneralPropertySpecConstants.CLIENT_BIND_HOST_ADDRESS_TYPES.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_NET_INTERFACE.newProperty(netInterface),
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES.newProperty(
                         HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS)));
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertTrue(
-                netInterface.getHostAddresses().contains((HostAddress) socksClientAgent.getClientBindHost()));
+                netInterface.getHostAddresses().contains((HostAddress) socksClientAgent.getSocksServerSocketBindHost()));
     }
 
     @Test
-    public void testGetClientBindPortRanges01() {
+    public void testGetSocksServerSocketBindPortRanges01() {
         Properties properties = Properties.of();
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
@@ -114,16 +114,16 @@ public class SocksClientAgentTest {
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 PortRanges.getDefault(),
-                socksClientAgent.getClientBindPortRanges());
+                socksClientAgent.getSocksServerSocketBindPortRanges());
     }
 
     @Test
-    public void testGetClientBindPortRanges02() {
+    public void testGetSocksServerSocketBindPortRanges02() {
         PortRanges portRanges = PortRanges.of(PortRange.of(
                 Port.valueOf(0),
                 Port.valueOf(65535)));
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_PORT_RANGES.newProperty(
                         portRanges));
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
@@ -131,11 +131,11 @@ public class SocksClientAgentTest {
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 portRanges,
-                socksClientAgent.getClientBindPortRanges());
+                socksClientAgent.getSocksServerSocketBindPortRanges());
     }
 
     @Test
-    public void testGetClientConnectTimeout01() {
+    public void testGetSocksServerSocketConnectTimeout01() {
         Properties properties = Properties.of();
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
@@ -143,14 +143,14 @@ public class SocksClientAgentTest {
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 NonNegativeInteger.valueOf(60000),
-                socksClientAgent.getClientConnectTimeout());
+                socksClientAgent.getSocksServerSocketConnectTimeout());
     }
 
     @Test
-    public void testGetClientConnectTimeout02() {
+    public void testGetSocksServerSocketConnectTimeout02() {
         NonNegativeInteger connectTimeout = NonNegativeInteger.valueOf(0);
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT.newProperty(
                         connectTimeout));
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
@@ -158,11 +158,11 @@ public class SocksClientAgentTest {
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 connectTimeout,
-                socksClientAgent.getClientConnectTimeout());
+                socksClientAgent.getSocksServerSocketConnectTimeout());
     }
 
     @Test
-    public void testGetClientSocketSettings01() {
+    public void testGetSocksServerSocketSocketSettings01() {
         Properties properties = Properties.of();
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
@@ -170,16 +170,16 @@ public class SocksClientAgentTest {
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 SocketSettings.of(),
-                socksClientAgent.getClientSocketSettings());
+                socksClientAgent.getSocksServerSocketSocketSettings());
     }
 
     @Test
-    public void testGetClientSocketSettings02() {
+    public void testGetSocksServerSocketSocketSettings02() {
         SocketSettings socketSettings = SocketSettings.of(
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(60000)));
         Properties properties = Properties.of(
-                GeneralPropertySpecConstants.CLIENT_SOCKET_SETTINGS.newProperty(
+                GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_SOCKET_SETTINGS.newProperty(
                         socketSettings));
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
@@ -187,7 +187,7 @@ public class SocksClientAgentTest {
         SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 socketSettings,
-                socksClientAgent.getClientSocketSettings());
+                socksClientAgent.getSocksServerSocketSocketSettings());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 new Oid("1.2.840.113554.1.2.2"),
                 socksClientAgent.getGssapiAuthMethodMechanismOid());
@@ -211,7 +211,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 oid,
                 socksClientAgent.getGssapiAuthMethodMechanismOid());
@@ -223,7 +223,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertFalse(socksClientAgent.getGssapiAuthMethodNecReferenceImpl());
     }
 
@@ -235,7 +235,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertTrue(socksClientAgent.getGssapiAuthMethodNecReferenceImpl());
     }
 
@@ -245,7 +245,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 CommaSeparatedValues.of(
                         "REQUIRED_INTEG_AND_CONF",
@@ -264,7 +264,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 commaSeparatedValues,
                 socksClientAgent.getGssapiAuthMethodProtectionLevels());
@@ -276,7 +276,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertNull(socksClientAgent.getGssapiAuthMethodServiceName());
     }
 
@@ -289,7 +289,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 string,
                 socksClientAgent.getGssapiAuthMethodServiceName());
@@ -301,7 +301,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertTrue(socksClientAgent.getGssapiAuthMethodSuggestedConf());
     }
 
@@ -313,7 +313,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertFalse(socksClientAgent.getGssapiAuthMethodSuggestedConf());
     }
 
@@ -323,7 +323,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 0,
                 socksClientAgent.getGssapiAuthMethodSuggestedInteg());
@@ -338,7 +338,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 i,
                 socksClientAgent.getGssapiAuthMethodSuggestedInteg());
@@ -350,7 +350,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 CommaSeparatedValues.of("NO_AUTHENTICATION_REQUIRED"),
                 socksClientAgent.getMethods());
@@ -366,7 +366,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 commaSeparatedValues,
                 socksClientAgent.getMethods());
@@ -378,7 +378,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertArrayEquals(
                 EncryptedPassword.newInstance(new char[]{}).getPassword(),
                 socksClientAgent.getUserpassAuthMethodPassword().getPassword());
@@ -394,7 +394,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertArrayEquals(
                 encryptedPassword.getPassword(),
                 socksClientAgent.getUserpassAuthMethodPassword().getPassword());
@@ -406,7 +406,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 System.getProperty("user.name"),
                 socksClientAgent.getUserpassAuthMethodUsername());
@@ -421,7 +421,7 @@ public class SocksClientAgentTest {
         SocksClient socksClient = SocksServerUriScheme.SOCKS5
                 .newSocksServerUri("127.0.0.1")
                 .newSocksClient(properties);
-        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);        
+        SocksClientAgent socksClientAgent = new SocksClientAgent(socksClient);
         Assert.assertEquals(
                 string,
                 socksClientAgent.getUserpassAuthMethodUsername());

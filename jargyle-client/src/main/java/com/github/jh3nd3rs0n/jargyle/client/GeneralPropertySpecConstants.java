@@ -25,148 +25,143 @@ public final class GeneralPropertySpecConstants {
     private static final PropertySpecs PROPERTY_SPECS = new PropertySpecs();
 
     /**
-     * {@code PropertySpec} constant for {@code socksClient.clientBindHost}:
-     * the {@code Host} for the binding host name or address for the client
-     * socket that is used to connect to the SOCKS server (default value is
-     * {@code 0.0.0.0}).
+     * {@code PropertySpec} constant for
+     * {@code socksClient.socksServerSocket.bindHost}: the {@code Host} for
+     * the binding host name or address for the SOCKS server {@code Socket}
+     * (default value is {@code 0.0.0.0}).
      */
     @NameValuePairValueSpecDoc(
             defaultValue = "0.0.0.0",
-            description = "The binding host name or address for the client "
-                    + "socket that is used to connect to the SOCKS server",
-            name = "socksClient.clientBindHost",
-            syntax = "socksClient.clientBindHost=HOST",
+            description = "The binding host name or address for the SOCKS "
+                    + "server TCP socket",
+            name = "socksClient.socksServerSocket.bindHost",
+            syntax = "socksClient.socksServerSocket.bindHost=HOST",
             valueType = Host.class
     )
-    public static final PropertySpec<Host> CLIENT_BIND_HOST =
+    public static final PropertySpec<Host> SOCKS_SERVER_SOCKET_BIND_HOST =
             PROPERTY_SPECS.addThenGet(new HostPropertySpec(
-                    "socksClient.clientBindHost",
+                    "socksClient.socksServerSocket.bindHost",
                     null));
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.clientBindHostAddressTypes}: the
+     * {@code socksClient.socksServerSocket.bindHostAddressTypes}: the
      * {@code HostAddressTypes} for the acceptable binding host address types
-     * for the client socket that is used to connect to the SOCKS server
-     * (default value is {@code HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS}).
+     * for the SOCKS server {@code Socket} (default value is
+     * {@code HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS}).
      */
     @NameValuePairValueSpecDoc(
             defaultValue = "HOST_IPV4_ADDRESS,HOST_IPV6_ADDRESS",
             description = "The comma separated list of acceptable binding "
-                    + "host address types for the client socket that is used "
-                    + "to connect to the SOCKS server",
-            name = "socksClient.clientBindHostAddressTypes",
-            syntax = "socksClient.clientBindHostAddressTypes=HOST_ADDRESS_TYPES",
+                    + "host address types for the SOCKS server TCP socket",
+            name = "socksClient.socksServerSocket.bindHostAddressTypes",
+            syntax = "socksClient.socksServerSocket.bindHostAddressTypes=HOST_ADDRESS_TYPES",
             valueType = HostAddressTypes.class
     )
-    public static final PropertySpec<HostAddressTypes> CLIENT_BIND_HOST_ADDRESS_TYPES =
+    public static final PropertySpec<HostAddressTypes> SOCKS_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES =
             PROPERTY_SPECS.addThenGet(new HostAddressTypesPropertySpec(
-                    "socksClient.clientBindHostAddressTypes",
+                    "socksClient.socksServerSocket.bindHostAddressTypes",
                     HostAddressTypes.getDefault()));
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.clientBindPortRanges}: the {@code PortRanges} for
-     * the binding port ranges for the client socket that is used to connect
-     * to the SOCKS server (default value is {@code 0}).
+     * {@code socksClient.socksServerSocket.bindPortRanges}: the
+     * {@code PortRanges} for the binding port ranges for the SOCKS server
+     * {@code Socket} (default value is {@code 0}).
      */
     @NameValuePairValueSpecDoc(
             defaultValue = "0",
             description = "The comma separated list of binding port ranges for "
-                    + "the client socket that is used to connect to the SOCKS "
-                    + "server",
-            name = "socksClient.clientBindPortRanges",
-            syntax = "socksClient.clientBindPortRanges=PORT_RANGES",
+                    + "the SOCKS server TCP socket",
+            name = "socksClient.socksServerSocket.bindPortRanges",
+            syntax = "socksClient.socksServerSocket.bindPortRanges=PORT_RANGES",
             valueType = PortRanges.class
     )
-    public static final PropertySpec<PortRanges> CLIENT_BIND_PORT_RANGES =
+    public static final PropertySpec<PortRanges> SOCKS_SERVER_SOCKET_BIND_PORT_RANGES =
             PROPERTY_SPECS.addThenGet(new PortRangesPropertySpec(
-                    "socksClient.clientBindPortRanges",
+                    "socksClient.socksServerSocket.bindPortRanges",
                     PortRanges.getDefault()));
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.clientConnectTimeout}: the {@code NonNegativeInteger}
-     * for the timeout in milliseconds on waiting for the client socket to
-     * connect to the SOCKS server (a timeout of {@code 0} is interpreted as
-     * an infinite timeout) (default value is {@code 60000}).
+     * {@code socksClient.socksServerSocket.connectTimeout}: the
+     * {@code NonNegativeInteger} for the timeout in milliseconds on waiting
+     * for the SOCKS server {@code Socket} to connect (a timeout of {@code 0}
+     * is interpreted as an infinite timeout) (default value is {@code 60000}).
      */
     @NameValuePairValueSpecDoc(
             defaultValue = "60000",
             description = "The timeout in milliseconds on waiting for the "
-                    + "client socket to connect to the SOCKS server (a "
-                    + "timeout of 0 is interpreted as an infinite timeout)",
-            name = "socksClient.clientConnectTimeout",
-            syntax = "socksClient.clientConnectTimeout=NON_NEGATIVE_INTEGER",
+                    + "SOCKS server TCP socket to connect (a timeout of 0 is "
+                    + "interpreted as an infinite timeout)",
+            name = "socksClient.socksServerSocket.connectTimeout",
+            syntax = "socksClient.socksServerSocket.connectTimeout=NON_NEGATIVE_INTEGER",
             valueType = NonNegativeInteger.class
     )
-    public static final PropertySpec<NonNegativeInteger> CLIENT_CONNECT_TIMEOUT =
+    public static final PropertySpec<NonNegativeInteger> SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT =
             PROPERTY_SPECS.addThenGet(new NonNegativeIntegerPropertySpec(
-                    "socksClient.clientConnectTimeout",
+                    "socksClient.socksServerSocket.connectTimeout",
                     NonNegativeInteger.valueOf(60000))); // 1 minute
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.clientNetInterface}: the {@code NetInterface} for
-     * the network interface that provides a binding host address for the
-     * client socket that is used to connect to the SOCKS server.
+     * {@code socksClient.socksServerSocket.netInterface}: the
+     * {@code NetInterface} for the network interface that provides a binding
+     * host address for the SOCKS server {@code Socket}.
      */
     @NameValuePairValueSpecDoc(
             description = "The network interface that provides a binding "
-                    + "host address for the client socket that is used to "
-                    + "connect to the SOCKS server",
-            name = "socksClient.clientNetInterface",
-            syntax = "socksClient.clientNetInterface=NETWORK_INTERFACE",
+                    + "host address for the SOCKS server TCP socket",
+            name = "socksClient.socksServerSocket.netInterface",
+            syntax = "socksClient.socksServerSocket.netInterface=NETWORK_INTERFACE",
             valueType = NetInterface.class
     )
-    public static final PropertySpec<NetInterface> CLIENT_NET_INTERFACE =
+    public static final PropertySpec<NetInterface> SOCKS_SERVER_SOCKET_NET_INTERFACE =
             PROPERTY_SPECS.addThenGet(new NetInterfacePropertySpec(
-                    "socksClient.clientNetInterface",
+                    "socksClient.socksServerSocket.netInterface",
                     null));
 
     /**
      * {@code PropertySpec} constant for
-     * {@code socksClient.clientSocketSettings}: the {@code SocketSettings}
-     * for the client socket that is used to connect to the SOCKS server.
-     */
-    @NameValuePairValueSpecDoc(
-            description = "The comma separated list of socket settings for the "
-                    + "client socket that is used to connect to the SOCKS "
-                    + "server",
-            name = "socksClient.clientSocketSettings",
-            syntax = "socksClient.clientSocketSettings=SOCKET_SETTINGS",
-            valueType = SocketSettings.class
-    )
-    public static final PropertySpec<SocketSettings> CLIENT_SOCKET_SETTINGS =
-            PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
-                    "socksClient.clientSocketSettings",
-                    SocketSettings.of()));
-
-    /**
-     * {@code PropertySpec} constant for
-     * {@code socksClient.prepareClientSocket}: the {@code Boolean} value to
-     * indicate if the client socket that is used to connect to the SOCKS
-     * server is to be prepared before connecting (involves apply the
-     * specified socket settings, resolving the SOCKS server host name, and
-     * setting the specified timeout on waiting to connect) (default value is
+     * {@code socksClient.socksServerSocket.prepareSocket}: the
+     * {@code Boolean} value to indicate if the SOCKS server {@code Socket} is
+     * to be prepared before connecting (involves apply the specified socket
+     * settings, resolving the SOCKS server host name, and setting the
+     * specified timeout on waiting to connect) (default value is
      * {@code false}).
      */
     @NameValuePairValueSpecDoc(
             defaultValue = "false",
-            description = "The boolean value to indicate if the client "
-                    + "socket that is used to connect to the SOCKS server is "
-                    + "to be prepared before connecting (involves applying "
-                    + "the specified socket settings, resolving the SOCKS "
-                    + "server host name, and setting the specified timeout "
-                    + "on waiting to connect)",
-            name = "socksClient.prepareClientSocket",
-            syntax = "socksClient.prepareClientSocket=true|false",
+            description = "The boolean value to indicate if the SOCKS server "
+                    + "TCP socket is to be prepared before connecting "
+                    + "(involves applying the specified socket settings, "
+                    + "resolving the SOCKS server host name, and setting the "
+                    + "specified timeout on waiting to connect)",
+            name = "socksClient.socksServerSocket.prepareSocket",
+            syntax = "socksClient.socksServerSocket.prepareSocket=true|false",
             valueType = Boolean.class
     )
-    public static final PropertySpec<Boolean> PREPARE_CLIENT_SOCKET =
+    public static final PropertySpec<Boolean> SOCKS_SERVER_SOCKET_PREPARE_SOCKET =
             PROPERTY_SPECS.addThenGet(new BooleanPropertySpec(
-                    "socksClient.prepareClientSocket",
+                    "socksClient.socksServerSocket.prepareSocket",
                     Boolean.FALSE));
+
+    /**
+     * {@code PropertySpec} constant for
+     * {@code socksClient.socksServerSocket.socketSettings}: the
+     * {@code SocketSettings} for the SOCKS server {@code Socket}.
+     */
+    @NameValuePairValueSpecDoc(
+            description = "The comma separated list of socket settings for the "
+                    + "SOCKS server TCP socket",
+            name = "socksClient.socksServerSocket.socketSettings",
+            syntax = "socksClient.socksServerSocket.socketSettings=SOCKET_SETTINGS",
+            valueType = SocketSettings.class
+    )
+    public static final PropertySpec<SocketSettings> SOCKS_SERVER_SOCKET_SOCKET_SETTINGS =
+            PROPERTY_SPECS.addThenGet(new SocketSettingsPropertySpec(
+                    "socksClient.socksServerSocket.socketSettings",
+                    SocketSettings.of()));
 
     /**
      * {@code PropertySpec} constant for {@code socksClient.socksServerUri}:

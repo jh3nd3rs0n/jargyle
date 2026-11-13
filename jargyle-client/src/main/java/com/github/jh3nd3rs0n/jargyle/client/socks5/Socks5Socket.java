@@ -51,13 +51,16 @@ public final class Socks5Socket extends Socket {
 			if (this.connected) {
 				throw new SocketException("socket is already connected");
 			}
-			if (endpoint == null || !(endpoint instanceof InetSocketAddress)) {
+			if (!(endpoint instanceof InetSocketAddress)) {
 				throw new IllegalArgumentException(
 						"endpoint must be an instance of InetSocketAddress");
 			}
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) endpoint;
+			if (inetSocketAddress.isUnresolved()) {
+				throw new UnknownHostException(inetSocketAddress.getHostString());
+			}
 			this.socks5Connect(
-					inetSocketAddress.getAddress(), 
+					inetSocketAddress.getAddress(),
 					inetSocketAddress.getPort(), 
 					timeout);
 		}
@@ -82,11 +85,11 @@ public final class Socks5Socket extends Socket {
 				final InetAddress inetAddress,
 				final int port,
 				final int timeout) throws IOException {
-			Socket sock = this.socks5ClientAgent.newClientSocketBuilder()
+			Socket sock = this.socks5ClientAgent.newSocksServerSocketBuilder()
 					.proceedToConfigure(this.socket)
 					.proceedToConnect()
 					.setConnectTimeout(timeout)
-					.getConnectedClientSocket();
+					.getConnectedSocksServerSocket();
 			String address = inetAddress.getHostAddress();
 			this.socks5Connect(sock, address, port);
 		}
@@ -263,7 +266,7 @@ public final class Socks5Socket extends Socket {
 		this.socks5ClientAgent = clientAgent;
 		this.socks5SocketImpl = new Socks5SocketImpl(
 				clientAgent,
-				clientAgent.newClientSocketBuilder().newClientSocket());
+				clientAgent.newSocksServerSocketBuilder().newSocksServerSocket());
 	}
 	
 	Socks5Socket(
@@ -272,12 +275,12 @@ public final class Socks5Socket extends Socket {
 			final int port) throws IOException {
 		Socks5SocketImpl impl;
 		try {
-			Socket connectedClientSocket =
-					clientAgent.newClientSocketBuilder()
-							.newBoundConnectedClientSocket();
-			impl = new Socks5SocketImpl(clientAgent, connectedClientSocket);
+			Socket connectedSocksServerSocket =
+					clientAgent.newSocksServerSocketBuilder()
+							.newBoundConnectedSocksServerSocket();
+			impl = new Socks5SocketImpl(clientAgent, connectedSocksServerSocket);
 			impl.socks5Connect(
-					connectedClientSocket, address.getHostAddress(), port);
+					connectedSocksServerSocket, address.getHostAddress(), port);
 		} catch (IOException e) {
 			throw clientAgent.toSocksClientIOException(e);
 		}
@@ -293,12 +296,12 @@ public final class Socks5Socket extends Socket {
 			final int localPort) throws IOException {
 		Socks5SocketImpl impl;
 		try {
-			Socket connectedClientSocket = clientAgent
-					.newClientSocketBuilder()
-					.newBoundConnectedClientSocket(localAddr, localPort);
-			impl = new Socks5SocketImpl(clientAgent, connectedClientSocket);
+			Socket connectedSocksServerSocket = clientAgent
+					.newSocksServerSocketBuilder()
+					.newBoundConnectedSocksServerSocket(localAddr, localPort);
+			impl = new Socks5SocketImpl(clientAgent, connectedSocksServerSocket);
 			impl.socks5Connect(
-					connectedClientSocket, address.getHostAddress(), port);
+					connectedSocksServerSocket, address.getHostAddress(), port);
 		} catch (IOException e) {
 			throw clientAgent.toSocksClientIOException(e);
 		}
@@ -317,11 +320,11 @@ public final class Socks5Socket extends Socket {
 			final int port) throws UnknownHostException, IOException {
 		Socks5SocketImpl impl;
 		try {
-			Socket connectedClientSocket = 
-					clientAgent.newClientSocketBuilder()
-							.newBoundConnectedClientSocket();
-			impl = new Socks5SocketImpl(clientAgent, connectedClientSocket);
-			impl.socks5Connect(connectedClientSocket, host, port);
+			Socket connectedSocksServerSocket = 
+					clientAgent.newSocksServerSocketBuilder()
+							.newBoundConnectedSocksServerSocket();
+			impl = new Socks5SocketImpl(clientAgent, connectedSocksServerSocket);
+			impl.socks5Connect(connectedSocksServerSocket, host, port);
 		} catch (IOException e) {
 			throw clientAgent.toSocksClientIOException(e);
 		}
@@ -337,11 +340,11 @@ public final class Socks5Socket extends Socket {
 			final int localPort) throws IOException {
 		Socks5SocketImpl impl;
 		try {
-			Socket connectedClientSocket = clientAgent
-					.newClientSocketBuilder()
-					.newBoundConnectedClientSocket(localAddr, localPort);
-			impl = new Socks5SocketImpl(clientAgent, connectedClientSocket);
-			impl.socks5Connect(connectedClientSocket, host, port);
+			Socket connectedSocksServerSocket = clientAgent
+					.newSocksServerSocketBuilder()
+					.newBoundConnectedSocksServerSocket(localAddr, localPort);
+			impl = new Socks5SocketImpl(clientAgent, connectedSocksServerSocket);
+			impl.socks5Connect(connectedSocksServerSocket, host, port);
 		} catch (IOException e) {
 			throw clientAgent.toSocksClientIOException(e);
 		}
@@ -685,16 +688,14 @@ public final class Socks5Socket extends Socket {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.getClass().getSimpleName())
-			.append(" [getSocks5Client()=")
-			.append(this.getSocks5Client())
-			.append(", getLocalSocketAddress()=")
-			.append(this.getLocalSocketAddress())
-			.append(", getRemoteSocketAddress()=")
-			.append(this.getRemoteSocketAddress())
-			.append("]");
-		return builder.toString();
+        return this.getClass().getSimpleName() +
+                " [getSocks5Client()=" +
+                this.getSocks5Client() +
+                ", getLocalSocketAddress()=" +
+                this.getLocalSocketAddress() +
+                ", getRemoteSocketAddress()=" +
+                this.getRemoteSocketAddress() +
+                "]";
 	}
 
 }

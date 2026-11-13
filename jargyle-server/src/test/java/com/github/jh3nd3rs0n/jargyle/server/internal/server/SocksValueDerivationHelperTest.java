@@ -35,7 +35,7 @@ public class SocksValueDerivationHelperTest {
                         Boolean.FALSE));
         Assert.assertFalse(SocksValueDerivationHelper.getSocksGssapiAuthMethodNecReferenceImplFrom(settings));
     }
-    
+
     @Test
     public void testGetSocksGssapiAuthMethodProtectionLevelsFromSettings01() {
         Settings settings = Settings.of();
@@ -44,7 +44,7 @@ public class SocksValueDerivationHelperTest {
                         "REQUIRED_INTEG_AND_CONF", "REQUIRED_INTEG", "NONE"),
                 SocksValueDerivationHelper.getSocksGssapiAuthMethodProtectionLevelsFrom(settings));
     }
-    
+
     @Test
     public void testGetSocksGssapiAuthMethodProtectionLevelsFromSettings02() {
         CommaSeparatedValues commaSeparatedValues = CommaSeparatedValues.of(
@@ -128,718 +128,6 @@ public class SocksValueDerivationHelperTest {
     }
 
     @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromRule01() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromRule02() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromRule03() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromRule04() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_INBOUND_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromSettings01() {
-        SocketSettings socketSettings = SocketSettings.of();
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromSettings02() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromSettings03() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromSettings04() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestInboundSocketSettingsFromSettings05() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_INBOUND_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestInboundSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromRule01() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromRule02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromRule03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromRule04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromSettings02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromSettings03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromSettings04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostFromSettings05() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromRule01() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromRule02() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromRule03() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromRule04() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                HostAddressTypes.of(
-                        HostAddressType.HOST_IPV4_ADDRESS,
-                        HostAddressType.HOST_IPV6_ADDRESS),
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromSettings02() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromSettings03() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromSettings04() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindHostAddressTypesFromSettings05() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromRule01() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_TCP_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromRule02() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromRule03() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromRule04() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromSettings01() {
-        PortRanges portRanges = PortRanges.getDefault();
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromSettings02() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromSettings03() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromSettings04() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenBindPortRangesFromSettings05() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_BIND_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromRule01() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromRule02() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromRule03() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromRule04() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);        
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface, 
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromRule01() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromRule02() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromRule03() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromRule04() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromSettings01() {
-        SocketSettings socketSettings = SocketSettings.of();
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromSettings02() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromSettings03() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromSettings04() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnBindRequestListenSocketSettingsFromSettings05() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_LISTEN_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnBindRequestListenSocketSettingsFrom(settings));
-    }
-
-    @Test
     public void testGetSocksOnBindRequestRelayBufferSizeFromRule01() {
         PositiveInteger relayBufferSize = PositiveInteger.valueOf(2048);
         Rule rule = new Rule.Builder()
@@ -901,7 +189,7 @@ public class SocksValueDerivationHelperTest {
                 .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newRuleAction(
                         relayIdleTimeout))
                 .build();
-        
+
         Assert.assertEquals(
                 relayIdleTimeout,
                 SocksValueDerivationHelper.getSocksOnBindRequestRelayIdleTimeoutFrom(rule));
@@ -914,7 +202,7 @@ public class SocksValueDerivationHelperTest {
                 .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_RELAY_IDLE_TIMEOUT.newRuleAction(
                         relayIdleTimeout))
                 .build();
-        
+
         Assert.assertEquals(
                 relayIdleTimeout,
                 SocksValueDerivationHelper.getSocksOnBindRequestRelayIdleTimeoutFrom(rule));
@@ -1066,27 +354,715 @@ public class SocksValueDerivationHelperTest {
     }
 
     @Test
-    public void testGetSocksOnConnectRequestPrepareTargetFacingSocketFromRule01() {
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromRule01() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET.newRuleAction(
-                        Boolean.TRUE))
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
                 .build();
-        Assert.assertTrue(
-                SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(rule));
-    }
-    
-    @Test
-    public void testGetSocksOnConnectRequestPrepareTargetFacingSocketFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertFalse(SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(settings));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestPrepareTargetFacingSocketFromSettings02() {
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromRule02() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromRule03() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromRule04() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                HostAddressTypes.of(
+                        HostAddressType.HOST_IPV4_ADDRESS,
+                        HostAddressType.HOST_IPV6_ADDRESS),
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromSettings02() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_PREPARE_TARGET_FACING_SOCKET.newSetting(
-                        Boolean.TRUE));
-        Assert.assertTrue(SocksValueDerivationHelper.getSocksOnConnectRequestPrepareTargetFacingSocketFrom(settings));
+                GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromSettings03() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromSettings04() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFromSettings05() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromRule01() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromRule02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromRule03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromRule04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromSettings02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromSettings03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromSettings04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindHostFromSettings05() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromRule01() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_TCP_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromRule02() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromRule03() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromRule04() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromSettings01() {
+        PortRanges portRanges = PortRanges.getDefault();
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromSettings02() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_TCP_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromSettings03() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromSettings04() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFromSettings05() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_BIND_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromRule01() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromRule02() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromRule03() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromRule04() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromRule01() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromRule02() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromRule03() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromRule04() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromSettings01() {
+        SocketSettings socketSettings = SocketSettings.of();
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromSettings02() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromSettings03() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromSettings04() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFromSettings05() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_FACING_SERVER_SOCKET_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteFacingServerSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromRule01() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromRule02() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromRule03() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromRule04() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_SOCKET_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromSettings01() {
+        SocketSettings socketSettings = SocketSettings.of();
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromSettings02() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromSettings03() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromSettings04() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnBindRequestRemoteSocketSocketSettingsFromSettings05() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_BIND_REQUEST_REMOTE_SOCKET_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnBindRequestRemoteSocketSocketSettingsFrom(settings));
     }
 
     @Test
@@ -1180,7 +1156,7 @@ public class SocksValueDerivationHelperTest {
     @Test
     public void testGetSocksOnConnectRequestRelayIdleTimeoutFromSettings02() {
         PositiveInteger relayIdleTimeout = PositiveInteger.valueOf(120000);
-        
+
         Settings settings = Settings.of(
                 SocksSettingSpecConstants.SOCKS_ON_REQUEST_RELAY_IDLE_TIMEOUT.newSetting(
                         relayIdleTimeout));
@@ -1315,104 +1291,7 @@ public class SocksValueDerivationHelperTest {
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromRule01() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromRule02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromRule03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromRule04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromSettings02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromSettings03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromSettings04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostFromSettings05() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromRule01() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromRule01() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
@@ -1421,60 +1300,60 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromRule02() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromRule02() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
                         hostAddressType))
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromRule03() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromRule03() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
                         hostAddressType))
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromRule04() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromRule04() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST_ADDRESS_TYPE.newRuleAction(
                         hostAddressType))
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromSettings01() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromSettings01() {
         Settings settings = Settings.of();
         Assert.assertEquals(
                 HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS,
                         HostAddressType.HOST_IPV6_ADDRESS),
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromSettings02() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromSettings02() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
@@ -1482,47 +1361,144 @@ public class SocksValueDerivationHelperTest {
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromSettings03() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromSettings03() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromSettings04() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromSettings04() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindHostAddressTypesFromSettings05() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostAddressTypesFromSettings05() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST_ADDRESS_TYPES.newSetting(
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromRule01() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromRule01() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromRule02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromRule03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromRule04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromSettings02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromSettings03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromSettings04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindHostFromSettings05() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromRule01() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
@@ -1532,62 +1508,62 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromRule02() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromRule02() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGE.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE.newRuleAction(
                         portRange))
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromRule03() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromRule03() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGE.newRuleAction(
                         portRange))
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromRule04() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromRule04() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_PORT_RANGE.newRuleAction(
                         portRange))
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromSettings01() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromSettings01() {
         PortRanges portRanges = PortRanges.getDefault();
         Settings settings = Settings.of();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromSettings02() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromSettings02() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
@@ -1596,79 +1572,79 @@ public class SocksValueDerivationHelperTest {
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromSettings03() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromSettings03() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_TCP_PORT_RANGES.newSetting(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGES.newSetting(
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromSettings04() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromSettings04() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_TCP_PORT_RANGES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_TCP_PORT_RANGES.newSetting(
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingBindPortRangesFromSettings05() {
+    public void testGetSocksOnConnectRequestRemoteSocketBindPortRangesFromSettings05() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_BIND_PORT_RANGES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_BIND_PORT_RANGES.newSetting(
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingConnectTimeoutFromRule01() {
+    public void testGetSocksOnConnectRequestRemoteSocketConnectTimeoutFromRule01() {
         PositiveInteger i = PositiveInteger.valueOf(1);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT.newRuleAction(i))
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_CONNECT_TIMEOUT.newRuleAction(i))
                 .build();
-        Assert.assertEquals(
-                i, 
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(rule));
-    }
-    
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingConnectTimeoutFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                PositiveInteger.valueOf(60000), 
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnConnectRequestTargetFacingConnectTimeoutFromSettings02() {
-        PositiveInteger i = PositiveInteger.valueOf(1);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_CONNECT_TIMEOUT.newSetting(i));
         Assert.assertEquals(
                 i,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingConnectTimeoutFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketConnectTimeoutFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromRule01() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketConnectTimeoutFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                PositiveInteger.valueOf(60000),
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketConnectTimeoutFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketConnectTimeoutFromSettings02() {
+        PositiveInteger i = PositiveInteger.valueOf(1);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_CONNECT_TIMEOUT.newSetting(i));
+        Assert.assertEquals(
+                i,
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketConnectTimeoutFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromRule01() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
@@ -1679,62 +1655,62 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromRule02() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromRule02() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_NET_INTERFACE.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE.newRuleAction(
                         netInterface))
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromRule03() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromRule03() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE.newRuleAction(
                         netInterface))
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromRule04() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromRule04() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_NET_INTERFACE.newRuleAction(
                         netInterface))
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromSettings01() {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromSettings01() {
         Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings));
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
@@ -1744,53 +1720,77 @@ public class SocksValueDerivationHelperTest {
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_NET_INTERFACE.newSetting(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE.newSetting(
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE.newSetting(
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
+    public void testGetSocksOnConnectRequestRemoteSocketNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_NET_INTERFACE.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_NET_INTERFACE.newSetting(
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketNetInterfaceFrom(settings));
     }
-    
+
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromRule01() {
+    public void testGetSocksOnConnectRequestRemoteSocketPrepareSocketFromRule01() {
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_PREPARE_SOCKET.newRuleAction(
+                        Boolean.TRUE))
+                .build();
+        Assert.assertTrue(
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketPrepareSocketFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketPrepareSocketFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertFalse(SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketPrepareSocketFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketPrepareSocketFromSettings02() {
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_PREPARE_SOCKET.newSetting(
+                        Boolean.TRUE));
+        Assert.assertTrue(SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketPrepareSocketFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromRule01() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -1803,11 +1803,11 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromRule02() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromRule02() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -1815,16 +1815,16 @@ public class SocksValueDerivationHelperTest {
         SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
         SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
                         socketSttng))
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromRule03() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromRule03() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -1832,16 +1832,16 @@ public class SocksValueDerivationHelperTest {
         SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
         SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
                         socketSttng))
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromRule04() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromRule04() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -1849,25 +1849,25 @@ public class SocksValueDerivationHelperTest {
         SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
         SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTING.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_SOCKET_SETTING.newRuleAction(
                         socketSttng))
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromSettings01() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromSettings01() {
         SocketSettings socketSettings = SocketSettings.of();
         Settings settings = Settings.of();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromSettings02() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromSettings02() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -1877,150 +1877,53 @@ public class SocksValueDerivationHelperTest {
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromSettings03() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromSettings03() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
         SocketSettings socketSettings = SocketSettings.of(socketSetting);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromSettings04() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromSettings04() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
         SocketSettings socketSettings = SocketSettings.of(socketSetting);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnConnectRequestTargetFacingSocketSettingsFromSettings05() {
+    public void testGetSocksOnConnectRequestRemoteSocketSocketSettingsFromSettings05() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
         SocketSettings socketSettings = SocketSettings.of(socketSetting);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_TARGET_FACING_SOCKET_SETTINGS.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_CONNECT_REQUEST_REMOTE_SOCKET_SOCKET_SETTINGS.newSetting(
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnConnectRequestTargetFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnConnectRequestRemoteSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromRule01() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromRule02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromRule03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromRule04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromSettings02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromSettings03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromSettings04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostFromSettings05() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromRule01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromRule01() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
@@ -2029,60 +1932,60 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromRule02() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromRule02() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
                         hostAddressType))
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromRule03() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromRule03() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
                         hostAddressType))
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromRule04() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromRule04() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPE.newRuleAction(
                         hostAddressType))
                 .build();
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromSettings01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromSettings01() {
         Settings settings = Settings.of();
         Assert.assertEquals(
                 HostAddressTypes.of(
                         HostAddressType.HOST_IPV4_ADDRESS,
                         HostAddressType.HOST_IPV6_ADDRESS),
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromSettings02() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromSettings02() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
@@ -2090,47 +1993,144 @@ public class SocksValueDerivationHelperTest {
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromSettings03() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromSettings03() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromSettings04() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromSettings04() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFromSettings05() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFromSettings05() {
         HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
         HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPES.newSetting(
                         hostAddressTypes));
         Assert.assertEquals(
                 hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindHostAddressTypesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostAddressTypesFrom(settings));
     }
-    
+
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromRule01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromRule01() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromRule02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromRule03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromRule04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromSettings02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromSettings03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromSettings04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFromSettings05() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromRule01() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
@@ -2140,62 +2140,62 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromRule02() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromRule02() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGE.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGE.newRuleAction(
                         portRange))
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromRule03() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromRule03() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGE.newRuleAction(
                         portRange))
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromRule04() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromRule04() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGE.newRuleAction(
                         portRange))
                 .build();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromSettings01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromSettings01() {
         PortRanges portRanges = PortRanges.getDefault();
         Settings settings = Settings.of();
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromSettings02() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromSettings02() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
@@ -2204,50 +2204,50 @@ public class SocksValueDerivationHelperTest {
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromSettings03() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromSettings03() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_BIND_UDP_PORT_RANGES.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGES.newSetting(
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromSettings04() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromSettings04() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_BIND_UDP_PORT_RANGES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_BIND_UDP_PORT_RANGES.newSetting(
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingBindPortRangesFromSettings05() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFromSettings05() {
         PortRange portRange = PortRange.of(
                 Port.valueOf(1), Port.valueOf(65535));
         PortRanges portRanges = PortRanges.of(portRange);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_BIND_PORT_RANGES.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGES.newSetting(
                         portRanges));
         Assert.assertEquals(
                 portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingBindPortRangesFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketBindPortRangesFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromRule01() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromRule01() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
@@ -2258,62 +2258,62 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromRule02() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromRule02() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_NET_INTERFACE.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_NET_INTERFACE.newRuleAction(
                         netInterface))
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromRule03() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromRule03() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_NET_INTERFACE.newRuleAction(
                         netInterface))
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromRule04() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromRule04() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_NET_INTERFACE.newRuleAction(
                         netInterface))
                 .build();
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromSettings01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromSettings01() {
         Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings));
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
@@ -2323,53 +2323,53 @@ public class SocksValueDerivationHelperTest {
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_NET_INTERFACE.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_NET_INTERFACE.newSetting(
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_NET_INTERFACE.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_NET_INTERFACE.newSetting(
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
         Host host = Host.newInstance("127.0.0.1");
         NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
                 host.toInetAddress());
         NetInterface netInterface = NetInterface.newInstance(networkInterface);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_NET_INTERFACE.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_NET_INTERFACE.newSetting(
                         netInterface));
         Assert.assertEquals(
                 netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingNetInterfaceFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketNetInterfaceFrom(settings));
     }
-    
+
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromRule01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromRule01() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -2382,11 +2382,11 @@ public class SocksValueDerivationHelperTest {
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromRule02() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromRule02() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -2394,16 +2394,16 @@ public class SocksValueDerivationHelperTest {
         SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
         SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.INTERNAL_FACING_SOCKET_SETTING.newRuleAction(
+                .addRuleAction(GeneralRuleActionSpecConstants.CLIENT_ENDPOINTS_SOCKET_SETTING.newRuleAction(
                         socketSttng))
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromRule03() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromRule03() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -2411,16 +2411,16 @@ public class SocksValueDerivationHelperTest {
         SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
         SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTING.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_SOCKET_SETTING.newRuleAction(
                         socketSttng))
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromRule04() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromRule04() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -2428,25 +2428,25 @@ public class SocksValueDerivationHelperTest {
         SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
         SocketSettings socketSettings = SocketSettings.of(socketSttng);
         Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTING.newRuleAction(
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_SOCKET_SETTING.newRuleAction(
                         socketSttng))
                 .build();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(rule));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(rule));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromSettings01() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromSettings01() {
         SocketSettings socketSettings = SocketSettings.of();
         Settings settings = Settings.of();
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromSettings02() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromSettings02() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
@@ -2456,628 +2456,49 @@ public class SocksValueDerivationHelperTest {
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromSettings03() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromSettings03() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
         SocketSettings socketSettings = SocketSettings.of(socketSetting);
         Settings settings = Settings.of(
-                GeneralSettingSpecConstants.INTERNAL_FACING_SOCKET_SETTINGS.newSetting(
+                GeneralSettingSpecConstants.CLIENT_ENDPOINTS_SOCKET_SETTINGS.newSetting(
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromSettings04() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromSettings04() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
         SocketSettings socketSettings = SocketSettings.of(socketSetting);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_INTERNAL_FACING_SOCKET_SETTINGS.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_CLIENT_ENDPOINTS_SOCKET_SETTINGS.newSetting(
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings));
     }
 
     @Test
-    public void testGetSocksOnUdpAssociateRequestClientFacingSocketSettingsFromSettings05() {
+    public void testGetSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFromSettings05() {
         SocketSetting<?> socketSetting =
                 StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
                         NonNegativeInteger.valueOf(0));
         SocketSettings socketSettings = SocketSettings.of(socketSetting);
         Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_SOCKET_SETTINGS.newSetting(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_CLIENT_FACING_DATAGRAM_SOCKET_SOCKET_SETTINGS.newSetting(
                         socketSettings));
         Assert.assertEquals(
                 socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromRule01() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromRule02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromRule03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromRule04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST.newRuleAction(
-                        host))
-                .build();
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromSettings02() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromSettings03() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromSettings04() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostFromSettings05() {
-        Host host = Host.newInstance("127.0.0.1");
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST.newSetting(
-                        host));
-        Assert.assertEquals(
-                host,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromRule01() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromRule02() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromRule03() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromRule04() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPE.newRuleAction(
-                        hostAddressType))
-                .build();
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                HostAddressTypes.of(
-                        HostAddressType.HOST_IPV4_ADDRESS,
-                        HostAddressType.HOST_IPV6_ADDRESS),
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromSettings02() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromSettings03() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromSettings04() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFromSettings05() {
-        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
-        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_HOST_ADDRESS_TYPES.newSetting(
-                        hostAddressTypes));
-        Assert.assertEquals(
-                hostAddressTypes,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindHostAddressTypesFrom(settings));
-    }
-    
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromRule01() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.BIND_UDP_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromRule02() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromRule03() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromRule04() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGE.newRuleAction(
-                        portRange))
-                .build();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromSettings01() {
-        PortRanges portRanges = PortRanges.getDefault();
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromSettings02() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromSettings03() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_BIND_UDP_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromSettings04() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_BIND_UDP_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingBindPortRangesFromSettings05() {
-        PortRange portRange = PortRange.of(
-                Port.valueOf(1), Port.valueOf(65535));
-        PortRanges portRanges = PortRanges.of(portRange);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_BIND_PORT_RANGES.newSetting(
-                        portRanges));
-        Assert.assertEquals(
-                portRanges,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingBindPortRangesFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromRule01() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromRule02() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromRule03() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromRule04() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE.newRuleAction(
-                        netInterface))
-                .build();
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromSettings01() {
-        Settings settings = Settings.of();
-        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
-        Host host = Host.newInstance("127.0.0.1");
-        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
-                host.toInetAddress());
-        NetInterface netInterface = NetInterface.newInstance(networkInterface);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_NET_INTERFACE.newSetting(
-                        netInterface));
-        Assert.assertEquals(
-                netInterface,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingNetInterfaceFrom(settings));
-    }
-    
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromRule01() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromRule02() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(GeneralRuleActionSpecConstants.EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromRule03() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromRule04() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        @SuppressWarnings("unchecked")
-        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
-        SocketSettings socketSettings = SocketSettings.of(socketSttng);
-        Rule rule = new Rule.Builder()
-                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTING.newRuleAction(
-                        socketSttng))
-                .build();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(rule));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromSettings01() {
-        SocketSettings socketSettings = SocketSettings.of();
-        Settings settings = Settings.of();
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromSettings02() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromSettings03() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                GeneralSettingSpecConstants.EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromSettings04() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_REQUEST_EXTERNAL_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings));
-    }
-
-    @Test
-    public void testGetSocksOnUdpAssociateRequestPeerFacingSocketSettingsFromSettings05() {
-        SocketSetting<?> socketSetting =
-                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
-                        NonNegativeInteger.valueOf(0));
-        SocketSettings socketSettings = SocketSettings.of(socketSetting);
-        Settings settings = Settings.of(
-                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_PEER_FACING_SOCKET_SETTINGS.newSetting(
-                        socketSettings));
-        Assert.assertEquals(
-                socketSettings,
-                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestPeerFacingSocketSettingsFrom(settings));
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestClientFacingDatagramSocketSocketSettingsFrom(settings));
     }
 
     @Test
@@ -3302,6 +2723,585 @@ public class SocksValueDerivationHelperTest {
         Assert.assertEquals(
                 relayOutboundBandwidthLimit,
                 SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRelayOutboundBandwidthLimitFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromRule01() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromRule02() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromRule03() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromRule04() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPE.newRuleAction(
+                        hostAddressType))
+                .build();
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                HostAddressTypes.of(
+                        HostAddressType.HOST_IPV4_ADDRESS,
+                        HostAddressType.HOST_IPV6_ADDRESS),
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromSettings02() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromSettings03() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromSettings04() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFromSettings05() {
+        HostAddressType hostAddressType = HostAddressType.HOST_IPV4_ADDRESS;
+        HostAddressTypes hostAddressTypes = HostAddressTypes.of(hostAddressType);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST_ADDRESS_TYPES.newSetting(
+                        hostAddressTypes));
+        Assert.assertEquals(
+                hostAddressTypes,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostAddressTypesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromRule01() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromRule02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromRule03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromRule04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST.newRuleAction(
+                        host))
+                .build();
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromSettings02() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_HOST.newSetting(host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromSettings03() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromSettings04() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFromSettings05() {
+        Host host = Host.newInstance("127.0.0.1");
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_HOST.newSetting(
+                        host));
+        Assert.assertEquals(
+                host,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindHostFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromRule01() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.BIND_UDP_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromRule02() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromRule03() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromRule04() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGE.newRuleAction(
+                        portRange))
+                .build();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromSettings01() {
+        PortRanges portRanges = PortRanges.getDefault();
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromSettings02() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.BIND_UDP_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromSettings03() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromSettings04() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_BIND_UDP_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFromSettings05() {
+        PortRange portRange = PortRange.of(
+                Port.valueOf(1), Port.valueOf(65535));
+        PortRanges portRanges = PortRanges.of(portRange);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_BIND_PORT_RANGES.newSetting(
+                        portRanges));
+        Assert.assertEquals(
+                portRanges,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketBindPortRangesFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromRule01() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromRule02() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromRule03() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromRule04() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_NET_INTERFACE.newRuleAction(
+                        netInterface))
+                .build();
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromSettings01() {
+        Settings settings = Settings.of();
+        Assert.assertNull(SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromSettings02() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromSettings03() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromSettings04() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFromSettings05() throws UnknownHostException, SocketException {
+        Host host = Host.newInstance("127.0.0.1");
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(
+                host.toInetAddress());
+        NetInterface netInterface = NetInterface.newInstance(networkInterface);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_NET_INTERFACE.newSetting(
+                        netInterface));
+        Assert.assertEquals(
+                netInterface,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketNetInterfaceFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromRule01() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromRule02() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(GeneralRuleActionSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromRule03() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromRule04() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        @SuppressWarnings("unchecked")
+        SocketSetting<Object> socketSttng = (SocketSetting<Object>) socketSetting;
+        SocketSettings socketSettings = SocketSettings.of(socketSttng);
+        Rule rule = new Rule.Builder()
+                .addRuleAction(SocksRuleActionSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_SOCKET_SETTING.newRuleAction(
+                        socketSttng))
+                .build();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(rule));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromSettings01() {
+        SocketSettings socketSettings = SocketSettings.of();
+        Settings settings = Settings.of();
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromSettings02() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromSettings03() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                GeneralSettingSpecConstants.REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromSettings04() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_REQUEST_REMOTE_ENDPOINTS_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings));
+    }
+
+    @Test
+    public void testGetSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFromSettings05() {
+        SocketSetting<?> socketSetting =
+                StandardSocketSettingSpecConstants.SO_TIMEOUT.newSocketSetting(
+                        NonNegativeInteger.valueOf(0));
+        SocketSettings socketSettings = SocketSettings.of(socketSetting);
+        Settings settings = Settings.of(
+                SocksSettingSpecConstants.SOCKS_ON_UDP_ASSOCIATE_REQUEST_REMOTE_FACING_DATAGRAM_SOCKET_SOCKET_SETTINGS.newSetting(
+                        socketSettings));
+        Assert.assertEquals(
+                socketSettings,
+                SocksValueDerivationHelper.getSocksOnUdpAssociateRequestRemoteFacingDatagramSocketSocketSettingsFrom(settings));
     }
 
     @Test

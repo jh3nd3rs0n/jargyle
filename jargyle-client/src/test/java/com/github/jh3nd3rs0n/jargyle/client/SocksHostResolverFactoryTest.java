@@ -18,9 +18,9 @@ public class SocksHostResolverFactoryTest {
     @Test
     public void testNewInstance02() {
         System.setProperty("socksClient.socksServerUri", "socks5://127.0.0.1");
-        System.setProperty("socksClient.clientBindHost", "127.0.0.1");
-        System.setProperty("socksClient.clientBindPortRanges", "0-65535");
-        System.setProperty("socksClient.clientConnectTimeout", "60000");
+        System.setProperty("socksClient.socksServerSocket.bindHost", "127.0.0.1");
+        System.setProperty("socksClient.socksServerSocket.bindPortRanges", "0-65535");
+        System.setProperty("socksClient.socksServerSocket.connectTimeout", "60000");
         try {
             SocksHostResolverFactory socksHostResolverFactory =
                     SocksHostResolverFactory.newInstance();
@@ -29,18 +29,18 @@ public class SocksHostResolverFactoryTest {
             Properties properties = socksClient.getProperties();
             Assert.assertEquals(
                     "127.0.0.1",
-                    properties.getValue(GeneralPropertySpecConstants.CLIENT_BIND_HOST).toString());
+                    properties.getValue(GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_HOST).toString());
             Assert.assertEquals(
                     "0-65535",
-                    properties.getValue(GeneralPropertySpecConstants.CLIENT_BIND_PORT_RANGES).toString());
+                    properties.getValue(GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_BIND_PORT_RANGES).toString());
             Assert.assertEquals(
                     "60000",
-                    properties.getValue(GeneralPropertySpecConstants.CLIENT_CONNECT_TIMEOUT).toString());
+                    properties.getValue(GeneralPropertySpecConstants.SOCKS_SERVER_SOCKET_CONNECT_TIMEOUT).toString());
         } finally {
             System.clearProperty("socksClient.socksServerUri");
-            System.clearProperty("socksClient.clientBindHost");
-            System.clearProperty("socksClient.clientBindPortRanges");
-            System.clearProperty("socksClient.clientConnectTimeout");
+            System.clearProperty("socksClient.socksServerSocket.bindHost");
+            System.clearProperty("socksClient.socksServerSocket.bindPortRanges");
+            System.clearProperty("socksClient.socksServerSocket.connectTimeout");
         }
     }
 

@@ -111,12 +111,12 @@ import java.io.IOException;
 public class ServerApp {
     public static void main(String[] args) throws IOException {
         new SocksServer(Configuration.newUnmodifiableInstance(Settings.of(
-                Setting.newInstanceWithParsedValue("port", "8080"),
-                Setting.newInstanceWithParsedValue("ssl.enabled", "true"),
-                Setting.newInstanceWithParsedValue("ssl.keyStoreFile", "server.jks"),
-                Setting.newInstanceWithParsedValue("ssl.keyStorePassword", "password"),
-                Setting.newInstanceWithParsedValue("socks5.methods", "USERNAME_PASSWORD"),
-                Setting.newInstanceWithParsedValue("socks5.userpassauthmethod.userRepository", "StringSourceUserRepository:Aladdin:opensesame")
+            Setting.newInstanceWithParsedValue("port", "8080"),
+            Setting.newInstanceWithParsedValue("ssl.enabled", "true"),
+            Setting.newInstanceWithParsedValue("ssl.keyStoreFile", "server.jks"),
+            Setting.newInstanceWithParsedValue("ssl.keyStorePassword", "password"),
+            Setting.newInstanceWithParsedValue("socks5.methods", "USERNAME_PASSWORD"),
+            Setting.newInstanceWithParsedValue("socks5.userpassauthmethod.userRepository", "StringSourceUserRepository:Aladdin:opensesame")
         ))).start();
     }
 }

@@ -168,7 +168,7 @@ For a `Socket`, you can provide the host name or address as a
     socket to a host name or address.
 -   `SocketFactory.newSocket(java.net.InetAddress address, int port, java.net.InetAddress localAddr, int localPort)`:
     The third method argument `localAddr` is used to bind the SOCKS server TCP 
-    socket to a host address.
+    socket to a host name or address.
 -   `Socket.bind(java.net.SocketAddress bindpoint)`: The host name or address 
     of the provided `java.net.SocketAddress` is used to bind the SOCKS server 
     TCP socket to a host name or address.
@@ -217,11 +217,14 @@ public class ClientApp {
          * Examples of binding the SOCKS server TCP socket to a host name or
          * address through a Socket:
          * 
-         * Socket socket = socketFactory.newSocket("example.com", 443, "a96p08.local", 0);
+         * InetAddress localAddr = InetAddress.getByName("a96p08.local");
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
          * 
-         * Socket socket = socketFactory.newSocket("example.com", 443, "192.168.1.231", 0);
+         * InetAddress localAddr = InetAddress.getByName("192.168.1.231");
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
          * 
-         * Socket socket = socketFactory.newSocket("example.com", 443, "fe80::34ef:938a:402f:e526%17", 0);
+         * InetAddress localAddr = InetAddress.getByName("fe80::34ef:938a:402f:e526%17");
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
          * 
          * InetAddress address = InetAddress.getByName("example.com");
          * InetAddress localAddr = InetAddress.getByName("a96p08.local");
@@ -286,10 +289,9 @@ public class ClientApp {
          * Examples of binding the SOCKS server TCP socket to a host address 
          * from a network interface through a Socket:
          * 
-         * InetAddress address = InetAddress.getByName("example.com");
          * InetAddress localAddr = NetInterface.newInstanceFrom("eth0")
          *     .getHostAddresses().get(0).toInetAddress();
-         * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
          * 
          * Socket socket = socketFactory.newSocket();
          * socket.bind(new InetSocketAddress(
@@ -354,12 +356,11 @@ public class ClientApp {
          * Examples of binding the SOCKS server TCP socket to a host address 
          * from a network interface through a Socket:
          * 
-         * InetAddress address = InetAddress.getByName("example.com");
          * InetAddress localAddr = NetInterface.newInstanceFrom("eth0")
          *     .getHostAddresses(HostAddressTypes.of(HostAddressType.HOST_IPV4_ADDRESS))
          *     .get(0)
          *     .toInetAddress();
-         * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
          * 
          * Socket socket = socketFactory.newSocket();
          * socket.bind(new InetSocketAddress(
@@ -434,17 +435,20 @@ public class ClientApp {
         /*
          * Examples of binding the SOCKS server TCP socket to a port number 
          * through a Socket:
-         * 
-         * Socket socket = socketFactory.newSocket("example.com", 443, "a96p08.local", 0);
-         * 
-         * Socket socket = socketFactory.newSocket("example.com", 443, "192.168.1.231", 0);
-         * 
-         * Socket socket = socketFactory.newSocket("example.com", 443, "fe80::34ef:938a:402f:e526%17", 0);
-         * 
+         *
+         * InetAddress localAddr = InetAddress.getByName("a96p08.local");
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
+         *
+         * InetAddress localAddr = InetAddress.getByName("192.168.1.231");
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
+         *
+         * InetAddress localAddr = InetAddress.getByName("fe80::34ef:938a:402f:e526%17");
+         * Socket socket = socketFactory.newSocket("example.com", 443, localAddr, 0);
+         *
          * InetAddress address = InetAddress.getByName("example.com");
          * InetAddress localAddr = InetAddress.getByName("a96p08.local");
          * Socket socket = socketFactory.newSocket(address, 443, localAddr, 0);
-         * 
+         *
          * Socket socket = socketFactory.newSocket();
          * socket.bind(new InetSocketAddress("a96p08.local", 0));
          * 
